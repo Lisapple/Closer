@@ -1,0 +1,237 @@
+/* 
+ Localizable.strings
+ Closer
+ 
+ Created by Max on 3/10/11.
+ Copyright 2011 Lis@cintosh. All rights reserved.
+ */
+
+/* MessageViewControler */
+"Message" = "Message";
+"Clear" = "Effacer";
+"This message will be shown when countdown will be finished." = "Ce message s'affichera quand le décompte sera fini.";
+"UNDO_MESSAGE_ACTION" = "Effacement";
+
+/* EditAllCountdownViewController */
+"All Countdowns" = "Tous les Décomptes";
+"New Countdown" = "Nouveau Décompte";
+"New Countdown %i" = "Nouveau Décompte %i";
+"You must delete at least one countdown to add a new countdown." = "Vous devez supprimer au moins un décompte pour en ajouter un nouveau.";
+"OK" = "OK";
+
+/* SettingsViewController */
+"Settings" = "Réglages";
+"Edit All" = "Tout Modifier";
+"Closer & Closer %@\nCopyright © 2013, Lis@cintosh\n" = "Closer & Closer %@\nCopyright © 2013, Lis@cintosh\n";
+"Name" = "Nom";
+"Date & Time" = "Date et Heure";
+"Message" = "Message";
+"Song" = "Sonnerie";
+"Theme" = "Thème";
+"No date" = "Aucune Date";
+
+"Do you really want to delete this countdown?" = "Voulez-vous vraiment supprimer ce décompte?";
+"Delete Countdown" = "Supprimer Décompte";
+
+"More information?" = "Plus d'informations?";
+"Cancel" = "Annuler";
+"Feedback & Support" = "Retour d'expérience";
+"Send me an e-mail" = "M'envoyer un mail";
+"Visit my website" = "Visiter mon site";
+"See all my applications" = "Voir toutes mes app";
+
+"Closer & Closer";
+
+/* NameViewController */
+"Name" = "Nom";
+"The name of the countdown can help you to identify it." = "Le nom du décompte peut vous servir à l'identifier.";
+
+/* DatePickerViewController */
+//"Date & Time"; // Already defined on SettingsViewController
+"UNDO_DATE_ACTION" = "Modification";
+
+/* SongPickerViewController */
+//"Song" = "";
+"None" = "Aucune";
+"Default" = "Par défaut";
+
+/* PageView */
+
+"and" = "et";
+"Current countdown settings" = "Réglages du décompte";
+"Go to countdown settings" = "Aller aux réglages du décompte";
+
+"DAYS_MANY" = "Jours";
+"DAY_ONE" = "Jour";
+"DAYS_ZERO" = "Jour";
+
+"HOURS_MANY" = "Heures";
+"HOUR_ONE" = "Heure";
+"HOURS_ZERO" = "Heure";
+
+"MINUTES_MANY" = "Minutes";
+"MINUTE_ONE" = "Minute";
+"MINUTES_ZERO" = "Minute";
+
+"SECONDS_MANY" = "Secondes";
+"SECOND_ONE" = "Seconde";
+"SECONDS_ZERO" = "Seconde";
+
+/* Others */
+"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Décompte terminé!";
+"COUNTDOWN_FINISHED_MESSAGE %@" = "Le décompte \"%@\" est fini.";
+
+"TIMER_FINISHED_DEFAULT_MESSAGE" = "Minuteur terminé!";
+"TIMER_FINISHED_MESSAGE %@" = "Le minuteur \"%@\" est fini.";
+
+/* Countdown */
+"READING_ERROR_ALERT_TITLE" = "Erreur de lecture!";
+"READING_ERROR_ALERT_MESSAGE" = "Une erreur s'est produite, un fichier doit être corrompu. Vous devriez supprimer l'application et la réinstaller.";
+
+"WRITING_ERROR_ALERT_TITLE" = "Erreur d'écriture!";
+"WRITING_ERROR_ALERT_MESSAGE %@" = "Une erreur s'est produite lorsque l'application a voulu écrire dans un fichier. Vous devriez vérifier l'espace disponible sur votre %@ ou le redémarrer.";
+
+"DEFAULT_STYLE" = "Par défaut";
+"LCD_STYLE" = "Écran LCD";
+"BOARD_STYLE" = "Tableau";
+"PAPER_STYLE" = "Papier";
+"TIMES_STYLE" = "New Time";
+
+"NO_TITLE_PLACEHOLDER" = "- Sans Titre -";
+
+/* EditAllCountdownViewController */
+"Import from Calendar" = "Importer depuis Calendrier";
+"Export..." = "Exporter...";
+
+"UNDO_DELETE_COUNTDOWN_ACTION" = "Suppression";
+
+/* ExportViewController */
+"Choose Countdowns" = "Choisissez\nles décomptes";
+"Export" = "Exporter";
+"You can export checked countdowns into\niCalendar file format in iTunes Sharing or\nadd them to the calendar app to your %@." = "Vous pouvez exporter les décomptes sélectionnés\nvers un fichier au format iCalendar via iTunes Sharing ou\najouter ces décomptes au calendrier de votre %@.";
+"Export as iCalendar" = "Vers un fichier iCalendar";
+"Export to calendar" = "Vers le calendrier";
+"Countdown finished" = "Décompte fini";
+"Export %@" = "Export %@";
+" and one more" = " et un de plus";
+" and %i more" = " et %i de plus";
+"You can retreive the export file as \"%@.%@\" into iTunes Sharing." = "Vous pouvez récupérer le fichier d'export nommé \"%@.%@\" dans iTunes Sharing";
+"Export Succeed!" = "Exports Réussi!";
+"All countdowns have been added as event in the calendar app into the calendar named \"%@\"." = "Tous les décomptes ont été ajoutés comme des événements dans l'application Calendrier dans le calendrier nommé \"%@\"";
+
+/* ImportFromCalendarViewController */
+"Choose Events" = "Choississez\nles événements";
+"Import" = "Importer";
+"No Future Events" = "Pas d'événement futur";
+
+"and one more" = "et un de plus";
+"and %i more" = "et %i autres de plus";
+"Event named \"%@\" could not be imported because the limit of countdown have been reach. %@" = "L'événement nommé \"%@\" n'a pas pu être importé parce que la limite de décompte a été atteinte. %@";
+"Events named \"%@\" %@ could not be imported because the limit of countdown have been reach. %@" = "L'événement nommé \"%@\" %@ n'ont pas pu être importés parce que la limite de décompte a été atteinte. %@";
+"Delete some countdowns and retry to import these events." = "Essayez de supprimer quelques décomptes et réessayez l'import de ces derniers.";
+
+"Countdown Limit Reached!" = "Limite de décompte atteinte";
+"Birthdays" = "Anniversaires";
+
+
+/*** From 1.1 ***/
+/* ImportFromWebsiteViewController_Pad */
+"Import" = "Importer";
+"Paste" = "Coller";
+"Do you want to use\n %@ and %@\nas passwords to import?" = "Voulez-vous utiliser\n %@ et %@\ncomme mots de passe?";
+"Import" = "Importer";
+
+"No Countdowns found" = "Aucun décompte trouvé";
+"Check that:\n%@ and %@\nare two correct passwords" = "Vérifiez que:\n%@ et %@\nsont corrects";
+
+"Connection Error" = "Erreur de connexion";
+
+/* ImportFromWebsiteViewController_Phone */
+"Enter the First Password" = "Entrez le premier code";
+"Enter the Second Password" = "Entrez le second code";
+
+/* ImportFromCalendarViewController */
+"Delete some countdowns and retry to import these event." = "Supprimez quelques décomptes et réessayez l'import de ces derniers.";
+
+/* ExportViewController */
+"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?" = "Voulez-vous exporter les décomptes:\nau format iCalendar dans iTunes Sharing,\nvers l'application calendrier de votre %@\nou vers Lisacintosh.com pour les afficher en ligne?";
+"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?" = "Voulez-vous exporter les décomptes:\nau format iCalendar dans iTunes Sharing,\nvers l'application calendrier de votre %@?";
+"Export to website" = "Exporter vers le site.";
+"No Countdowns" = "Aucun Décompte";
+
+/* ExportToWebsiteViewController */
+"Error!" = "Erreur!";
+"Exported to Website" = "Exporté sur le site";
+"Show on Safari" = "Afficher dans Safari";
+
+/* EditAllCountdownViewController */
+"Import from Calendar" = "Importer depuis le calendrier";
+"Access Denied!" = "Accès refusé!";
+"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings." = "Closer & Closer n'a pas accès aux événements du calendrier. Vérifiez les réglages de confidentialité dans les réglages de votre %@";
+
+"Import with Passwords" = "Importer avec des codes";
+"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE" = "Vous avez besoin de deux mots de passe de closer.lisacintosh.com pour importer ces décomptes.\nVous pouvez exporter vos décomptes en ligne depuis \"Exporter... > Exporter vers le site\".";
+
+/* MainViewController_Pad */
+"Show Countdowns Online" = "Afficher les décomptes en ligne";
+"Go to my website" = "Allez voir mon site";
+"Delete" = "Supprimer";
+
+
+
+"New Timer" = "Nouveau Minuteur";
+"New Timer %i" = "Nouveau Minuteur %i";
+"%ld timers" = "%ld minuteurs";
+"No timers" = "Aucun minuteur";
+"no timers" = "aucun minuteur";
+"No Durations" = "Aucun minuteur";
+
+"Duration" = "Durée";
+"Durations" = "Durées";
+
+"Days" = "Jours";
+"days" = "jours";
+"day" = "jour";
+"Hours" = "Heures";
+"hours" = "heures";
+"hour" = "heure";
+"Minutes";
+"minutes";
+"minute";
+"min";
+"Seconds" = "Secondes";
+"seconds" = "secondes";
+"second" = "seconde";
+"sec";
+"seconds_0" = "seconde";
+
+"Continue" = "Continuer";
+"Resume" = "Reprendre";
+
+" and " = " et ";
+
+"d";
+"h";
+"m";
+"s";
+
+"Ask to Continue" = "Demander pour Continuer";
+"Ask" = "Demander";
+"None" = "Aucun";
+"For every timers" = "Pour chaque minuteur";
+"When all timers finished" = "À la fin de tous les minuteurs";
+"An alert can be shown to ask you to continue the timer." = "Une alert peut s'afficher pour vous demander de continuer le minuteur";
+
+"Type";
+"Timer" = "Minuteur";
+"Countdown" = "Décompte";
+
+"Export Countdowns..." = "Exporter les Décomptes...";
+
+"Do you really want to delete this timer?" = "Voulez-vous vraiment supprimer ce minuteur?";
+"Delete Timer" = "Supprimer le Minuteur";
+
+"Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods." = "Les décomptes permettent d'afficher le temps restant avant une date précise, les minuteurs permettent de mesurer des petites durées.";
+
+"Countdown finished!" = "Décompte fini!";
+"Timer finished!" = "Minuteur fini!";

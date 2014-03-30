@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Name</key>
+		<string>Alarm</string>
+		<key>Filename</key>
+		<string>alarm.caf</string>
+		<key>ID</key>
+		<string>alarm</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Alien Response</string>
+		<key>Filename</key>
+		<string>alien_response.caf</string>
+		<key>ID</key>
+		<string>alien</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Boing-Boing</string>
+		<key>Filename</key>
+		<string>boing.caf</string>
+		<key>ID</key>
+		<string>boing</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Cow</string>
+		<key>Filename</key>
+		<string>moo.caf</string>
+		<key>ID</key>
+		<string>cow</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Crazy Duck</string>
+		<key>Filename</key>
+		<string>ducky_mad.caf</string>
+		<key>ID</key>
+		<string>duck</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Drump</string>
+		<key>Filename</key>
+		<string>drump.caf</string>
+		<key>ID</key>
+		<string>drump</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Piano</string>
+		<key>Filename</key>
+		<string>piano.caf</string>
+		<key>ID</key>
+		<string>piano</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Power Switch</string>
+		<key>Filename</key>
+		<string>power_switch.caf</string>
+		<key>ID</key>
+		<string>switch</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Rooster</string>
+		<key>Filename</key>
+		<string>coq.caf</string>
+		<key>ID</key>
+		<string>coq</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Ringtone</string>
+		<key>Filename</key>
+		<string>ring.caf</string>
+		<key>ID</key>
+		<string>ring</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Signal Delay</string>
+		<key>Filename</key>
+		<string>signal_delay.caf</string>
+		<key>ID</key>
+		<string>signal</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Suspense</string>
+		<key>Filename</key>
+		<string>suspence.caf</string>
+		<key>ID</key>
+		<string>suspence</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Transmitted Waves</string>
+		<key>Filename</key>
+		<string>transmitted_waves.caf</string>
+		<key>ID</key>
+		<string>waves</string>
+	</dict>
+</array>
+</plist>

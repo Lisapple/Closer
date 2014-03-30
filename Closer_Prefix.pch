@@ -1,0 +1,29 @@
+//
+// Prefix header for all source files of the 'Closer' target in the 'Closer' project
+//
+
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "Countdown.h"// Include Countdown to get it into all classes
+#endif
+
+#define CountdownDidSynchronizeNotification @"CountdownDidSynchronizeNotification"
+#define CountdownDidUpdateNotification @"CountdownDidUpdateNotification"
+
+#if TARGET_IPHONE_SIMULATOR
+#define NSDebugLog(format, ...)  NSLog(format, ##__VA_ARGS__)
+#else
+#define NSDebugLog(format, ...)
+#endif
+
+CG_INLINE void NSFrameLog(CGRect rect)
+{
+	NSDebugLog(@"{%.1f, %.1f} {%.1f, %.1f}", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+};
+
+#define kDefaultEventDuration 7200 // The default duration for EKEvent and VEvent = 60 * 60 * 2 seconds = 2 hours
+
+#define TARGET_IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+
+#define OrderComparisonResult(A, B) ( (A < B)? NSOrderedAscending : ((A > B)? NSOrderedDescending : NSOrderedSame) )

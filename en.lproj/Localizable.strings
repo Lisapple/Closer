@@ -1,0 +1,240 @@
+/* 
+   Localizable.strings
+   Closer
+
+   Created by Max on 3/10/11.
+   Copyright 2011 Lis@cintosh. All rights reserved.
+ */
+ 
+/* MessageViewControler */
+"Message";
+"Clear";
+"This message will be shown when countdown will be finished.";
+"UNDO_MESSAGE_ACTION" = "Clearing Message";
+
+/* EditAllCountdownViewController */
+"All Countdowns";
+"New Countdown";
+"New Countdown %i";
+"You must delete at least one countdown to add a new countdown.";
+"OK";
+
+/* SettingsViewController */
+"Settings";
+"Edit All";
+"Closer & Closer %@\nCopyright © 2013, Lis@cintosh\n";
+"Name";
+"Date & Time";
+"Message";
+"Song";
+"No date";
+
+"Do you really want to delete this countdown?";
+"Delete Countdown";
+
+"More information?";
+"Cancel";
+"Feedback & Support";
+"Send me an e-mail";
+"Visit my website";
+"See all my applications";
+
+"Closer & Closer";
+
+/* NameViewController */
+"Name";
+"The name of the countdown can help you to identify it.";
+
+/* DatePickerViewController */
+//"Date & Time"; // Already defined on SettingsViewController
+"UNDO_DATE_ACTION" = "Date Change";
+
+/* SongPickerViewController */
+"Song";
+"None";
+"Default";
+
+/* PageView */
+
+"and";
+"Current countdown settings";
+"Go to countdown settings";
+
+"DAYS_MANY" = "Days";
+"DAY_ONE" = "Day";
+"DAYS_ZERO" = "Days";
+
+"HOURS_MANY" = "Hours";
+"HOUR_ONE" = "Hour";
+"HOURS_ZERO" = "Hours";
+
+"MINUTES_MANY" = "Minutes";
+"MINUTE_ONE" = "Minute";
+"MINUTES_ZERO" = "Minutes";
+
+"SECONDS_MANY" = "Seconds";
+"SECOND_ONE" = "Second";
+"SECONDS_ZERO" = "Seconds";
+
+/* Others */
+"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Countdown finished!";
+"COUNTDOWN_FINISHED_MESSAGE %@" = "The countdown \"%@\" is finished.";
+
+"TIMER_FINISHED_DEFAULT_MESSAGE" = "Timer finished!";
+"TIMER_FINISHED_MESSAGE %@" = "The timer \"%@\" is finished.";
+
+/* Countdown */
+"READING_ERROR_ALERT_TITLE" = "Reading Error!";
+"READING_ERROR_ALERT_MESSAGE" = "An error appears when reading on disk, the file could be corrupted. You should delete the application and re-install it.";
+
+"WRITING_ERROR_ALERT_TITLE" = "Wrinting Error!";
+"WRITING_ERROR_ALERT_MESSAGE %@" = "An error appears when wrinting on disk. You should check for available space on your %@ or restart it.";
+
+"DEFAULT_STYLE" = "Default";
+"LCD_STYLE" = "LCD Screen";
+"BOARD_STYLE" = "Board";
+"PAPER_STYLE" = "Letter";
+"TIMES_STYLE" = "New Time";
+
+"NO_TITLE_PLACEHOLDER" = "- No Title -";
+
+/* EditAllCountdownViewController */
+"Import from Calendar";
+"Export...";
+
+"UNDO_DELETE_COUNTDOWN_ACTION" = "Countdown Deleting";
+
+/* ExportViewController */
+"Choose Countdowns";
+"Export";
+"You can export checked countdowns into\niCalendar file format in iTunes Sharing or\nadd them to the calendar app to your %@.";
+"Export as iCalendar";
+"Export to calendar";
+"Countdown finished";
+"Export %@";
+" and one more";
+" and %i more";
+"You can retreive the export file as \"%@.%@\" into iTunes Sharing.";
+"Export Succeed!";
+"All countdowns have been added as event in the calendar app into the calendar named \"%@\".";
+
+/* ImportFromCalendarViewController */
+"Choose Events";
+"Import";
+"No Future Events";
+
+"and one more";
+"and %i more";
+"Event named \"%@\" could not be imported because the limit of countdown have been reach. %@";
+"Events named \"%@\" %@ could not be imported because the limit of countdown have been reach. %@";
+"Delete some countdowns and retry to import these events.";
+
+"Birthdays";
+
+/*** From 1.1 ***/
+/* ImportFromWebsiteViewController_Pad */
+"Import";
+"Paste";
+"Do you want to use\n %@ and %@\nas passwords to import?";
+"Import";
+
+"No Countdowns found";
+"Check that:\n%@ and %@\nare two correct passwords";
+
+"Connection Error";
+
+/* ImportFromWebsiteViewController_Phone */
+"Enter the First Password";
+"Enter the Second Password";
+
+/* ImportFromCalendarViewController */
+"Delete some countdowns and retry to import these event.";
+
+/* ExportViewController */
+"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?";
+"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?";
+"Export to website";
+
+/* ExportToWebsiteViewController */
+"Error!";
+"Exported to Website";
+"Show on Safari";
+
+/* EditAllCountdownViewController */
+"Import from Calendar";
+"Access Denied!";
+"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.";
+
+"Import with Passwords";
+"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE" = "You need to have two valid passwords from closer.lisacintosh.com to import countdowns.\nYou can export your countdowns online from \"Export... > Export to website\".";
+
+/* ExportViewController */
+"Export to website";
+"No Countdowns";
+
+/* MainViewController_Pad */
+"Show Countdowns Online";
+"Go to my website";
+"Delete";
+
+
+
+
+"New Timer";
+"New Timer %i";
+"%ld timers";
+"No timers";
+
+"Duration";
+"Durations";
+
+"Days";
+"days";
+"day";
+"Hours";
+"hours";
+"hour";
+"Minutes";
+"minutes";
+"minute";
+"min";
+"Seconds";
+"seconds";
+"second";
+"sec";
+"seconds_0" = "secondes";
+
+"Continue";
+"Resume";
+
+" and ";
+
+"d";
+"h";
+"m";
+"s";
+
+"Ask to Continue";
+"Ask";
+"None";
+"For every timers";
+"When all timers finished";
+"An alert can be shown to ask you to continue the timer.";
+
+"Type";
+"Timer";
+"Countdown";
+
+"No Durations";
+"no timers" = "no durations";
+"%ld timers" = "%ld durations";
+
+"Export Countdowns...";
+
+"Do you really want to delete this timer?";
+"Delete Timer";
+
+"Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods.";
+
+"Countdown finished!";
+"Timer finished!";
