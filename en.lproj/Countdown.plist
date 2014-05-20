@@ -52,7 +52,7 @@
 		<key>durations</key>
 		<array>
 			<integer>60</integer>
-			<string>30</string>
+			<integer>30</integer>
 		</array>
 		<key>prompt</key>
 		<integer>2</integer>
