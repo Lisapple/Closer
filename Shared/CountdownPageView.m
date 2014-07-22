@@ -63,7 +63,7 @@ static UINib * nib = nil, * landscapeNib = nil;
 + (UINib *)landscapeNib
 {
 	if (!landscapeNib) {
-		landscapeNib = [UINib nibWithNibName:@"PageViewLandscape" bundle:[NSBundle mainBundle]];
+		landscapeNib = [UINib nibWithNibName:@"CountdownPageViewLandscape" bundle:[NSBundle mainBundle]];
 	}
 	
 	return landscapeNib;
