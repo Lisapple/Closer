@@ -39,13 +39,6 @@
 
 - (NSInteger)selectedPageIndex;
 
-#pragma mark Page Memory Managing
-
-- (void)loadPageAtIndex:(NSInteger)pageIndex;
-- (void)loadAllPages;
-- (void)unloadPageAtIndex:(NSInteger)pageIndex;
-- (void)unloadHiddenPages;
-
 #pragma mark Add Page
 
 - (void)addPageWithCountDown:(Countdown *)aCountdown;
@@ -69,7 +62,7 @@
 
 #pragma mark Show Description Managment
 
-- (void)showDescriptions:(BOOL)show animated:(BOOL)animated;
+//- (void)showDescriptions:(BOOL)show animated:(BOOL)animated;
 
 #pragma mark UIPageControl Managment
 

@@ -22,11 +22,11 @@
 /* SettingsViewController */
 "Settings";
 "Edit All";
-"Closer & Closer %@\nCopyright © 2013, Lis@cintosh\n";
+"Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n";
 "Name";
 "Date & Time";
 "Message";
-"Song";
+"Sound";
 "No date";
 
 "Do you really want to delete this countdown?";
@@ -50,7 +50,7 @@
 "UNDO_DATE_ACTION" = "Date Change";
 
 /* SongPickerViewController */
-"Song";
+"Sound";
 "None";
 "Default";
 
@@ -60,21 +60,21 @@
 "Current countdown settings";
 "Go to countdown settings";
 
-"DAYS_MANY" = "Days";
-"DAY_ONE" = "Day";
-"DAYS_ZERO" = "Days";
+"DAYS_MANY" = "days";
+"DAY_ONE" = "day";
+"DAYS_ZERO" = "days";
 
-"HOURS_MANY" = "Hours";
-"HOUR_ONE" = "Hour";
-"HOURS_ZERO" = "Hours";
+"HOURS_MANY" = "hours";
+"HOUR_ONE" = "hour";
+"HOURS_ZERO" = "hours";
 
-"MINUTES_MANY" = "Minutes";
-"MINUTE_ONE" = "Minute";
-"MINUTES_ZERO" = "Minutes";
+"MINUTES_MANY" = "minutes";
+"MINUTE_ONE" = "minute";
+"MINUTES_ZERO" = "minutes";
 
-"SECONDS_MANY" = "Seconds";
-"SECOND_ONE" = "Second";
-"SECONDS_ZERO" = "Seconds";
+"SECONDS_MANY" = "seconds";
+"SECOND_ONE" = "second";
+"SECONDS_ZERO" = "seconds";
 
 /* Others */
 "COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Countdown finished!";
@@ -90,11 +90,11 @@
 "WRITING_ERROR_ALERT_TITLE" = "Wrinting Error!";
 "WRITING_ERROR_ALERT_MESSAGE %@" = "An error appears when wrinting on disk. You should check for available space on your %@ or restart it.";
 
-"DEFAULT_STYLE" = "Default";
-"LCD_STYLE" = "LCD Screen";
-"BOARD_STYLE" = "Board";
-"PAPER_STYLE" = "Letter";
-"TIMES_STYLE" = "New Time";
+"PAGE_STYLE_NIGHT" = "Night";
+"PAGE_STYLE_DAY" = "Day";
+"PAGE_STYLE_DAWN" = "Dawn";
+"PAGE_STYLE_OASIS" = "Oasis";
+"PAGE_STYLE_SPRING" = "Spring";
 
 "NO_TITLE_PLACEHOLDER" = "- No Title -";
 
@@ -238,3 +238,5 @@
 
 "Countdown finished!";
 "Timer finished!";
+
+"More";

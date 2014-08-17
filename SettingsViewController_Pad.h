@@ -9,9 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @class Countdown;
-@interface SettingsViewController_Pad : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate>
+@interface SettingsViewController_Pad : UITableViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate>
 {
-	IBOutlet UITableView * tableView;
 	Countdown * countdown;
 	
 	@private

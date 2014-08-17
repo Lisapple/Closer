@@ -9,10 +9,8 @@
 #import "DatePickerViewController.h"
 
 #import "Countdown.h"
-#import "MyDatePicker.h"
 
 #import "NSDate+addition.h"
-#import "UIColor+addition.h"
 
 @interface DatePickerViewController (PrivateMethods)
 
@@ -34,50 +32,45 @@
 
 - (void)viewDidLoad
 {
-	self.title = NSLocalizedString(@"Date & Time", nil);
+	[super viewDidLoad];
 	
-	/*
-	 UIBarButtonItem * doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-	 target:self
-	 action:@selector(done:)];
-	 self.navigationItem.rightBarButtonItem = doneButton;
-	 [doneButton release];
-	 
-	 UIBarButtonItem * cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-	 target:self
-	 action:@selector(cancel:)];
-	 self.navigationItem.leftBarButtonItem = cancelButton;
-	 [cancelButton release];
-	 */
+	self.title = NSLocalizedString(@"Date & Time", nil);
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
 	
 	[tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
-						   animated:NO 
+						   animated:NO
 					 scrollPosition:UITableViewScrollPositionNone];
 	
-	tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView = backgroundView;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+        
+        tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        
+        UIView * backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        tableView.backgroundView = backgroundView;
+    }
 	
 	tableView.alwaysBounceVertical = NO;
 	tableView.scrollEnabled = NO;
 	
+	if (TARGET_IS_IOS7_OR_LATER())
+		self.view.tintColor = [UIColor blackColor];
+	
 	[self reloadData];
-	
-	[super viewDidLoad];
-	
 	
 	NSDebugLog(@"scheduledLocalNotifications: %i local notification(s)", [[UIApplication sharedApplication] scheduledLocalNotifications].count);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+	[super viewWillAppear:animated];
+	
 	NSDate * endDate = countdown.endDate;
 	hasTimeDate = (endDate != nil && ([endDate timeIntervalSinceNow] > 0));// If endDate is nil or passed, we don't have a valid date and consider time as invalid
 	
@@ -90,12 +83,6 @@
 	[datePicker setDate:date animated:NO];
 	datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60];// minimumDate = now + 1 minute
 	datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:(100. * 365. * 24. * 60. * 60.)];// maximumDate = now + 100 years
-	
-	/*
-	 if (![self.date isEqualToDate:datePicker.date]) {
-	 [self datePickerDidChange:nil];// Force datePickerDidChange: call when datePicker set minimum date automatly (when date is earlier than datePicker minium date per example)
-	 }
-	 */
 	
 	[self reloadData];
 	
@@ -114,20 +101,17 @@
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
 		updateDatePickerTimer = [NSTimer scheduledTimerWithTimeInterval:60.// Every minutes
-																  target:self
-																selector:@selector(updatePickerMinimalDate)
-																userInfo:nil
-																 repeats:YES];
+                                                                 target:self
+                                                               selector:@selector(updatePickerMinimalDate)
+                                                               userInfo:nil
+                                                                repeats:YES];
 	});
-	
-	[super viewWillAppear:animated];
-	
-	// Layout once here to ensure the current orientation is respected.
-	//[self layoutPicker:[UIApplication sharedApplication].statusBarOrientation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+	[super viewWillDisappear:animated];
+	
 	if (hasTimeDate) {
 		NSTimeInterval timeIntervalSince1970 = [date timeIntervalSince1970];
 		NSTimeInterval seconds = (timeIntervalSince1970 - ((int)(timeIntervalSince1970 / 60) * 60.));
@@ -140,8 +124,6 @@
 		[updateDatePickerTimer invalidate];
 		updateDatePickerTimer = nil;
 	}
-	
-	[super viewWillDisappear:animated];
 }
 
 - (void)setDatePickerDate:(NSDate *)aDate
@@ -210,7 +192,7 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		
-		cell.textLabel.textAlignment = UITextAlignmentCenter;
+		cell.textLabel.textAlignment = NSTextAlignmentCenter;
 	}
 	
 	if (cell.isHighlighted) {
@@ -255,11 +237,6 @@
 	[self reloadData];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || UIInterfaceOrientationIsPortrait(interfaceOrientation));
-}
-
 // Use frame of containing view to work out the correct origin and size
 // of the UIDatePicker. (=> http://niftybean.com/main/blog/21-rotating-uipickerview-between-landscape-and-portrait-orientations )
 // And subclass of the UIDatePicker form http://www.llamagraphics.com/developer/using-uidatepicker-landscape-mode
@@ -277,28 +254,5 @@
 	
 	[super willAnimateRotationToInterfaceOrientation:orientation duration:duration];
 }
-
-- (BOOL)canBecomeFirstResponder
-{
-	return YES;// Return YES to receive shake to undo gesture
-}
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-	
-	// Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload
-{
-	self.tableView = nil;
-	self.datePicker = nil;
-	
-	[super viewDidUnload];
-}
-
-
-
 
 @end

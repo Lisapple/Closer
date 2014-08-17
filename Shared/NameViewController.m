@@ -8,9 +8,6 @@
 
 #import "NameViewController.h"
 
-#import "UIColor+addition.h"
-#import "UITableView+addition.h"
-
 @implementation NameViewController
 
 @synthesize cellTextField;
@@ -25,19 +22,25 @@
 	tableView.delegate = self;
 	tableView.dataSource = self;
 	
-	tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.alwaysBounceVertical = YES;
-	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView = backgroundView;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		
+		UIView * backgroundView = [[UIView alloc] init];
+		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView = backgroundView;
+	}
+    
+    tableView.alwaysBounceVertical = YES;
+    
+	if (TARGET_IS_IOS7_OR_LATER())
+		self.view.tintColor = [UIColor blackColor];
 	
 	cellTextField.text = countdown.name;
 	cellTextField.delegate = self;
-	
-	[tableView setFooterText:NSLocalizedString(@"The name of the countdown can help you to identify it.", nil)];
 	
 	[super viewDidLoad];
 }
@@ -67,6 +70,11 @@
 		return @" ";
 	else
 		return @"";
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+	return NSLocalizedString(@"The name of the countdown can help you to identify it.", nil);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -111,29 +119,5 @@
 	
 	[super willAnimateRotationToInterfaceOrientation:orientation duration:duration];
 }
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-	
-	// Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload
-{
-	self.cellTextField = nil;
-	self.tableView = nil;
-	
-	[super viewDidUnload];
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || UIInterfaceOrientationIsPortrait(interfaceOrientation));
-}
-
-
 
 @end

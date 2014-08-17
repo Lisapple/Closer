@@ -22,11 +22,11 @@
 /* SettingsViewController */
 "Settings" = "Réglages";
 "Edit All" = "Tout Modifier";
-"Closer & Closer %@\nCopyright © 2013, Lis@cintosh\n" = "Closer & Closer %@\nCopyright © 2013, Lis@cintosh\n";
+"Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n" = "Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n";
 "Name" = "Nom";
 "Date & Time" = "Date et Heure";
 "Message" = "Message";
-"Song" = "Sonnerie";
+"Sound" = "Sonnerie";
 "Theme" = "Thème";
 "No date" = "Aucune Date";
 
@@ -51,7 +51,7 @@
 "UNDO_DATE_ACTION" = "Modification";
 
 /* SongPickerViewController */
-//"Song" = "";
+//"Sound" = "";
 "None" = "Aucune";
 "Default" = "Par défaut";
 
@@ -61,21 +61,21 @@
 "Current countdown settings" = "Réglages du décompte";
 "Go to countdown settings" = "Aller aux réglages du décompte";
 
-"DAYS_MANY" = "Jours";
-"DAY_ONE" = "Jour";
-"DAYS_ZERO" = "Jour";
+"DAYS_MANY" = "jours";
+"DAY_ONE" = "jour";
+"DAYS_ZERO" = "jour";
 
-"HOURS_MANY" = "Heures";
-"HOUR_ONE" = "Heure";
-"HOURS_ZERO" = "Heure";
+"HOURS_MANY" = "heures";
+"HOUR_ONE" = "heure";
+"HOURS_ZERO" = "heure";
 
-"MINUTES_MANY" = "Minutes";
-"MINUTE_ONE" = "Minute";
-"MINUTES_ZERO" = "Minute";
+"MINUTES_MANY" = "minutes";
+"MINUTE_ONE" = "minute";
+"MINUTES_ZERO" = "minute";
 
-"SECONDS_MANY" = "Secondes";
-"SECOND_ONE" = "Seconde";
-"SECONDS_ZERO" = "Seconde";
+"SECONDS_MANY" = "secondes";
+"SECOND_ONE" = "seconde";
+"SECONDS_ZERO" = "seconde";
 
 /* Others */
 "COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Décompte terminé!";
@@ -91,11 +91,11 @@
 "WRITING_ERROR_ALERT_TITLE" = "Erreur d'écriture!";
 "WRITING_ERROR_ALERT_MESSAGE %@" = "Une erreur s'est produite lorsque l'application a voulu écrire dans un fichier. Vous devriez vérifier l'espace disponible sur votre %@ ou le redémarrer.";
 
-"DEFAULT_STYLE" = "Par défaut";
-"LCD_STYLE" = "Écran LCD";
-"BOARD_STYLE" = "Tableau";
-"PAPER_STYLE" = "Papier";
-"TIMES_STYLE" = "New Time";
+"PAGE_STYLE_NIGHT" = "Nuit";
+"PAGE_STYLE_DAY" = "Jour";
+"PAGE_STYLE_DAWN" = "Aube";
+"PAGE_STYLE_OASIS" = "Oasis";
+"PAGE_STYLE_SPRING" = "Printemps";
 
 "NO_TITLE_PLACEHOLDER" = "- Sans Titre -";
 
@@ -235,3 +235,5 @@
 
 "Countdown finished!" = "Décompte fini!";
 "Timer finished!" = "Minuteur fini!";
+
+"More" = "Plus";

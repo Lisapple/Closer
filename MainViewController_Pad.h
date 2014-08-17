@@ -29,7 +29,7 @@ enum DeleteButtonState {
 
 @class PageView;
 
-@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, PageViewDelegate>
+@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, PageViewDelegate, UIPopoverControllerDelegate>
 {
 	IBOutlet UIView * defaultNavigationBarView, * editNavigationBarView;
 	IBOutlet UIBarButtonItem * doneButton;
@@ -37,30 +37,24 @@ enum DeleteButtonState {
 	IBOutlet UIPageControl * pageControl;
 	
 	@private
-	BOOL editing;
 	NSInteger currentSettingsPageIndex;
 	int currentNavigationBarTag;
-	NSMutableArray * pageViews, * containerViews;
+	NSMutableArray * pageViews;
 	PageView * currentPageWithConfirmation;
 	
-	BOOL importActionSheetShowing;
-	UIActionSheet * importActionSheet;
+	BOOL shareActionSheetShowing;
+	UIActionSheet * shareActionSheet;
 	
-	UINavigationController * settingsNavigationController;
+	UIPopoverController * popover, * editPopover;
 }
 
 - (IBAction)new:(id)sender;
 - (IBAction)editAll:(id)sender;
 
 - (IBAction)done:(id)sender;
-- (IBAction)import:(id)sender;
-- (IBAction)export:(id)sender;
 
 - (IBAction)showPopover:(id)sender;
-//- (IBAction)showModal:(id)sender;
 - (IBAction)close:(id)sender;
-
-- (IBAction)showInfo:(id)sender;
 
 #pragma mark UIPageControl Managment
 - (IBAction)changePage:(id)sender;

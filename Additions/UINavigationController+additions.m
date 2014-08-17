@@ -15,4 +15,9 @@
 	return NO;
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	return (TARGET_IS_IPAD()) ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+}
+
 @end

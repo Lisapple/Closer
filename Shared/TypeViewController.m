@@ -8,11 +8,6 @@
 
 #import "TypeViewController.h"
 
-#import "CheckTableViewCell.h"
-
-#import "UIColor+addition.h"
-#import "UITableView+addition.h"
-
 @interface TypeViewController ()
 
 @end
@@ -22,15 +17,6 @@
 @synthesize tableView = _tableView;
 @synthesize countdown = _countdown;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Type", nil);
@@ -38,16 +24,20 @@
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+        _tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        _tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        
+        UIView * backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        _tableView.backgroundView = backgroundView;
+    }
 	_tableView.alwaysBounceVertical = YES;
 	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView = backgroundView;
-	
-	_tableView.footerText = NSLocalizedString(@"Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods.", nil);
+	if (TARGET_IS_IOS7_OR_LATER())
+		self.view.tintColor = [UIColor blackColor];
 	
     [super viewDidLoad];
 }
@@ -66,14 +56,18 @@
 	return 2;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+	return NSLocalizedString(@"Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods.", nil);
+}
+
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	
-	CheckTableViewCell * cell = (CheckTableViewCell *)[_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
 	if (cell == nil) {
-		cell = [[CheckTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	
@@ -98,29 +92,17 @@
 	_countdown.type = indexPath.row;
 	
 	if (indexPath.row == 0) {
-		[_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]]
+		[_tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]]
 						  withRowAnimation:UITableViewRowAnimationNone];
 	} else {
-		[_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]
+		[_tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]]
 						  withRowAnimation:UITableViewRowAnimationNone];
 	}
 	
-	CheckTableViewCell * cell = (CheckTableViewCell *)[_tableView cellForRowAtIndexPath:indexPath];
+	UITableViewCell * cell = [_tableView cellForRowAtIndexPath:indexPath];
 	cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	
 	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || UIInterfaceOrientationIsPortrait(interfaceOrientation));
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

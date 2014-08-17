@@ -26,53 +26,28 @@
 @synthesize backgroundImageView;
 @synthesize infoButton = _infoButton;
 
-@synthesize timeLabelLanscape = _timeLabelLanscape, descriptionLabelLandscape = _descriptionLabelLandscape;
-@synthesize leftButtonLandscape = _leftButtonLandscape;
-@synthesize nameLabelLandscape = _nameLabelLandscape;
-@synthesize backgroundImageViewLandscape;
-@synthesize infoButtonLandscape = _infoButtonLandscape;
-
-static UINib * nib = nil, * landscapeNib = nil;
-
-+ (void)initialize
-{
-	static BOOL initialized = NO;
-	if (!initialized) {
-		initialized = YES;
-		
-		nib = [UINib nibWithNibName:@"TimerPageView" bundle:[NSBundle mainBundle]];
-	}
-}
-
-
-#pragma mark - Landscape Nib Management
-
-+ (UINib *)landscapeNib
-{
-	if (!landscapeNib) {
-		landscapeNib = [UINib nibWithNibName:@"TimerPageViewLandscape" bundle:[NSBundle mainBundle]];
-	}
-	
-	return landscapeNib;
-}
-
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
-    if (self) {
+    if ((self = [super initWithFrame:frame])) {
+		UINib * nib = [UINib nibWithNibName:@"TimerPageView" bundle:[NSBundle mainBundle]];
 		[nib instantiateWithOwner:self options:nil];
-		[self addSubview:_contentView];
 		
-		/*
-		[[TimerPageView landscapeNib] instantiateWithOwner:self options:nil];
-		[self addSubview:_contentViewLandscape];
-		*/
+		_contentView.frame = self.bounds;
+		_contentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+		[self.scrollView addSubview:_contentView];
 		
-		UIFont * font = [UIFont fontWithName:@"Helvetica-Light" size:10.];
-		if (!font) { // If the "Helvetica Light" isn't available (iOS 4.3), set system ("Helvetica") as font
-			_timeLabel.font = [UIFont systemFontOfSize:72.];
-			_descriptionLabel.font = [UIFont systemFontOfSize:24.];
-			_nameLabel.font = [UIFont systemFontOfSize:17.];
+		// On iOS 6, create a custom info button (because tint color for info button doesn't work)
+		if (!TARGET_IS_IOS7_OR_LATER()) {
+			UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+			button.frame = _infoButton.frame;
+			button.autoresizingMask = _infoButton.autoresizingMask;
+			NSString * actionString = [_infoButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].lastObject;
+			[button addTarget:self
+					   action:NSSelectorFromString(actionString)
+			 forControlEvents:UIControlEventTouchUpInside];
+			_infoButton.hidden = YES;
+			_tintedInfoButton = button;
+			[_contentView.subviews.lastObject addSubview:_tintedInfoButton];
 		}
 		
 		[_timerView addTarget:self
@@ -80,43 +55,58 @@ static UINib * nib = nil, * landscapeNib = nil;
 			 forControlEvents:UIControlEventTouchUpInside];
 		
 		updateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification
-														  object:nil
-														   queue:[NSOperationQueue currentQueue]
-													  usingBlock:^(NSNotification * notification) {
-														  /* If the current timer's endDate change, reset the timer */
-														  if (self.countdown.currentDuration.doubleValue != duration && !isPaused) { //if (![self.countdown.endDate isEqualToDate:nextEndDate]) {
-															  
-															  duration = countdown.currentDuration.doubleValue;
-															  remainingSeconds = duration;
-															  countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:duration];
-															  _timerView.progression = 0.;
-															  
-															  isPaused = YES;
-															  
-															  NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
-														  }
-														  
-														  _nameLabel.text = _nameLabelLandscape.text = self.countdown.name;
-													  }];
+																		   object:nil
+																			queue:[NSOperationQueue currentQueue]
+																	   usingBlock:^(NSNotification * notification)
+						  {
+							  /* If the current timer's endDate change, reset the timer */
+							  if (countdown.currentDuration.doubleValue != duration && !isPaused) {
+								  
+								  duration = countdown.currentDuration.doubleValue;
+								  remainingSeconds = duration;
+								  countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:duration];
+								  _timerView.progression = 0.;
+								  
+								  isPaused = YES;
+								  
+								  NSDebugLog(@"End date changed for \"%@\"", countdown.name);
+							  }
+							  
+							  _nameLabel.text = countdown.name;
+						  }];
 		
 		continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
-														  object:nil
-														   queue:[NSOperationQueue currentQueue]
-													  usingBlock:^(NSNotification * notification) {
-														  if (notification.object == self.countdown && isPaused) {
-															  [self start];
-														  }
-													  }];
+																			 object:nil
+																			  queue:[NSOperationQueue currentQueue]
+																		 usingBlock:^(NSNotification * notification)
+							{
+								if (notification.object == countdown && isPaused)
+									[self start];
+							}];
 		// @TODO: Do something with updateObserver and continueObserver
     }
     return self;
+}
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+	_tintedInfoButton.frame = _infoButton.frame;
+	
+	UIView * containerView = _contentView.subviews.lastObject;
+	CGRect frame = containerView.frame;
+	frame.origin.x = ceilf((self.frame.size.width - containerView.frame.size.width) / 2.);
+	frame.origin.y = ceilf((self.frame.size.height - containerView.frame.size.height) / 2.);
+	containerView.frame = frame;
 }
 
 - (void)setCountdown:(Countdown *)aCountdown
 {
 	countdown = aCountdown;
 	
-	_nameLabel.text = _nameLabelLandscape.text = aCountdown.name;
+	self.style = aCountdown.style;
+	_nameLabel.text = aCountdown.name;
 	
 	if (countdown.durations.count) {
 		duration = [countdown.durations[countdown.durationIndex % countdown.durations.count] doubleValue];
@@ -126,16 +116,78 @@ static UINib * nib = nil, * landscapeNib = nil;
 	if (remainingSeconds <= 0.) { // If the timer is finished
 		isPaused = YES;
 		isFinished = YES;
-		_timeLabel.text = _timeLabelLanscape.text = NSLocalizedString(@"Resume", nil);
-		_descriptionLabel.hidden = _descriptionLabelLandscape.hidden = YES;
+		_timeLabel.text = NSLocalizedString(@"Resume", nil);
+		_descriptionLabel.hidden = YES;
 		
-		
-		UIImage * image = (isPaused)? [UIImage imageNamed:@"restart-button"] : [UIImage imageNamed:@"pause-button"];
-		[_leftButton setImage:image forState:UIControlStateNormal];
-		[_leftButtonLandscape setImage:image forState:UIControlStateNormal];
+		[self updateLeftButton];
 	}
 	
 	[self update];
+}
+
+- (void)setTextColor:(UIColor *)textColor
+{
+	_timerView.tintColor = textColor;
+	
+	_timeLabel.textColor = textColor;
+	_descriptionLabel.textColor = textColor;
+	_nameLabel.textColor = textColor;
+}
+
+- (void)setStyle:(PageViewStyle)aStyle
+{
+	super.style = aStyle;
+	
+	_contentView.backgroundColor = [[UIColor backgroundColorForPageStyle:aStyle] colorWithAlphaComponent:0.7];
+	[self setTextColor:[UIColor textColorForPageStyle:aStyle]];
+	
+	NSString * name = nil;
+	switch (aStyle) {
+		case PageViewStyleDay:
+			name = @"button-day"; break;
+		case PageViewStyleDawn:
+			name = @"button-dawn"; break;
+		case PageViewStyleOasis:
+			name = @"button-oasis"; break;
+		case PageViewStyleSpring:
+			name = @"button-spring"; break;
+		case PageViewStyleNight:
+		default:
+			name = @"button-night"; break;
+	}
+	if (!TARGET_IS_IOS7_OR_LATER()) {
+		NSString * filename = [NSString stringWithFormat:@"info-%@-iOS6", name];
+		[_tintedInfoButton setBackgroundImage:[UIImage imageNamed:filename]
+							   forState:UIControlStateNormal];
+	} else {
+		_infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
+	}
+	[self updateLeftButton];
+}
+
+- (void)updateLeftButton
+{
+	NSString * name = nil;
+	switch (self.style) {
+		case PageViewStyleDay:
+			name = @"button-day"; break;
+		case PageViewStyleDawn:
+			name = @"button-dawn"; break;
+		case PageViewStyleOasis:
+			name = @"button-oasis"; break;
+		case PageViewStyleSpring:
+			name = @"button-spring"; break;
+		case PageViewStyleNight:
+		default:
+			name = @"button-night"; break;
+	}
+	
+	NSString * filename = [NSString stringWithFormat:@"%@-%@-iOS%d",
+						   ((isPaused) ? @"reset" : @"pause"),
+						   name,
+						   (TARGET_IS_IOS7_OR_LATER()) ? 7 : 6];
+	[_leftButton setImage:[UIImage imageNamed:filename]
+				 forState:UIControlStateNormal];
 }
 
 - (NSString *)formattedDuration
@@ -176,29 +228,30 @@ static UINib * nib = nil, * landscapeNib = nil;
 
 - (void)update
 {
-	if (self.countdown.durations.count == 0) {
-	
+	if (countdown.durations.count == 0) {
+		
 		_timeLabel.text = NSLocalizedString(@"No Durations", nil);
-		_descriptionLabel.hidden = _descriptionLabelLandscape.hidden = YES;
+		_descriptionLabel.hidden = YES;
 		
 	} else if (!isPaused) {
 		if (countdown.endDate && countdown.durations.count) {
-			remainingSeconds = [countdown.endDate timeIntervalSinceNow];
+			remainingSeconds = countdown.endDate.timeIntervalSinceNow;
 			
 			if (remainingSeconds >= 0.) {
-				_timerView.progression = (duration - remainingSeconds) / duration;
-				_timeLabel.text = _timeLabelLanscape.text = [self formattedDuration];
-				_descriptionLabel.text = _descriptionLabelLandscape.text = [self formattedDescription];
-				_descriptionLabel.hidden = _descriptionLabelLandscape.hidden = NO;
+				[_timerView setProgression:(duration - remainingSeconds) / duration
+								  animated:YES];
+				_timeLabel.text = [self formattedDuration];
+				_descriptionLabel.text = [self formattedDescription];
+				_descriptionLabel.hidden = NO;
 				
 			} else { // Timer done or paused
 				if (!isFinished) {
 					if (countdown.promptState == PromptStateEveryTimers
 						|| (countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) { // Pause the timer and wait for the used to tap on "Continue"
 						[self pause];
-						_timerView.progression = 1.;
-						_timeLabel.text = _timeLabelLanscape.text = NSLocalizedString(@"Continue", nil);
-						_descriptionLabel.hidden = _descriptionLabelLandscape.hidden = YES;
+						[_timerView setProgression:1. animated:YES];
+						_timeLabel.text = NSLocalizedString(@"Continue", nil);
+						_descriptionLabel.hidden = YES;
 						isFinished = YES;
 						
 					} else { // Start the next timer
@@ -207,13 +260,13 @@ static UINib * nib = nil, * landscapeNib = nil;
 						countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:duration];
 						isFinished = NO;
 						
-						_timeLabel.text = _timeLabelLanscape.text = [self formattedDuration];
-						_descriptionLabel.hidden = _descriptionLabelLandscape.hidden = NO;
+						_timeLabel.text = [self formattedDuration];
+						_descriptionLabel.hidden = NO;
 					}
 				}
 			}
 		} else {
-			_timeLabel.text = _timeLabelLanscape.text = NSLocalizedString(@"Continue", nil);
+			_timeLabel.text = NSLocalizedString(@"Continue", nil);
 		}
 	}
 }
@@ -221,7 +274,7 @@ static UINib * nib = nil, * landscapeNib = nil;
 - (IBAction)pauseButtonAction:(id)sender
 {
 	if (isPaused) { // If already paused, reset the timer
-		remainingSeconds = duration = self.countdown.currentDuration.doubleValue;
+		remainingSeconds = duration = countdown.currentDuration.doubleValue;
 		_timerView.progression = 0.;
 	}
 	
@@ -230,7 +283,7 @@ static UINib * nib = nil, * landscapeNib = nil;
 
 - (void)tooglePause
 {
-	if (self.countdown.durations.count == 0) { // Don't allow "start" if no durations
+	if (countdown.durations.count == 0) { // Don't allow "start" if no durations
 		[self pause];
 		return ;
 	}
@@ -246,7 +299,7 @@ static UINib * nib = nil, * landscapeNib = nil;
 {
 	isPaused = YES;
 	
-	_timeLabel.text = _timeLabelLanscape.text = NSLocalizedString(@"Resume", nil);
+	_timeLabel.text = NSLocalizedString(@"Resume", nil);
 	
 	remainingSeconds = [countdown.endDate timeIntervalSinceNow];
 	countdown.endDate = nil;
@@ -274,11 +327,9 @@ static UINib * nib = nil, * landscapeNib = nil;
 
 - (void)reload
 {
-	UIImage * image = (isPaused)? [UIImage imageNamed:@"restart-button"] : [UIImage imageNamed:@"pause-button"];
-	[_leftButton setImage:image forState:UIControlStateNormal];
-	[_leftButtonLandscape setImage:image forState:UIControlStateNormal];
+	[self updateLeftButton];
 	
-	_descriptionLabel.hidden = _descriptionLabelLandscape.hidden = isPaused;
+	_descriptionLabel.hidden = isPaused;
 	
 	[self update];
 }
@@ -293,66 +344,6 @@ static UINib * nib = nil, * landscapeNib = nil;
 	/* Show settings */
 	if ([self.delegate respondsToSelector:@selector(pageViewWillShowSettings:)])
 		[self.delegate pageViewWillShowSettings:self];
-}
-
-- (void)setOrientation:(UIInterfaceOrientation)newOrientation
-{
-	orientation = newOrientation;
-	
-	if (UIInterfaceOrientationIsPortrait(orientation)) {
-		
-		_contentView.hidden = NO;
-		_contentViewLandscape.hidden = YES;
-		 
-		/*
-		[self addSubview:_contentView];
-		[_contentViewLandscape removeFromSuperview];
-		*/
-	} else if (UIInterfaceOrientationIsLandscape(orientation)) {
-		
-		/* Load Landscape Nib if it's not done yet */
-		if (!_contentViewLandscape) {
-			[[TimerPageView landscapeNib] instantiateWithOwner:self options:nil];
-			NSDebugLog(@"Instantiate landscapeNib.");
-			
-			UIFont * font = [UIFont fontWithName:@"Helvetica-Light" size:10.];
-			if (!font) { // If the "Helvetica Light" isn't available (iOS 4.3), set system ("Helvetica") as font
-				_timeLabelLanscape.font = [UIFont systemFontOfSize:72.];
-				_descriptionLabelLandscape.font = [UIFont systemFontOfSize:24.];
-				_nameLabelLandscape.font = [UIFont systemFontOfSize:17.];
-			}
-			
-			[self addSubview:_contentViewLandscape];
-			
-			self.countdown = self.countdown;// Force UI reload
-		}
-		
-		/*
-		 [self addSubview:_contentViewLandscape];
-		[_contentView removeFromSuperview];
-		 */
-		
-		_contentView.hidden = YES;
-		_contentViewLandscape.hidden = NO;
-	}
-	
-	[_timerView addTarget:self
-				   action:@selector(timerDidSelectAction:)
-		 forControlEvents:UIControlEventTouchUpInside];
-	
-	[self update];
-}
-
-#pragma - Page Resources Management
-
-- (void)load
-{
-	
-}
-
-- (void)unload
-{
-	
 }
 
 @end

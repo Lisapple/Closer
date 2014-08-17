@@ -18,10 +18,4 @@
 - (NSUInteger)numberOfFutureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
 - (NSArray *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
 
-/*** DEPRECATED ***/
-/*
-- (NSUInteger)numberOfFutureEventsFromCalendar:(EKCalendar *)calendar;
-- (NSArray *)futureEventsFromCalendar:(EKCalendar *)calendar;
-*/
-
 @end

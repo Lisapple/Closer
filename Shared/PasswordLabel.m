@@ -10,18 +10,12 @@
 
 @implementation PasswordLabel
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
 - (void)drawRect:(CGRect)rect
 {
-	[[UIImage imageNamed:@"password-field-background"] drawInRect:rect];
+	if (TARGET_IS_IOS7_OR_LATER())
+		[[UIImage imageNamed:@"password-field-background-iOS7"] drawInRect:rect];
+	else
+		[[UIImage imageNamed:@"password-field-background"] drawInRect:rect];
 	
 	[super drawRect:rect];
 }

@@ -32,7 +32,6 @@
 
 - (IBAction)done:(id)sender;
 - (IBAction)editAllCountdowns:(id)sender;
-- (IBAction)moreInfo:(id)sender;
 - (IBAction)deleteAction:(id)sender;
 
 // TODO: create PrivateMethods category

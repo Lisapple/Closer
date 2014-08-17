@@ -40,7 +40,7 @@
 														  calendars:@[calendar]];
 	NSArray * events = [self eventsMatchingPredicate:predicate];
 	if (!events) {// If "events" is nil, return an empty array
-		return [NSArray array];
+		return @[];
 	} else {// Else, return the sorted array
 		return [events sortedArrayUsingSelector:@selector(compareStartDateWithEvent:)];
 	}
@@ -83,30 +83,6 @@
 									}
 								}];
 	return (NSArray *)events;
-}
-
-
-/*** DEPRECATED ***/
-- (NSUInteger)numberOfFutureEventsFromCalendar:(EKCalendar *)calendar
-{
-	return [self numberOfFutureEventsFromCalendar:calendar includingRecurrent:YES];
-}
-
-- (NSArray *)futureEventsFromCalendar:(EKCalendar *)calendar
-{
-	return [self futureEventsFromCalendar:calendar includingRecurrent:YES];
-	
-	/*
-	 NSPredicate * predicate = [self predicateForEventsWithStartDate:[NSDate date]
-	 endDate:[NSDate distantFuture]// Fetch all future events that the eventStore could store
-	 calendars:@[calendar]];
-	 NSArray * events = [self eventsMatchingPredicate:predicate];
-	 if (!events) {// If "events" is nil, return an empty array
-	 return [NSArray array];
-	 } else {// Else, return the sorted array
-	 return [events sortedArrayUsingSelector:@selector(compareStartDateWithEvent:)];
-	 }
-	 */
 }
 
 @end

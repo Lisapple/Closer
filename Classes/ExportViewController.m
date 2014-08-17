@@ -10,13 +10,10 @@
 
 #import "ExportToWebsiteViewController.h"
 
-#import "CheckTableViewCell.h"
-
 #import "VCalendar.h"
 
 #import "NetworkStatus.h"
 
-#import "UIColor+addition.h"
 
 @interface ExportViewController (PrivateMethods)
 
@@ -35,61 +32,65 @@
 	NSString * title = NSLocalizedString(@"Choose Countdowns", nil);
 	NSArray * components = [title componentsSeparatedByString:@"\n"];
 	
-	if (components.count == 1) {
-		UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, 40.)];
-		titleLabel.backgroundColor = [UIColor clearColor];
-		titleLabel.text = title;
-		titleLabel.font = [UIFont boldSystemFontOfSize:20.];
-		titleLabel.minimumFontSize = 14.;
-		titleLabel.adjustsFontSizeToFitWidth = YES;
-		titleLabel.textAlignment = UITextAlignmentCenter;
-		titleLabel.textColor = [UIColor whiteColor];
-		titleLabel.shadowOffset = CGSizeMake(0., -1);
-		titleLabel.shadowColor = [UIColor blackColor];
-		self.navigationItem.titleView = titleLabel;
-		
+	if (TARGET_IS_IOS7_OR_LATER()) {
+		self.title = title;
 	} else {
-		
-		CGRect rect = CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
-		UIView * titleView = [[UIView alloc] initWithFrame:rect];
-		
-		float height = self.navigationController.navigationBar.frame.size.height / 3.;
-		
-		UILabel * upTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height / 2., self.navigationController.navigationBar.frame.size.width, height)];
-		upTitleLabel.backgroundColor = [UIColor clearColor];
-		upTitleLabel.text = [components objectAtIndex:0];
-		upTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
-		upTitleLabel.textAlignment = UITextAlignmentCenter;
-		upTitleLabel.textColor = [UIColor whiteColor];
-		upTitleLabel.shadowOffset = CGSizeMake(0., -1);
-		upTitleLabel.shadowColor = [UIColor blackColor];
-		
-		upTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		
-		[titleView addSubview:upTitleLabel];
-		
-		UILabel * downTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height * (1.5), self.navigationController.navigationBar.frame.size.width, height)];
-		downTitleLabel.backgroundColor = [UIColor clearColor];
-		downTitleLabel.text = [components objectAtIndex:1];
-		downTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
-		downTitleLabel.textAlignment = UITextAlignmentCenter;
-		downTitleLabel.textColor = [UIColor whiteColor];
-		downTitleLabel.shadowOffset = CGSizeMake(0., -1);
-		downTitleLabel.shadowColor = [UIColor blackColor];
-		
-		downTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		
-		[titleView addSubview:downTitleLabel];
-		
-		titleView.autoresizesSubviews = YES;
-		self.navigationItem.titleView = titleView;
+		if (components.count == 1) {
+			UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, 40.)];
+			titleLabel.backgroundColor = [UIColor clearColor];
+			titleLabel.text = title;
+			titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+			titleLabel.minimumScaleFactor = (14. / 20.);
+			titleLabel.adjustsFontSizeToFitWidth = YES;
+			titleLabel.textAlignment = NSTextAlignmentCenter;
+			titleLabel.textColor = [UIColor whiteColor];
+			titleLabel.shadowOffset = CGSizeMake(0., -1);
+			titleLabel.shadowColor = [UIColor blackColor];
+			self.navigationItem.titleView = titleLabel;
+			
+		} else {
+			
+			CGRect rect = CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+			UIView * titleView = [[UIView alloc] initWithFrame:rect];
+			
+			float height = self.navigationController.navigationBar.frame.size.height / 3.;
+			
+			UILabel * upTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height / 2., self.navigationController.navigationBar.frame.size.width, height)];
+			upTitleLabel.backgroundColor = [UIColor clearColor];
+			upTitleLabel.text = components[0];
+			upTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
+			upTitleLabel.textAlignment = NSTextAlignmentCenter;
+			upTitleLabel.textColor = [UIColor whiteColor];
+			upTitleLabel.shadowOffset = CGSizeMake(0., -1);
+			upTitleLabel.shadowColor = [UIColor blackColor];
+			
+			upTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+			
+			[titleView addSubview:upTitleLabel];
+			
+			UILabel * downTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height * (1.5), self.navigationController.navigationBar.frame.size.width, height)];
+			downTitleLabel.backgroundColor = [UIColor clearColor];
+			downTitleLabel.text = components[1];
+			downTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
+			downTitleLabel.textAlignment = NSTextAlignmentCenter;
+			downTitleLabel.textColor = [UIColor whiteColor];
+			downTitleLabel.shadowOffset = CGSizeMake(0., -1);
+			downTitleLabel.shadowColor = [UIColor blackColor];
+			
+			downTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+			
+			[titleView addSubview:downTitleLabel];
+			
+			titleView.autoresizesSubviews = YES;
+			self.navigationItem.titleView = titleView;
+		}
 	}
 	
 	UIBarButtonItem * importButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Export", nil)
 																	  style:UIBarButtonItemStyleDone
 																	 target:self
 																	 action:@selector(export:)];
-	if ([importButton respondsToSelector:@selector(setTintColor:)])
+	if (!TARGET_IS_IOS7_OR_LATER())
 		importButton.tintColor = [UIColor doneButtonColor];
 	
 	self.navigationItem.rightBarButtonItem = importButton;
@@ -102,7 +103,7 @@
 	/* Get only countdowns */
 	NSMutableArray * allCountdowns = [[NSMutableArray alloc] initWithCapacity:10];
 	for (Countdown * countdown in [Countdown allCountdowns]) {
-		if (countdown.type == CountdownTypeDefault)
+		if (countdown.type == CountdownTypeCountdown)
 			[allCountdowns addObject:countdown];
 	}
 	
@@ -114,14 +115,17 @@
 	tableView.delegate = self;
 	tableView.dataSource = self;
 	
-	tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView = backgroundView;
-	
+	tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		
+		UIView * backgroundView = [[UIView alloc] init];
+		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView = backgroundView;
+	}
+    
 	[tableView reloadData];
 	
     [super viewDidLoad];
@@ -131,7 +135,7 @@
 {
 	NSInteger count = 0;
 	for (Countdown * countdown in [Countdown allCountdowns]) {
-		if (countdown.type == CountdownTypeDefault)
+		if (countdown.type == CountdownTypeCountdown)
 			count++;
 	}
 	
@@ -141,10 +145,10 @@
 		UILabel * label = [[UILabel alloc] initWithFrame:frame];
 		label.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		label.backgroundColor = [UIColor clearColor];
-		label.lineBreakMode = UILineBreakModeWordWrap;
+		label.lineBreakMode = NSLineBreakByWordWrapping;
 		label.numberOfLines = 0;// Infinite number of line
 		label.textColor = [UIColor darkGrayColor];
-		label.textAlignment = UITextAlignmentCenter;
+		label.textAlignment = NSTextAlignmentCenter;
 		label.font = [UIFont boldSystemFontOfSize:18.];
 		label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
 		label.shadowOffset = CGSizeMake(0., 1.);
@@ -184,7 +188,7 @@
 	if (self.navigationController.viewControllers.count > 1) {// If the view controller has been pop intot the navigationController (iPhone)
 		[self.navigationController popViewControllerAnimated:YES];
 	} else {// Else, it has been show as modal
-		[self dismissModalViewControllerAnimated:YES];
+		[self dismissViewControllerAnimated:YES completion:NULL];
 	}
 }
 
@@ -205,14 +209,14 @@
 {
 	UITableViewCell * cell = nil;
 	
-	Countdown * countdown = [countdowns objectAtIndex:indexPath.row];
+	Countdown * countdown = countdowns[indexPath.row];
 	if ([countdown.endDate timeIntervalSinceNow] > 0. || countdown.type == CountdownTypeTimer) { // Disable finished countdowns and timers
 		
 		static NSString * cellIdentifier = @"CellID";
-		cell = (CheckTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
 		if (cell == nil) {
-			cell = [[CheckTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 		}
 		
 		cell.textLabel.text = countdown.name;
@@ -231,9 +235,11 @@
 		}
 		
 		cell.textLabel.text = countdown.name;
-		
 		cell.textLabel.textColor = [UIColor grayColor];
+		
 		cell.detailTextLabel.text = NSLocalizedString(@"Countdown finished", nil);
+		cell.detailTextLabel.textColor = [UIColor grayColor];
+		
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
 	
@@ -245,7 +251,7 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	Countdown * countdown = [countdowns objectAtIndex:indexPath.row];
+	Countdown * countdown = countdowns[indexPath.row];
 	
 	if ([countdown.endDate timeIntervalSinceNow] > 0.) {// Change check state only for valid (not finished) countdowns
 		UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
@@ -297,7 +303,7 @@
 {
 	if (selectedCountdowns.count  > 0) {// Create export file only when we've got one or many selected countdowns
 		
-		NSString * name = ((Countdown *)[selectedCountdowns objectAtIndex:0]).name;
+		NSString * name = ((Countdown *)selectedCountdowns[0]).name;
 		NSString * filename = [NSString stringWithFormat:NSLocalizedString(@"Export %@", nil), name];
 		
 		/* If we have many countdown, use somthing like "{First countdown name} and {remaining count} more". ex: "Countdown 1 and 2 more.ics" */
@@ -383,22 +389,7 @@
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:exportToWebsiteViewController];
 	
 	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentModalViewController:navigationController animated:YES];
+	[self presentViewController:navigationController animated:YES completion:NULL];
 }
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (UIInterfaceOrientationIsPortrait(interfaceOrientation) || UIInterfaceOrientationIsLandscape(interfaceOrientation));
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-	
-	self.tableView = nil;
-}
-
 
 @end

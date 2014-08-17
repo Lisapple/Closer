@@ -15,12 +15,12 @@
 #import "ImportFromCalendarViewController.h"
 #import "ImportFromWebsiteViewController_Pad.h"
 #import "ExportViewController.h"
+#import "EditViewController.h"
 
 #import "Countdown.h"
 
 #import "NetworkStatus.h"
 
-#import "UIColor+addition.h"
 #import "NSObject+additions.h"
 
 @implementation DeleteButton
@@ -70,43 +70,9 @@
 #define kDefaultNavigationBar 1
 #define kEditNavigationBar 2
 
-#define kImportAlertTag 1234
-
-/*** Views Structure ***
- * "scrollView"
- * {
- **	- containerView
- ** {
- *** - pageView (tag = 100)
- *** {
- **** - DeleteButton (tag = 1001, the red circle with white border, above the "confirmationView")
- **** - confirmationView (tag = 1002)
- **** {
- ***** - imageView (the background of the confirmation button)
- ***** - confirmationButton (the "Delete" button)
- **** }
- *** }
- *** - secondView (tag = 200, for settings)
- **	}
- * }
- */
-
-enum tags {
-	PageViewTag = 100,
-	DeleteButtonTag = 1001,
-	ConfirmationViewTag = 1002,
-	
-	SecondViewTag = 200
-};
-
+#define kShareAlertTag 1234
 
 @implementation MainViewController_Pad
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
-}
 
 #pragma mark - View lifecycle
 
@@ -118,29 +84,51 @@ enum tags {
 - (void)showNavigationBar:(NSInteger)navigationBarTag animated:(BOOL)animated
 {
 	if (navigationBarTag == kEditNavigationBar) {
-		CGRect frame = editNavigationBarView.frame;
-		frame.size.width = scrollView.frame.size.width;
-		editNavigationBarView.frame = frame;
 		
-		if ([doneButton respondsToSelector:@selector(setTintColor:)])
-			doneButton.tintColor = [UIColor doneButtonColor];
+		UIBarButtonItem * editItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+																				   target:self
+																				   action:@selector(editAction:)];
+		UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+																					target:self
+																					action:@selector(shareAction:)];
+		[self.navigationItem setLeftBarButtonItems:@[editItem, shareItem]
+										  animated:YES];
 		
-		editNavigationBarView.alpha = 0.;
-		[self.view addSubview:editNavigationBarView];
-		[UIView animateWithDuration:(animated)? 0.25 : 0.
-						 animations:^{ editNavigationBarView.alpha = 1.; }
-						 completion:^(BOOL finished) { [defaultNavigationBarView removeFromSuperview]; }];
+		UIBarButtonItem * doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+																				   target:self
+																				   action:@selector(done:)];
+		[self.navigationItem setRightBarButtonItem:doneItem animated:YES];
+		
 	} else {
-		CGRect frame = editNavigationBarView.frame;
-		frame.size.width = scrollView.frame.size.width;
-		defaultNavigationBarView.frame = frame;
+		UIBarButtonItem * addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+																				  target:self
+																				  action:@selector(new:)];
+		UIBarButtonItem * manageItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", nil)
+																		style:UIBarButtonItemStylePlain
+																	   target:self
+																	   action:@selector(editAll:)];
+		self.navigationItem.leftBarButtonItems = @[addItem, manageItem];
 		
-		defaultNavigationBarView.alpha = 0.;
-		[self.view addSubview:defaultNavigationBarView];
-		[UIView animateWithDuration:(animated)? 0.25 : 0.
-						 animations:^{ defaultNavigationBarView.alpha = 1.; }
-						 completion:^(BOOL finished) { [editNavigationBarView removeFromSuperview]; }];
+		CGRect frame = CGRectMake(0., 0., 23., 23.);
+		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
+		button.frame = frame;
+		[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
+		if (TARGET_IS_IOS7_OR_LATER())
+			button.tintColor = self.view.window.tintColor;
+		
+		if (TARGET_IS_IOS7_OR_LATER()) {
+			UIBarButtonItem * spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
+			spaceItem.width = 90.;
+			self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:button], spaceItem];
+		} else {
+			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+		}
+		
+		pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+		pageControl.pageIndicatorTintColor = [UIColor colorWithWhite:1. alpha:0.3];
+		self.navigationItem.titleView = pageControl;
 	}
+	
 	currentNavigationBarTag = navigationBarTag;
 }
 
@@ -154,7 +142,7 @@ enum tags {
 		
 		BOOL nameIsFree = YES;
 		for (int i = 0; i < countdowns.count; i++) {
-			Countdown * countdown = (Countdown *)[countdowns objectAtIndex:i];
+			Countdown * countdown = (Countdown *)countdowns[i];
 			if ([countdown.name isEqualToString:name]) {
 				nameIsFree = NO;
 				break;
@@ -175,7 +163,7 @@ enum tags {
 {
 	/* Create the countdown */
 	__block Countdown * aCountDown = [[Countdown alloc] init];
-	aCountDown.name = [self proposedNameForType:CountdownTypeDefault];
+	aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
 	
 	int numberOfRows = 2;
 	int numberOfColumns = 2;
@@ -187,7 +175,7 @@ enum tags {
 	if (scrollView.contentOffset.x < rect.origin.x) {// If the scrollView have to scroll, "pop" the new countdown after a delay
 		
 		/* Strech the scrollView to add a last page */
-		scrollView.contentSize = CGSizeMake(numberOfPages * scrollView.frame.size.width, scrollView.frame.size.height);
+		scrollView.contentSize = CGSizeMake(numberOfPages * scrollView.frame.size.width, 0.);
 		
 		/* Scroll to the countdown new position */
 		[scrollView setContentOffset:rect.origin
@@ -201,41 +189,29 @@ enum tags {
 	
 	[NSObject performBlock:^{
 		
-		PageView * pageView = [self createPageWithCountdown:aCountDown
-													atIndex:pageViews.count // After the last pageView ("pageViews.count - 1 + 1")
-												   animated:YES];
-		if (editing)
-			[self showDeleteButtonOnPage:pageView];
-		
+		[self createPageWithCountdown:aCountDown
+							  atIndex:pageViews.count // After the last pageView ("pageViews.count - 1 + 1")
+							 animated:YES];
 		[NSObject performBlock:^{ [Countdown addCountdown:aCountDown]; }
 					afterDelay:0.5];
 	}
 				afterDelay:delayInSeconds];
-	
-#if 0
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-		PageView * pageView = [self createPageWithCountdown:aCountDown
-													atIndex:([Countdown numberOfCountdowns] - 1)
-												   animated:YES];
-		
-		if (editing)
-			[self showDeleteButtonOnPage:pageView];
-		
-		/* The layout is updated after the synchronisation of countdowns */
-		[Countdown synchronize];
-	});
-#endif
 }
 
 - (IBAction)editAll:(id)sender
 {
 	if (currentNavigationBarTag != kEditNavigationBar) {
 		[self showNavigationBar:kEditNavigationBar animated:YES];
-		[self handleLongTapFrom:nil];
 	}
-	
-	editing = YES;
+}
+
+- (IBAction)editAction:(id)sender
+{
+	if (!editPopover.isPopoverVisible) {
+		EditViewController * editViewController = [[EditViewController alloc] init];
+		editPopover = [[UIPopoverController alloc] initWithContentViewController:editViewController];
+		[editPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:NO];
+	}
 }
 
 - (IBAction)done:(id)sender
@@ -243,59 +219,51 @@ enum tags {
 	if (currentNavigationBarTag == kEditNavigationBar) {
 		[self showNavigationBar:kDefaultNavigationBar animated:YES];
 	}
-	
-	for (CountdownPageView * pageView in pageViews) {
-		
-		/* Remove the Delete Button */
-		[[pageView viewWithTag:DeleteButtonTag] removeFromSuperview];
-		
-		/* Remove the confirmation view */
-		[[pageView viewWithTag:ConfirmationViewTag] removeFromSuperview];
-	}
-	
-	editing = NO;
 }
 
 - (void)networkStatusDidChange:(NSNotification *)notification
 {
-	if (importActionSheetShowing) {
-		[importActionSheet dismissWithClickedButtonIndex:-1 animated:NO];
-		importActionSheetShowing = NO;
-		[self import:nil];
+	if (shareActionSheetShowing) {
+		[shareActionSheet dismissWithClickedButtonIndex:-1 animated:NO];
+		shareActionSheetShowing = NO;
+		[self shareAction:nil];
 	}
 }
 
-- (IBAction)import:(id)sender
+- (IBAction)shareAction:(id)sender
 {
-	if (!importActionSheetShowing) {
+	if (!shareActionSheetShowing) {
 		BOOL isConnected = [NetworkStatus isConnected];
-		importActionSheet = [[UIActionSheet alloc] initWithTitle:nil
-														delegate:self
-											   cancelButtonTitle:nil
-										  destructiveButtonTitle:nil
-											   otherButtonTitles:NSLocalizedString(@"Import from Calendar", nil), nil];
+		shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil
+													   delegate:self
+											  cancelButtonTitle:nil
+										 destructiveButtonTitle:nil
+											  otherButtonTitles:NSLocalizedString(@"Import from Calendar", nil), nil];
 		if (isConnected)
-			[importActionSheet addButtonWithTitle:NSLocalizedString(@"Import with Passwords", nil)];
+			[shareActionSheet addButtonWithTitle:NSLocalizedString(@"Import with Passwords", nil)];
 		
-		importActionSheet.tag = kImportAlertTag;
-		[importActionSheet showFromBarButtonItem:(UIBarButtonItem *)sender
-										animated:NO];
+		[shareActionSheet addButtonWithTitle:NSLocalizedString(@"Export", nil)];
 		
-		importActionSheetShowing = YES;
+		shareActionSheet.tag = kShareAlertTag;
+		[shareActionSheet showFromBarButtonItem:(UIBarButtonItem *)sender
+									   animated:NO];
+		
+		shareActionSheetShowing = YES;
 	}
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	if (actionSheet.tag == kImportAlertTag) {// Import action sheet
+	if (actionSheet.tag == kShareAlertTag) {// Import action sheet
 		if (buttonIndex == 0) {
 			ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
 			UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromCalendarViewController];
 			navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 			navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-			[self presentModalViewController:navigationController
-									animated:YES];
-		} if (buttonIndex == 1) {
+			[self presentViewController:navigationController
+							   animated:YES
+							 completion:NULL];
+		} else if (buttonIndex == 1 && [NetworkStatus isConnected]) { // Export with password (only if connected)
 			
 			/* Show an alertView to introduce the import from passwords (if not already done) */
 			NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
@@ -311,13 +279,14 @@ enum tags {
 				[alertView show];
 				
 				[userDefaults setBool:YES forKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"];
-			} else {
+			} else if (buttonIndex >= 1) {
 				ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
 				UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
 				navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 				navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-				[self presentModalViewController:navigationController
-										animated:YES];
+				[self presentViewController:navigationController
+								   animated:YES
+								 completion:NULL];
 			}
 		}
 	} else {// Information action sheet
@@ -328,11 +297,6 @@ enum tags {
 			case 1:// Feedback & Support
 				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]];
 				break;
-				/*
-				 case 2:// Send me an e-mail
-				 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"mailto://4automator@googlemail.com"]];
-				 break;
-				 */
 			case 2:// Go to my website
 				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]];
 				break;
@@ -353,8 +317,8 @@ enum tags {
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-	if (actionSheet.tag == kImportAlertTag)
-		importActionSheetShowing = NO;
+	if (actionSheet.tag == kShareAlertTag)
+		shareActionSheetShowing = NO;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -363,66 +327,39 @@ enum tags {
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
 	navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentModalViewController:navigationController
-							animated:YES];
-}
-
-- (IBAction)export:(id)sender
-{
-	ExportViewController * exportViewController = [[ExportViewController alloc] init];
-	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:exportViewController];
-	navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentModalViewController:navigationController
-							animated:YES];
+	[self presentViewController:navigationController
+					   animated:YES
+					 completion:NULL];
 }
 
 - (void)showSettingsForPageAtIndex:(NSInteger)index
 {
-	/* Hide the delete confirmation */
-	[self hideDeleteConfirmationOnPage:currentPageWithConfirmation];
-	
 	/* Close the active settings */
 	[self closeActiveSettings];
-	
-	UIView * containerView = [containerViews objectAtIndex:index];
-	CGRect frame = containerView.bounds;
-	
-	__block PageView * pageView = [pageViews objectAtIndex:index];
 	
 	SettingsViewController_Pad * settingsViewController = [[SettingsViewController_Pad alloc] init];
 	settingsViewController.countdown = [Countdown countdownAtIndex:index];
 	
-	settingsNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
 	
-	UIView * secondView = [[UIView alloc] initWithFrame:frame];
+	popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
+	popover.delegate = self;
 	
-	frame = CGRectMake(20., 8., 320., 402.);
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
-		frame.size = CGSizeMake(450., 290.);
-	}
+	if (!TARGET_IS_IOS7_OR_LATER())
+		popover.popoverContentSize = CGSizeMake(popover.popoverContentSize.width, 480.);
 	
-	settingsNavigationController.view.frame = frame;
-	settingsNavigationController.view.clipsToBounds = YES;
-	[secondView addSubview:settingsNavigationController.view];
+	settingsViewController.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	
-	UIImageView * imageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"popover"] stretchableImageWithLeftCapWidth:50
-																													  topCapHeight:50]];
-	imageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-	imageView.frame = secondView.bounds;
-	[secondView addSubview:imageView];
+	PageView * pageView = pageViews[index];
+	CGRect rect = [self.view convertRect:pageView.infoButton.frame fromView:pageView];
+	CGPoint offset = CGPointMake(60., 0.);
+	if ([pageView isKindOfClass:TimerPageView.class])
+		offset = CGPointMake(45., 60.);
 	
-	secondView.tag = SecondViewTag;
-	
-	[containerView addSubview:secondView];
-	
-	[UIView transitionWithView:containerView
-					  duration:0.5
-					   options:UIViewAnimationOptionTransitionFlipFromRight
-					animations:^{
-						pageView.hidden = YES;
-					}
-					completion:NULL];
+	[popover presentPopoverFromRect:CGRectOffset(rect, offset.x, offset.y)
+							 inView:self.view
+		   permittedArrowDirections:(UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight)
+						   animated:NO];
 	
 	currentSettingsPageIndex = index;
 }
@@ -432,36 +369,15 @@ enum tags {
 	[self showSettingsForPageAtIndex:1];
 }
 
-- (void)closeSettingsForPageAtIndex:(NSInteger)index
-{
-	settingsNavigationController = nil;
-	
-	UIView * containerView = [containerViews objectAtIndex:index];
-	
-	PageView * pageView = [pageViews objectAtIndex:index];
-	pageView.countdown = [Countdown countdownAtIndex:index];
-	
-	[UIView transitionWithView:containerView
-					  duration:0.5
-					   options:UIViewAnimationOptionTransitionFlipFromLeft
-					animations:^{
-						UIView * secondView = [containerView viewWithTag:SecondViewTag];
-						[secondView removeFromSuperview];
-						pageView.hidden = NO;
-					}
-					completion:NULL];
-	currentSettingsPageIndex = -1;
-}
-
 - (void)closeActiveSettings
 {
-	if (currentSettingsPageIndex >= 0)
-		[self closeSettingsForPageAtIndex:currentSettingsPageIndex];
+	[popover dismissPopoverAnimated:YES];
+	popover = nil;
 }
 
 - (IBAction)close:(id)sender
 {
-	[self closeSettingsForPageAtIndex:1];
+	[self closeActiveSettings];
 }
 
 - (IBAction)showSettings:(id)sender
@@ -472,10 +388,10 @@ enum tags {
 		[self showSettingsForPageAtIndex:[pageViews indexOfObject:page]];
 }
 
-- (IBAction)showInfo:(id)sender
+- (IBAction)moreInfo:(id)sender
 {
 	NSDictionary * infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © 2013, Lis@cintosh\n", nil), [infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n", nil), infoDictionary[@"CFBundleShortVersionString"]];
 	
 	UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:title
 															  delegate:self
@@ -484,7 +400,6 @@ enum tags {
 													 otherButtonTitles:
 								   NSLocalizedString(@"Show Countdowns Online", nil),
 								   NSLocalizedString(@"Feedback & Support", nil),
-								   /*NSLocalizedString(@"Send me an e-mail", nil),*/
 								   NSLocalizedString(@"Go to my website", nil),
 								   NSLocalizedString(@"See all my applications", nil), nil];
 	
@@ -504,11 +419,36 @@ enum tags {
 	[self showSettingsForPageAtIndex:[pageViews indexOfObject:page]];
 }
 
+- (BOOL)pageViewShouldShowDeleteConfirmation:(PageView *)page
+{
+	if (currentPageWithConfirmation) {
+		[currentPageWithConfirmation hideDeleteConfirmation];
+		[NSObject performBlock:^{ currentPageWithConfirmation = nil; }
+					afterDelay:0.2];
+		return NO;
+	}
+	return YES;
+}
+
+- (void)pageViewWillShowDeleteConfirmation:(PageView *)page
+{
+	currentPageWithConfirmation = page;
+}
+
+- (void)pageViewDidHideDeleteConfirmation:(PageView *)page
+{
+	currentPageWithConfirmation = nil;
+}
+
+- (void)pageViewDeleteButtonDidTap:(PageView *)page
+{
+	[self deleteCountdown:page];
+}
+
 #pragma mark - Delete Management
 
-- (void)deleteCountdown:(id)sender
+- (void)deleteCountdown:(PageView *)pageView
 {
-	PageView * pageView = (PageView *)[[(UIButton *)sender superview] superview];
 	NSUInteger index = [pageViews indexOfObject:pageView];
 	if (index != NSNotFound) {
 		NSInteger oldNumberOfCountdowns = [Countdown numberOfCountdowns];
@@ -525,10 +465,10 @@ enum tags {
 			if (oldNumberOfPages != numberOfPages) {// If the number of pages has changed
 				
 				/* // @FIXME: Don't scroll to last page
-				CGRect lastPageFrame = CGRectMake((numberOfPages - 1) * scrollView.frame.size.width, 0., scrollView.frame.size.width, scrollView.frame.size.height);
-				[scrollView scrollRectToVisible:lastPageFrame animated:YES];
-				pageControl.currentPage = (numberOfPages - 1);
-				*/
+				 CGRect lastPageFrame = CGRectMake((numberOfPages - 1) * scrollView.frame.size.width, 0., scrollView.frame.size.width, scrollView.frame.size.height);
+				 [scrollView scrollRectToVisible:lastPageFrame animated:YES];
+				 pageControl.currentPage = (numberOfPages - 1);
+				 */
 				
 				[NSObject performBlock:^{ [self updateLayoutWithAnimation:NO]; } afterDelay:0.25];
 				
@@ -540,136 +480,10 @@ enum tags {
 	}
 }
 
-- (void)showDeletingConfirmation:(id)sender
-{
-	DeleteButton * button = (DeleteButton *)sender;
-	
-	/* Remove the confirmation if it's already shown */
-	if (button.state == DeleteButtonStateConfirmation) {
-		[self cancelDeletingConfirmation:sender];
-		return;
-	}
-	
-	/* Hide the last confirmation shown */
-	[self hideDeleteConfirmationOnPage:currentPageWithConfirmation];
-	
-	button.state = DeleteButtonStateConfirmation;
-	
-	CGRect frame = CGRectMake(-36., 4., 110., 40);
-	UIView * view = [[UIView alloc] initWithFrame:frame];
-	view.tag = ConfirmationViewTag;
-	
-	frame.origin = CGPointZero;
-	UIImageView * imageView = [[UIImageView alloc] initWithFrame:frame];
-	imageView.image = [[UIImage imageNamed:@"delete-view"] stretchableImageWithLeftCapWidth:12 topCapHeight:20];
-	[view addSubview:imageView];
-	
-	view.layer.anchorPoint = CGPointMake(0.15, 0.5);
-	view.transform = CGAffineTransformMakeRotation(-M_PI_2);
-	
-	view.alpha = 0.;
-	
-	frame = CGRectMake(35., 5., 67., 27.);
-	UIButton * confirmationButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	confirmationButton.frame = frame;
-	
-	//confirmationButton.exclusiveTouch = YES;
-	
-	confirmationButton.titleLabel.font = [UIFont boldSystemFontOfSize:14.];
-	confirmationButton.titleLabel.shadowOffset = CGSizeMake(0., -1);
-	
-	[confirmationButton setBackgroundImage:[[UIImage imageNamed:@"delete-confirmation-button"] stretchableImageWithLeftCapWidth:6 topCapHeight:14]
-								  forState:UIControlStateNormal];
-	
-	[confirmationButton setTitle:NSLocalizedString(@"Delete", nil)
-						forState:UIControlStateNormal];
-	
-	[confirmationButton addTarget:self
-						   action:@selector(deleteCountdown:)
-				 forControlEvents:UIControlEventTouchUpInside];
-	
-	[view addSubview:confirmationButton];
-	
-	PageView * pageView = (PageView *)button.superview;
-	[pageView insertSubview:view belowSubview:button];// Insert the delete view just above the delete badge
-	
-	[UIView animateWithDuration:0.25
-					 animations:^{
-						 view.alpha = 1.;
-						 view.transform = CGAffineTransformIdentity;
-					 }
-					 completion:^(BOOL finished) {  }];
-	
-	currentPageWithConfirmation = pageView;
-}
-
-- (void)cancelDeletingConfirmation:(id)sender
-{
-	DeleteButton * button = (DeleteButton *)sender;
-	if (button.state == DeleteButtonStateConfirmation) {
-		button.state = DeleteButtonStateShow;
-		
-		PageView * pageView = (PageView *)button.superview;
-		[self hideDeleteConfirmationOnPage:pageView];
-	}
-}
-
-- (void)handleLongTapFrom:(UIGestureRecognizer *)recognizer
-{
-	for (PageView * pageView in pageViews) {
-		[self showDeleteButtonOnPage:pageView];
-	}
-}
-
-- (void)showDeleteButtonOnPage:(PageView *)pageView
-{
-	DeleteButton * button = [DeleteButton buttonWithType:UIButtonTypeCustom];
-	button.frame = CGRectMake(8., 8., 28., 28.);
-	[button setImage:[UIImage imageNamed:@"delete-badge"]
-			forState:UIControlStateNormal];
-	[button addTarget:self
-			   action:@selector(showDeletingConfirmation:)
-	 forControlEvents:UIControlEventTouchUpInside];
-	
-	button.state = DeleteButtonStateShow;
-	button.tag = DeleteButtonTag;
-	
-	[pageView addSubview:button];
-	
-#if 0
-	/* Remove the long press recognizer from view to not be catched by the delete button */
-	NSArray * recognizers = [[pageView gestureRecognizers] copy];
-	for (UIGestureRecognizer * aRecognizer in recognizers) {
-		if ([aRecognizer isKindOfClass:[UILongPressGestureRecognizer class]])
-			[pageView removeGestureRecognizer:aRecognizer];
-	}
-	[recognizers release];
-#endif
-}
-
-- (void)hideDeleteConfirmationOnPage:(PageView *)pageView
-{
-	if (pageView) {
-		/* Rollback the delete button to the initial position */
-		DeleteButton * deleteButton = (DeleteButton *)[pageView viewWithTag:DeleteButtonTag];
-		deleteButton.state = DeleteButtonStateShow;
-		
-		/* Remove the confirmation view */
-		UIView * confirmationView = [pageView viewWithTag:ConfirmationViewTag];
-		[UIView animateWithDuration:0.25
-						 animations:^{
-							 confirmationView.alpha = 0.;
-							 confirmationView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-						 }
-						 completion:^(BOOL finished) { [confirmationView removeFromSuperview]; }];
-	}
-}
-
 - (void)update
 {
-	for (PageView * pageView in pageViews) {
-		[pageView update];
-	}
+	for (PageView * pageView in pageViews)
+		dispatch_async(dispatch_get_main_queue(), ^{ [pageView update]; });
 }
 
 #pragma mark - Invalidate Layout
@@ -683,52 +497,26 @@ enum tags {
 - (void)invalidateLayoutWithOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated
 {
 	NSArray * countdowns = [Countdown allCountdowns];
-	if (countdowns.count > containerViews.count) {// If we have countdown to add
+	if (countdowns.count > pageViews.count) {// If we have countdown to add
 		
-		NSInteger count = containerViews.count;
-		NSArray * newCountdowns = [countdowns subarrayWithRange:NSMakeRange(containerViews.count, (countdowns.count - containerViews.count))];
+		NSInteger count = pageViews.count;
+		NSArray * newCountdowns = [countdowns subarrayWithRange:NSMakeRange(pageViews.count, (countdowns.count - pageViews.count))];
 		for (Countdown * countdown in newCountdowns) {
-			PageView * pageView = [self createPageWithCountdown:countdown
-														atIndex:count
-													   animated:animated];
-			
-			if (editing) [self showDeleteButtonOnPage:pageView];
-			
-			count++;
+			[self createPageWithCountdown:countdown atIndex:count animated:animated];
+			++count;
 		}
 		
-	} else if (countdowns.count < containerViews.count) {// If we have countdowns to remove
+	} else if (countdowns.count < pageViews.count) {// If we have countdowns to remove
 		
-		NSRange range = NSMakeRange(countdowns.count - 1, (containerViews.count - countdowns.count));
-		[containerViews removeObjectsInRange:range];
-		[pageViews removeObjectsInRange:range];
+		NSRange range = NSMakeRange(countdowns.count, (pageViews.count - countdowns.count));
+		for (PageView * pageView in [pageViews objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range]])
+			[self deletePageViewAtIndex:[pageViews indexOfObject:pageView] animated:YES];
 	}
 	
 	/* Reload remaining PageView*/
 	for (int i = 0; i < countdowns.count; i++) {
 		[self reloadPageViewAtIndex:i];
 	}
-	
-#if 0
-	NSInteger index = 0;
-	for (Countdown * countdown in countdowns) {
-		
-		PageView * pageView = pageViews[index];
-		/* If the type of page doesn't match with the type of countdown/timer, recreate a new page with the correct type */
-		if ((countdown.type == CountdownTypeTimer && [pageView isKindOfClass:[CountdownPageView class]])
-			|| (countdown.type == CountdownTypeDefault && [pageView isKindOfClass:[TimerPageView class]])) {
-			
-			PageView * pageView = [self createPageWithCountdown:countdown
-														atIndex:index
-													   animated:NO];
-			[pageViews replaceObjectAtIndex:index withObject:pageView];
-			
-			[self reloadPageViewAtIndex:index];
-		}
-		//pageView.countdown = countdown;
-		index++;
-	}
-#endif
 	
 	[self updateLayoutWithOrientation:orientation
 							 animated:animated];
@@ -761,73 +549,48 @@ enum tags {
 	const int numberOfRows = 2;
 	const int numberOfColumns = 2;
 	
-	/* the size of the container view */
-	CGSize size = CGSizeMake(360., 430.);
-	if (UIInterfaceOrientationIsLandscape(orientation))
-		size = CGSizeMake(490., 320.);
-	
-	CGSize pageSize = CGSizeMake(300., 423.);
-	if (UIInterfaceOrientationIsLandscape(orientation))
-		pageSize = CGSizeMake(470., 280.);
-	
-	CGRect frame = CGRectMake(0., 0., scrollView.frame.size.width, scrollView.frame.size.height);
-	
-	CGFloat leftMargin = (int)((frame.size.width - numberOfColumns * size.width) / (numberOfColumns + 1));
-	CGFloat topMargin = (int)((frame.size.height - numberOfRows * size.height) / (numberOfRows + 1));
+	NSInteger numberOfItemsPerPage = 4;
+	CGSize pageSize = CGSizeMake(384., 480.);
+	if (UIInterfaceOrientationIsLandscape(orientation)) {
+		pageSize = CGSizeMake(341., 704.);
+		numberOfItemsPerPage = 3;
+	}
 	
 	NSInteger numberOfCountdowns = [Countdown numberOfCountdowns];
-	int numberOfPage = ceil(numberOfCountdowns / (float)(numberOfRows * numberOfColumns));
+	int numberOfPage = ceil(numberOfCountdowns / (float)numberOfItemsPerPage);
 	
 	[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 	int i = 0;
-	for (UIView * containerView in containerViews) {
+	for (PageView * pageView in pageViews) {
 		
 		int index = i % (numberOfRows * numberOfColumns);
-		int row = index / numberOfRows;
-		int col = index % numberOfRows;
-		int page = i / (numberOfRows * numberOfColumns);
+		CGRect frame = CGRectMake(0., 0., pageSize.width, pageSize.height);
 		
-		int pageOffset = page * scrollView.frame.size.width;
-		
-		CGFloat x = leftMargin + (col * (size.width + leftMargin)) + frame.origin.x + pageOffset;
-		CGFloat y = topMargin + (row * (size.height + topMargin)) + frame.origin.y;
-		
-		CGRect rect = CGRectMake((int)x, (int)y, size.width, size.height);
-		[UIView animateWithDuration:(animated)? 0.25 : 0.
-						 animations:^{
-							 containerView.frame = rect;
-						 }
-						 completion:NULL];
-		
-		x = (size.width - pageSize.width) / 2. - 8.;
-		y = (size.height - pageSize.height) / 2.;
-		PageView * pageView = [pageViews objectAtIndex:i];
-		pageView.frame = CGRectMake((int)x, (int)y, pageSize.width, pageSize.height);
-		
-		if (i == currentSettingsPageIndex) {
-			// Change the layout of the page that shows settings
+		if (UIInterfaceOrientationIsLandscape(orientation)) {
 			
-			CGRect containerFrame = CGRectMake(0., 0., size.width, size.height);
+			frame.origin.x = (i * pageSize.width) + ceilf(index / 3.);
 			
-			CGRect innerContainerFrame = CGRectMake(20., 8., 320., 402.);
-			if (UIInterfaceOrientationIsLandscape(orientation))
-				innerContainerFrame.size = CGSizeMake(450., 290.);
+		} else {
+			int row = index / numberOfRows;
+			int col = index % numberOfRows;
+			int page = i / (numberOfRows * numberOfColumns);
 			
-			UIView * secondView = [containerView viewWithTag:SecondViewTag];
-			secondView.frame = containerFrame;
+			int pageOffset = page * scrollView.frame.size.width;
 			
-			settingsNavigationController.view.frame = innerContainerFrame;
+			frame.origin.x = (col * pageSize.width) + frame.origin.x + pageOffset;
+			frame.origin.y = (row * pageSize.height) + frame.origin.y;
 		}
+		pageView.frame = frame;
 		
-		i++;
+		++i;
 	}
 	
 	[[UIApplication sharedApplication] endIgnoringInteractionEvents];
 	
 	// @TODO: animate when the number of pages change
-	scrollView.contentSize = CGSizeMake(numberOfPage * scrollView.frame.size.width, scrollView.frame.size.height);
+	scrollView.contentSize = CGSizeMake(numberOfPage * scrollView.frame.size.width, 0.);
 	
-	size = scrollView.frame.size;
+	CGSize size = scrollView.frame.size;
 	CGRect rect = CGRectMake(pageControl.currentPage * size.width, 0., size.width, size.height);
 	[scrollView scrollRectToVisible:rect animated:NO];
 	
@@ -839,35 +602,9 @@ enum tags {
 	int numberOfRows = 2;
 	int numberOfColumns = 2;
 	
-	/* the size of the container view */
-	CGSize size = CGSizeMake(360., 430.);
+	CGSize pageSize = CGSizeMake(384., 480.);
 	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-		size = CGSizeMake(490., 320.);
-	
-	CGSize pageSize = CGSizeMake(300., 423.);
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-		pageSize = CGSizeMake(470., 280.);
-	
-	CGFloat x = (size.width - pageSize.width) / 2. - 8.;
-	CGFloat y = (size.height - pageSize.height) / 2.;
-	CGRect rect = CGRectMake((int)x, (int)y, pageSize.width, pageSize.height);
-	PageView * view = nil;
-	if (countdown.type == CountdownTypeTimer) {
-		view = [[TimerPageView alloc] initWithFrame:rect];
-	} else {
-		view = [[CountdownPageView alloc] initWithFrame:rect];
-	}
-	
-	view.countdown = countdown;
-	view.orientation = self.interfaceOrientation;
-	view.tag = PageViewTag;
-	view.delegate = self;
-	
-	[pageViews addObject:view];
-	
-	CGRect frame = CGRectMake(0., 0., scrollView.frame.size.width, scrollView.frame.size.height);
-	CGFloat leftMargin = (int)((frame.size.width - numberOfColumns * size.width) / (numberOfColumns + 1));
-	CGFloat topMargin = (int)((frame.size.height - numberOfRows * size.height) / (numberOfRows + 1));
+		pageSize = CGSizeMake(341., 704.);
 	
 	int i = index % (numberOfRows * numberOfColumns);
 	int row = i / numberOfRows;
@@ -876,26 +613,31 @@ enum tags {
 	
 	int pageOffset = page * scrollView.frame.size.width;
 	
-	x = leftMargin + (col * (size.width + leftMargin)) + frame.origin.x + pageOffset;
-	y = topMargin + (row * (size.height + topMargin)) + frame.origin.y;
-	rect = CGRectMake((int)x, (int)y, size.width, size.height);
-	UIView * containerView = [[UIView alloc] initWithFrame:rect];
+	CGFloat x = (col * pageSize.width) + pageOffset;
+	CGFloat y = row * pageSize.height;
+	CGRect rect = CGRectMake((int)x, (int)y, pageSize.width, pageSize.height);
+	PageView * view = nil;
+	if (countdown.type == CountdownTypeTimer)
+		view = [[TimerPageView alloc] initWithFrame:rect];
+	else
+		view = [[CountdownPageView alloc] initWithFrame:rect];
 	
-	[containerView addSubview:view];
+	view.countdown = countdown;
+	view.delegate = self;
 	
 	if (animated) {
-		containerView.alpha = 0.;
-		containerView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+		view.alpha = 0.;
+		view.transform = CGAffineTransformMakeScale(0.1, 0.1);
 	}
 	
-	[containerViews addObject:containerView];
-	[scrollView addSubview:containerView];
+	[pageViews addObject:view];
+	[scrollView addSubview:view];
 	
 	if (animated) {
 		[UIView animateWithDuration:0.25
 						 animations:^{
-							 containerView.alpha = 1.;
-							 containerView.transform = CGAffineTransformIdentity;
+							 view.alpha = 1.;
+							 view.transform = CGAffineTransformIdentity;
 						 }
 						 completion:NULL];
 	}
@@ -909,28 +651,16 @@ enum tags {
 	// @TODO: Update the page
 	
 	Countdown * countdown = [Countdown allCountdowns][index];
-	if (([pageViews[index] isKindOfClass:[CountdownPageView class]] && countdown.type != CountdownTypeDefault)
+	if (([pageViews[index] isKindOfClass:[CountdownPageView class]] && countdown.type != CountdownTypeCountdown)
 		|| ([pageViews[index] isKindOfClass:[TimerPageView class]] && countdown.type != CountdownTypeTimer)) {
 		
 		NSDebugLog(@"Reloading page at index: %d", index);
 		
-		/* the size of the container view */
-		CGSize size = CGSizeMake(360., 430.);
+		CGSize pageSize = CGSizeMake(384., 480.);
 		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-			size = CGSizeMake(490., 320.);
+			pageSize = CGSizeMake(341., 704.);
 		
-		CGSize pageSize = CGSizeMake(300., 423.);
-		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-			pageSize = CGSizeMake(470., 280.);
-		
-		/*
-		 CGRect rect = CGRectMake(0., 0., size.width, size.height);
-		 UIView * containerView = [[UIView alloc] initWithFrame:rect];
-		 */
-		
-		CGFloat x = (size.width - pageSize.width) / 2.;
-		CGFloat y = (size.height - pageSize.height) / 2.;
-		CGRect rect = CGRectMake((int)x, (int)y, pageSize.width, pageSize.height);
+		CGRect rect = CGRectMake(0., 0., pageSize.width, pageSize.height);
 		
 		PageView * pageView = nil;
 		if (countdown.type == CountdownTypeTimer) {
@@ -940,46 +670,38 @@ enum tags {
 		}
 		
 		pageView.countdown = countdown;
-		pageView.orientation = self.interfaceOrientation;
-		pageView.tag = PageViewTag;
 		pageView.delegate = self;
 		
+		[scrollView addSubview:pageView];
 		[pageViews[index] removeFromSuperview];
-		[pageViews removeObjectAtIndex:index];
-		[pageViews insertObject:pageView atIndex:index];
-		
-		UIView * containerView = containerViews[index];
-		//NSInteger index = [containerView.subviews indexOfObject:[containerView viewWithTag:PageViewTag]];
-		//[[containerView viewWithTag:PageViewTag] removeFromSuperview];
-		
-		
-		[containerView insertSubview:pageView atIndex:index];
-		
-		/* Show the new container view only if the page is not showing settings */
-		pageView.hidden = (index == currentSettingsPageIndex);
+		[pageViews replaceObjectAtIndex:index withObject:pageView];
+	} else { // Just refresh the page view
+		((PageView *)pageViews[index]).countdown = countdown;
 	}
 }
 
 - (void)deletePageViewAtIndex:(NSInteger)index animated:(NSInteger)animated
 {
-	UIView * containerView = [containerViews objectAtIndex:index];
-	containerView.alpha = 1.;
-	containerView.transform = CGAffineTransformIdentity;
+	PageView * view = pageViews[index];
+	view.alpha = 1.;
+	view.transform = CGAffineTransformIdentity;
 	
 	[UIView animateWithDuration:(animated)? 0.25 : 0.
 					 animations:^{
-						 containerView.alpha = 0.;
-						 containerView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+						 view.alpha = 0.;
+						 view.transform = CGAffineTransformMakeScale(0.1, 0.1);
 					 }
-					 completion:^(BOOL finished) { [containerView removeFromSuperview]; }];
+					 completion:^(BOOL finished) { [view removeFromSuperview]; }];
 	
 	[pageViews removeObjectAtIndex:index];
-	[containerViews removeObjectAtIndex:index];
 }
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	if (TARGET_IS_IOS7_OR_LATER())
+		self.automaticallyAdjustsScrollViewInsets = NO;
 	
 	currentSettingsPageIndex = -1;
 	
@@ -990,31 +712,34 @@ enum tags {
 	
 	NSArray * countdowns = [Countdown allCountdowns];
 	pageViews = [[NSMutableArray alloc] initWithCapacity:countdowns.count];
-	containerViews = [[NSMutableArray alloc] initWithCapacity:countdowns.count];
 	
 	int index = 0;
 	for (Countdown * countdown in countdowns) {
-		PageView * pageView = [self createPageWithCountdown:countdown
-													atIndex:index
-												   animated:NO];
-		if (editing) [self showDeleteButtonOnPage:pageView];
+		[self createPageWithCountdown:countdown
+							  atIndex:index
+							 animated:NO];
 	}
 	
 	[self updateLayoutWithOrientation:self.interfaceOrientation animated:NO];
+	
+	if (!TARGET_IS_IOS7_OR_LATER()) {
+		CGRect frame = scrollView.frame;
+		frame.origin.y -= 20.;
+		frame.size.height += 20.;
+		scrollView.frame = frame;
+	}
 	
 	scrollView.pagingEnabled = YES;
 	scrollView.delegate = self;
 	
 	pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight;// Add flexible height (Unavailable from IB)
 	
-	dispatch_queue_t queue = dispatch_get_main_queue();
-	dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);// Run event handler on the default global queue
-	dispatch_time_t now = dispatch_walltime(DISPATCH_TIME_NOW, 0);
-	dispatch_source_set_timer(timer, now, 1000 * USEC_PER_SEC, 5000ull);// Fire timer one time a second, with 5 ms delay, "in case the system wants to align it with other events to minimize power consumption"
-	dispatch_source_set_event_handler(timer, ^{
-		[self update];
-	});
-	dispatch_resume(timer);
+	[NSTimer scheduledTimerWithTimeInterval:1.
+									 target:self
+								   selector:@selector(update)
+								   userInfo:nil
+									repeats:YES];
+	[self update];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(closeActiveSettings)
@@ -1067,6 +792,9 @@ enum tags {
 											 selector:@selector(keyboardWillHide:)
 												 name:UIKeyboardWillHideNotification
 											   object:nil];
+	
+	if (TARGET_IS_IOS7_OR_LATER())
+		[self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -1079,13 +807,13 @@ enum tags {
 - (void)keyboardDidShow:(NSNotification *)notification
 {
 	if (currentSettingsPageIndex % 4 >= 2) { // If the index of the page is >= 2, the countdown is on the bottom line
-		CGSize keyboardSize = [[notification.userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-		double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+		CGSize keyboardSize = [(notification.userInfo)[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+		double duration = [(notification.userInfo)[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 		[UIView animateWithDuration:duration
 						 animations:^{
 							 CGRect frame = scrollView.frame;
 							 CGFloat height = MIN(keyboardSize.height, keyboardSize.width);// Get the real size from that the keyboard frame doesn't change depending of the rotation of the screen; the smaller value is the real height
-							 frame.origin.y = 44. + 40. /* 40px margin*/ - height;
+							 frame.origin.y = ((TARGET_IS_IOS7_OR_LATER()) ? 64. : 44.) + 40. /* 40px margin*/ - height;
 							 scrollView.frame = frame;
 						 }];
 	}
@@ -1096,52 +824,33 @@ enum tags {
 	[UIView animateWithDuration:0.25
 					 animations:^{
 						 CGRect frame = scrollView.frame;
-						 frame.origin.y = 44.;
+						 frame.origin.y = (TARGET_IS_IOS7_OR_LATER()) ? 64. : 44.;
+						 
 						 scrollView.frame = frame;
 					 }];
 }
 
+#pragma mark - UIPopoverController delegate
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+	[self reloadPageViewAtIndex:currentSettingsPageIndex];
+	currentSettingsPageIndex = 0;
+}
+
 #pragma mark - UIPageControl Managment
+
 - (IBAction)changePage:(id)sender
 {
 	CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageControl.currentPage, 0.);
 	[scrollView setContentOffset:contentOffset animated:YES];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-/*
- - (void)viewWillAppear:(BOOL)animated
- {
- [super viewWillAppear:animated];
- }
- 
- - (void)viewDidAppear:(BOOL)animated
- {
- [super viewDidAppear:animated];
- }
- 
- - (void)viewWillDisappear:(BOOL)animated
- {
- [super viewWillDisappear:animated];
- }
- 
- - (void)viewDidDisappear:(BOOL)animated
- {
- [super viewDidDisappear:animated];
- }
- */
-
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
 	/* Hide the delete confirmation opened when the scroll starts */
 	if (currentPageWithConfirmation) {
-		[self hideDeleteConfirmationOnPage:currentPageWithConfirmation];
+		//[self hideDeleteConfirmationOnPage:currentPageWithConfirmation];
 		currentPageWithConfirmation = nil;
 	}
 }
@@ -1151,55 +860,16 @@ enum tags {
 	pageControl.currentPage = floor(scrollView.contentOffset.x / scrollView.frame.size.width);
 }
 
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (UIStatusBarStyle)preferredStatusBarStyle
 {
-    return YES;
+	return UIStatusBarStyleLightContent;
 }
-
-/*
- - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
- {
- [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
- }
- 
- - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
- {
- [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
- }
- */
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
 	[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 	
 	UIInterfaceOrientation orientation = self.interfaceOrientation;
-	for (CountdownPageView * pageView in pageViews) {
-		pageView.orientation = orientation;
-	}
-	
-#if 0
-	if (settingsNavigationController) {
-		/*
-		 CGRect frame = CGRectMake(20., 8., 320., 402.);
-		 if (UIInterfaceOrientationIsLandscape(orientation)) {
-		 frame.size = CGSizeMake(450., 290.);
-		 }
-		 */
-		
-		//settingsNavigationController.view.frame = frame;
-		
-		UIView * secondView = [[containerViews objectAtIndex:currentSettingsPageIndex] viewWithTag:SecondViewTag];
-		CGRect frame = secondView.frame;
-		
-		frame.size = CGSizeMake(300., 423.);
-		if (UIInterfaceOrientationIsLandscape(orientation))
-			frame.size = CGSizeMake(470., 280.);
-		
-		secondView.frame = frame;
-	}
-#endif
-	
 	[self updateLayoutWithOrientation:orientation animated:NO];
 }
 

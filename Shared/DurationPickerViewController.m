@@ -10,7 +10,6 @@
 
 #import "DurationPickerTableViewCell.h"
 
-#import "UIColor+addition.h"
 
 @interface DurationPickerViewController ()
 
@@ -21,37 +20,34 @@
 @synthesize countdown = _countdown;
 @synthesize durationIndex = _durationIndex;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
 	self.title = NSLocalizedString(@"Duration", nil);
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	
+	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    if (!TARGET_IS_IOS7_OR_LATER()) {
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
 	_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
 	_tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        
+        UIView * backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        _tableView.backgroundView = backgroundView;
+    }
+    
 	_tableView.alwaysBounceVertical = YES;
-	
 	_tableView.rowHeight = 82.;
 	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView = backgroundView;
+	if (TARGET_IS_IOS7_OR_LATER())
+		self.view.tintColor = [UIColor blackColor];
 	
 	cellsTitle = @[NSLocalizedString(@"Days", nil), NSLocalizedString(@"Hours", nil), NSLocalizedString(@"Minutes", nil), NSLocalizedString(@"Seconds", nil)];
 	durationPickers = [[NSMutableArray alloc] initWithCapacity:4];
-	
-    [super viewDidLoad];
 }
 
 #pragma mark -
@@ -80,6 +76,12 @@
 		DurationPickerView * pickerView = cell.pickerView;
 		pickerView.delegate = self;
 		pickerView.dataSource = self;
+		
+		if ([durationPickers containsObject:pickerView])
+			durationPickers[indexPath.section] = pickerView;
+		else
+			[durationPickers addObject:pickerView];
+		
 		[pickerView reloadData];
 		
 		long seconds = [self.countdown.durations[_durationIndex] longValue];
@@ -87,11 +89,6 @@
 		long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 		long minutes = seconds / 60; seconds -= minutes * 60;
 		pickerView.selectedIndex = (indexPath.section == 0) ? days : ((indexPath.section == 1) ? hours : ((indexPath.section == 2) ? minutes : seconds));
-		
-		if ([durationPickers containsObject:pickerView])
-			[durationPickers replaceObjectAtIndex:indexPath.section withObject:pickerView];
-		else
-			[durationPickers addObject:pickerView];
 	}
 	
 	cell.label.text = cellsTitle[indexPath.section];
@@ -110,7 +107,7 @@
 
 - (NSInteger)numberOfNumbersInDurationPickerView:(DurationPickerView *)durationPickerView
 {
-	NSInteger section = [durationPickers indexOfObject:durationPickers];
+	NSInteger section = [durationPickers indexOfObject:durationPickerView];
 	if (section == 0)
 		return 7;
 	else if (section == 1)
@@ -138,26 +135,12 @@
 		pickerIndex++;
 	}
 	
-	[self.countdown setDuration:[NSNumber numberWithLong:duration]
+	[self.countdown setDuration:@(duration)
 						atIndex:_durationIndex];
 	
 	/* Stop the timer if we modify the current index used for the timer */
 	if (_durationIndex == self.countdown.durationIndex)
 		self.countdown.endDate = nil;
-}
-
-
-
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || UIInterfaceOrientationIsPortrait(interfaceOrientation));
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

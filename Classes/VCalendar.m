@@ -12,7 +12,6 @@
 
 @implementation VEvent
 
-
 @synthesize startDate;
 @synthesize duration;
 @synthesize summary, description;
@@ -82,7 +81,7 @@
 	[string appendString:@"BEGIN:VCALENDAR\n"];
 	[string appendFormat:@"VERSION:%@\n", version];
 	
-	NSString * currentLanguage = (NSString *)[[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
+	NSString * currentLanguage = (NSString *)[[NSBundle mainBundle] preferredLocalizations][0];
 	[string appendFormat:@"PRODID:-//Lis@cintosh//NONSGML Closer&Closer//%@\n", [currentLanguage uppercaseString]];
 	
 	for (VEvent * event in events) {

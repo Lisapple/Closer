@@ -86,24 +86,24 @@ static NSMutableArray * _countdowns = nil;
 		_countdowns = [[NSMutableArray alloc] initWithCapacity:_propertyList.count];
 		for (NSDictionary * dictionary in _propertyList) {
 			
-			NSString * identifier = [dictionary objectForKey:@"identifier"];
+			NSString * identifier = dictionary[@"identifier"];
 			Countdown * aCountdown = [[Countdown alloc] initWithIdentifier:identifier];
 			
-			CountdownType type = [[dictionary objectForKey:@"type"] integerValue];
-			if (type == CountdownTypeDefault) {
-				aCountdown.message = [dictionary objectForKey:@"message"];
+			CountdownType type = [dictionary[@"type"] integerValue];
+			if (type == CountdownTypeCountdown) {
+				aCountdown.message = dictionary[@"message"];
 			} else {
-				NSArray * durations = [dictionary objectForKey:@"durations"];
+				NSArray * durations = dictionary[@"durations"];
 				if (durations) [aCountdown addDurations:durations];
-				aCountdown.durationIndex = [[dictionary objectForKey:@"durationIndex"] integerValue];
+				aCountdown.durationIndex = [dictionary[@"durationIndex"] integerValue];
 				
-				aCountdown.promptState = [[dictionary objectForKey:@"prompt"] integerValue];
+				aCountdown.promptState = [dictionary[@"prompt"] integerValue];
 			}
 			
-			aCountdown.name = [dictionary objectForKey:@"name"];
-			aCountdown.endDate = [dictionary objectForKey:@"endDate"];
-			aCountdown.songID = [dictionary objectForKey:@"songID"];
-			aCountdown.style = [[dictionary objectForKey:@"style"] integerValue];
+			aCountdown.name = dictionary[@"name"];
+			aCountdown.endDate = dictionary[@"endDate"];
+			aCountdown.songID = dictionary[@"songID"];
+			aCountdown.style = [dictionary[@"style"] integerValue];
 			aCountdown.type = type;
 			
 			[aCountdown activate];
@@ -191,7 +191,7 @@ static NSMutableArray * _countdowns = nil;
 
 + (Countdown *)countdownAtIndex:(NSInteger)index
 {
-	return (Countdown *)[_countdowns objectAtIndex:index];
+	return (Countdown *)_countdowns[index];
 }
 
 + (NSInteger)indexOfCountdown:(Countdown *)countdown
@@ -251,7 +251,7 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)removeCountdownAtIndex:(NSInteger)index
 {
-	Countdown * countdown = [_countdowns objectAtIndex:index];
+	Countdown * countdown = _countdowns[index];
 	[countdown removeLocalNotification];
 	[countdown desactivate];
 	[_countdowns removeObjectAtIndex:index];
@@ -261,11 +261,11 @@ static NSMutableArray * _countdowns = nil;
 
 + (NSArray *)styles
 {
-	return [NSArray arrayWithObjects:NSLocalizedString(@"DEFAULT_STYLE", nil),
-			NSLocalizedString(@"LCD_STYLE", nil),
-			NSLocalizedString(@"BOARD_STYLE", nil),
-			NSLocalizedString(@"PAPER_STYLE", nil),
-			NSLocalizedString(@"TIMES_STYLE", nil), nil];
+	return @[NSLocalizedString(@"PAGE_STYLE_NIGHT", nil),
+			NSLocalizedString(@"PAGE_STYLE_DAY", nil),
+			NSLocalizedString(@"PAGE_STYLE_DAWN", nil),
+			NSLocalizedString(@"PAGE_STYLE_OASIS", nil),
+			NSLocalizedString(@"PAGE_STYLE_SPRING", nil)];
 }
 
 #pragma mark - Countdown's Instance Methods
@@ -273,23 +273,23 @@ static NSMutableArray * _countdowns = nil;
 - (NSMutableDictionary *)_countdownToDictionary
 {
 	NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] initWithCapacity:5];
-	[dictionary setObject:self.name forKey:@"name"];
+	dictionary[@"name"] = self.name;
 	
-	if (self.type == CountdownTypeDefault) {
-		if (self.endDate) [dictionary setObject:self.endDate forKey:@"endDate"];
-		if (self.message) [dictionary setObject:self.message forKey:@"message"];
+	if (self.type == CountdownTypeCountdown) {
+		if (self.endDate) dictionary[@"endDate"] = self.endDate;
+		if (self.message) dictionary[@"message"] = self.message;
 	} else {
-		if (durations) [dictionary setObject:durations forKey:@"durations"];
-		[dictionary setObject:[NSNumber numberWithInteger:self.durationIndex] forKey:@"durationIndex"];
+		if (durations) dictionary[@"durations"] = durations;
+		dictionary[@"durationIndex"] = @(self.durationIndex);
 		
-		if (self.endDate) [dictionary setObject:self.endDate forKey:@"endDate"];
-		[dictionary setObject:[NSNumber numberWithInteger:self.promptState] forKey:@"prompt"];
+		if (self.endDate) dictionary[@"endDate"] = self.endDate;
+		dictionary[@"prompt"] = @(self.promptState);
 	}
 	
-	[dictionary setObject:self.songID forKey:@"songID"];
-	[dictionary setObject:self.identifier forKey:@"identifier"];
-	[dictionary setObject:[NSNumber numberWithInteger:self.style] forKey:@"style"];
-	[dictionary setObject:[NSNumber numberWithInteger:self.type] forKey:@"type"];
+	dictionary[@"songID"] = self.songID;
+	dictionary[@"identifier"] = self.identifier;
+	dictionary[@"style"] = @(self.style);
+	dictionary[@"type"] = @(self.type);
 	
 	return dictionary;
 }
@@ -297,12 +297,10 @@ static NSMutableArray * _countdowns = nil;
 - (id)initWithIdentifier:(NSString *)anIdentifier
 {
 	if ((self = [super init])) {
-		if (anIdentifier) {
-			identifier = anIdentifier;
-		} else {
+		if (!anIdentifier) {
 			CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
 			CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-			identifier = (__bridge NSString *)uuidString;
+			anIdentifier = (__bridge NSString *)uuidString;
 			CFRelease(uuidString);
 			CFRelease(uuidRef);
 		}
@@ -313,7 +311,7 @@ static NSMutableArray * _countdowns = nil;
 		message = @"";
 		songID = @"default";
 		style = 0;
-		_type = CountdownTypeDefault;
+		_type = CountdownTypeCountdown;
 		
 		identifier = anIdentifier;
 		
@@ -338,7 +336,7 @@ static NSMutableArray * _countdowns = nil;
 		message = @"";
 		songID = @"default";
 		style = 0;
-		_type = CountdownTypeDefault;
+		_type = CountdownTypeCountdown;
 		
 		[self updateLocalNotification];
 	}
@@ -361,7 +359,7 @@ static NSMutableArray * _countdowns = nil;
 	NSArray * allLocalNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
 	for (UILocalNotification * localNotif in allLocalNotifications) {
 		
-		NSString * anIdentifier = [localNotif.userInfo objectForKey:@"identifier"];
+		NSString * anIdentifier = (localNotif.userInfo)[@"identifier"];
 		if ([anIdentifier isEqualToString:self.identifier]) {
 			return localNotif;// Return the localNotification
 		}
@@ -376,7 +374,7 @@ static NSMutableArray * _countdowns = nil;
 	UILocalNotification * localNotif = [[UILocalNotification alloc] init];
 	
 	localNotif.timeZone = [NSTimeZone localTimeZone];
-	localNotif.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.identifier, @"identifier", nil];
+	localNotif.userInfo = @{@"identifier": self.identifier};
 	
 	return localNotif;
 }
@@ -384,7 +382,7 @@ static NSMutableArray * _countdowns = nil;
 - (void)updateLocalNotification
 {
 	if (active) {
-		dispatch_async(dispatch_get_current_queue(), ^{
+		dispatch_async(dispatch_get_main_queue(), ^{
 			if (endDate && endDate.timeIntervalSinceNow > 0.) {
 				
 				UILocalNotification * localNotif = [self localNotification];
@@ -468,12 +466,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)setEndDate:(NSDate *)aDate
 {
-	if (aDate && ![aDate isEqualToDate:endDate]) {
-		endDate = aDate;
-		
-		[self updateLocalNotification];
-		NSDebugLog(@"set end date: %@", aDate);
-	}
+	endDate = aDate;
+	[self updateLocalNotification];
 }
 
 - (void)setSongID:(NSString *)aSongID
@@ -531,7 +525,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index
 {
-	[durations replaceObjectAtIndex:index withObject:duration];
+	durations[index] = duration;
 }
 
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex
@@ -580,7 +574,7 @@ static NSMutableArray * _countdowns = nil;
 		if (seconds) [components addObject:[NSString stringWithFormat:@"%ld %@", seconds, (seconds > 1) ? NSLocalizedString(@"seconds", nil) : NSLocalizedString(@"second", nil)]];
 	}
 	
-	return [components componentsJoinedByString:@", " andLastString:NSLocalizedString(@" and ", nil)]; // "12 minutes and 34 seconds", "12 days, 34 hours, 56 min and 12 sec"
+	return [components componentsJoinedByString:@", " withLastJoin:NSLocalizedString(@" and ", nil)]; // "12 minutes and 34 seconds", "12 days, 34 hours, 56 min and 12 sec"
 }
 
 - (NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index
@@ -605,7 +599,7 @@ static NSMutableArray * _countdowns = nil;
 		if (seconds) [components addObject:[NSString stringWithFormat:@"%ld %@ ", seconds, NSLocalizedString(@"sec", nil)]];
 	}
 	
-	return [components componentsJoinedByString:@", " andLastString:NSLocalizedString(@" and ", nil)]; // "12 min and 34 sec", "12d, 34h, 56m and 12s"
+	return [components componentsJoinedByString:@", " withLastJoin:NSLocalizedString(@" and ", nil)]; // "12 min and 34 sec", "12d, 34h, 56m and 12s"
 }
 
 
@@ -647,13 +641,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)dealloc
 {
-	self.name = nil;
-	self.endDate = nil;
-	self.message = nil;
-	self.songID = nil;
-	
-	identifier = nil;
-	durations = nil;
+	/* Remove the notification */
+	[self removeLocalNotification];
 }
 
 @end

@@ -8,12 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+#import "PageView.h"
 
 @interface UIColor(addition)
 
 + (UIColor *)groupedTableViewBackgroundColor;
 + (UIColor *)defaultTintColor;
 + (UIColor *)doneButtonColor;
+
++ (UIColor *)backgroundColorForPageStyle:(PageViewStyle)style;
++ (UIColor *)textColorForPageStyle:(PageViewStyle)style;
 
 /*
 - (UIColor *)invertedColor;

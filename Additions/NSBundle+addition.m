@@ -24,8 +24,8 @@
 		
 		NSString * name = nil;
 		for (NSDictionary * attributes in songs) {
-			if ([[attributes objectForKey:@"ID"] isEqualToString:songID]) {
-				name = [attributes objectForKey:@"Name"];
+			if ([attributes[@"ID"] isEqualToString:songID]) {
+				name = attributes[@"Name"];
 				break;
 			}
 		}
@@ -43,8 +43,8 @@
 	
 	NSString * filename = nil;
 	for (NSDictionary * attributes in songs) {
-		if ([[attributes objectForKey:@"ID"] isEqualToString:songID]) {
-			filename = [attributes objectForKey:@"Filename"];
+		if ([attributes[@"ID"] isEqualToString:songID]) {
+			filename = attributes[@"Filename"];
 			break;
 		}
 	}

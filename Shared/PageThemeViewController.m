@@ -10,15 +10,36 @@
 
 #import "Countdown.h"
 
-#import "PageThemeTableViewCell.h"
-
-#import "UIColor+addition.h"
-
 @implementation PageThemeViewController
 
 @synthesize tableView;
 @synthesize countdown;
 
++ (UIImage *)imageForStyle:(PageViewStyle)style
+{
+	const CGFloat width = (style == PageViewStyleDay) ? 21. : 20.;
+	CGRect frame = CGRectMake(0., 0., width, width);
+	UIView * backgroundView = [[UIView alloc] initWithFrame:frame];
+	backgroundView.backgroundColor = [UIColor backgroundColorForPageStyle:style];
+	backgroundView.layer.cornerRadius = (width / 2.);
+	if (style == PageViewStyleDay) {
+		backgroundView.layer.borderWidth = 1.;
+		backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+	}
+	
+	frame = CGRectMake((width / 4.), (width / 4.), (width / 2.), (width / 2.));
+	UIView * textView = [[UIView alloc] initWithFrame:frame];
+	textView.backgroundColor = [UIColor textColorForPageStyle:style];
+	textView.layer.cornerRadius = (width / 4.);
+	[backgroundView addSubview:textView];
+	
+	UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, width), NO, 0.);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	[backgroundView.layer renderInContext:context];
+	UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	return image;
+}
 
 - (void)viewDidLoad
 {
@@ -26,16 +47,22 @@
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-	tableView.rowHeight = 71.;
 	
-	tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		
+		UIView * backgroundView = [[UIView alloc] init];
+		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView = backgroundView;
+	}
 	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView = backgroundView;
-	
+	if (TARGET_IS_IOS7_OR_LATER())
+		self.view.tintColor = [UIColor blackColor];
+    
 	[super viewDidLoad];
 }
 
@@ -54,17 +81,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return 5;
+	return [Countdown styles].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
+	UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
-	PageThemeTableViewCell * cell = (PageThemeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
-		cell = [[PageThemeTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+	if (!cell) {
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	
@@ -73,20 +99,8 @@
 		checkedCell = cell;
 	}
 	
-	
-	if (indexPath.row == 0) {
-		cell.imageView.image = [UIImage imageNamed:@"theme1_preview"];
-	} else if (indexPath.row == 1) {
-		cell.imageView.image = [UIImage imageNamed:@"theme2_preview"];
-	} else if (indexPath.row == 2) {
-		cell.imageView.image = [UIImage imageNamed:@"theme3_preview"];
-	} else if (indexPath.row == 3) {
-		cell.imageView.image = [UIImage imageNamed:@"theme4_preview"];
-	} else {
-		cell.imageView.image = [UIImage imageNamed:@"theme5_preview"];
-	}
-	
-	cell.textLabel.text = [[Countdown styles] objectAtIndex:indexPath.row];
+	cell.textLabel.text = [Countdown styles][indexPath.row];
+	cell.imageView.image = [self.class imageForStyle:indexPath.row];
 	
 	return cell;
 }
@@ -96,7 +110,7 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	PageThemeTableViewCell * cell = (PageThemeTableViewCell *)[aTableView cellForRowAtIndexPath:indexPath];
+	UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
 	
 	if (cell != checkedCell) {
 		checkedCell.accessoryType = UITableViewCellAccessoryNone;
@@ -109,28 +123,5 @@
 	
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || UIInterfaceOrientationIsPortrait(interfaceOrientation));
-}
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-	
-	// Release any cached data, images, etc. that aren't in use.
-}
-
-- (void)viewDidUnload
-{
-	self.tableView = nil;
-	
-	[super viewDidUnload];
-}
-
-
-
 
 @end

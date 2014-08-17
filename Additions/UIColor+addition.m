@@ -8,12 +8,16 @@
 
 #import "UIColor+addition.h"
 
-
 @implementation UIColor(addition)
+
++ (UIColor *)colorWithR:(NSInteger)red G:(NSInteger)green B:(NSInteger)blue
+{
+	return [UIColor colorWithRed:(red / 255.) green:(green / 255.) blue:(blue / 255.) alpha:1.];
+}
 
 + (UIColor *)groupedTableViewBackgroundColor
 {
-	return [UIColor colorWithPatternImage:[UIImage imageNamed:@"grouped_tableview_background"]];
+    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"grouped_tableview_background"]];
 }
 
 + (UIColor *)defaultTintColor
@@ -26,47 +30,28 @@
 	return [UIColor colorWithRed:0.6 green:0.6 blue:1. alpha:1.];
 }
 
-/*
-- (UIColor *)invertedColor
++ (UIColor *)backgroundColorForPageStyle:(PageViewStyle)style
 {
-	return [UIColor colorWithRed:(1. - [self redComponent]) 
-						   green:(1. - [self greenComponent]) 
-							blue:(1. - [self blueComponent]) 
-						   alpha:[self alphaComponent]];
+	switch (style) {
+		case PageViewStyleDay:		return [UIColor whiteColor];
+		case PageViewStyleDawn:		return [UIColor colorWithR:74 G:74 B:74];
+		case PageViewStyleOasis:	return [UIColor colorWithR:40 G:65 B:164];
+		case PageViewStyleSpring:	return [UIColor colorWithR:126 G:211 B:33];
+		case PageViewStyleNight:
+		default:					return [UIColor colorWithR:34 G:34 B:34];
+	}
 }
 
-- (CGFloat)redComponent
++ (UIColor *)textColorForPageStyle:(PageViewStyle)style
 {
-	// RGBA Component
-	const CGFloat * components = CGColorGetComponents(self.CGColor);
-	return components[0];
+	switch (style) {
+		case PageViewStyleDay:		return [UIColor colorWithR:74 G:74 B:74];
+		case PageViewStyleDawn:		return [UIColor colorWithR:85 G:175 B:255];
+		case PageViewStyleOasis:	return [UIColor colorWithR:126 G:211 B:33];
+		case PageViewStyleSpring:	return [UIColor colorWithR:6 G:20 B:158];
+		case PageViewStyleNight:
+		default:					return [UIColor whiteColor];
+	}
 }
-
-- (CGFloat)greenComponent
-{
-	// RGBA Component
-	const CGFloat * components = CGColorGetComponents(self.CGColor);
-	return components[1];
-}
-
-- (CGFloat)blueComponent
-{
-	// RGBA Component
-	const CGFloat * components = CGColorGetComponents(self.CGColor);
-	return components[2];
-}
-
-- (CGFloat)alphaComponent
-{
-	// RGBA Component
-	const CGFloat * components = CGColorGetComponents(self.CGColor);
-	return components[3];
-}
-
-- (NSString *)_description
-{
-	return [NSString stringWithFormat:@"<Color 0x%x R:%.3f, G:%.3f, B:%.3f, A:%.3f>", self, [self redComponent], [self greenComponent], [self blueComponent], [self alphaComponent]];
-}
-*/
 
 @end

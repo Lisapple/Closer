@@ -18,7 +18,7 @@
 	Countdown * countdown;
 	
 	@private
-	PageThemeTableViewCell * checkedCell;
+	UITableViewCell * checkedCell;
 }
 
 @property (nonatomic, strong) IBOutlet UITableView * tableView;

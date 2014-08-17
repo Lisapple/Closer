@@ -10,8 +10,6 @@
 #import "PromptViewController.h"
 #import "DurationPickerViewController.h"
 
-#import "UIColor+addition.h"
-
 @interface DurationsViewController ()
 
 @end
@@ -22,15 +20,6 @@
 
 @synthesize countdown = _countdown;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -40,17 +29,25 @@
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.alwaysBounceVertical = YES;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+        _tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        _tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        
+        UIView * backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        _tableView.backgroundView = backgroundView;
+    }
+    
+    _tableView.alwaysBounceVertical = YES;
 	
 	_tableView.allowsSelectionDuringEditing = YES;
 	_tableView.editing = YES;
 	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView = backgroundView;
+	if (TARGET_IS_IOS7_OR_LATER())
+		self.view.tintColor = [UIColor blackColor];
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 																						   target:self
@@ -79,10 +76,10 @@
 		UILabel * label = [[UILabel alloc] initWithFrame:frame];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		label.backgroundColor = [UIColor clearColor];
-		label.lineBreakMode = UILineBreakModeWordWrap;
+		label.lineBreakMode = NSLineBreakByWordWrapping;
 		label.numberOfLines = 0;// Infinite number of line
 		label.textColor = [UIColor darkGrayColor];
-		label.textAlignment = UITextAlignmentCenter;
+		label.textAlignment = NSTextAlignmentCenter;
 		label.font = [UIFont boldSystemFontOfSize:18.];
 		label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
 		label.shadowOffset = CGSizeMake(0., 1.);
@@ -101,11 +98,11 @@
 {
 	[_tableView beginUpdates];
 	
-	[_countdown addDuration:[NSNumber numberWithInteger:0]];
+	[_countdown addDuration:@0];
 	
 	NSIndexPath * indexPath = [NSIndexPath indexPathForRow:(_countdown.durations.count - 1)
 												 inSection:1];
-	[_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+	[_tableView insertRowsAtIndexPaths:@[indexPath]
 					  withRowAnimation:UITableViewRowAnimationFade];
 	[_tableView endUpdates];
 	
@@ -169,6 +166,9 @@
 		
 	} else {
 		cell.textLabel.text = [_countdown descriptionOfDurationAtIndex:indexPath.row];
+		CGSize size = [cell.textLabel sizeThatFits:CGSizeMake(cell.textLabel.frame.size.width, INFINITY)];
+		if (size.height > cell.textLabel.frame.size.height || size.width > cell.textLabel.frame.size.width)
+			cell.textLabel.text = [_countdown shortDescriptionOfDurationAtIndex:indexPath.row];
 		cell.accessoryType = UITableViewCellAccessoryNone;
 	}
 	
@@ -178,6 +178,11 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	return (indexPath.section == 1);
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return NSLocalizedString(@"_Remove", nil);
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -232,67 +237,6 @@
 	}
 	
 	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-/*
-#pragma mark - UIPickerView Delegate
-
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-	if (component == 0)
-		return [NSString stringWithFormat:@"%d", row];
-	else
-		return (row < 10)? [NSString stringWithFormat:@"0%d", row] : [NSString stringWithFormat:@"%d", row];
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-	NSInteger index = _tableView.indexPathForSelectedRow.row;
-	
-	NSNumber * number = [NSNumber numberWithInteger:(24 * 60 * 60 * [pickerView selectedRowInComponent:0]
-													 + 60 * 60 * [pickerView selectedRowInComponent:1]
-													 + 60 * [pickerView selectedRowInComponent:2]
-													 + [pickerView selectedRowInComponent:3])];
-	
-	[_countdown setDuration:number atIndex:index];
-	
-	NSIndexPath * indexPath = [NSIndexPath indexPathForRow:index
-												 inSection:1];
-	[_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
-					  withRowAnimation:UITableViewRowAnimationNone];
-	[_tableView selectRowAtIndexPath:indexPath
-							animated:NO
-					  scrollPosition:UITableViewScrollPositionNone];
-}
-
-#pragma mark - UIPickerView DataSource
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-	return 4;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-	if (component == 0)
-		return 7;
-	if (component == 1)
-		return 24;
-	
-	return 60;
-}
-*/
-
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || UIInterfaceOrientationIsPortrait(interfaceOrientation));
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

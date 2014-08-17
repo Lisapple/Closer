@@ -12,79 +12,23 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "PageView.h"
+#import "CCLabel.h"
 
 @class Countdown;
-
-typedef enum {
-	CountdownPageViewStyleDefault,
-	CountdownPageViewStyleLCD,
-	CountdownPageViewStyleBoard,
-	CountdownPageViewStyleLetter,
-	CountdownPageViewStyleTimes,
-} CountdownPageViewStyle;
 
 @interface CountdownPageView : PageView
 {
 @private
-	// Portrait
 	IBOutlet UIView * _contentView;
-	
-	IBOutlet UILabel * daysLabel, * hoursLabel, * minutesLabel, * secondsLabel;
-	IBOutlet UILabel * daysDescriptionLabel, * hoursDescriptionLabel, * minutesDescriptionLabel, * secondsDescriptionLabel;
-	
-	IBOutlet UIButton * infoButton;
-	IBOutlet UILabel * nameLabel;
-	
-	IBOutlet UIImageView * backgroundImageView;
-	
-	// Landscape
-	IBOutlet UIView * _contentViewLandscape;
-	
-	IBOutlet UILabel * timeLabelLanscape;
-	
-	IBOutlet UIButton * infoButtonLandscape;
-	IBOutlet UILabel * nameLabelLandscape;
-	
-	IBOutlet UIImageView * backgroundImageViewLandscape;
-	
-	UIButtonType infoButtonType;
-	
-	BOOL _loaded;
-	
-	// Accesssibility
-	NSArray * accessibilityElements;
-	
-@public
-	
-	CountdownPageViewStyle style;
+	IBOutlet UIButton * _tintedInfoButton /* For iOS 6, since tint color doesn't work for info button */;
 }
 
-// Private
-// Portrait
-@property (nonatomic, strong) IBOutlet UILabel * daysLabel, * hoursLabel, * minutesLabel, * secondsLabel;
-@property (nonatomic, strong) IBOutlet UILabel * daysDescriptionLabel, * hoursDescriptionLabel, * minutesDescriptionLabel, * secondsDescriptionLabel;
+@property (nonatomic, strong) IBOutlet CCLabel * daysLabel, * hoursLabel, * minutesLabel, * secondsLabel;
+@property (nonatomic, strong) IBOutlet CCLabel * daysDescriptionLabel, * hoursDescriptionLabel, * minutesDescriptionLabel, * secondsDescriptionLabel;
 
-@property (nonatomic, strong) IBOutlet UIButton * infoButton;
 @property (nonatomic, strong) IBOutlet UILabel * nameLabel;
 
-@property (nonatomic, strong) IBOutlet UIImageView * backgroundImageView;
-
-@property (nonatomic, strong) NSString * backgroundImageName, * landscapeBackgroundImageName;
-
-// Landscape
-
-@property (nonatomic, strong) IBOutlet UILabel * timeLabelLanscape;
-
-@property (nonatomic, strong) IBOutlet UIButton * infoButtonLandscape;
-@property (nonatomic, strong) IBOutlet UILabel * nameLabelLandscape;
-
-@property (nonatomic, strong) IBOutlet UIImageView * backgroundImageViewLandscape;
-
-// Public
-@property (nonatomic, assign) CountdownPageViewStyle style;
-
-- (void)showDescription:(BOOL)show animated:(BOOL)animated;
-- (void)setInfoButtonType:(UIButtonType)type;
+@property (nonatomic, strong) NSString * backgroundImageName;
 
 - (IBAction)showSettings:(id)sender;
 

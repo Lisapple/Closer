@@ -27,17 +27,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	application.applicationSupportsShakeToEdit = YES;// Enabled shake to undo
-	application.statusBarStyle = UIStatusBarStyleBlackOpaque;
 	
-	/* Set the background to have a nice animation effect (black background break this effect) */
-	_window.backgroundColor = [UIColor viewFlipsideBackgroundColor];
+	if (TARGET_IS_IOS7_OR_LATER()) {
+		_window.tintColor = [UIColor darkGrayColor];
+		application.statusBarStyle = UIStatusBarStyleDefault;
+		application.statusBarHidden = YES;
+	} else {
+		/* Set the background to have a nice animation effect (black background break this effect) */
+		_window.backgroundColor = [UIColor colorWithWhite:0.13 alpha:1.];
+		application.statusBarStyle = 2 /* UIStatusBarStyleBlackTranslucent */;
+	}
 	
-	UIView * statusBarView = [[UIView alloc] initWithFrame:application.statusBarFrame];
-	statusBarView.backgroundColor = [UIColor lightGrayColor];
-	statusBarView.tag = 4567;
-	[_window addSubview:statusBarView];
-	
-	mainViewController.view.alpha = 0.;// Set mainViewController alpha to 0 to get a nice fade effect
 	_window.rootViewController = mainViewController;
 	[_window makeKeyAndVisible];
 	
@@ -45,12 +45,6 @@
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 	NSInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
 	[mainViewController showPageAtIndex:index animated:NO];
-	
-	/* Animations are always good to see! */
-	[UIView animateWithDuration:0.5
-					 animations:^{
-						 mainViewController.view.alpha = 1.;
-					 }];
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification
 													  object:nil
@@ -78,11 +72,11 @@
 	NSDebugLog(@"application:didReceiveLocalNotification: %@ with an %@.", notification.alertBody, stateString);
 #endif
 	
-	NSString * identifier = [notification.userInfo objectForKey:@"identifier"];
+	NSString * identifier = (notification.userInfo)[@"identifier"];
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSDebugLog(@"Local notification received: %@ - %@ (will play %@)", identifier, countdown.name, notification.soundName);
 	
-	if (countdown.type == CountdownTypeDefault) {
+	if (countdown.type == CountdownTypeCountdown) {
 		
 		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Countdown finished!", nil)
 															 message:notification.alertBody
@@ -133,12 +127,6 @@
 #endif
 		}
 	}
-	
-	/*
-	 NSInteger index = [Countdown indexOfCountdown:countdown];
-	 [self.mainViewController showPageAtIndex:index animated:NO];
-	 [self.mainViewController showSettingsForPageAtIndex:index animated:NO];
-	 */
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -155,52 +143,17 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-	/*
-	 Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-	 Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-	 */
-	
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setInteger:mainViewController.selectedPageIndex
 					  forKey:kLastSelectedPageIndex];
-	
-	[mainViewController unloadHiddenPages];
 	
 	[mainViewController stopUpdateTimeLabels];
 	
 	[Countdown synchronize_async];
 }
 
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-	/*
-	 Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-	 If your application supports background execution, called instead of applicationWillTerminate: when the user quits.
-	 */
-}
-
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-	/*
-	 Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
-	 */
-	
-	/*
-	 [mainViewController loadAllPages];
-	 [mainViewController startUpdateTimeLabels];
-	 */
-}
-
-
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-	/*
-	 Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-	 */
-	
-	[mainViewController loadAllPages];
 	[mainViewController startUpdateTimeLabels];
 }
 
@@ -214,18 +167,5 @@
 	
 	[Countdown synchronize_async];
 }
-
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
-{
-	/*
-	 Free up as much memory as possible by purging cached data objects that can be recreated (or reloaded from disk) later.
-	 */
-}
-
-
 
 @end

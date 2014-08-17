@@ -3,9 +3,12 @@
 //
 
 #ifdef __OBJC__
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import "Countdown.h"// Include Countdown to get it into all classes
+	#import <Foundation/Foundation.h>
+	#import <UIKit/UIKit.h>
+	// Include Countdown to get it into all classes
+	#import "Countdown.h"
+	// Additions
+	#import "UIColor+addition.h"
 #endif
 
 #define CountdownDidSynchronizeNotification @"CountdownDidSynchronizeNotification"
@@ -27,3 +30,5 @@ CG_INLINE void NSFrameLog(CGRect rect)
 #define TARGET_IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 #define OrderComparisonResult(A, B) ( (A < B)? NSOrderedAscending : ((A > B)? NSOrderedDescending : NSOrderedSame) )
+
+#define TARGET_IS_IOS7_OR_LATER() ([UIDevice currentDevice].systemVersion.floatValue >= 7.)

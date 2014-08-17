@@ -8,16 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
-	CountdownTypeDefault = 0,
+typedef NS_OPTIONS(NSUInteger, CountdownType) {
+	CountdownTypeCountdown = 0,
 	CountdownTypeTimer
-} CountdownType;
+};
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, PromptState) {
 	PromptStateNone = 0,
 	PromptStateEveryTimers,
 	PromptStateEnd
-} PromptState;
+};
 
 @interface Countdown : NSObject
 {

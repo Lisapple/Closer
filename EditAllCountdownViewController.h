@@ -10,7 +10,7 @@
 
 @class SettingsViewController_Phone;
 
-@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate>
+@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UITableView * tableView;
 	NSArray * countdowns;
@@ -19,6 +19,8 @@
 }
 
 @property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
+
+- (IBAction)moreInfo:(id)sender;
 
 - (void)reloadData;
 

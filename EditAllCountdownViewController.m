@@ -14,9 +14,6 @@
 
 #import "NetworkStatus.h"
 
-#import "UITableView+addition.h"
-#import "UIColor+addition.h"
-
 @interface EditAllCountdownViewController (PrivateMethods)
 
 - (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
@@ -32,35 +29,50 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
 	self.title = NSLocalizedString(@"All Countdowns", nil);
-	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	
 	UIBarButtonItem * doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 																					 target:self
 																					 action:@selector(done:)];
 	doneButtonItem.tag = kDoneButtonItemTag;
 	
-	if ([doneButtonItem respondsToSelector:@selector(setTintColor:)])
+	if (!TARGET_IS_IOS7_OR_LATER()) {
+		self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 		doneButtonItem.tintColor = [UIColor doneButtonColor];
+	}
 	
 	self.navigationItem.rightBarButtonItem = doneButtonItem;
 	
 	UIBarButtonItem * addButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 																					target:self
 																					action:@selector(add:)];
-	self.navigationItem.leftBarButtonItem = addButtonItem;
+	UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
+	button.frame = CGRectMake(0., 0., 23., 23.);
+	[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
+	if (TARGET_IS_IOS7_OR_LATER())
+        button.tintColor = self.view.window.tintColor;
+	
+    UIBarButtonItem * infoButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+	
+	self.navigationItem.leftBarButtonItems = @[addButtonItem, infoButtonItem];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
 	
+    tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    if (!TARGET_IS_IOS7_OR_LATER()) {
 	tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
 	tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        
+        UIView * backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        tableView.backgroundView = backgroundView;
+    }
+    
 	tableView.allowsSelectionDuringEditing = YES;
 	tableView.editing = YES;
-	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	tableView.backgroundView = backgroundView;
 	
 	[self reloadData];
 	
@@ -69,8 +81,6 @@ const NSInteger kDoneButtonItemTag = 1;
 											 selector:@selector(networkStatusDidChange:)
 												 name:kNetworkStatusDidChangeNotification
 											   object:nil];
-	
-	[super viewDidLoad];
 }
 
 - (void)networkStatusDidChange:(NSNotification *)notification
@@ -82,6 +92,8 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (void)viewDidAppear:(BOOL)animated
 {
+	[super viewDidAppear:animated];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(reloadData)
 												 name:CountdownDidSynchronizeNotification
@@ -92,34 +104,30 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+	[super viewDidDisappear:animated];
+	
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:CountdownDidSynchronizeNotification
 												  object:nil];
 }
 
-- (void)updateUI
+- (IBAction)moreInfo:(id)sender
 {
-	/*
-	 NSArray * oldCountdowns = [countdowns copy];
-	 countdowns = [[Countdown allCountdowns] copy];
-	 */
-	/*
-	 if (countdowns.count > 0) {
-	 if (![oldCountdowns isEqualToArray:countdowns]) {// Change to "save" only if we have real change
-	 BOOL animated = (self.navigationItem.rightBarButtonItem.tag == kDoneButtonItemTag);
-	 UIBarButtonItem * saveButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-	 target:self
-	 action:@selector(done:)];
-	 if ([saveButtonItem respondsToSelector:@selector(setTintColor:)])
-	 saveButtonItem.tintColor = [UIColor doneButtonColor];
-	 
-	 [self.navigationItem setRightBarButtonItem:saveButtonItem animated:animated];
-	 }
-	 }
-	 
-	 
-	 self.navigationItem.rightBarButtonItem.enabled = (countdowns.count > 0);
-	 */
+	NSDictionary * infoDictionary = [[NSBundle mainBundle] infoDictionary];
+	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n", nil), infoDictionary[@"CFBundleShortVersionString"]]; // @TODO: generate the year
+	
+	UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:title
+															  delegate:self
+													 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+												destructiveButtonTitle:nil
+													 otherButtonTitles:
+								   NSLocalizedString(@"Show Countdowns Online", nil),
+								   NSLocalizedString(@"Feedback & Support", nil),
+								   NSLocalizedString(@"Go to my website", nil),
+								   NSLocalizedString(@"See all my applications", nil), nil];
+	
+	actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+	[actionSheet showInView:self.view];
 }
 
 - (void)reloadData
@@ -128,22 +136,6 @@ const NSInteger kDoneButtonItemTag = 1;
 	
 	if (![oldCountdowns isEqualToArray:[Countdown allCountdowns]]) { // Change to "save" only if we have real change
 		
-		/*
-		 [tableView beginUpdates];
-		 
-		 countdowns = [[Countdown allCountdowns] copy];
-		 
-		 NSMutableArray * indexPaths = [[NSMutableArray alloc] initWithCapacity:countdowns.count];
-		 for (int i = 0; i < countdowns.count; i++) {
-		 [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-		 }
-		 
-		 [tableView reloadRowsAtIndexPaths:indexPaths
-		 withRowAnimation:UITableViewRowAnimationTop];
-		 
-		 [tableView endUpdates];
-		 */
-		
 		countdowns = [[Countdown allCountdowns] copy];
 		[tableView reloadData];
 		
@@ -151,20 +143,11 @@ const NSInteger kDoneButtonItemTag = 1;
 		UIBarButtonItem * saveButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
 																						 target:self
 																						 action:@selector(done:)];
-		if ([saveButtonItem respondsToSelector:@selector(setTintColor:)])
+		if (!TARGET_IS_IOS7_OR_LATER())
 			saveButtonItem.tintColor = [UIColor doneButtonColor];
 		
 		[self.navigationItem setRightBarButtonItem:saveButtonItem animated:animated];
 	}
-	
-	/*
-	 if (scrollIndexPath) {
-	 [tableView scrollToRowAtIndexPath:scrollIndexPath
-	 atScrollPosition:UITableViewScrollPositionMiddle
-	 animated:YES];
-	 }
-	 */
-	
 	
 	self.navigationItem.rightBarButtonItem.enabled = (countdowns.count > 0);
 }
@@ -180,7 +163,7 @@ const NSInteger kDoneButtonItemTag = 1;
 	
 	[Countdown synchronize];
 	
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (NSString *)proposedNameForType:(CountdownType)type
@@ -192,7 +175,7 @@ const NSInteger kDoneButtonItemTag = 1;
 		
 		BOOL nameIsFree = YES;
 		for (int i = 0; i < countdowns.count; i++) {
-			Countdown * countdown = (Countdown *)[countdowns objectAtIndex:i];
+			Countdown * countdown = (Countdown *)countdowns[i];
 			if ([countdown.name isEqualToString:name]) {
 				nameIsFree = NO;
 				break;
@@ -224,7 +207,7 @@ const NSInteger kDoneButtonItemTag = 1;
 	} else {
 		
 		Countdown * aCountDown = [[Countdown alloc] init];
-		aCountDown.name = [self proposedNameForType:CountdownTypeDefault];
+		aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
 		[Countdown addCountdown:aCountDown];
 		/* Note: the tableView is automatically reloaded */
 		// @TODO: animated the row insertion
@@ -286,7 +269,7 @@ const NSInteger kDoneButtonItemTag = 1;
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		}
 		
-		Countdown * countdown = [countdowns objectAtIndex:indexPath.row];
+		Countdown * countdown = countdowns[indexPath.row];
 		cell.textLabel.text = countdown.name;
 		
 		if (countdown.type == CountdownTypeTimer) {
@@ -301,7 +284,6 @@ const NSInteger kDoneButtonItemTag = 1;
 			cell.detailTextLabel.text = [countdown.endDate description];
 		}
 		
-		
 	} else {
 		static NSString * shareCellIdentifier = @"shareCellIdentifier";
 		cell = [tableView dequeueReusableCellWithIdentifier:shareCellIdentifier];
@@ -309,7 +291,7 @@ const NSInteger kDoneButtonItemTag = 1;
 		if (cell == nil) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:shareCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
-			cell.textLabel.textAlignment = UITextAlignmentCenter;
+			cell.textLabel.textAlignment = NSTextAlignmentCenter;
 		}
 		
 		switch (indexPath.row) {
@@ -374,13 +356,13 @@ const NSInteger kDoneButtonItemTag = 1;
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (indexPath.section == 0) {
-		settingsViewController.countdown = [countdowns objectAtIndex:indexPath.row];
+		settingsViewController.countdown = countdowns[indexPath.row];
 		
 		[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 		
 		[Countdown synchronize];
 		
-		[self dismissModalViewControllerAnimated:YES];
+		[self dismissViewControllerAnimated:YES completion:NULL];
 	} else {
 		switch (indexPath.row) {// Import From Calendar
 			case 0: {
@@ -427,7 +409,7 @@ const NSInteger kDoneButtonItemTag = 1;
 					} else {
 						ImportFromWebsiteViewController_Phone * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Phone alloc] init];
 						UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-						[self presentModalViewController:navigationController animated:YES];
+						[self presentViewController:navigationController animated:YES completion:NULL];
 					}
 					
 					break;
@@ -444,40 +426,45 @@ const NSInteger kDoneButtonItemTag = 1;
 	}
 }
 
+#pragma mark - UIActionSheet Delegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+		switch (buttonIndex) {
+			case 0:// Show Countdowns Online
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com/index.php"]];
+				break;
+			case 1:// Feedback & Support
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]];
+				break;
+			case 2:// Go to my website
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]];
+				break;
+			case 3: {// See all my applications
+				/* Link via iTunes -> AppStore, I haven't found better! */
+				NSString * iTunesLink = @"https://itunes.apple.com/us/artist/lisacintosh/id320891279?uo=4";// old link = http://search.itunes.apple.com/WebObjects/MZContentLink.woa/wa/link?path=apps%2flisacintosh
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
+				
+				/* Link via Safari -> iTunes -> AppStore */
+				//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.com/apps/lisacintosh/"]];
+			}
+				break;
+			default:// Cancel
+				break;
+		}
+}
+
 #pragma mark - UIAlertView Delegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
 	ImportFromWebsiteViewController_Phone * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Phone alloc] init];
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-	[self presentModalViewController:navigationController animated:YES];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || UIInterfaceOrientationIsPortrait(interfaceOrientation));
+	[self presentViewController:navigationController animated:YES completion:NULL];
 }
 
 - (BOOL)canBecomeFirstResponder
 {
 	return YES;// Return YES to receive undo from shake gesture
 }
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-	
-	// Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-}
-
-
-
 
 @end

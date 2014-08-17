@@ -8,12 +8,6 @@
 
 #import "ImportFromWebsiteViewController_Phone.h"
 
-#import "JSONKit.h"
-
-#import "CheckTableViewCell.h"
-
-#import "UIColor+addition.h"
-
 @interface ImportFromWebsiteViewController_Phone (PrivateMethods)
 
 - (void)updateUI;
@@ -35,8 +29,8 @@
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	
-	UIBarButtonItem * cancelButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel 
-																					   target:self 
+	UIBarButtonItem * cancelButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+																					   target:self
 																					   action:@selector(cancel:)];
 	
 	self.navigationItem.leftBarButtonItem = cancelButtonItem;
@@ -76,11 +70,13 @@
 	_tableView.dataSource = self;
 	_tableView.delegate = self;
 	
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	
-	self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+		_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+		_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		
+		self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+	}
+    
 	[_hiddenTextField becomeFirstResponder];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(textFieldDidChange:)
@@ -90,7 +86,7 @@
 
 - (IBAction)cancel:(id)sender
 {
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (IBAction)pasteFromPasteboard:(id)sender
@@ -154,8 +150,8 @@
 	[request setHTTPMethod:@"POST"];
 	
 	connection = [[NSURLConnection alloc] initWithRequest:request
-												  delegate:self
-										  startImmediately:YES];
+												 delegate:self
+										 startImmediately:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -170,7 +166,7 @@
 	[formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
 	
-	NSDictionary * dictionary = [data objectFromJSONData];
+	NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 	
 	if ([dictionary valueForKey:@"group"]) {// If we have a group (many countdowns)
 		
@@ -179,10 +175,10 @@
 		NSArray * array = [dictionary valueForKey:@"group"];
 		for (NSDictionary * attributes in array) {
 			Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
-			countdown.endDate = [formatter dateFromString:[attributes objectForKey:@"endDate"]];
-			countdown.name = [attributes objectForKey:@"name"];
-			countdown.message = [attributes objectForKey:@"message"];
-			countdown.style = [[attributes objectForKey:@"style"] integerValue];
+			countdown.endDate = [formatter dateFromString:attributes[@"endDate"]];
+			countdown.name = attributes[@"name"];
+			countdown.message = attributes[@"message"];
+			countdown.style = [attributes[@"style"] integerValue];
 			
 			if ([countdown.endDate timeIntervalSinceNow] > 0)
 				[selectedCountdowns addObject:countdown];
@@ -195,15 +191,15 @@
 	} else if ([dictionary valueForKey:@"endDate"]) {// Else is we have just a countdown
 		
 		Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
-		countdown.endDate = [formatter dateFromString:[dictionary objectForKey:@"endDate"]];
-		countdown.name = [dictionary objectForKey:@"name"];
-		countdown.message = [dictionary objectForKey:@"message"];
-		countdown.style = [[dictionary objectForKey:@"style"] integerValue];
+		countdown.endDate = [formatter dateFromString:dictionary[@"endDate"]];
+		countdown.name = dictionary[@"name"];
+		countdown.message = dictionary[@"message"];
+		countdown.style = [dictionary[@"style"] integerValue];
 		
 		if ([countdown.endDate timeIntervalSinceNow] > 0)
 			[selectedCountdowns addObject:countdown];
 		
-		countdowns = [[NSArray alloc] initWithObjects:countdown, nil];
+		countdowns = @[countdown];
 		
 	} else {
 		noCountdownFoundAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Countdowns found", nil)
@@ -220,7 +216,7 @@
 																			  style:UIBarButtonItemStyleDone
 																			 target:self
 																			 action:@selector(import:)];
-		if ([importButtonItem respondsToSelector:@selector(setTintColor:)])
+		if (!TARGET_IS_IOS7_OR_LATER())
 			importButtonItem.tintColor = [UIColor doneButtonColor];
 		
 		self.navigationItem.rightBarButtonItem = importButtonItem;
@@ -228,6 +224,7 @@
 	
 	[self updateUI];
 	
+	_tableView.contentInset = UIEdgeInsetsMake(64., 0., 0., 0.);
 	[self.view addSubview:_tableView];
 	[_tableView reloadData];
 }
@@ -246,7 +243,7 @@
 #endif
 	
 	[Countdown addCountdowns:selectedCountdowns];
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)connection:(NSURLConnection *)aConnection didFailWithError:(NSError *)error
@@ -306,11 +303,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * identifier = @"CellID";
-	CheckTableViewCell * cell = (CheckTableViewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+	UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:identifier];
 	if (!cell)
-		cell = [[CheckTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
 	
-	Countdown * countdown = [countdowns objectAtIndex:indexPath.row];
+	Countdown * countdown = countdowns[indexPath.row];
 	cell.textLabel.text = countdown.name;
 	
 	if ([countdown.endDate timeIntervalSinceNow] > 0) {
@@ -336,7 +333,7 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	Countdown * countdown = [countdowns objectAtIndex:indexPath.row];
+	Countdown * countdown = countdowns[indexPath.row];
 	
 	if ([countdown.endDate timeIntervalSinceNow] > 0.) {// Change check state only for valid (not finished) countdowns
 		UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
@@ -380,42 +377,10 @@
 		// else, it's for Cancel, do nothing
 		
 	} else if (alertView == noCountdownFoundAlertView) {
-		[self dismissModalViewControllerAnimated:YES];
+		[self dismissViewControllerAnimated:YES completion:NULL];
 	} else {// On error alert view
-		[self dismissModalViewControllerAnimated:YES];
+		[self dismissViewControllerAnimated:YES completion:NULL];
 	}
-}
-
-#pragma mark -
-#pragma mark Rotation management
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-	
-	self.hiddenTextField = nil;
-	
-	self.instructionLabel = nil;
-	self.passwordLabel1 = nil;
-	self.passwordLabel2 = nil;
-	self.passwordLabel3 = nil;
-	self.passwordLabel4 = nil;
-	
-	self.activityIndicator = nil;
-	self.tableView = nil;
-	
-	
-	
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
 }
 
 @end

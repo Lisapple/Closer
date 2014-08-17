@@ -8,9 +8,6 @@
 
 #import "ExportToWebsiteViewController.h"
 
-#import "JSONKit.h"
-
-#import "UIColor+addition.h"
 #import "NSDate+addition.h"
 
 @interface ExportToWebsiteViewController (PrivateMethods)
@@ -47,14 +44,13 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Exported to Website", nil);
-	self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	
 	UIBarButtonItem * doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 																				 target:self
 																				 action:@selector(done:)];
-	if ([doneButton respondsToSelector:@selector(setTintColor:)])
+	if (!TARGET_IS_IOS7_OR_LATER())
 		doneButton.tintColor = [UIColor doneButtonColor];
 	
 	self.navigationItem.rightBarButtonItem = doneButton;
@@ -62,21 +58,23 @@
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	
-	UIView * backgroundView = [[UIView alloc] init];
-	backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView = backgroundView;
-	
+    if (!TARGET_IS_IOS7_OR_LATER()) {
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+        _tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        _tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        
+        UIView * backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+        _tableView.backgroundView = backgroundView;
+	}
+    
 	[self export:nil];
 }
 
 - (IBAction)done:(id)sender
 {
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (IBAction)export:(id)sender
@@ -84,7 +82,7 @@
 	NSURL * url = [NSURL URLWithString:@"http://closer.lisacintosh.com/import.php"];
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
 	
-	NSString * stringJSON = nil;
+	NSData * JSONData = nil;
 	if (_countdowns.count > 1) {
 		
 		/* If many countdowns into "_countdowns", create a dictionary for each countdown, put all dict into an array and create a dict with the array:
@@ -96,38 +94,41 @@
 		
 		NSMutableArray * objects = [[NSMutableArray alloc] initWithCapacity:_countdowns.count];
 		for (Countdown * countdown in _countdowns) {
-			NSDictionary * attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-										 countdown.name, @"name",
-										 [countdown.endDate SQLDateTime], @"endDate",
-										((countdown.message)? countdown.message: @""), @"message",// If we don't have message (= nil), pass a empty string
-										 [NSNumber numberWithInteger:countdown.style], @"style",
-										 [UIDevice currentDevice].model, @"client", nil];
+			NSDictionary * attributes = @{@"name": countdown.name,
+										 @"endDate": [countdown.endDate SQLDateTime],
+                                         @"message": ((countdown.message)? countdown.message: @""),// If we don't have message (= nil), pass a empty string
+										 @"style": @(countdown.style),
+										 @"client": [UIDevice currentDevice].model};
 			[objects addObject:attributes];
 		}
 		
-		NSDictionary * outputDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:objects, @"group", nil];
-		
-		stringJSON = [outputDictionary JSONString];
+		NSDictionary * outputDictionary = @{@"group": objects};
+		JSONData = [NSJSONSerialization dataWithJSONObject:outputDictionary
+												   options:0
+													 error:NULL];
 		
 	} else if (_countdowns.count == 1) {
 		/* If just one countdown into "_countdowns", create a dictionary with content of the countdown */
 		
-		Countdown * countdown = [_countdowns objectAtIndex:0];
-		NSDictionary * attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-									 countdown.name, @"name",
-									 [countdown.endDate SQLDateTime], @"endDate",
-									 countdown.message, @"message",
-									 [NSNumber numberWithInteger:countdown.style], @"style",
-									 [UIDevice currentDevice].model, @"client", nil];
+		Countdown * countdown = _countdowns[0];
+		NSDictionary * attributes = @{@"name": countdown.name,
+									 @"endDate": [countdown.endDate SQLDateTime],
+									 @"message": countdown.message,
+									 @"style": @(countdown.style),
+									 @"client": [UIDevice currentDevice].model};
 		
-		stringJSON = [attributes JSONString];
+		JSONData = [NSJSONSerialization dataWithJSONObject:attributes
+													 options:0
+													   error:NULL];
 		
 	} else {
 		/* The "_countdowns" should not be empty, but, in this case, quit the method */
 		return ;
 	}
 	
-	NSData * data = [[NSString stringWithFormat:@"json_data=%@", stringJSON] dataUsingEncoding:NSUTF8StringEncoding];
+	NSMutableData * data = [[NSMutableData alloc] initWithCapacity:(10 + JSONData.length)];
+	[data appendData:[@"json_data=" dataUsingEncoding:NSUTF8StringEncoding]];
+	[data appendData:JSONData];
 	
 	[request setHTTPBody:data];
 	[request setHTTPMethod:@"POST"];
@@ -152,10 +153,10 @@
 {
 	[_activityIndicator stopAnimating];
 	
-	NSDictionary * dictionary = [data objectFromJSONData];
+	NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 	
-	password1 = [dictionary objectForKey:@"password1"];
-	password2 = [dictionary objectForKey:@"password2"];
+	password1 = dictionary[@"password1"];
+	password2 = dictionary[@"password2"];
 	
 	NSDebugLog(@"(%@|%@)", password1, password2);
 	
@@ -176,6 +177,7 @@
 		pasteboard.URL = [self countdownOnCloserWebsiteURL];
 		pasteboard.string = [NSString stringWithFormat:@"%@ - %@", password1, password2];
 		
+		_tableView.frame = self.view.frame;
 		[self.view addSubview:_tableView];
 		[_tableView reloadData];
 	} else {
@@ -212,7 +214,7 @@
 	}
 	
 	cell.textLabel.text = NSLocalizedString(@"Show on Safari", nil);
-	cell.textLabel.textAlignment = UITextAlignmentCenter;
+	cell.textLabel.textAlignment = NSTextAlignmentCenter;
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	
 	return cell;
@@ -226,41 +228,6 @@
 	[[UIApplication sharedApplication] openURL:[self countdownOnCloserWebsiteURL]];
 	
 	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	/* Allow landscape mode on iPad */
-	if (TARGET_IS_IPAD())
-		return (UIInterfaceOrientationIsPortrait(interfaceOrientation) || UIInterfaceOrientationIsLandscape(interfaceOrientation));
-	else 
-		return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-	
-	
-	self.password1Label1 = nil;
-	self.password1Label2 = nil;
-	self.password1Label3 = nil;
-	self.password1Label4 = nil;
-	
-	self.password2Label1 = nil;
-	self.password2Label2 = nil;
-	self.password2Label3 = nil;
-	self.password2Label4 = nil;
-	
-	self.tableView = nil;
 }
 
 @end

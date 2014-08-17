@@ -11,5 +11,8 @@
 @interface TimerView : UIControl
 
 @property (nonatomic, assign) CGFloat progression;
+@property (nonatomic, assign) UIColor * tintColor;
+
+- (void)setProgression:(CGFloat)progression animated:(BOOL)animated;
 
 @end

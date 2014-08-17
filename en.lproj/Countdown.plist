@@ -8,9 +8,9 @@
 		<key>name</key>
 		<string>Countdown 1</string>
 		<key>endDate</key>
-		<date>2013-12-31T23:00:00Z</date>
+		<date>2014-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Happy new Year 2014!</string>
+		<string>Happy new Year 2015!</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>
@@ -26,9 +26,9 @@
 		<key>name</key>
 		<string>Countdown 2</string>
 		<key>endDate</key>
-		<date>2014-12-31T23:00:00Z</date>
+		<date>2015-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Happy new Year 2015!</string>
+		<string>Happy new Year 2016!</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>

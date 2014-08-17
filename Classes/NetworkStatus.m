@@ -51,7 +51,7 @@ void NetworkReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReach
 	
 	if (oldStatus != (int)connected) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:kNetworkStatusDidChangeNotification
-														object:[NSNumber numberWithBool:connected]];
+														object:@(connected)];
 		oldStatus = (int)connected;
 	}
 }
@@ -65,7 +65,7 @@ void NetworkReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReach
 		SCNetworkReachabilityContext context = { 0, (__bridge void *)(self), NULL, NULL, NULL };
 		SCNetworkReachabilitySetCallback(reachability, NetworkReachabilityCallBack, &context);
 		
-		SCNetworkReachabilitySetDispatchQueue(reachability, dispatch_get_current_queue());
+		SCNetworkReachabilitySetDispatchQueue(reachability, dispatch_get_main_queue());
 		
 		isObserving = YES;
 	}

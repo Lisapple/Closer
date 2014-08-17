@@ -24,61 +24,77 @@
 {
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	
-	CGFloat border = 1.;
-	CGRect frame = CGRectMake(border, border, rect.size.width - border * 2, rect.size.height - border * 2);
-	
-	float bottomRadius = 8., topRadius = 0.;
-	CGSize arrowSize = CGSizeMake(20., 10.);
-	float x = frame.origin.x, y = frame.origin.y, width = frame.size.width, height = frame.size.height;
-	
-	CGContextSaveGState(context);
-	{
-		CGContextBeginPath(context);
-		/* Start at right-up corner*/
-		CGContextMoveToPoint(context, x, y + topRadius);
-		CGContextAddArcToPoint(context, x, y, x + topRadius, y, topRadius);
-		
-		/* Add the arrow (at the top) */
-		CGContextAddLineToPoint(context, x + width / 2. - arrowSize.width / 2., y);
-		CGContextAddLineToPoint(context, x + width / 2., y + arrowSize.height);
-		CGContextAddLineToPoint(context, x + width / 2. + arrowSize.width / 2., y);
-		
-		CGContextAddArcToPoint(context, x + width, y, x + width, topRadius, topRadius);
-		CGContextAddArcToPoint(context, x + width, height + y, x + width - bottomRadius, height + y, bottomRadius);
-		CGContextAddArcToPoint(context, x, height + y, x, y + height - bottomRadius, bottomRadius);
-		CGContextClosePath(context);
-		CGContextClip(context);
+	if (TARGET_IS_IOS7_OR_LATER()) {
+		CGFloat width = 30.;
+		CGRect frame = CGRectMake(rect.origin.x + ceilf((rect.size.width - width) / 2.), 0.,
+								  width, rect.size.height);
+		[[UIColor colorWithWhite:0.9 alpha:1.] setStroke];
+		CGContextStrokeRect(context, frame);
 		
 		CGContextSetBlendMode(context, kCGBlendModeClear);
-		[[UIColor blueColor] setFill];//[[UIColor clearColor] setFill];
+		[[UIColor clearColor] setFill];
 		CGContextFillRect(context, frame);
+		
+	} else {
+		
+		CGFloat border = 1.;
+		CGRect frame = CGRectMake(border, border, rect.size.width - border * 2, rect.size.height - border * 2);
+		
+		float bottomRadius = 8., topRadius = 0.;
+		CGSize arrowSize = CGSizeMake(20., 10.);
+		float x = frame.origin.x, y = frame.origin.y, width = frame.size.width, height = frame.size.height;
+		
+		CGContextSaveGState(context);
+		{
+			CGContextBeginPath(context);
+			/* Start at right-up corner*/
+			CGContextMoveToPoint(context, x, y + topRadius);
+			CGContextAddArcToPoint(context, x, y, x + topRadius, y, topRadius);
+			
+			/* Add the arrow (at the top) */
+			CGContextAddLineToPoint(context, x + width / 2. - arrowSize.width / 2., y);
+			CGContextAddLineToPoint(context, x + width / 2., y + arrowSize.height);
+			CGContextAddLineToPoint(context, x + width / 2. + arrowSize.width / 2., y);
+			
+			CGContextAddArcToPoint(context, x + width, y, x + width, topRadius, topRadius);
+			CGContextAddArcToPoint(context, x + width, height + y, x + width - bottomRadius, height + y, bottomRadius);
+			CGContextAddArcToPoint(context, x, height + y, x, y + height - bottomRadius, bottomRadius);
+			CGContextClosePath(context);
+			CGContextClip(context);
+			
+			CGContextSetBlendMode(context, kCGBlendModeClear);
+			[[UIColor blueColor] setFill];//[[UIColor clearColor] setFill];
+			CGContextFillRect(context, frame);
+		}
+		CGContextRestoreGState(context);
+		
+		CGContextSetBlendMode(context, kCGBlendModeNormal);
+		CGContextSaveGState(context);
+		{
+			CGContextSetShadowWithColor(context, CGSizeMake(0., 1.), 3., [UIColor colorWithWhite:0. alpha:0.333].CGColor);
+			
+			// @TODO: Create a rounded arrow for iOS 7+
+			
+			CGContextBeginPath(context);
+			/* Start at right-up corner*/
+			CGContextMoveToPoint(context, x, y);
+			
+			/* Add the arrow (at the top) */
+			CGContextAddLineToPoint(context, x + width / 2. - arrowSize.width / 2., y);
+			CGContextAddLineToPoint(context, x + width / 2., y + arrowSize.height);
+			CGContextAddLineToPoint(context, x + width / 2. + arrowSize.width / 2., y);
+			
+			CGContextAddLineToPoint(context, x + width, y);
+			CGContextAddLineToPoint(context, x + width, y - 10.);
+			CGContextAddLineToPoint(context, x, y - 10.);
+			
+			CGContextClosePath(context);
+			
+			[[UIColor colorWithWhite:(247. / 255.) alpha:1.] setFill];
+			CGContextFillPath(context);
+		}
+		CGContextRestoreGState(context);
 	}
-	CGContextRestoreGState(context);
-	
-	CGContextSetBlendMode(context, kCGBlendModeNormal);
-	CGContextSaveGState(context);
-	{
-		CGContextSetShadowWithColor(context, CGSizeMake(0., 1.), 3., [UIColor colorWithWhite:0. alpha:0.333].CGColor);
-		
-		CGContextBeginPath(context);
-		/* Start at right-up corner*/
-		CGContextMoveToPoint(context, x, y);
-		
-		/* Add the arrow (at the top) */
-		CGContextAddLineToPoint(context, x + width / 2. - arrowSize.width / 2., y);
-		CGContextAddLineToPoint(context, x + width / 2., y + arrowSize.height);
-		CGContextAddLineToPoint(context, x + width / 2. + arrowSize.width / 2., y);
-		
-		CGContextAddLineToPoint(context, x + width, y);
-		CGContextAddLineToPoint(context, x + width, y - 10.);
-		CGContextAddLineToPoint(context, x, y - 10.);
-		
-		CGContextClosePath(context);
-		
-		[[UIColor colorWithWhite:(247. / 255.) alpha:1.] setFill];
-		CGContextFillPath(context);
-	}
-	CGContextRestoreGState(context);
 }
 
 - (void)setFrame:(CGRect)frame
@@ -102,7 +118,11 @@
 		self.showsHorizontalScrollIndicator = NO;
 		self.alwaysBounceHorizontal = YES;
 		//self.backgroundColor =
-		backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"picker-background"]];
+		
+		if (!TARGET_IS_IOS7_OR_LATER()) {
+			UIImage * image = [UIImage imageNamed:@"picker-background"];
+			backgroundColor = [UIColor colorWithPatternImage:image];
+		}
 	}
     return self;
 }
@@ -117,37 +137,35 @@
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	
 	/* Clear the border (with round corner) */
-	/*
-	 CGContextSetBlendMode(context, kCGBlendModeClear);
-	 [[UIColor redColor] setFill];
-	 CGContextFillPath(context);
-	 */
-	
-	CGFloat border = 0.;
-	CGRect frame = CGRectMake(border + self.contentOffset.x, border, rect.size.width - border * 2, rect.size.height - border * 2);
-	
-	float bottomRadius = 8., topRadius = 0.;
-	float x = frame.origin.x, y = frame.origin.y, width = frame.size.width, height = frame.size.height;
-	CGContextBeginPath(context);
-	/* Start at right-up corner*/
-	CGContextMoveToPoint(context, x, y + topRadius);
-	CGContextAddArcToPoint(context, x, y, x + topRadius, y, topRadius);
-	CGContextAddArcToPoint(context, x + width, y, x + width, topRadius, topRadius);
-	CGContextAddArcToPoint(context, x + width, height + y, x + width - bottomRadius, height + y, bottomRadius);
-	CGContextAddArcToPoint(context, x, height + y, x, y + height - bottomRadius, bottomRadius);
-	CGContextClosePath(context);
-	
-	/*
-	CGPathRef path = CGContextCopyPath(context);
-	
-	CGContextAddPath(context, path);
-	CGContextClip(context);
-	CGPathRelease(path);
-	*/
-	
-	CGContextSetBlendMode(context, kCGBlendModeNormal);
-	[backgroundColor setFill];
-	CGContextFillPath(context);
+	if (TARGET_IS_IOS7_OR_LATER()) {
+		
+	} else {
+		
+		CGFloat border = 0.;
+		CGRect frame = CGRectMake(border + self.contentOffset.x, border, rect.size.width - border * 2, rect.size.height - border * 2);
+		
+		float bottomRadius = 8., topRadius = 0.;
+		float x = frame.origin.x, y = frame.origin.y, width = frame.size.width, height = frame.size.height;
+		CGContextBeginPath(context);
+		/* Start at right-up corner*/
+		CGContextMoveToPoint(context, x, y + topRadius);
+		CGContextAddArcToPoint(context, x, y, x + topRadius, y, topRadius);
+		CGContextAddArcToPoint(context, x + width, y, x + width, topRadius, topRadius);
+		CGContextAddArcToPoint(context, x + width, height + y, x + width - bottomRadius, height + y, bottomRadius);
+		CGContextAddArcToPoint(context, x, height + y, x, y + height - bottomRadius, bottomRadius);
+		CGContextClosePath(context);
+		/*
+		 CGPathRef path = CGContextCopyPath(context);
+		 
+		 CGContextAddPath(context, path);
+		 CGContextClip(context);
+		 CGPathRelease(path);
+		 */
+		
+		CGContextSetBlendMode(context, kCGBlendModeNormal);
+		[backgroundColor setFill];
+		CGContextFillPath(context);
+	}
 }
 
 - (void)setContentOffset:(CGPoint)contentOffset
@@ -225,6 +243,22 @@
 	[self addSubview:maskView];
 }
 
+- (UIColor *)highlightedTextColor
+{
+	if (TARGET_IS_IOS7_OR_LATER())
+		return [UIColor colorWithWhite:0.1 alpha:1.];
+		
+	return [UIColor colorWithWhite:0.25 alpha:1.];
+}
+
+- (UIColor *)unhighlightedTextColor
+{
+	if (TARGET_IS_IOS7_OR_LATER())
+		return [UIColor lightGrayColor];
+	
+	return [UIColor grayColor];
+}
+
 - (void)reloadData
 {
 	numberOfItems = [self.dataSource numberOfNumbersInDurationPickerView:self];
@@ -244,10 +278,13 @@
 		UILabel * label = [[UILabel alloc] initWithFrame:rect];
 		label.backgroundColor = [UIColor clearColor];
 		label.opaque = YES;
-		label.textColor = (index == _selectedIndex)? [UIColor colorWithWhite:0.25 alpha:1.] : [UIColor grayColor];
+		label.textColor = (index == _selectedIndex)? [self highlightedTextColor] : [self unhighlightedTextColor];
+		
+		if (!TARGET_IS_IOS7_OR_LATER()) {
+			label.shadowColor = [UIColor colorWithWhite:1. alpha:0.5];
+			label.shadowOffset = CGSizeMake(0., 1.);
+		}
 		label.font = [UIFont boldSystemFontOfSize:17.];
-		label.shadowColor = [UIColor colorWithWhite:1. alpha:0.5];
-		label.shadowOffset = CGSizeMake(0., 1.);
 		label.textAlignment = NSTextAlignmentCenter;
 		label.text = [NSString stringWithFormat:@"%d", number];
 		[scrollView addSubview:label];
@@ -285,11 +322,11 @@
 {
 	if (0 <= index && index < numberOfItems) {
 		UILabel * oldLabel = labels[_selectedIndex];
-		oldLabel.textColor = [UIColor grayColor];
+		oldLabel.textColor = [self unhighlightedTextColor];
 		
 		UILabel * newLabel = labels[index];
-		newLabel.textColor = [UIColor colorWithWhite:0.25 alpha:1.];
-		
+		newLabel.textColor = [self highlightedTextColor];
+			
 		_selectedIndex = index;
 		
 		const CGFloat labelWidth = 40.;
@@ -316,12 +353,12 @@
 	
 	if (0 <= _selectedIndex && _selectedIndex < labels.count) {
 		UILabel * oldLabel = labels[_selectedIndex];
-		oldLabel.textColor = [UIColor grayColor];
+		oldLabel.textColor = [self unhighlightedTextColor];
 	}
 	
 	if (0 <= index && index < labels.count) {
 		UILabel * newLabel = labels[index];
-		newLabel.textColor = [UIColor colorWithWhite:0.25 alpha:1.];
+		newLabel.textColor = [self highlightedTextColor];
 	}
 	
 	_selectedIndex = index;

@@ -10,6 +10,7 @@
 
 @interface NSArray (addition)
 
-- (NSString *)componentsJoinedByString:(NSString *)separator andLastString:(NSString *)endSeparator;
+- (NSString *)componentsJoinedByString:(NSString *)separator andLastString:(NSString *)endSeparator DEPRECATED_ATTRIBUTE;
+- (NSString *)componentsJoinedByString:(NSString *)separator withLastJoin:(NSString *)endJoin;
 
 @end

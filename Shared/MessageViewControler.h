@@ -14,10 +14,9 @@
 	
 @end
 
-@interface MessageViewControler : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
+@interface MessageViewControler : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
 {
 	IBOutlet MyTextView * cellTextView;
-	IBOutlet UITableView * tableView;
 	
 	UITableViewCell * messageCell;
 	
@@ -27,7 +26,6 @@
 }
 
 @property (nonatomic, strong) IBOutlet UITextView * cellTextView;
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
 
 @property (nonatomic, strong) UITableViewCell * messageCell;
 
