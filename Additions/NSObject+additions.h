@@ -15,7 +15,8 @@ typedef void (^_AnimationBlockCompletionHandler)(void);
 
 @property (nonatomic, strong) _AnimationBlockUpdateHandler updateBlock;
 @property (nonatomic, strong) _AnimationBlockCompletionHandler completionBlock;
-@property (nonatomic, assign) NSTimeInterval duration, startTimestamp;
+@property (nonatomic, assign) NSTimeInterval duration;
+@property (nonatomic, assign) float progression;
 
 @end
 

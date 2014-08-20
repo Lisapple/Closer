@@ -426,11 +426,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 	
 	int index = 0;
 	for (PageView * page in pages) {
-		
-		if (ABS(pageIndex - index) <= 1) {// Update only the current page and it left and right neighbours
+		if (ABS(pageIndex - index) <= 1) // Update only the current page and it left and right neighbours
 			[page update];
-		}
-		
 		index++;
 	}
 }

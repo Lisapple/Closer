@@ -13,6 +13,7 @@
 @property (nonatomic, assign) CGFloat progression;
 @property (nonatomic, assign) UIColor * tintColor;
 
+- (void)cancelProgressionAnimation;
 - (void)setProgression:(CGFloat)progression animated:(BOOL)animated;
 
 @end

@@ -23,31 +23,6 @@
 
 #import "NSObject+additions.h"
 
-@implementation DeleteButton
-
-@synthesize state;
-
-- (void)setState:(enum DeleteButtonState)theState
-{
-	if (state == DeleteButtonStateShow &&
-		theState == DeleteButtonStateConfirmation) {
-		[UIView animateWithDuration:0.25
-						 animations:^{
-							 self.transform = CGAffineTransformMakeRotation(M_PI_2);
-						 }];
-	} else if (state == DeleteButtonStateConfirmation &&
-			   theState == DeleteButtonStateShow) {
-		[UIView animateWithDuration:0.25
-						 animations:^{
-							 self.transform = CGAffineTransformIdentity;
-						 }];
-	}
-	
-	state = theState;
-}
-
-@end
-
 @interface MainViewController_Pad (PrivateMethods)
 
 - (void)showNavigationBar:(NSInteger)navigationBarTag animated:(BOOL)animated;
@@ -609,7 +584,7 @@
 	int i = index % (numberOfRows * numberOfColumns);
 	int row = i / numberOfRows;
 	int col = i % numberOfRows;
-	int page = index / (numberOfRows * numberOfColumns);
+	NSInteger page = index / (numberOfRows * numberOfColumns);
 	
 	int pageOffset = page * scrollView.frame.size.width;
 	

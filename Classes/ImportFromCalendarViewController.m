@@ -22,9 +22,10 @@
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
 	NSString * title = NSLocalizedString(@"Choose Events", nil);
 	NSArray * components = [title componentsSeparatedByString:@"\n"];
-	
     
     if (TARGET_IS_IOS7_OR_LATER()) {
         self.title = title;
@@ -95,50 +96,6 @@
 																				   action:@selector(cancel:)];
 	self.navigationItem.leftBarButtonItem = cancelButton;
 	
-	/*
-	 When eventStore is released, all events and calendars disapear, we loose all references
-	 so eventStore is stored as ivar and manage memory manually.
-	 Note: reference to event are created from the evenStore himself, they don't change until the event change.
-	 */
-	eventStore = [[EKEventStore alloc] init];
-	
-	if ([eventStore respondsToSelector:@selector(requestAccessToEntityType:completion:)]) {
-		
-		/* Show the spinning wheel */
-		_activityIndicatorView.hidden = NO;
-		
-		[eventStore requestAccessToEntityType:EKEntityTypeEvent
-								   completion:^(BOOL granted, NSError *error) {
-									   
-									   /* Hide the spinning wheel */
-									   _activityIndicatorView.hidden = YES;
-									   
-                                       NSLog(@"Granted: %d", granted);
-                                       
-									   if (granted) {
-										   [self reload];
-									   } else if (!granted) {
-										   
-										   NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
-										   UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Access Denied!", nil)
-																								message:message
-																							   delegate:nil
-																					  cancelButtonTitle:NSLocalizedString(@"OK", nil)
-																					  otherButtonTitles:nil];
-										   [alertView show];
-										   
-									   } else if (error) {
-										   /* Show an alert with the error */
-										   UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error!", nil)
-																								message:error.localizedDescription
-																							   delegate:nil
-																					  cancelButtonTitle:NSLocalizedString(@"OK", nil)
-																					  otherButtonTitles:nil];
-										   [alertView show];
-									   }
-								   }];
-	}
-	
 	selectedEvents = [[NSMutableArray alloc] initWithCapacity:10];
 	
 	tableView.delegate = self;
@@ -158,13 +115,52 @@
     
 	[tableView reloadData];
 	
-    [super viewDidLoad];
+	/* Show the spinning wheel */
+	_activityIndicatorView.hidden = NO;
 	
-	[self reload];
+	/*
+	 When eventStore is released, all events and calendars disapear, we loose all references
+	 so eventStore is stored as ivar and manage memory manually.
+	 Note: reference to event are created from the evenStore himself, they don't change until the event change.
+	 */
+	eventStore = [[EKEventStore alloc] init];
+	[eventStore requestAccessToEntityType:EKEntityTypeEvent
+							   completion:^(BOOL granted, NSError *error)
+	 {
+		 dispatch_async(dispatch_get_main_queue(), ^{
+			 
+			 /* Hide the spinning wheel */
+			 _activityIndicatorView.hidden = YES;
+			 
+			 NSDebugLog(@"Granted: %@", (granted) ? @"Yes" : @"No");
+			 
+			 if (granted) {
+				 [self reload];
+				 
+			 } else if (!granted) {
+				 NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
+				 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Access Denied!", nil)
+											 message:message
+											delegate:nil
+								   cancelButtonTitle:NSLocalizedString(@"OK", nil)
+								   otherButtonTitles:nil] show];
+				 
+			 } else if (error) {
+				 /* Show an alert with the error */
+				 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error!", nil)
+											 message:error.localizedDescription
+											delegate:nil
+								   cancelButtonTitle:NSLocalizedString(@"OK", nil)
+								   otherButtonTitles:nil] show];
+			 }
+		 });
+	 }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+	[super viewWillAppear:animated];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(reload)
 												 name:EKEventStoreChangedNotification
@@ -174,12 +170,12 @@
 											 selector:@selector(deviceOrientationDidChange:)
 												 name:UIDeviceOrientationDidChangeNotification
 											   object:nil];
-	
-	[super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+	[super viewWillDisappear:animated];
+	
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:EKEventStoreChangedNotification
 												  object:nil];
@@ -187,8 +183,6 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:UIDeviceOrientationDidChangeNotification
 												  object:nil];
-	
-	[super viewWillDisappear:animated];
 }
 
 - (void)reload
@@ -197,6 +191,8 @@
     if (!reloading) {
         reloading = YES;
         
+		[eventStore refreshSourcesIfNecessary];
+		
         NSArray * allCalendars = [eventStore calendarsForEntityType:EKEntityTypeEvent];
         NSInteger count = allCalendars.count;
         
@@ -231,30 +227,8 @@
         
         NSArray * selectedEventsCopy = selectedEvents.copy;
         for (EKEvent * event in selectedEventsCopy) {
-            if (![allCalendarsEvents containsObject:event]) {
+            if (![allCalendarsEvents containsObject:event])
                 [selectedEvents removeObject:event];
-            }
-        }
-        
-        /* Show "No Future Events" if no future events (for all calendars) */
-        if (numberOfEvents == 0) {
-            CGRect frame = CGRectMake(0., 0., self.tableView.frame.size.width, self.tableView.frame.size.height);
-            UILabel * label = [[UILabel alloc] initWithFrame:frame];
-            label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            label.backgroundColor = [UIColor clearColor];
-            label.lineBreakMode = NSLineBreakByCharWrapping;
-            label.numberOfLines = 0;// Infinite number of line
-            label.textColor = [UIColor darkGrayColor];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.font = [UIFont boldSystemFontOfSize:18.];
-            label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
-            label.shadowOffset = CGSizeMake(0., 1.);
-            
-            label.text = NSLocalizedString(@"No Future Events", nil);
-            
-            //self.tableView.tableHeaderView = label;
-        } else {
-            //self.tableView.tableHeaderView = nil;
         }
         
         [self updateUI];
@@ -267,6 +241,32 @@
 - (void)updateUI
 {
 	self.navigationItem.rightBarButtonItem.enabled = (selectedEvents.count > 0);
+	
+	/* Show "No Future Events" if no future events (for all calendars) */
+	if (numberOfEvents == 0) {
+		CGRect frame = CGRectMake(0., 0., self.tableView.frame.size.width, self.tableView.frame.size.height - 84.);
+		UILabel * label = [[UILabel alloc] initWithFrame:frame];
+		label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		label.backgroundColor = [UIColor clearColor];
+		label.lineBreakMode = NSLineBreakByCharWrapping;
+		label.numberOfLines = 0;// Infinite number of line
+		label.textAlignment = NSTextAlignmentCenter;
+		
+		if (TARGET_IS_IOS7_OR_LATER()) {
+			label.textColor = [UIColor blackColor];
+			label.font = [UIFont systemFontOfSize:17.];
+			
+		} else {
+			label.textColor = [UIColor darkGrayColor];
+			label.font = [UIFont boldSystemFontOfSize:18.];
+			label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
+			label.shadowOffset = CGSizeMake(0., 1.);
+		}
+		
+		label.text = NSLocalizedString(@"No Future Events", nil);
+		
+		self.tableView.tableHeaderView = label;
+	}
 }
 
 - (IBAction)import:(id)sender

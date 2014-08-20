@@ -91,7 +91,9 @@
 	// Hide the delete button on tap (outside the delete button)
 	if (_showDeleteConfirmation) {
 		[self hideDeleteConfirmation];
+		
 	} else {
+		/*
 		UITouch * touch = [touches anyObject];
 		if (touch.tapCount == 1)
 			[self performSelector:@selector(handleSingleTap) withObject:nil afterDelay:kDoubleTapDelay];
@@ -99,19 +101,20 @@
 			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(handleSingleTap) object:nil];
 			[self handleDoubleTap];
 		}
+		 */
 	}
 }
 
 - (void)handleSingleTap
 {
-	if ([self.delegate respondsToSelector:@selector(viewDidSingleTap:)])
-		[self.delegate viewDidSingleTap:self];
+	if ([self.delegate respondsToSelector:@selector(pageViewDidSingleTap:)])
+		[self.delegate pageViewDidSingleTap:self];
 }
 
 - (void)handleDoubleTap
 {
-	if ([self.delegate respondsToSelector:@selector(viewDidDoubleTap:)])
-		[self.delegate viewDidDoubleTap:self];
+	if ([self.delegate respondsToSelector:@selector(pageViewDidDoubleTap:)])
+		[self.delegate pageViewDidDoubleTap:self];
 }
 
 - (void)hideDeleteConfirmation

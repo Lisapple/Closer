@@ -33,14 +33,6 @@
 @synthesize daysDescriptionLabel, hoursDescriptionLabel, minutesDescriptionLabel, secondsDescriptionLabel;
 @synthesize nameLabel;
 
-const NSTimeInterval kHideDescriptionDelay = 5.;
-
-/*
- static CGFloat hoursLabelY, minutesLabelY, secondsLabelY;
- static CGFloat hoursDescriptionLabelY, minutesDescriptionLabelY, secondsDescriptionLabelY;
- static CGFloat nameLabelY, infoButtonY;
- */
-
 - (id)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
@@ -51,7 +43,12 @@ const NSTimeInterval kHideDescriptionDelay = 5.;
 		// On iOS 6, create a custom info button (because tint color doesn't work)
 		if (!TARGET_IS_IOS7_OR_LATER()) {
 			_tintedInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_tintedInfoButton.frame = self.infoButton.frame;
+			
+			CGFloat margin = 10.;
+			CGRect rect = self.infoButton.frame;
+			_tintedInfoButton.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
+												 rect.size.width + 2. * margin, rect.size.height + 2. * margin);
+			
 			_tintedInfoButton.autoresizingMask = self.infoButton.autoresizingMask;
 			NSString * actionString = [self.infoButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].lastObject;
 			[_tintedInfoButton addTarget:self
@@ -88,7 +85,7 @@ const NSTimeInterval kHideDescriptionDelay = 5.;
 		totalHeight += daysLabel.frame.size.height;
 	
 	int numberOfLabels = (days) ? 5 : 4;
-	CGFloat margin = ceilf((self.frame.size.height - 10. - totalHeight) / (float)(numberOfLabels + 1));
+	CGFloat margin = ceilf((self.frame.size.height - 20. - totalHeight) / (float)(numberOfLabels + 1));
 	
 	CGFloat y = margin;
 	if (days > 0) {
@@ -112,7 +109,12 @@ const NSTimeInterval kHideDescriptionDelay = 5.;
 	[nameLabel setY:y];
 	[self.infoButton setY:y];
 	
-	_tintedInfoButton.frame = self.infoButton.frame;
+	if (!TARGET_IS_IOS7_OR_LATER()) {
+		CGFloat margin = 10.;
+		CGRect rect = self.infoButton.frame;
+		_tintedInfoButton.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
+											 rect.size.width + 2. * margin, rect.size.height + 2. * margin);
+	}
 	
 	UIView * containerView = _contentView.subviews.lastObject;
 	CGRect frame = containerView.frame;
@@ -121,12 +123,12 @@ const NSTimeInterval kHideDescriptionDelay = 5.;
 	containerView.frame = frame;
 }
 
-NSString * stringFormat(unsigned int value, BOOL addZero)
+NSString * stringFormat(NSUInteger value, BOOL addZero)
 {
 	if (value <= 0)
 		return (addZero)? @"00" : @"0";
 	
-	return [NSString stringWithFormat:((addZero && value < 10) ? @"0%i" : @"%i"), value];
+	return [NSString stringWithFormat:((addZero && value < 10) ? @"0%ld" : @"%ld"), (long)value];
 }
 
 - (void)setStyle:(PageViewStyle)aStyle
@@ -153,8 +155,8 @@ NSString * stringFormat(unsigned int value, BOOL addZero)
 		}
 		if (name) {
 			NSString * filename = [NSString stringWithFormat:@"info-%@-iOS6", name];
-			[_tintedInfoButton setBackgroundImage:[UIImage imageNamed:filename]
-									   forState:UIControlStateNormal];
+			[_tintedInfoButton setImage:[UIImage imageNamed:filename]
+							   forState:UIControlStateNormal];
 		}
 	}
 }

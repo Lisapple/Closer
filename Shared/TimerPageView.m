@@ -39,7 +39,12 @@
 		// On iOS 6, create a custom info button (because tint color for info button doesn't work)
 		if (!TARGET_IS_IOS7_OR_LATER()) {
 			UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-			button.frame = _infoButton.frame;
+			
+			CGFloat margin = 10.;
+			CGRect rect = _infoButton.frame;
+			button.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
+									  rect.size.width + 2. * margin, rect.size.height + 2. * margin);
+			
 			button.autoresizingMask = _infoButton.autoresizingMask;
 			NSString * actionString = [_infoButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].lastObject;
 			[button addTarget:self
@@ -92,7 +97,10 @@
 {
 	[super layoutSubviews];
 	
-	_tintedInfoButton.frame = _infoButton.frame;
+	CGFloat margin = 10.;
+	CGRect rect = _infoButton.frame;
+	_tintedInfoButton.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
+										 rect.size.width + 2. * margin, rect.size.height + 2. * margin);
 	
 	UIView * containerView = _contentView.subviews.lastObject;
 	CGRect frame = containerView.frame;
@@ -109,7 +117,7 @@
 	_nameLabel.text = aCountdown.name;
 	
 	if (countdown.durations.count) {
-		duration = [countdown.durations[countdown.durationIndex % countdown.durations.count] doubleValue];
+		duration = [countdown.durations[(countdown.durationIndex % countdown.durations.count)] doubleValue];
 		remainingSeconds = [countdown.endDate timeIntervalSinceNow];
 	}
 	
@@ -157,8 +165,8 @@
 	}
 	if (!TARGET_IS_IOS7_OR_LATER()) {
 		NSString * filename = [NSString stringWithFormat:@"info-%@-iOS6", name];
-		[_tintedInfoButton setBackgroundImage:[UIImage imageNamed:filename]
-							   forState:UIControlStateNormal];
+		[_tintedInfoButton setImage:[UIImage imageNamed:filename]
+						   forState:UIControlStateNormal];
 	} else {
 		_infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
 	}
@@ -237,8 +245,9 @@
 		if (countdown.endDate && countdown.durations.count) {
 			remainingSeconds = countdown.endDate.timeIntervalSinceNow;
 			
-			if (remainingSeconds >= 0.) {
-				[_timerView setProgression:(duration - remainingSeconds) / duration
+			if (remainingSeconds >= 0. && duration > 1) {
+				[_timerView cancelProgressionAnimation];
+				[_timerView setProgression:(duration - remainingSeconds) / (duration - 1)
 								  animated:YES];
 				_timeLabel.text = [self formattedDuration];
 				_descriptionLabel.text = [self formattedDescription];
@@ -246,10 +255,11 @@
 				
 			} else { // Timer done or paused
 				if (!isFinished) {
-					if (countdown.promptState == PromptStateEveryTimers
-						|| (countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) { // Pause the timer and wait for the used to tap on "Continue"
+					if (countdown.promptState == PromptStateEveryTimers ||
+						(countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) { // Pause the timer and wait for the used to tap on "Continue"
 						[self pause];
-						[_timerView setProgression:1. animated:YES];
+						[_timerView cancelProgressionAnimation];
+						_timerView.progression = 0.;
 						_timeLabel.text = NSLocalizedString(@"Continue", nil);
 						_descriptionLabel.hidden = YES;
 						isFinished = YES;
@@ -263,11 +273,12 @@
 						_timeLabel.text = [self formattedDuration];
 						_descriptionLabel.hidden = NO;
 					}
-				}
-			}
+				}			}
 		} else {
 			_timeLabel.text = NSLocalizedString(@"Continue", nil);
 		}
+	} else { // Paused
+		[_timerView cancelProgressionAnimation];
 	}
 }
 
@@ -285,13 +296,10 @@
 {
 	if (countdown.durations.count == 0) { // Don't allow "start" if no durations
 		[self pause];
-		return ;
-	}
-	
-	if (isPaused) {
-		[self start];
+		
 	} else {
-		[self pause];
+		if (isPaused) [self start];
+		else [self pause];
 	}
 }
 
@@ -344,6 +352,12 @@
 	/* Show settings */
 	if ([self.delegate respondsToSelector:@selector(pageViewWillShowSettings:)])
 		[self.delegate pageViewWillShowSettings:self];
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:updateObserver];
+	[[NSNotificationCenter defaultCenter] removeObserver:continueObserver];
 }
 
 @end

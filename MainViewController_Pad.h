@@ -11,22 +11,6 @@
 
 #import "PageView.h"
 
-enum DeleteButtonState {
-	DeleteButtonStateHidden = 0,
-	DeleteButtonStateShow,
-	DeleteButtonStateConfirmation
-	};
-
-@interface DeleteButton : UIButton
-{
-@private
-    enum DeleteButtonState state;
-}
-
-@property (nonatomic, assign) enum DeleteButtonState state;
-
-@end
-
 @class PageView;
 
 @interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, PageViewDelegate, UIPopoverControllerDelegate>
@@ -38,7 +22,7 @@ enum DeleteButtonState {
 	
 	@private
 	NSInteger currentSettingsPageIndex;
-	int currentNavigationBarTag;
+	NSInteger currentNavigationBarTag;
 	NSMutableArray * pageViews;
 	PageView * currentPageWithConfirmation;
 	

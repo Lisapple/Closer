@@ -112,7 +112,7 @@
 			fileURL = [NSURL fileURLWithPath:path];
 		}
 		
-		NSLog(@"fileURL: %@", fileURL);
+		NSDebugLog(@"fileURL: %@", fileURL);
 		if (fileURL) {
 #if TARGET_IPHONE_SIMULATOR // Playing sounds on simulator is still "buggy"
 			NSDebugLog(@"Sound played: %@ (%@)", notification.soundName, fileURL);

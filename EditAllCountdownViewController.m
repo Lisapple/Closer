@@ -63,8 +63,8 @@ const NSInteger kDoneButtonItemTag = 1;
 	
     tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     if (!TARGET_IS_IOS7_OR_LATER()) {
-	tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
         
         UIView * backgroundView = [[UIView alloc] init];
         backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
@@ -343,11 +343,21 @@ const NSInteger kDoneButtonItemTag = 1;
 	return (indexPath.section == 0);
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
+{
+	if (proposedDestinationIndexPath.section > 0)
+		return [NSIndexPath indexPathForRow:(countdowns.count - 1) inSection:0];
+	
+	return proposedDestinationIndexPath;
+}
+
 - (void)tableView:(UITableView *)aTableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-	[Countdown moveCountdownAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
-	//[self reloadData];
-	// @TODO: animated the row movement
+	if (destinationIndexPath.section == 0) {
+		[Countdown moveCountdownAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
+		//[self reloadData];
+		// @TODO: animated the row movement
+	}
 }
 
 #pragma mark -
@@ -429,28 +439,28 @@ const NSInteger kDoneButtonItemTag = 1;
 #pragma mark - UIActionSheet Delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-		switch (buttonIndex) {
-			case 0:// Show Countdowns Online
-				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com/index.php"]];
-				break;
-			case 1:// Feedback & Support
-				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]];
-				break;
-			case 2:// Go to my website
-				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]];
-				break;
-			case 3: {// See all my applications
-				/* Link via iTunes -> AppStore, I haven't found better! */
-				NSString * iTunesLink = @"https://itunes.apple.com/us/artist/lisacintosh/id320891279?uo=4";// old link = http://search.itunes.apple.com/WebObjects/MZContentLink.woa/wa/link?path=apps%2flisacintosh
-				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
-				
-				/* Link via Safari -> iTunes -> AppStore */
-				//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.com/apps/lisacintosh/"]];
-			}
-				break;
-			default:// Cancel
-				break;
+	switch (buttonIndex) {
+		case 0:// Show Countdowns Online
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com/index.php"]];
+			break;
+		case 1:// Feedback & Support
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]];
+			break;
+		case 2:// Go to my website
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]];
+			break;
+		case 3: {// See all my applications
+			/* Link via iTunes -> AppStore, I haven't found better! */
+			NSString * iTunesLink = @"https://itunes.apple.com/us/artist/lisacintosh/id320891279?uo=4";// old link = http://search.itunes.apple.com/WebObjects/MZContentLink.woa/wa/link?path=apps%2flisacintosh
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
+			
+			/* Link via Safari -> iTunes -> AppStore */
+			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.com/apps/lisacintosh/"]];
 		}
+			break;
+		default:// Cancel
+			break;
+	}
 }
 
 #pragma mark - UIAlertView Delegate

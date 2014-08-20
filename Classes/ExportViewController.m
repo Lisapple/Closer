@@ -313,8 +313,7 @@
 			filename = [filename stringByAppendingFormat:NSLocalizedString(@" and %i more", nil), (selectedCountdowns.count - 1)];
 		}
 		
-		NSString * extension = @"ics";
-		
+		const NSString * extension = @"ics";
 		NSString * documentFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 		NSString * path = [NSString stringWithFormat:@"%@/%@.%@", documentFolderPath, filename, extension];// ex: "~/Documents/Countdown 1 and 2 more.ics"
 		

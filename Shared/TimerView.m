@@ -10,6 +10,12 @@
 
 #import "NSObject+additions.h"
 
+@interface TimerView ()
+{
+	BOOL _cancel, _animating;
+}
+@end
+
 @implementation TimerView
 
 @synthesize progression = _progression;
@@ -23,15 +29,30 @@
 - (void)setProgression:(CGFloat)progression animated:(BOOL)animated
 {
 	if (animated && progression > _progression) {
-		float startProgression = _progression;
-		[NSObject animationBlock:^(float t) {
-			_progression = CLAMP(startProgression, progression, t);
-			[self setNeedsDisplay];
+		if (!_animating) {
+			_cancel = NO;
+			_animating = YES;
+			float startProgression = _progression;
+			[NSObject animationBlock:^(float t) {
+				if (!_cancel) {
+					dispatch_async(dispatch_get_main_queue(), ^{
+						_progression = CLAMP(startProgression, progression, t);
+						[self setNeedsDisplay];
+					});
+				}
+			}
+							duration:1.
+						  completion:^{ _animating = NO; }];
 		}
-						duration:1.];
 	} else {
 		self.progression = progression;
 	}
+}
+
+- (void)cancelProgressionAnimation
+{
+	_cancel = YES;
+	_animating = NO;
 }
 
 - (void)setTintColor:(UIColor *)tintColor

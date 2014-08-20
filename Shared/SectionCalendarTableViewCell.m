@@ -53,7 +53,7 @@
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	
-	int number = CGColorGetNumberOfComponents(CGColor);
+	NSInteger number = (NSInteger)CGColorGetNumberOfComponents(CGColor);
 	CGFloat * components = (CGFloat *)CGColorGetComponents(CGColor);
 	
 	/* Compute lighter color */

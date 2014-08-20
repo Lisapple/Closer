@@ -107,6 +107,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 		[self.undoManager setActionName:NSLocalizedString(@"UNDO_MESSAGE_ACTION", nil)];
 		
 		cellTextView.text = @"";
+		[self update];
 	}
 }
 
@@ -135,8 +136,13 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 
 - (void)update
 {
-	CGRect frame = messageCell.frame;
-	messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, [self rowHeight]);
+	[self.tableView beginUpdates];
+	{
+		CGRect frame = messageCell.frame;
+		messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, [self rowHeight]);
+		self.tableView.rowHeight = [self rowHeight];
+	}
+	[self.tableView endUpdates];
 	
 	/* Update Clear button enable */
 	self.navigationItem.rightBarButtonItem.enabled = (cellTextView.text.length > 0);
@@ -166,20 +172,22 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 {
 	static NSString * cellIdentifier = @"CellID";
 	
-	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	if (!self.messageCell) {
+		UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		
-		cell.clipsToBounds = YES;
-		cell.contentView.autoresizesSubviews = YES;
-		[cell.contentView addSubview:cellTextView];
+		if (cell == nil) {
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
+			
+			cell.clipsToBounds = YES;
+			cell.contentView.autoresizesSubviews = YES;
+			[cell.contentView addSubview:cellTextView];
+		}
+		
+		self.messageCell = cell;
 	}
 	
-	self.messageCell = cell;
-	
-	return cell;
+	return self.messageCell;
 }
 
 #pragma mark -
@@ -197,8 +205,10 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-	self.tableView.contentInset = UIEdgeInsetsZero;
-	self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+	/*
+	 self.tableView.contentInset = UIEdgeInsetsZero;
+	 self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+	 */
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

@@ -286,7 +286,7 @@
 		}
 		label.font = [UIFont boldSystemFontOfSize:17.];
 		label.textAlignment = NSTextAlignmentCenter;
-		label.text = [NSString stringWithFormat:@"%d", number];
+		label.text = [NSString stringWithFormat:@"%ld", (long)number];
 		[scrollView addSubview:label];
 		[labels addObject:label];
 	}
