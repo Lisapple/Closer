@@ -1,11 +1,11 @@
-<img style="border-radius:20px;" src="Icon@2x.png">
+<img style="border-radius:20px;" src="Closer/Images.xcassets/AppIcon.appiconset/Icon-60@2x.png">
 
 Closer &amp; Closer
 =====
 
 [Closer &amp; Closer](http://www.lisacintosh.com/closer/) for iOS (iPhone and iPad) is a countdown application to use for last moments before a special event.
 
-Compiled with Xcode 4.x and iOS 6.x
+Compiled with Xcode 5.1.x and iOS 7.x
 
 The code source and resources are under MIT licence.
 
