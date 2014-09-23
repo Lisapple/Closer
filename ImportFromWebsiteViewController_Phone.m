@@ -224,6 +224,7 @@
 	
 	[self updateUI];
 	
+	_tableView.frame = self.view.bounds;
 	_tableView.contentInset = UIEdgeInsetsMake(64., 0., 0., 0.);
 	[self.view addSubview:_tableView];
 	[_tableView reloadData];
