@@ -91,6 +91,7 @@
 		50FF483A131E711B0094645C /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FF4838131E711B0094645C /* NameViewController.m */; };
 		50FF483B131E711B0094645C /* NameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50FF4839131E711B0094645C /* NameViewController.xib */; };
 		50FF49D6131E996D0094645C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50FF49D5131E996D0094645C /* AVFoundation.framework */; };
+		9C00BDE919D2DA9B00E93271 /* Launch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C00BDE819D2DA9B00E93271 /* Launch.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -232,6 +233,7 @@
 		50FF4839131E711B0094645C /* NameViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NameViewController.xib; sourceTree = "<group>"; };
 		50FF49D5131E996D0094645C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* Closer-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Closer-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		9C00BDE819D2DA9B00E93271 /* Launch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Launch.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +308,7 @@
 				50A1A5C1198FBE0100133954 /* Images */,
 				8D1107310486CEB800E47090 /* Closer-Info.plist */,
 				50C5A32512E352590013605C /* Songs */,
+				9C00BDE819D2DA9B00E93271 /* Launch.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -514,7 +517,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Closer" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -564,6 +567,7 @@
 				507A116317133D6C004909D0 /* ExportToWebsiteViewController_Phone.xib in Resources */,
 				5029FA8A1610CEE5002E2FC0 /* MainWindow-iPad.xib in Resources */,
 				504FD33D164D2F8200D54381 /* MainViewController_Pad.xib in Resources */,
+				9C00BDE919D2DA9B00E93271 /* Launch.xib in Resources */,
 				504FD343164D350E00D54381 /* SettingsViewController_Pad.xib in Resources */,
 				507A116717133D7A004909D0 /* ExportToWebsiteViewController_Pad.xib in Resources */,
 				507A115F17133D3E004909D0 /* ImportFromWebsiteViewController_Pad.xib in Resources */,
@@ -697,7 +701,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -722,7 +725,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -744,7 +746,6 @@
 		5054DB06131FBED100F98B20 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: maxime leroy";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: maxime leroy";
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -761,7 +762,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -784,7 +784,6 @@
 		50A1F16A133A331F00596F1B /* App Store */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: maxime leroy";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: maxime leroy";
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -801,7 +800,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -826,13 +824,13 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: maxime leroy (VM9FMBHPX4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
+				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
@@ -842,7 +840,6 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: maxime leroy (VM9FMBHPX4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;

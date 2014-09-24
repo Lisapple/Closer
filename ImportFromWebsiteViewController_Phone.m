@@ -240,7 +240,7 @@
 #if TARGET_IPHONE_SIMULATOR
 	NSInteger currentCount = [Countdown allCountdowns].count;
 	NSInteger importedCount = selectedCountdowns.count;
-	NSDebugLog(@"%i from current countdowns + %i imported countdowns", currentCount, importedCount);
+	NSDebugLog(@"%li from current countdowns + %ld imported countdowns", (long)currentCount, (long)importedCount);
 #endif
 	
 	[Countdown addCountdowns:selectedCountdowns];

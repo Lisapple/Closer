@@ -123,7 +123,7 @@
 
 - (void)durationPickerView:(DurationPickerView *)durationPickerView didSelectIndex:(NSInteger)index
 {
-	NSDebugLog(@"Set value: %d at index: %d", index, [durationPickers indexOfObject:durationPickerView]);
+	NSDebugLog(@"Set value: %ld at index: %ld", index, (long)[durationPickers indexOfObject:durationPickerView]);
 	
 	long duration = 0;
 	int pickerIndex = 0;
