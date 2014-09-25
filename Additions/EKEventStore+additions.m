@@ -71,7 +71,7 @@
 															endDate:[NSDate distantFuture]// Fetch all future events that the eventStore could store
 														  calendars:@[calendar]];
 	
-	__block BOOL hasRecurrenceRulesPropertyExists = ([EKEvent instancesRespondToSelector:@selector(hasRecurrenceRules)]);
+	BOOL hasRecurrenceRulesPropertyExists = ([EKEvent instancesRespondToSelector:@selector(hasRecurrenceRules)]);
 	
 	__block NSMutableArray * events = [[NSMutableArray alloc] initWithCapacity:10];
 	[self enumerateEventsMatchingPredicate:predicate
