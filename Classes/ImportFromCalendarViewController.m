@@ -26,60 +26,60 @@
 	
 	NSString * title = NSLocalizedString(@"Choose Events", nil);
 	NSArray * components = [title componentsSeparatedByString:@"\n"];
-    
-    if (TARGET_IS_IOS7_OR_LATER()) {
-        self.title = title;
-    } else {
-        if (components.count == 1) {
-            UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, 40.)];
-            titleLabel.backgroundColor = [UIColor clearColor];
-            titleLabel.text = title;
-            titleLabel.font = [UIFont boldSystemFontOfSize:20.];
-            titleLabel.minimumScaleFactor = (14. / 20.);
-            titleLabel.adjustsFontSizeToFitWidth = YES;
-            titleLabel.textAlignment = NSTextAlignmentCenter;
-            titleLabel.textColor = [UIColor whiteColor];
-            titleLabel.shadowOffset = CGSizeMake(0., -1);
-            titleLabel.shadowColor = [UIColor blackColor];
-            self.navigationItem.titleView = titleLabel;
-            
-        } else {
-            
-            CGRect rect = CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
-            UIView * titleView = [[UIView alloc] initWithFrame:rect];
-            
-            float height = self.navigationController.navigationBar.frame.size.height / 3.;
-            
-            UILabel * upTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height / 2., self.navigationController.navigationBar.frame.size.width, height)];
-            upTitleLabel.backgroundColor = [UIColor clearColor];
-            upTitleLabel.text = components[0];
-            upTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
-            upTitleLabel.textAlignment = NSTextAlignmentCenter;
-            upTitleLabel.textColor = [UIColor whiteColor];
-            upTitleLabel.shadowOffset = CGSizeMake(0., -1);
-            upTitleLabel.shadowColor = [UIColor blackColor];
-            
-            upTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            
-            [titleView addSubview:upTitleLabel];
-            
-            UILabel * downTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height * (1.5), self.navigationController.navigationBar.frame.size.width, height)];
-            downTitleLabel.backgroundColor = [UIColor clearColor];
-            downTitleLabel.text = components[1];
-            downTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
-            downTitleLabel.textAlignment = NSTextAlignmentCenter;
-            downTitleLabel.textColor = [UIColor whiteColor];
-            downTitleLabel.shadowOffset = CGSizeMake(0., -1);
-            downTitleLabel.shadowColor = [UIColor blackColor];
-            
-            downTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            
-            [titleView addSubview:downTitleLabel];
-            
-            titleView.autoresizesSubviews = YES;
-            self.navigationItem.titleView = titleView;
-        }
-    }
+	
+	if (TARGET_IS_IOS7_OR_LATER()) {
+		self.title = title;
+	} else {
+		if (components.count == 1) {
+			UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, 40.)];
+			titleLabel.backgroundColor = [UIColor clearColor];
+			titleLabel.text = title;
+			titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+			titleLabel.minimumScaleFactor = (14. / 20.);
+			titleLabel.adjustsFontSizeToFitWidth = YES;
+			titleLabel.textAlignment = NSTextAlignmentCenter;
+			titleLabel.textColor = [UIColor whiteColor];
+			titleLabel.shadowOffset = CGSizeMake(0., -1);
+			titleLabel.shadowColor = [UIColor blackColor];
+			self.navigationItem.titleView = titleLabel;
+			
+		} else {
+			
+			CGRect rect = CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+			UIView * titleView = [[UIView alloc] initWithFrame:rect];
+			
+			float height = self.navigationController.navigationBar.frame.size.height / 3.;
+			
+			UILabel * upTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height / 2., self.navigationController.navigationBar.frame.size.width, height)];
+			upTitleLabel.backgroundColor = [UIColor clearColor];
+			upTitleLabel.text = components[0];
+			upTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
+			upTitleLabel.textAlignment = NSTextAlignmentCenter;
+			upTitleLabel.textColor = [UIColor whiteColor];
+			upTitleLabel.shadowOffset = CGSizeMake(0., -1);
+			upTitleLabel.shadowColor = [UIColor blackColor];
+			
+			upTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+			
+			[titleView addSubview:upTitleLabel];
+			
+			UILabel * downTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height * (1.5), self.navigationController.navigationBar.frame.size.width, height)];
+			downTitleLabel.backgroundColor = [UIColor clearColor];
+			downTitleLabel.text = components[1];
+			downTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
+			downTitleLabel.textAlignment = NSTextAlignmentCenter;
+			downTitleLabel.textColor = [UIColor whiteColor];
+			downTitleLabel.shadowOffset = CGSizeMake(0., -1);
+			downTitleLabel.shadowColor = [UIColor blackColor];
+			
+			downTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+			
+			[titleView addSubview:downTitleLabel];
+			
+			titleView.autoresizesSubviews = YES;
+			self.navigationItem.titleView = titleView;
+		}
+	}
 	
 	
 	UIBarButtonItem * importButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
@@ -101,18 +101,18 @@
 	tableView.delegate = self;
 	tableView.dataSource = self;
 	
-    if (TARGET_IS_IOS7_OR_LATER()) {
+	if (TARGET_IS_IOS7_OR_LATER()) {
 		tableView.contentInset = UIEdgeInsetsMake(20., 0., 0., 0.);
 	} else {
-        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView = backgroundView;
+		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		
+		UIView * backgroundView = [[UIView alloc] init];
+		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
+		tableView.backgroundView = backgroundView;
 	}
-    
+	
 	[tableView reloadData];
 	
 	/* Show the spinning wheel */
@@ -187,55 +187,64 @@
 
 - (void)reload
 {
-    static BOOL reloading = NO;
-    if (!reloading) {
-        reloading = YES;
-        
+	static BOOL reloading = NO;
+	if (!reloading) {
+		reloading = YES;
+		
 		[eventStore refreshSourcesIfNecessary];
 		
-        NSArray * allCalendars = [eventStore calendarsForEntityType:EKEntityTypeEvent];
-        NSInteger count = allCalendars.count;
-        
-        /* Order calendars depending of the number of events */
-        NSArray * sortedCalendars = [allCalendars sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            NSUInteger count1 = [eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj1 includingRecurrent:NO];
-            NSUInteger count2 = [eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj2 includingRecurrent:NO];
-            return -OrderComparisonResult(count1, count2);// Add "minus" to reverser order (descending)
-        }];
-        
-        calendars = [[NSMutableArray alloc] initWithCapacity:count];
-        calendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
-        
-        NSMutableArray * allCalendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
-        
-        numberOfEvents = 0;
-        for (EKCalendar * calendar in sortedCalendars) {
-            
-            /* Get all future events from the current calendar */
-            NSArray * events = [eventStore futureEventsFromCalendar:calendar includingRecurrent:NO];
-            if (events.count > 0) {
-                
-                [calendars addObject:calendar];
-                [allCalendarsEvents addObjectsFromArray:events];
-                
-                if (events) {
-                    [calendarsEvents addObject:events];
-                    numberOfEvents += events.count;
-                }
-            }
-        }
-        
-        NSArray * selectedEventsCopy = selectedEvents.copy;
-        for (EKEvent * event in selectedEventsCopy) {
-            if (![allCalendarsEvents containsObject:event])
-                [selectedEvents removeObject:event];
-        }
-        
-        [self updateUI];
-        [tableView reloadData];
-        
-        reloading = NO;
-    }
+		NSArray * allCalendars = [eventStore calendarsForEntityType:EKEntityTypeEvent];
+		NSInteger count = allCalendars.count;
+		
+		/* Order calendars depending of the number of events */
+		NSArray * sortedCalendars = [allCalendars sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+			NSUInteger count1 = [eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj1 includingRecurrent:NO];
+			NSUInteger count2 = [eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj2 includingRecurrent:NO];
+			return -OrderComparisonResult(count1, count2);// Add "minus" to reverser order (descending)
+		}];
+		
+		calendars = [[NSMutableArray alloc] initWithCapacity:count];
+		calendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
+		
+		NSMutableArray * allCalendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
+		
+		numberOfEvents = 0;
+		for (EKCalendar * calendar in sortedCalendars) {
+			NSArray * events = nil;
+			if (calendar.type == EKCalendarTypeBirthday) {
+				NSDateComponents * comps = [[NSCalendar currentCalendar] components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear)
+																		  fromDate:[NSDate date]];
+				comps.year = (comps.year + 1);
+				events = [eventStore eventsWithStartDate:[NSDate date]
+												 endDate:[[NSCalendar currentCalendar] dateFromComponents:comps]
+												calendar:calendar];
+			} else {
+				/* Get all future events from the current calendar */
+				events = [eventStore futureEventsFromCalendar:calendar includingRecurrent:NO];
+			}
+			
+			if (events.count > 0) {
+				[calendars addObject:calendar];
+				[allCalendarsEvents addObjectsFromArray:events];
+				
+				if (events) {
+					[calendarsEvents addObject:events];
+					numberOfEvents += events.count;
+				}
+			}
+		}
+		
+		NSArray * selectedEventsCopy = selectedEvents.copy;
+		for (EKEvent * event in selectedEventsCopy) {
+			if (![allCalendarsEvents containsObject:event])
+				[selectedEvents removeObject:event];
+		}
+		
+		[self updateUI];
+		[tableView reloadData];
+		
+		reloading = NO;
+	}
 }
 
 - (void)updateUI
@@ -353,18 +362,24 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    EKCalendar * calendar = calendars[section];
-    
-    UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 200., 36.)];
-    
-    UIView * pinView = [[UIView alloc] initWithFrame:CGRectMake(15., 15., 10., 10.)];
-    pinView.backgroundColor = [UIColor colorWithCGColor:calendar.CGColor];
-    pinView.layer.cornerRadius = 5.;
-    [headerView addSubview:pinView];
-    
+	EKCalendar * calendar = calendars[section];
+	
+	UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 200., 36.)];
+	
+	if (calendar.type == EKCalendarTypeBirthday) {
+		UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(8., 11., 16., 16.)];
+		imageView.image = (TARGET_IS_IOS7_OR_LATER()) ? [UIImage imageNamed:@"birthdays-iOS7"] : [UIImage imageNamed:@"birthdays"];
+		[headerView addSubview:imageView];
+	} else {
+		UIView * pinView = [[UIView alloc] initWithFrame:CGRectMake(15., 15., 10., 10.)];
+		pinView.backgroundColor = [UIColor colorWithCGColor:calendar.CGColor];
+		pinView.layer.cornerRadius = 5.;
+		[headerView addSubview:pinView];
+	}
+	
 	UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(30., 10., 160., 20.)];
 	label.backgroundColor = [UIColor clearColor];
-    if (TARGET_IS_IOS7_OR_LATER()) {
+	if (TARGET_IS_IOS7_OR_LATER()) {
 		label.text = calendar.title.uppercaseString;
 		label.textColor = [UIColor grayColor];
 		label.font = [UIFont systemFontOfSize:14.];
@@ -372,10 +387,10 @@
 	} else {
 		label.text = calendar.title;
 		label.textColor = [UIColor grayColor];
-    }
+	}
 	[headerView addSubview:label];
-    
-    return headerView;
+	
+	return headerView;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

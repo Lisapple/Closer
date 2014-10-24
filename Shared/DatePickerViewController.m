@@ -64,7 +64,7 @@
 	
 	[self reloadData];
 	
-	NSDebugLog(@"scheduledLocalNotifications: %i local notification(s)", [[UIApplication sharedApplication] scheduledLocalNotifications].count);
+	NSDebugLog(@"scheduledLocalNotifications: %lu local notification(s)", (long)[[UIApplication sharedApplication] scheduledLocalNotifications].count);
 }
 
 - (void)viewWillAppear:(BOOL)animated

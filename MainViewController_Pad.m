@@ -629,7 +629,7 @@
 	if (([pageViews[index] isKindOfClass:[CountdownPageView class]] && countdown.type != CountdownTypeCountdown)
 		|| ([pageViews[index] isKindOfClass:[TimerPageView class]] && countdown.type != CountdownTypeTimer)) {
 		
-		NSDebugLog(@"Reloading page at index: %d", index);
+		NSDebugLog(@"Reloading page at index: %ld", (long)index);
 		
 		CGSize pageSize = CGSizeMake(384., 480.);
 		if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
