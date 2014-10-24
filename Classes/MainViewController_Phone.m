@@ -56,13 +56,18 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+	[super viewWillAppear:animated];
+	
 	[self reload];
 	
-	[super viewWillAppear:animated];
+	if (TARGET_IS_IOS7_OR_LATER())
+		[self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+	[super viewDidAppear:animated];
+	
 	if (self.pages.count > 0) {
 		[self reload];
 	} else { // If no coutdowns to show (if the last coutdown has been deleted from delete button)
@@ -70,8 +75,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 		UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:editAllCountdownViewController];
 		[self presentViewController:navigationController animated:NO completion:NULL];
 	}
-	
-	[super viewDidAppear:animated];
 }
 
 #pragma mark - Current Page Index

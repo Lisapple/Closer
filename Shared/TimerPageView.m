@@ -11,6 +11,8 @@
 @interface TimerPageView ()
 {
 	id updateObserver, continueObserver;
+	
+	BOOL dragging;
 }
 @end
 
@@ -88,7 +90,15 @@
 								if (notification.object == countdown && isPaused)
 									[self start];
 							}];
-		// @TODO: Do something with updateObserver and continueObserver
+		
+		UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
+																			   action:@selector(timerDidDragged:)];
+		pan.delegate = self;
+		for (UIGestureRecognizer * gesture in self.scrollView.gestureRecognizers)
+			[pan requireGestureRecognizerToFail:gesture];
+		for (UIGestureRecognizer * gesture in self.superview.gestureRecognizers)
+			[pan requireGestureRecognizerToFail:gesture];
+		[self addGestureRecognizer:pan];
     }
     return self;
 }
@@ -352,6 +362,28 @@
 	/* Show settings */
 	if ([self.delegate respondsToSelector:@selector(pageViewWillShowSettings:)])
 		[self.delegate pageViewWillShowSettings:self];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+	return !(dragging);
+}
+
+- (void)timerDidDragged:(UIGestureRecognizer *)gesture
+{
+	if (gesture.state == UIGestureRecognizerStateBegan) {
+		dragging = YES;
+	}
+	else if (gesture.state == UIGestureRecognizerStateEnded) {
+		dragging = NO;
+	}
+	else {
+		if (dragging)
+			NSLog(@"%@", NSStringFromCGPoint([gesture locationInView:self]));
+		
+		if ((int)((UIScrollView *)self.superview).contentOffset.x % (int)self.frame.size.width > 0)
+			dragging = NO;
+	}
 }
 
 - (void)dealloc
