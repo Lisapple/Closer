@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -22,20 +22,20 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Arf-bR-2x4">
-                    <rect key="frame" x="4" y="72" width="312" height="336"/>
+                    <rect key="frame" x="4" y="40" width="312" height="401"/>
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="10" customClass="TimerView">
-                            <rect key="frame" x="31" y="20" width="250" height="231"/>
+                            <rect key="frame" x="31" y="20" width="250" height="295"/>
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="123" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="3">
-                                    <rect key="frame" x="20" y="83" width="210" height="65"/>
+                                    <rect key="frame" x="20" y="106" width="210" height="83"/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="72"/>
                                     <color key="textColor" white="0.24766885080000001" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                     <size key="shadowOffset" width="0.0" height="0.0"/>
                                 </label>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="seconds" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                                    <rect key="frame" x="20" y="143" width="210" height="30"/>
+                                    <rect key="frame" x="20" y="175" width="210" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="GHk-F8-Fjz"/>
                                     </constraints>
@@ -47,7 +47,6 @@
                             </subviews>
                             <constraints>
                                 <constraint firstItem="3" firstAttribute="trailing" secondItem="11" secondAttribute="trailing" id="517-ps-0eY"/>
-                                <constraint firstItem="3" firstAttribute="top" secondItem="10" secondAttribute="top" constant="83" id="FiJ-kf-EYd"/>
                                 <constraint firstItem="3" firstAttribute="leading" secondItem="10" secondAttribute="leading" constant="20" id="Kv6-HO-J0k"/>
                                 <constraint firstAttribute="centerY" secondItem="11" secondAttribute="centerY" constant="-42" id="VOF-vp-toK"/>
                                 <constraint firstItem="3" firstAttribute="leading" secondItem="11" secondAttribute="leading" id="j5x-ia-4Qa"/>
@@ -56,14 +55,14 @@
                             </constraints>
                         </view>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="13">
-                            <rect key="frame" x="59" y="293" width="194" height="21"/>
+                            <rect key="frame" x="59" y="344" width="194" height="21"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="17"/>
                             <color key="textColor" white="0.25381174400000001" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                             <size key="shadowOffset" width="0.0" height="0.0"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="14">
-                            <rect key="frame" x="20" y="293" width="22" height="22"/>
+                            <rect key="frame" x="20" y="343" width="22" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="22" id="5SW-YI-e9Q"/>
                                 <constraint firstAttribute="height" constant="22" id="cDb-zu-FnE"/>
@@ -81,7 +80,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15">
-                            <rect key="frame" x="270" y="293" width="22" height="22"/>
+                            <rect key="frame" x="270" y="343" width="22" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="22" id="7XM-bZ-aB9"/>
                                 <constraint firstAttribute="width" constant="22" id="knr-0k-gnb"/>
@@ -99,18 +98,17 @@
                         </button>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="15" firstAttribute="centerY" secondItem="13" secondAttribute="centerY" id="1qf-zZ-yOh"/>
                         <constraint firstItem="13" firstAttribute="leading" secondItem="14" secondAttribute="trailing" constant="17" id="2VY-ip-pUK"/>
                         <constraint firstAttribute="centerX" secondItem="13" secondAttribute="centerX" id="HwY-cG-asY"/>
                         <constraint firstItem="10" firstAttribute="top" secondItem="Arf-bR-2x4" secondAttribute="top" constant="20" id="L02-Ri-4bn"/>
                         <constraint firstItem="10" firstAttribute="leading" secondItem="Arf-bR-2x4" secondAttribute="leading" constant="31" id="L4D-Io-4hb"/>
+                        <constraint firstAttribute="centerY" secondItem="10" secondAttribute="centerY" constant="33" id="MTs-gD-CaT"/>
                         <constraint firstItem="13" firstAttribute="centerX" secondItem="10" secondAttribute="centerX" id="NeQ-gW-uCM"/>
+                        <constraint firstItem="14" firstAttribute="centerY" secondItem="13" secondAttribute="centerY" id="PKF-vz-RMs"/>
                         <constraint firstAttribute="trailing" secondItem="15" secondAttribute="trailing" constant="20" id="PMJ-08-e25"/>
                         <constraint firstItem="14" firstAttribute="leading" secondItem="Arf-bR-2x4" secondAttribute="leading" constant="20" id="arG-03-jYt"/>
-                        <constraint firstAttribute="bottom" secondItem="15" secondAttribute="bottom" constant="21" id="bWN-Hr-Nsc"/>
-                        <constraint firstItem="15" firstAttribute="top" secondItem="10" secondAttribute="bottom" constant="42" id="eyn-9l-5Zq"/>
-                        <constraint firstAttribute="bottom" secondItem="14" secondAttribute="bottom" constant="21" id="o0x-lf-LpN"/>
-                        <constraint firstItem="14" firstAttribute="top" secondItem="10" secondAttribute="bottom" constant="42" id="pDw-SB-w5q"/>
-                        <constraint firstAttribute="bottom" secondItem="13" secondAttribute="bottom" constant="22" id="q2d-gh-0oc"/>
+                        <constraint firstAttribute="bottom" secondItem="13" secondAttribute="bottom" constant="36" id="q2d-gh-0oc"/>
                         <constraint firstItem="15" firstAttribute="leading" secondItem="13" secondAttribute="trailing" constant="17" id="sgg-w3-6ia"/>
                     </constraints>
                 </view>
@@ -120,7 +118,7 @@
                 <constraint firstItem="Arf-bR-2x4" firstAttribute="leading" secondItem="25" secondAttribute="leading" constant="4" id="YA6-pr-u5g"/>
                 <constraint firstAttribute="trailing" secondItem="Arf-bR-2x4" secondAttribute="trailing" constant="4" id="gjY-fI-UP9"/>
                 <constraint firstAttribute="centerY" secondItem="Arf-bR-2x4" secondAttribute="centerY" id="n6f-4D-aIz"/>
-                <constraint firstItem="Arf-bR-2x4" firstAttribute="top" secondItem="25" secondAttribute="top" constant="72" id="uqo-Zp-ylb"/>
+                <constraint firstItem="Arf-bR-2x4" firstAttribute="top" secondItem="25" secondAttribute="top" constant="40" id="uqo-Zp-ylb"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
         </view>
