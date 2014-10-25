@@ -12,7 +12,7 @@
 
 #import "TimerView.h"
 
-@interface TimerPageView : PageView
+@interface TimerPageView : PageView <UIGestureRecognizerDelegate>
 {
 	IBOutlet TimerView * timerView;
 	
@@ -24,7 +24,7 @@
 	IBOutlet UILabel * nameLabel;
 	
 	// Private
-	NSTimeInterval remainingSeconds, duration;
+	NSTimeInterval remainingSeconds, duration /* DUration of the current timer */;
 	NSDate * nextEndDate;
 	BOOL isPaused, isFinished;
 	BOOL _loaded;

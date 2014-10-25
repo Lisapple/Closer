@@ -12,7 +12,9 @@
 {
 	id updateObserver, continueObserver;
 	
-	BOOL dragging;
+	BOOL dragging, showingChangeConfirmation;
+	CGPoint startLocation;
+	NSTimeInterval originalDuration, delta;
 }
 @end
 
@@ -208,9 +210,9 @@
 				 forState:UIControlStateNormal];
 }
 
-- (NSString *)formattedDuration
+- (NSString *)formattedDurationForDuration:(NSTimeInterval)d
 {
-	double seconds = [countdown.endDate timeIntervalSinceNow];
+	double seconds = d;
 	double days = seconds / (24. * 60. * 60.);
 	if (floor(days) >= 2.)
 		return [NSString stringWithFormat:@"%d", (int)ceil(days)];
@@ -226,9 +228,14 @@
 	return [NSString stringWithFormat:@"%d", (int)ceil(seconds)];
 }
 
-- (NSString *)formattedDescription
+- (NSString *)formattedDuration
 {
-	double seconds = [countdown.endDate timeIntervalSinceNow];
+	return [self formattedDurationForDuration:countdown.endDate.timeIntervalSinceNow];
+}
+
+- (NSString *)formattedDescriptionForDuration:(NSTimeInterval)d
+{
+	double seconds = d;
 	double days = seconds / (24. * 60. * 60.);
 	if (floor(days) >= 2.)
 		return NSLocalizedString(@"days", nil);
@@ -241,7 +248,12 @@
 	if (floor(minutes) >= 2.)
 		return NSLocalizedString(@"minutes", nil);
 	
-	return (seconds > 1) ? NSLocalizedString(@"seconds", nil) : ((ceil(seconds) == 1.) ? NSLocalizedString(@"second", nil) : NSLocalizedString(@"seconds_0", nil));
+	return (seconds > 1) ? NSLocalizedString(@"seconds", nil) : ((ceil(seconds) == 1.) ? NSLocalizedString(@"second", nil) : NSLocalizedString(@"SECONDS_ZERO", nil));
+}
+
+- (NSString *)formattedDescription
+{
+	return [self formattedDescriptionForDuration:countdown.endDate.timeIntervalSinceNow];
 }
 
 - (void)update
@@ -283,7 +295,8 @@
 						_timeLabel.text = [self formattedDuration];
 						_descriptionLabel.hidden = NO;
 					}
-				}			}
+				}
+			}
 		} else {
 			_timeLabel.text = NSLocalizedString(@"Continue", nil);
 		}
@@ -354,7 +367,8 @@
 
 - (IBAction)timerDidSelectAction:(id)sender
 {
-	[self tooglePause];
+	if (!showingChangeConfirmation)
+		[self tooglePause];
 }
 
 - (IBAction)showSettings:(id)sender
@@ -364,6 +378,77 @@
 		[self.delegate pageViewWillShowSettings:self];
 }
 
+- (IBAction)confirmationChangeAction:(id)sender
+{
+	[self.countdown setDuration:@(originalDuration)
+						atIndex:self.countdown.durationIndex];
+	
+	_timeLabel.text = NSLocalizedString(@"Resume", nil);
+	remainingSeconds = duration = self.countdown.currentDuration.doubleValue;
+	isFinished = NO;
+	[self reload];
+	[self showConfirmationToolbar:NO];
+}
+
+- (IBAction)resetChangeAction:(id)sender
+{
+	_timeLabel.text = NSLocalizedString(@"Resume", nil);
+	remainingSeconds = duration = self.countdown.currentDuration.doubleValue;
+	isFinished = NO;
+	[self reload];
+	[self showConfirmationToolbar:NO];
+}
+
+- (IBAction)showConfirmationToolbar:(BOOL)show
+{
+	showingChangeConfirmation = show;
+	
+	static const NSInteger tag = 1234;
+	if (show) {
+		CGRect frame = CGRectMake(0., self.frame.size.height,
+								  self.frame.size.width, 44.);
+		UIToolbar * toolbar = [[UIToolbar alloc] initWithFrame:frame];
+		toolbar.tag = tag;
+		
+		NSString * resetTitle = [NSString stringWithFormat:@"Reset to %@",
+								 [self.countdown shortDescriptionOfDurationAtIndex:self.countdown.durationIndex]];
+		toolbar.items = @[ [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+																		 target:self action:@selector(confirmationChangeAction:)],
+						   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+																		 target:nil action:NULL],
+						   [[UIBarButtonItem alloc] initWithTitle:resetTitle
+															style:UIBarButtonItemStylePlain
+														   target:self action:@selector(resetChangeAction:)] ];
+		[self addSubview:toolbar];
+		[UIView animateWithDuration:0.15
+						 animations:^{
+							 toolbar.frame = CGRectMake(0., self.frame.size.height - 44.,
+														self.frame.size.width, 44.);
+						 }];
+		
+		if ([self.delegate respondsToSelector:@selector(pageViewWillShowDeleteConfirmation:)]) {
+			[self.delegate pageViewWillShowDeleteConfirmation:self]; // @TODO: Use a type for confirmation (xxxDelete and xxxTimer)
+		}
+		
+	} else { // Hide
+		[UIView animateWithDuration:0.15
+						 animations:^{
+							 [self viewWithTag:tag].frame = CGRectMake(0., self.frame.size.height,
+																	   self.frame.size.width, 44.);
+						 }
+						 completion:^(BOOL finished) { [[self viewWithTag:tag] removeFromSuperview]; }];
+		
+		if ([self.delegate respondsToSelector:@selector(pageViewWillShowDeleteConfirmation:)]) {
+			[self.delegate pageViewDidHideDeleteConfirmation:self]; // @TODO: Use a type for confirmation (xxxDelete and xxxTimer)
+		}
+	}
+	
+	((UIScrollView *)self.superview).scrollEnabled = !(show);
+	self.scrollView.scrollEnabled =  !(show);
+	self.infoButton.hidden = (show);
+	self.leftButton.hidden = (show);
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
 	return !(dragging);
@@ -371,18 +456,52 @@
 
 - (void)timerDidDragged:(UIGestureRecognizer *)gesture
 {
+	if (!isPaused)
+		return ;
+	
 	if (gesture.state == UIGestureRecognizerStateBegan) {
 		dragging = YES;
+		startLocation = [gesture locationInView:self];
 	}
 	else if (gesture.state == UIGestureRecognizerStateEnded) {
 		dragging = NO;
+		originalDuration = MIN(MAX(0., originalDuration + delta), 7 * 24 * 3600);
+		delta = 0.;
 	}
 	else {
-		if (dragging)
-			NSLog(@"%@", NSStringFromCGPoint([gesture locationInView:self]));
-		
-		if ((int)((UIScrollView *)self.superview).contentOffset.x % (int)self.frame.size.width > 0)
+		if ((int)((UIScrollView *)self.superview).contentOffset.x % (int)self.frame.size.width > 0) // If the user scolls to left or right, stop "dragging to set"
 			dragging = NO;
+		else if (dragging) {
+			if (!showingChangeConfirmation) {
+				[self showConfirmationToolbar:YES];
+				originalDuration = ((NSNumber *)self.countdown.currentDuration).doubleValue;
+				
+				_timerView.progression = 0.;
+				_descriptionLabel.hidden = NO;
+			}
+			
+			CGPoint location = [gesture locationInView:self];
+			CGFloat offset = location.y - startLocation.y;
+			
+			NSInteger d = (int)(-offset / 10.);
+			NSInteger step;
+			if /**/ (originalDuration <= 60.)
+				step = 1;
+			else if (originalDuration <= 3600)
+				step = 60;
+			else
+				step = 3600;
+			
+			if (ABS(d) <= 5)
+				d *= step;
+			else
+				d = (ABS(d) - 4) * step * 5 * ((d < 0) ? -1 : 1);
+			
+			delta = d;
+			NSTimeInterval newDuration = MIN(MAX(0., originalDuration + d), 7 * 24 * 3600);
+			_timeLabel.text = [self formattedDurationForDuration:newDuration];
+			_descriptionLabel.text = [self formattedDescriptionForDuration:newDuration];
+		}
 	}
 }
 
