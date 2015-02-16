@@ -45,6 +45,7 @@
 /* NameViewController */
 "Name" = "Nom";
 "The name of the countdown can help you to identify it." = "Le nom du décompte peut vous servir à l'identifier.";
+"The name of the timer can help you to identify it." = "Le nom du minuteur peut vous servir à l'identifier.";
 
 /* DatePickerViewController */
 //"Date & Time"; // Already defined on SettingsViewController
@@ -85,6 +86,7 @@
 "TIMER_FINISHED_MESSAGE %@" = "Le minuteur \"%@\" est fini.";
 
 /* Countdown */
+"ERROR_ALERT_TITLE" = "Erreur!";
 "READING_ERROR_ALERT_TITLE" = "Erreur de lecture!";
 "READING_ERROR_ALERT_MESSAGE" = "Une erreur s'est produite, un fichier doit être corrompu. Vous devriez supprimer l'application et la réinstaller.";
 
@@ -182,9 +184,10 @@
 "New Timer" = "Nouveau Minuteur";
 "New Timer %i" = "Nouveau Minuteur %i";
 "%ld timers" = "%ld minuteurs";
-"No timers" = "Aucun minuteur";
 "no timers" = "aucun minuteur";
 "No Durations" = "Aucun minuteur";
+"no durations" = "aucun durée";
+"%d durations" = "%ld durées";
 
 "Duration" = "Durée";
 "Durations" = "Durées";
@@ -237,3 +240,5 @@
 "Timer finished!" = "Minuteur fini!";
 
 "More" = "Plus";
+
+"Reset to %@" = "Remettre %@";

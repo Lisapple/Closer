@@ -94,7 +94,7 @@
 	
 	/* Compute the next time change (one minute - the actual number of second) */
 	NSCalendar * calendar = [NSCalendar currentCalendar];
-	NSDateComponents * components = [calendar components:NSSecondCalendarUnit fromDate:[NSDate date]];
+	NSDateComponents * components = [calendar components:NSCalendarUnitSecond fromDate:[NSDate date]];
 	double delayInSeconds = 60. - components.second;
 	
 	/* Start -[DatePickerViewController updatePickerMinimalDate] to set minimum date at the next time change and call it every minutes */

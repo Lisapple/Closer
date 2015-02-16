@@ -68,6 +68,10 @@
 		_scrollView.contentSize = CGSizeMake(0., frame.size.height + 60.);
 		_scrollView.alwaysBounceVertical = YES;
 		
+        UITapGestureRecognizer * gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)];
+        gesture.numberOfTapsRequired = 2;
+        [_scrollView addGestureRecognizer:gesture];
+        
 		_scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self addSubview:_scrollView];
 	}
@@ -89,32 +93,13 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	// Hide the delete button on tap (outside the delete button)
-	if (_showDeleteConfirmation) {
+	if (_showDeleteConfirmation)
 		[self hideDeleteConfirmation];
-		
-	} else {
-		/*
-		UITouch * touch = [touches anyObject];
-		if (touch.tapCount == 1)
-			[self performSelector:@selector(handleSingleTap) withObject:nil afterDelay:kDoubleTapDelay];
-		else if (touch.tapCount == 2) {
-			[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(handleSingleTap) object:nil];
-			[self handleDoubleTap];
-		}
-		 */
-	}
-}
-
-- (void)handleSingleTap
-{
-	if ([self.delegate respondsToSelector:@selector(pageViewDidSingleTap:)])
-		[self.delegate pageViewDidSingleTap:self];
 }
 
 - (void)handleDoubleTap
 {
-	if ([self.delegate respondsToSelector:@selector(pageViewDidDoubleTap:)])
-		[self.delegate pageViewDidDoubleTap:self];
+    [_infoButton sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)hideDeleteConfirmation

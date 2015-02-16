@@ -44,6 +44,7 @@
 /* NameViewController */
 "Name";
 "The name of the countdown can help you to identify it.";
+"The name of the timer can help you to identify it.";
 
 /* DatePickerViewController */
 //"Date & Time"; // Already defined on SettingsViewController
@@ -84,10 +85,11 @@
 "TIMER_FINISHED_MESSAGE %@" = "The timer \"%@\" is finished.";
 
 /* Countdown */
+"ERROR_ALERT_TITLE" = "Error!";
 "READING_ERROR_ALERT_TITLE" = "Reading Error!";
 "READING_ERROR_ALERT_MESSAGE" = "An error appears when reading on disk, the file could be corrupted. You should delete the application and re-install it.";
 
-"WRITING_ERROR_ALERT_TITLE" = "Wrinting Error!";
+"WRITING_ERROR_ALERT_TITLE" = "Writing Error!";
 "WRITING_ERROR_ALERT_MESSAGE %@" = "An error appears when wrinting on disk. You should check for available space on your %@ or restart it.";
 
 "PAGE_STYLE_NIGHT" = "Night";
@@ -183,7 +185,6 @@
 "New Timer";
 "New Timer %i";
 "%ld timers";
-"No timers";
 
 "Duration";
 "Durations";
@@ -226,8 +227,8 @@
 "Countdown";
 
 "No Durations";
-"no timers" = "no durations";
-"%ld timers" = "%ld durations";
+"no durations";
+"%ld durations";
 
 "Export Countdowns...";
 
@@ -240,3 +241,5 @@
 "Timer finished!";
 
 "More";
+
+"Reset to %@";

@@ -74,6 +74,9 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
+    if (countdown.type == CountdownTypeTimer) {
+        return NSLocalizedString(@"The name of the timer can help you to identify it.", nil);
+    }
 	return NSLocalizedString(@"The name of the countdown can help you to identify it.", nil);
 }
 

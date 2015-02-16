@@ -409,8 +409,9 @@
 								  self.frame.size.width, 44.);
 		UIToolbar * toolbar = [[UIToolbar alloc] initWithFrame:frame];
 		toolbar.tag = tag;
+        toolbar.tintColor = [UIColor blackColor];
 		
-		NSString * resetTitle = [NSString stringWithFormat:@"Reset to %@",
+		NSString * resetTitle = [NSString stringWithFormat:NSLocalizedString(@"Reset to %@", nil),
 								 [self.countdown shortDescriptionOfDurationAtIndex:self.countdown.durationIndex]];
 		toolbar.items = @[ [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 																		 target:self action:@selector(confirmationChangeAction:)],

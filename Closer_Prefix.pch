@@ -11,9 +11,6 @@
 	#import "UIColor+addition.h"
 #endif
 
-#define CountdownDidSynchronizeNotification @"CountdownDidSynchronizeNotification"
-#define CountdownDidUpdateNotification @"CountdownDidUpdateNotification"
-
 #if TARGET_IPHONE_SIMULATOR
 #define NSDebugLog(format, ...)  NSLog(format, ##__VA_ARGS__)
 #else
@@ -29,6 +26,13 @@ CG_INLINE void NSFrameLog(CGRect rect)
 
 #define TARGET_IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
-#define OrderComparisonResult(A, B) ( (A < B)? NSOrderedAscending : ((A > B)? NSOrderedDescending : NSOrderedSame) )
+#if !defined(OrderComparisonResult)
+#define OrderComparisonResult(A, B) ( ((A) < (B))? NSOrderedAscending : (((A) > (B))? NSOrderedDescending : NSOrderedSame) )
+#endif
+
+//#if !defined(MIN)
+//#define MIN(A,B)	({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
+//#endif
 
 #define TARGET_IS_IOS7_OR_LATER() ([UIDevice currentDevice].systemVersion.floatValue >= 7.)
+#define TARGET_IS_IOS8_OR_LATER   ([UIDevice currentDevice].systemVersion.floatValue >= 8.)

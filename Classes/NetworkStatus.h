@@ -11,7 +11,8 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <netinet/in.h>
 
-#define kNetworkStatusDidChangeNotification @"kNetworkStatusDidChangeNotification"
+#define kNetworkStatusDidChangeNotification NetworkStatusDidChangeNotification
+extern NSString * const NetworkStatusDidChangeNotification;
 
 @interface NetworkStatus : NSObject
 

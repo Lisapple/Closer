@@ -274,11 +274,11 @@ const NSInteger kDoneButtonItemTag = 1;
 		
 		if (countdown.type == CountdownTypeTimer) {
 			if (countdown.durations.count >= 2) {
-				cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld timers", nil), (long)countdown.durations.count]; // @TODO: replace "%ld timers" with "%ld durations"
+				cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)countdown.durations.count];
 			} else if (countdown.durations.count == 1) {
 				cell.detailTextLabel.text = [countdown descriptionOfDurationAtIndex:0];
 			} else {
-				cell.detailTextLabel.text = NSLocalizedString(@"No timers", nil); // @TODO: replace "No timers" with "No durations"
+				cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
 			}
 		} else {
 			cell.detailTextLabel.text = [countdown.endDate description];

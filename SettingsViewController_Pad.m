@@ -80,14 +80,14 @@
 					break;
 				case 1: { // Durations
 					if (countdown.durations.count == 0) {
-						cell.detailTextLabel.text = NSLocalizedString(@"no timers", nil); // @TODO: replace "no timers" with "no durations"
+						cell.detailTextLabel.text = NSLocalizedString(@"no durations", nil);
 						cell.detailTextLabel.font = [UIFont italicSystemFontOfSize:17.];
 						cell.detailTextLabel.textColor = [UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.];
 					} else {
 						if (countdown.durations.count == 1) {
 							cell.detailTextLabel.text = [countdown shortDescriptionOfDurationAtIndex:0];
 						} else {
-							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld timers", nil), (long)countdown.durations.count]; // @TODO: replace "%ld timers" with "%ld durations"
+							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)countdown.durations.count];
 						}
 						cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
 						cell.detailTextLabel.textColor = [UIColor darkGrayColor];

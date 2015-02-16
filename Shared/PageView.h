@@ -21,8 +21,8 @@
 
 @optional
 
-- (void)pageViewDidSingleTap:(PageView *)page;
-- (void)pageViewDidDoubleTap:(PageView *)page;
+//- (void)pageViewDidSingleTap:(PageView *)page;
+//- (void)pageViewDidDoubleTap:(PageView *)page;
 
 - (void)pageViewWillShowSettings:(PageView *)page;
 

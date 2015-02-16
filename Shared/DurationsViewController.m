@@ -56,6 +56,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
 	NSArray * durationsCopy = _countdown.durations.copy;
 	for (NSNumber * duration in durationsCopy) {
 		if (duration.integerValue == 0) { // Remove empty durations

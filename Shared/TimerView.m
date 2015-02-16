@@ -69,19 +69,22 @@
 
 - (void)drawRect:(CGRect)rect
 {
-	CGFloat top = ceilf((rect.size.height - rect.size.width) / 2.);
-	
-	CGFloat border = 4.;
-	CGRect innerFrame = CGRectMake(border, top + border,
-								   rect.size.width - 2. * border,
-								   rect.size.width - 2. * border);
+    CGFloat border = 4.;
+    CGFloat length = MIN(rect.size.width, rect.size.height);
+    CGFloat topMargin = ceilf((rect.size.height - length) / 2.);
+    CGFloat leftMargin = ceilf((rect.size.width - length) / 2.);
+	CGRect innerFrame = CGRectMake(leftMargin + border,
+                                   topMargin + border,
+								   length - 2. * border,
+								   length - 2. * border);
 	
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	
 	// Draw the outer ring (with |tintColor|)
 	CGContextSaveGState(context);
 	{
-		CGRect outerFrame = CGRectMake(0., top, rect.size.width, rect.size.width);
+        
+		CGRect outerFrame = CGRectMake(leftMargin, topMargin, length, length);
 		CGContextAddEllipseInRect(context, outerFrame);
 		CGContextSetFillColorWithColor(context, [_tintColor colorWithAlphaComponent:0.333].CGColor);
 		

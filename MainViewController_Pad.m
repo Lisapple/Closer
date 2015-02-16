@@ -348,6 +348,11 @@
 {
 	[popover dismissPopoverAnimated:YES];
 	popover = nil;
+    
+    if (currentSettingsPageIndex >= 0) {
+        [self reloadPageViewAtIndex:currentSettingsPageIndex];
+        currentSettingsPageIndex = 0;
+    }
 }
 
 - (IBAction)close:(id)sender
@@ -814,6 +819,15 @@
 }
 
 #pragma mark - UIPageControl Managment
+
+- (void)showPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated
+{
+    if (pageIndex < pageControl.numberOfPages) {
+        pageControl.currentPage = pageIndex;
+        CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageIndex, 0.);
+        [scrollView setContentOffset:contentOffset animated:animated];
+    }
+}
 
 - (IBAction)changePage:(id)sender
 {

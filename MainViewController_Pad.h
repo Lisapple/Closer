@@ -41,6 +41,7 @@
 - (IBAction)close:(id)sender;
 
 #pragma mark UIPageControl Managment
+- (void)showPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated;
 - (IBAction)changePage:(id)sender;
 
 @end

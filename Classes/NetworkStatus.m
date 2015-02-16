@@ -10,6 +10,8 @@
 
 @implementation NetworkStatus
 
+NSString * const NetworkStatusDidChangeNotification = @"NetworkStatusDidChangeNotification";
+
 static SCNetworkReachabilityRef reachability = NULL;
 static BOOL isObserving = NO;
 static int _connected = -1;
@@ -21,8 +23,7 @@ static int _connected = -1;
 		initialized = YES;
 		
 		/* Create a default local address */
-		struct sockaddr_in zeroAddress;
-		bzero(&zeroAddress, sizeof(zeroAddress));
+        struct sockaddr_in zeroAddress = { 0, 0, 0, NULL, NULL };
 		zeroAddress.sin_len = sizeof(zeroAddress);
 		zeroAddress.sin_family = AF_INET;
 		
@@ -42,7 +43,7 @@ static int _connected = -1;
 
 void NetworkReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
 {
-	static int oldStatus = -1;// "-1" means no old status
+	static int oldStatus = -1; // "-1" means no old status
 	
 	BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable) && !(flags & kSCNetworkReachabilityFlagsConnectionRequired);
 	_connected = (int)connected;// Change the "_connected" value before send the notification
@@ -50,8 +51,8 @@ void NetworkReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReach
 	NSDebugLog(@"%@", (connected)? @"Connected": @"Not connected");
 	
 	if (oldStatus != (int)connected) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:kNetworkStatusDidChangeNotification
-														object:@(connected)];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NetworkStatusDidChangeNotification
+                                                            object:@(connected)];
 		oldStatus = (int)connected;
 	}
 }
