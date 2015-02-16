@@ -141,6 +141,19 @@
 	}
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
+        Countdown * countdown = [Countdown countdownWithIdentifier:url.fragment];
+        NSInteger index = [Countdown indexOfCountdown:countdown];
+        if (index != NSNotFound) {
+            [_mainViewController showPageAtIndex:index animated:NO];
+        }
+    }
+    
+    return YES;
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];

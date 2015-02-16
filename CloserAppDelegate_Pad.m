@@ -92,6 +92,19 @@
 	}
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
+        Countdown * countdown = [Countdown countdownWithIdentifier:url.fragment];
+        NSInteger index = [Countdown indexOfCountdown:countdown];
+        if (index != NSNotFound) {
+            [self.viewController showPageAtIndex:(index % 3) animated:NO];
+        }
+    }
+    
+    return YES;
+}
+
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
 	[Countdown synchronize_async];
