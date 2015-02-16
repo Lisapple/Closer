@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const CountdownDidSynchronizeNotification;
+extern NSString * const CountdownDidUpdateNotification;
+
 typedef NS_OPTIONS(NSUInteger, CountdownType) {
 	CountdownTypeCountdown = 0,
 	CountdownTypeTimer
@@ -44,12 +47,14 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 @property (nonatomic, assign) CountdownType type;
 @property (nonatomic, assign) PromptState promptState;
 @property (nonatomic, assign) NSInteger durationIndex;
+@property (nonatomic, assign) BOOL notificationCenter;
 
 // Private
 @property (nonatomic, readonly) NSString * identifier;
 
 /* Save any change from propertyList to disk */
-+ (void)synchronize;
++ (void)synchronize; // Calls "synchronizeWithCompletion:" but shows an alert on error
++ (void)synchronizeWithCompletion:(void (^)(BOOL success, NSError * error))completionHandler;
 
 + (NSInteger)numberOfCountdowns;
 
@@ -97,18 +102,13 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 
 - (void)resetDurationIndex;
 
-- (void)removeLocalNotification;
-
 @end
 
 
 @interface Countdown (PrivateMethods)
 
-+ (void)synchronize_async;
++ (void)synchronize_async DEPRECATED_ATTRIBUTE;
 
 - (NSMutableDictionary *)_countdownToDictionary;
 
-- (UILocalNotification *)localNotification;
-- (UILocalNotification *)createLocalNotification;
-- (void)updateLocalNotification;
 @end
