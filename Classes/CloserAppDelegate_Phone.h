@@ -11,13 +11,7 @@
 
 @class MainViewController_Phone;
 
-@interface CloserAppDelegate_Phone : NSObject <UIApplicationDelegate, UIAlertViewDelegate> {
-	UIWindow *window;
-	MainViewController_Phone *mainViewController;
-	
-	@private
-	AVAudioPlayer * player;
-}
+@interface CloserAppDelegate_Phone : NSObject <UIApplicationDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UIWindow *window;
 @property (nonatomic, strong) IBOutlet MainViewController_Phone *mainViewController;

@@ -243,3 +243,6 @@
 "More";
 
 "Reset to %@";
+
+"Include in notification center";
+"Do not include";

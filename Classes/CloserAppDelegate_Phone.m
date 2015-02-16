@@ -13,11 +13,14 @@
 
 #import "NSBundle+addition.h"
 
+@interface CloserAppDelegate_Phone ()
+{
+    AVAudioPlayer * player;
+}
+
+@end
+
 @implementation CloserAppDelegate_Phone
-
-
-@synthesize window = _window;
-@synthesize mainViewController;
 
 #define kLastSelectedPageIndex @"last_selected_page_index"
 
@@ -26,7 +29,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	application.applicationSupportsShakeToEdit = YES;// Enabled shake to undo
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeSound)
+                                                                                        categories:[NSSet set]]];
+    }
+    
+	application.applicationSupportsShakeToEdit = YES; // Enabled shake to undo
 	
 	if (TARGET_IS_IOS7_OR_LATER()) {
 		_window.tintColor = [UIColor darkGrayColor];
@@ -38,13 +46,13 @@
 		application.statusBarStyle = 2 /* UIStatusBarStyleBlackTranslucent */;
 	}
 	
-	_window.rootViewController = mainViewController;
+	_window.rootViewController = _mainViewController;
 	[_window makeKeyAndVisible];
 	
-	/* Retreive the last slected page index and selected it */
+	/* Retreive the last selected page index and selected it */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 	NSInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
-	[mainViewController showPageAtIndex:index animated:NO];
+	[_mainViewController showPageAtIndex:index animated:NO];
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification
 													  object:nil
@@ -157,17 +165,17 @@
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setInteger:mainViewController.selectedPageIndex
+	[userDefaults setInteger:_mainViewController.selectedPageIndex
 					  forKey:kLastSelectedPageIndex];
 	
-	[mainViewController stopUpdateTimeLabels];
+	[_mainViewController stopUpdateTimeLabels];
 	
-	[Countdown synchronize_async];
+	[Countdown synchronize];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-	[mainViewController startUpdateTimeLabels];
+	[_mainViewController startUpdateTimeLabels];
 }
 
 
@@ -175,10 +183,10 @@
 {
 	/* Save the last selected page */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setInteger:[mainViewController selectedPageIndex]
+	[userDefaults setInteger:[_mainViewController selectedPageIndex]
 					  forKey:kLastSelectedPageIndex];
 	
-	[Countdown synchronize_async];
+	[Countdown synchronize];
 }
 
 @end

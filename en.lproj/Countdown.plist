@@ -19,6 +19,8 @@
 		<integer>0</integer>
 		<key>type</key>
 		<integer>0</integer>
+		<key>notificationCenter</key>
+		<true/>
 	</dict>
 	<dict>
 		<key>index</key>
@@ -37,6 +39,8 @@
 		<integer>1</integer>
 		<key>type</key>
 		<integer>0</integer>
+		<key>notificationCenter</key>
+		<true/>
 	</dict>
 	<dict>
 		<key>index</key>
@@ -58,6 +62,8 @@
 		<integer>2</integer>
 		<key>durationIndex</key>
 		<integer>0</integer>
+		<key>notificationCenter</key>
+		<false/>
 	</dict>
 </array>
 </plist>

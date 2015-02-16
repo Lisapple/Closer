@@ -242,3 +242,6 @@
 "More" = "Plus";
 
 "Reset to %@" = "Remettre %@";
+
+"Include in notification center" = "Inclure dans les notifications";
+"Do not include" = "Ne pas inclure";
