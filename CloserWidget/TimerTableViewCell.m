@@ -31,7 +31,7 @@
     CGRect frame = CGRectMake(0., self.frame.size.height - 1., self.frame.size.width - 8., 1. / [UIScreen mainScreen].scale);
     UIView * separator = [[UIView alloc] initWithFrame:frame];
     separator.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
-    separator.backgroundColor = [UIColor grayColor];
+    separator.backgroundColor = [UIColor whiteColor];
     [visualEffectView.contentView addSubview:separator];
     [self addSubview:visualEffectView];
     
@@ -97,12 +97,6 @@
         frame.size.width = 0.;
     }
     _progressionView.frame = frame;
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 @end

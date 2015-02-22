@@ -20,36 +20,19 @@
 
 @implementation TodayViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
     NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
     _countdowns = [widgetDefaults arrayForKey:@"countdowns"];
-    
-    //_tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+  
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.rowHeight = 37.;
     _tableView.separatorInset = UIEdgeInsetsZero;
     
     self.preferredContentSize = CGSizeMake(_tableView.contentSize.width,
                                            _tableView.rowHeight * _countdowns.count);
-    
-    //[_tableView registerClass:CountdownTableViewCell.class forCellReuseIdentifier:@"CountdownCellID"];
-    //[_tableView registerClass:TimerTableViewCell.class forCellReuseIdentifier:@"TimerCellID"];
-    //_tableView.delegate = self;
-    //_tableView.dataSource = self;
-    //[_tableView reloadData];
-    
-    //[self.view addSubview:_tableView];
-    /*
-    UIVisualEffect * effect = [UIVibrancyEffect notificationCenterVibrancyEffect];
-    UIVisualEffectView * effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-    effectView.frame = CGRectMake(0., 0., 100., 100.);
-    effectView.tintColor = [UIColor clearColor];
-    [effectView.contentView addSubview:_tableView];
-    [self.view addSubview:effectView];
-    */
 }
 
 - (void)viewDidAppear:(BOOL)animated
