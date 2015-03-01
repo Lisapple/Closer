@@ -276,19 +276,31 @@
 				_descriptionLabel.hidden = NO;
 				
                 if (0. < remainingSeconds && remainingSeconds <= 5.) {
-                    [UIView animateKeyframesWithDuration:1.
-                                                   delay:0.
-                                                 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
-                                              animations:^{
-                                                  UIColor * backgroundColor = _contentView.backgroundColor;
-                                                  [UIView addKeyframeWithRelativeStartTime:0. relativeDuration:0.5 animations:^{
-                                                      _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }];
-                                                  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-                                                      _contentView.backgroundColor = backgroundColor; }];
-                                              }
-                                              completion:NULL];
+					if (TARGET_IS_IOS7_OR_LATER()) {
+						[UIView animateKeyframesWithDuration:1.
+													   delay:0.
+													 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
+												  animations:^{
+													  UIColor * backgroundColor = _contentView.backgroundColor;
+													  [UIView addKeyframeWithRelativeStartTime:0. relativeDuration:0.5 animations:^{
+														  _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }];
+													  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+														  _contentView.backgroundColor = backgroundColor; }];
+												  }
+												  completion:NULL];
+					} else {
+						UIColor * backgroundColor = _contentView.backgroundColor;
+						[UIView animateWithDuration:0.5 delay:0.
+											options:(UIViewAnimationOptionAllowUserInteraction)
+										 animations:^{ _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }
+										 completion:^(BOOL finished) {
+											 [UIView animateWithDuration:0.5 delay:0.
+																 options:(UIViewAnimationOptionAllowUserInteraction)
+															  animations:^{ _contentView.backgroundColor = backgroundColor; }
+															  completion:NULL];
+										 }];
+					}
                 }
-                
 			} else { // Timer done or paused
 				if (!isFinished) {
 					if (countdown.promptState == PromptStateEveryTimers ||
@@ -432,7 +444,7 @@
 						   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
 																		 target:nil action:NULL],
 						   [[UIBarButtonItem alloc] initWithTitle:resetTitle
-															style:UIBarButtonItemStylePlain
+															style:UIBarButtonItemStyleDone
 														   target:self action:@selector(resetChangeAction:)] ];
 		[self addSubview:toolbar];
 		[UIView animateWithDuration:0.15

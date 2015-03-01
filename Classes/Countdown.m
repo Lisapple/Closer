@@ -114,19 +114,21 @@ static NSMutableArray * _countdowns = nil;
         [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification
                                                           object:nil
                                                            queue:NSOperationQueue.currentQueue
-                                                      usingBlock:^(NSNotification *note) {
-                                                          static NSUserDefaults * widgetDefaults = nil;
-                                                          if (!widgetDefaults)
-                                                              widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
-                                                          
-                                                          NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
-                                                          [includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
-                                                              return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
-                                                          
-                                                          [widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
-                                                                             forKey:@"countdowns"];
-                                                          [widgetDefaults synchronize];
-                                                      }];
+													  usingBlock:^(NSNotification *note) {
+														  if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
+															  static NSUserDefaults * widgetDefaults = nil;
+															  if (!widgetDefaults)
+																  widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
+															  
+															  NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
+															  [includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+																  return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
+															  
+															  [widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
+																				 forKey:@"countdowns"];
+															  [widgetDefaults synchronize];
+														  }
+													  }];
         if (_countdowns.count > 0) {
             [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
         }
