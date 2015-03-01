@@ -7,9 +7,13 @@
 //
 
 #import "Countdown.h"
+#import "Countdown+addition.h"
 
 #import "NSBundle+addition.h"
 #import "NSArray+addition.h"
+
+NSString * const CountdownDidSynchronizeNotification = @"CountdownDidSynchronizeNotification";
+NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotification";
 
 @implementation Countdown
 
@@ -40,7 +44,7 @@ static NSMutableArray * _countdowns = nil;
 		NSString * preferencesFolderPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
 		_countdownsListPath = [[NSString alloc] initWithFormat:@"%@/Preferences/Countdowns.plist", preferencesFolderPath];
 		
-		NSString * errorString = nil;
+		NSError * error = nil;
 		NSData * data = [NSData dataWithContentsOfFile:_countdownsListPath];
 		if (!data) {// If no Countdowns.plist have been found, look up at ~/Documents/Countdown.plist ...
 			
@@ -54,7 +58,6 @@ static NSMutableArray * _countdowns = nil;
 			}
 			
 			// Force to move the current (or default) countdown list file to ~/Library/Preferences/
-			NSError * error = nil;
 			BOOL success = [data writeToFile:_countdownsListPath options:NSDataWritingAtomic error:&error];
 			
 			if (!success) {
@@ -73,12 +76,10 @@ static NSMutableArray * _countdowns = nil;
 		}
 		
 		NSPropertyListFormat format = NSPropertyListXMLFormat_v1_0;
-		
-		_propertyList = [NSPropertyListSerialization propertyListFromData:data
-														 mutabilityOption:NSPropertyListMutableContainersAndLeaves
-																   format:&format
-														 errorDescription:&errorString];
-		
+		_propertyList = [NSPropertyListSerialization propertyListWithData:data
+                                                                  options:NSPropertyListMutableContainersAndLeaves
+                                                                   format:&format
+                                                                    error:&error];
 		if (![_propertyList isKindOfClass:[NSMutableArray class]])
 			[NSException raise:@"CountdownException" format:@"Countdown.plist should be an mutable array based format."];
 		
@@ -96,7 +97,6 @@ static NSMutableArray * _countdowns = nil;
 				NSArray * durations = dictionary[@"durations"];
 				if (durations) [aCountdown addDurations:durations];
 				aCountdown.durationIndex = [dictionary[@"durationIndex"] integerValue];
-				
 				aCountdown.promptState = [dictionary[@"prompt"] integerValue];
 			}
 			
@@ -105,67 +105,100 @@ static NSMutableArray * _countdowns = nil;
 			aCountdown.songID = dictionary[@"songID"];
 			aCountdown.style = [dictionary[@"style"] integerValue];
 			aCountdown.type = type;
+            aCountdown.notificationCenter = (dictionary[@"notificationCenter"]) ? [dictionary[@"notificationCenter"] boolValue] : YES;
 			
 			[aCountdown activate];
 			[_countdowns addObject:aCountdown];
 		}
 		
-		if (_countdowns.count > 0)
-			[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification
+                                                          object:nil
+                                                           queue:NSOperationQueue.currentQueue
+													  usingBlock:^(NSNotification *note) {
+														  if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
+															  static NSUserDefaults * widgetDefaults = nil;
+															  if (!widgetDefaults)
+																  widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
+															  
+															  NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
+															  [includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+																  return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
+															  
+															  [widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
+																				 forKey:@"countdowns"];
+															  [widgetDefaults synchronize];
+														  }
+													  }];
+        if (_countdowns.count > 0) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+        }
 	}
 }
 
 + (void)synchronize
 {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[Countdown synchronize_async];
-	});
+    [self synchronizeWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
+                                                                 message:error.localizedDescription
+                                                                delegate:nil
+                                                       cancelButtonTitle:nil
+                                                       otherButtonTitles:nil, nil];
+            [alertView show];
+        }
+    }];
 }
 
 + (void)synchronize_async
 {
-	@synchronized(_countdowns) {
-		[_propertyList removeAllObjects];
-		for (Countdown * countdown in _countdowns) {
-			NSDictionary * dictionary = [countdown _countdownToDictionary];
-			[_propertyList addObject:dictionary];
-		}
-	}
-	
-	NSString * errorString = nil;
-	NSData * data = [NSPropertyListSerialization dataFromPropertyList:_propertyList
-															   format:NSPropertyListBinaryFormat_v1_0
-													 errorDescription:&errorString];
-	
-	if (!data) {
-		
-		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"READING_ERROR_ALERT_TITLE", nil)
-															 message:NSLocalizedString(@"READING_ERROR_ALERT_MESSAGE", nil)
-															delegate:nil
-												   cancelButtonTitle:nil
-												   otherButtonTitles:nil, nil];
-		[alertView show];
-		
-		NSLog(@"Error when serialize property list : %@", errorString);
-		return;
-	}
-	
-	NSError * error = nil;
-	BOOL succeed = [data writeToFile:_countdownsListPath options:NSDataWritingAtomic error:&error];// Write data atomically
-	if (!succeed && error) {
-		
-		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"WRITING_ERROR_ALERT_MESSAGE %@", nil), [[UIDevice currentDevice] localizedModel]];
-		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WRITING_ERROR_ALERT_TITLE", nil)
-															 message:message
-															delegate:nil
-												   cancelButtonTitle:nil
-												   otherButtonTitles:nil];
-		[alertView show];
-		
-		NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, [error localizedDescription]);
-	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+    [self synchronizeWithCompletion:NULL];
+}
+
++ (void)synchronizeWithCompletion:(void (^)(BOOL success, NSError * error))completionHandler
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        @synchronized(_countdowns) {
+            [_propertyList removeAllObjects];
+            [_countdowns enumerateObjectsUsingBlock:^(Countdown *countdown, NSUInteger idx, BOOL *stop) {
+                [_propertyList addObject:[countdown countdownToDictionary]]; }];
+        }
+        
+        NSError * error = nil;
+        NSData * data = [NSPropertyListSerialization dataWithPropertyList:_propertyList
+                                                                   format:NSPropertyListBinaryFormat_v1_0
+                                                                  options:0
+                                                                    error:&error];
+        if (!data) {
+            NSLog(@"Error when serialize property list : %@", error.localizedDescription);
+            
+            if (completionHandler) {
+                NSError * error = [NSError errorWithDomain:@"CountdownErrorDomain"
+                                                      code:1
+                                                  userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"READING_ERROR_ALERT_MESSAGE", nil) }];
+                completionHandler(NO, error);
+            }
+            return;
+        }
+        
+        error = nil;
+        BOOL succeed = [data writeToFile:_countdownsListPath options:NSDataWritingAtomic error:&error]; // Write data atomically
+        if (!succeed) {
+            NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, error.localizedDescription);
+            
+            if (completionHandler) {
+                NSError * error = [NSError errorWithDomain:@"CountdownErrorDomain"
+                                                      code:2
+                                                  userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"WRITING_ERROR_ALERT_TITLE", nil) }];
+                completionHandler(NO, error);
+            }
+            return;
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+        if (completionHandler)
+            completionHandler(YES, nil);
+    });
 }
 
 + (NSInteger)numberOfCountdowns
@@ -242,7 +275,7 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)removeCountdown:(Countdown *)countdown
 {
-	[countdown removeLocalNotification];
+	[countdown remove];
 	[_countdowns removeObject:countdown];
 	[countdown desactivate];
 	
@@ -252,7 +285,7 @@ static NSMutableArray * _countdowns = nil;
 + (void)removeCountdownAtIndex:(NSInteger)index
 {
 	Countdown * countdown = _countdowns[index];
-	[countdown removeLocalNotification];
+	[countdown remove];
 	[countdown desactivate];
 	[_countdowns removeObjectAtIndex:index];
 	
@@ -261,18 +294,18 @@ static NSMutableArray * _countdowns = nil;
 
 + (NSArray *)styles
 {
-	return @[NSLocalizedString(@"PAGE_STYLE_NIGHT", nil),
-			NSLocalizedString(@"PAGE_STYLE_DAY", nil),
-			NSLocalizedString(@"PAGE_STYLE_DAWN", nil),
-			NSLocalizedString(@"PAGE_STYLE_OASIS", nil),
-			NSLocalizedString(@"PAGE_STYLE_SPRING", nil)];
+    return @[ NSLocalizedString(@"PAGE_STYLE_NIGHT", nil),
+              NSLocalizedString(@"PAGE_STYLE_DAY", nil),
+              NSLocalizedString(@"PAGE_STYLE_DAWN", nil),
+              NSLocalizedString(@"PAGE_STYLE_OASIS", nil),
+              NSLocalizedString(@"PAGE_STYLE_SPRING", nil) ];
 }
 
 #pragma mark - Countdown's Instance Methods
 
-- (NSMutableDictionary *)_countdownToDictionary
+- (NSDictionary *)countdownToDictionary
 {
-	NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] initWithCapacity:5];
+	NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] initWithCapacity:_countdowns.count];
 	dictionary[@"name"] = self.name;
 	
 	if (self.type == CountdownTypeCountdown) {
@@ -290,6 +323,7 @@ static NSMutableArray * _countdowns = nil;
 	dictionary[@"identifier"] = self.identifier;
 	dictionary[@"style"] = @(self.style);
 	dictionary[@"type"] = @(self.type);
+    dictionary[@"notificationCenter"] = @(self.notificationCenter);
 	
 	return dictionary;
 }
@@ -312,10 +346,11 @@ static NSMutableArray * _countdowns = nil;
 		songID = @"default";
 		style = 0;
 		_type = CountdownTypeCountdown;
+        _notificationCenter = YES;
 		
 		identifier = anIdentifier;
 		
-		[self updateLocalNotification];
+		[self update];
 	}
 	
 	return self;
@@ -337,8 +372,9 @@ static NSMutableArray * _countdowns = nil;
 		songID = @"default";
 		style = 0;
 		_type = CountdownTypeCountdown;
+        _notificationCenter = YES;
 		
-		[self updateLocalNotification];
+		[self update];
 	}
 	
 	return self;
@@ -354,100 +390,6 @@ static NSMutableArray * _countdowns = nil;
 	active = NO;
 }
 
-- (UILocalNotification *)localNotification
-{
-	NSArray * allLocalNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
-	for (UILocalNotification * localNotif in allLocalNotifications) {
-		
-		NSString * anIdentifier = (localNotif.userInfo)[@"identifier"];
-		if ([anIdentifier isEqualToString:self.identifier]) {
-			return localNotif;// Return the localNotification
-		}
-	}
-	
-	return nil;
-}
-
-- (UILocalNotification *)createLocalNotification
-{
-	NSDebugLog(@"Create new local notification for countdown : %@ => %@", self.name, [endDate description]);
-	UILocalNotification * localNotif = [[UILocalNotification alloc] init];
-	
-	localNotif.timeZone = [NSTimeZone localTimeZone];
-	localNotif.userInfo = @{@"identifier": self.identifier};
-	
-	return localNotif;
-}
-
-- (void)updateLocalNotification
-{
-	if (active) {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			if (endDate && endDate.timeIntervalSinceNow > 0.) {
-				
-				UILocalNotification * localNotif = [self localNotification];
-				if (localNotif) {
-					[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
-				} else {
-					localNotif = [self createLocalNotification];
-				}
-				
-				localNotif.fireDate = self.endDate;
-				
-				NSString * messageString = message;
-				if (!message || [message isEqualToString:@""]) {// If no message, show the default message
-					if (self.style == CountdownTypeTimer) {
-						if (name)// If name was set, add it to default message
-							messageString = [NSString stringWithFormat:NSLocalizedString(@"TIMER_FINISHED_MESSAGE %@", nil), self.name];
-						else // Else if wasn't set, just show the default message
-							messageString = NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil);
-					} else {
-						if (name) messageString = [NSString stringWithFormat:NSLocalizedString(@"COUNTDOWN_FINISHED_MESSAGE %@", nil), self.name];
-						else messageString = NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil);
-					}
-				}
-				localNotif.alertBody = messageString;
-				
-				localNotif.repeatInterval = 0;
-				localNotif.hasAction = YES;
-				
-				if ([self.songID isEqualToString:@"-1"]) {// Don't play any sound ("-1" means "none")
-					
-				} else if ([self.songID isEqualToString:@"default"]) {// Play default sound
-					localNotif.soundName = UILocalNotificationDefaultSoundName;
-					
-				} else {// Play other sound from Songs folder
-					NSString * songPath = [NSString stringWithFormat:@"Songs/%@", [[NSBundle mainBundle] filenameForSongWithID:self.songID]];
-					localNotif.soundName = songPath;
-				}
-				
-				/* localNotif.userInfo => don't change userInfo, it alrealdy contains identifier */
-				
-				NSDebugLog(@"updateLocalNotification: (%@ %@)", localNotif.fireDate, localNotif.alertBody);
-				
-				[[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
-			} else {
-				/* Remove the notification */
-				UILocalNotification * localNotif = [self localNotification];
-				if (localNotif) {
-					[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
-				}
-			}
-			
-			/* Send a notification from the countdown/timer */
-			[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidUpdateNotification
-																object:self];
-		});
-	}
-}
-
-- (void)removeLocalNotification
-{
-	UILocalNotification * localNotif = [self localNotification];
-	if (localNotif)
-		[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
-}
-
 - (void)setName:(NSString *)aName
 {
 	if (aName && ![aName isEqualToString:name]) {
@@ -460,14 +402,14 @@ static NSMutableArray * _countdowns = nil;
 	if (aMessage && ![aMessage isEqualToString:message]) {
 		message = aMessage;
 		
-		[self updateLocalNotification];
+		[self update];
 	}
 }
 
 - (void)setEndDate:(NSDate *)aDate
 {
 	endDate = aDate;
-	[self updateLocalNotification];
+	[self update];
 }
 
 - (void)setSongID:(NSString *)aSongID
@@ -475,7 +417,7 @@ static NSMutableArray * _countdowns = nil;
 	if (aSongID && ![aSongID isEqualToString:songID]) {
 		songID = aSongID;
 		
-		[self updateLocalNotification];
+		[self update];
 	}
 }
 
@@ -484,8 +426,18 @@ static NSMutableArray * _countdowns = nil;
 	if (_type != newType) {
 		_type = newType;
 		
-		[self updateLocalNotification];
+		[self update];
 	}
+}
+
+- (void)update
+{
+    [self updateLocalNotification];
+}
+
+- (void)remove
+{
+    [self removeLocalNotification];
 }
 
 #pragma mark - Timer Methods
@@ -641,8 +593,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)dealloc
 {
-	/* Remove the notification */
-	[self removeLocalNotification];
+    // Remove the notification
+    [self remove];
 }
 
 @end

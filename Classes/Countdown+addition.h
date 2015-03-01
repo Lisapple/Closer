@@ -9,7 +9,16 @@
 #import "Countdown.h"
 #import <EventKit/EventKit.h>
 
-@interface Countdown (addition)
+@interface Countdown (LocalNotification)
+
+- (UILocalNotification *)localNotification;
+- (UILocalNotification *)createLocalNotification;
+- (void)updateLocalNotification;
+- (void)removeLocalNotification;
+
+@end
+
+@interface Countdown (Event)
 
 + (Countdown *)countdownWithEvent:(EKEvent *)event;
 

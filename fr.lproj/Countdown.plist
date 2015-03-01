@@ -8,9 +8,9 @@
 		<key>name</key>
 		<string>Décompte 1</string>
 		<key>endDate</key>
-		<date>2014-12-31T23:00:00Z</date>
+		<date>2015-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Bonne année 2015!</string>
+		<string>Bonne année 2016!</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>
@@ -26,9 +26,9 @@
 		<key>name</key>
 		<string>Décompte 2</string>
 		<key>endDate</key>
-		<date>2015-12-31T23:00:00Z</date>
+		<date>2016-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Bonne année 2016!</string>
+		<string>Bonne année 2017!</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>

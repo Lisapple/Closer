@@ -10,13 +10,22 @@
 
 #import "MainViewController_Pad.h"
 
-@implementation CloserAppDelegate_Pad
+@interface CloserAppDelegate_Pad ()
+{
+    AVAudioPlayer * player;
+}
 
-@synthesize window = _window;
-@synthesize viewController = _viewController;
+@end
+
+@implementation CloserAppDelegate_Pad
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeSound)
+                                                                                        categories:[NSSet set]]];
+    }
+    
 	self.viewController = [[MainViewController_Pad alloc] initWithNibName:@"MainViewController_Pad" bundle:nil];
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
 	if (TARGET_IS_IOS7_OR_LATER()) {
@@ -92,14 +101,27 @@
 	}
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
+        Countdown * countdown = [Countdown countdownWithIdentifier:url.fragment];
+        NSInteger index = [Countdown indexOfCountdown:countdown];
+        if (index != NSNotFound) {
+            [self.viewController showPageAtIndex:(index % 3) animated:NO];
+        }
+    }
+    
+    return YES;
+}
+
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-	[Countdown synchronize_async];
+	[Countdown synchronize];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-	[Countdown synchronize_async];
+	[Countdown synchronize];
 }
 
 @end

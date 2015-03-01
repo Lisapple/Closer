@@ -14,7 +14,12 @@
 
 #import "NetworkStatus.h"
 
-@interface EditAllCountdownViewController (PrivateMethods)
+@interface EditAllCountdownViewController ()
+{
+    BOOL forceReloadData;
+}
+@property (nonatomic, strong) NSArray * allCountdowns;
+@property (nonatomic, strong) NSMutableArray * includedCountdowns, * notIncludedCountdowns;
 
 - (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
 - (void)removeCountdown:(Countdown *)countdown index:(NSInteger)index;
@@ -132,11 +137,17 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (void)reloadData
 {
-	NSArray * oldCountdowns = [countdowns copy];
-	
-	if (![oldCountdowns isEqualToArray:[Countdown allCountdowns]]) { // Change to "save" only if we have real change
+	if (![_allCountdowns isEqualToArray:[Countdown allCountdowns]] || forceReloadData) { // Change to "save" only if we have real change
 		
-		countdowns = [[Countdown allCountdowns] copy];
+        _allCountdowns = [Countdown allCountdowns].copy;
+        _includedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
+        [_includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+            return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
+        
+        _notIncludedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == NO"]].mutableCopy;
+        [_notIncludedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+            return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
+        
 		[tableView reloadData];
 		
 		BOOL animated = (self.navigationItem.rightBarButtonItem.tag == kDoneButtonItemTag);
@@ -147,9 +158,11 @@ const NSInteger kDoneButtonItemTag = 1;
 			saveButtonItem.tintColor = [UIColor doneButtonColor];
 		
 		[self.navigationItem setRightBarButtonItem:saveButtonItem animated:animated];
+        
+        forceReloadData = NO;
 	}
 	
-	self.navigationItem.rightBarButtonItem.enabled = (countdowns.count > 0);
+	self.navigationItem.rightBarButtonItem.enabled = (_allCountdowns.count > 0);
 }
 
 - (IBAction)done:(id)sender
@@ -170,21 +183,12 @@ const NSInteger kDoneButtonItemTag = 1;
 {
 	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
 	
+    NSArray * names = [_allCountdowns valueForKeyPath:@"name"];
 	int index = 1;
 	while (1) {
-		
-		BOOL nameIsFree = YES;
-		for (int i = 0; i < countdowns.count; i++) {
-			Countdown * countdown = (Countdown *)countdowns[i];
-			if ([countdown.name isEqualToString:name]) {
-				nameIsFree = NO;
-				break;
-			}
-		}
-		
-		if (nameIsFree)
-			return name;
-		
+        if (![names containsObject:name])
+            return name;
+        
 		if (type == CountdownTypeTimer)
 			name = [NSString stringWithFormat:NSLocalizedString(@"New Timer %i", nil), index++];
 		else
@@ -194,7 +198,7 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (IBAction)add:(id)sender
 {
-	if (countdowns.count > 18) {// The limit of countdown for the pageControl view is 18
+	if (_allCountdowns.count > 18) {// The limit of countdown for the pageControl view is 18
 		UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"You must delete at least one countdown to add a new countdown.", nil)
 																  delegate:nil
 														 cancelButtonTitle:NSLocalizedString(@"OK", nil)
@@ -212,7 +216,7 @@ const NSInteger kDoneButtonItemTag = 1;
 		/* Note: the tableView is automatically reloaded */
 		// @TODO: animated the row insertion
 		
-		[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(countdowns.count - 1) inSection:0]
+		[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(_includedCountdowns.count - 1) inSection:0]
 						 atScrollPosition:UITableViewScrollPositionMiddle
 								 animated:YES];
 	}
@@ -243,13 +247,38 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 2;// One section for countdowns and one for Import/Export
+    if (TARGET_IS_IOS8_OR_LATER)
+        return 3; // "Include in notification center", "Do not include" and Import/Export
+    
+	return 2; // One section for countdowns and one for Import/Export
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (TARGET_IS_IOS8_OR_LATER) {
+        if /**/ (section == 0)
+            return NSLocalizedString(@"Include in notification center", nil);
+        else if (section == 1)
+            return NSLocalizedString(@"Do not include", nil);
+    }
+    return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (TARGET_IS_IOS8_OR_LATER) {
+        if /**/ (section == 0)
+            return self.includedCountdowns.count;
+        else if (section == 1)
+            return self.notIncludedCountdowns.count;
+        else if (section == 2)
+            return ([NetworkStatus isConnected] == YES)? 3: 2; // Remove the "Import with Passwords" if no internet connection
+        
+        return 0;
+    }
+    
 	if (section == 0)
-		return countdowns.count;
+		return _allCountdowns.count;
 	else if (section == 1)
 		return ([NetworkStatus isConnected] == YES)? 3: 2; // Remove the "Import with Passwords" if no internet connection
 	
@@ -260,7 +289,7 @@ const NSInteger kDoneButtonItemTag = 1;
 {
 	UITableViewCell * cell = nil;
 	
-	if (indexPath.section == 0) {
+	if (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1)) {
 		static NSString * countdownCellIdentifier = @"countdownCellIdentifier";
 		cell = [tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
 		
@@ -269,7 +298,10 @@ const NSInteger kDoneButtonItemTag = 1;
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		}
 		
-		Countdown * countdown = countdowns[indexPath.row];
+		Countdown * countdown = _allCountdowns[indexPath.row];
+        if (TARGET_IS_IOS8_OR_LATER) {
+            countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
+        }
 		cell.textLabel.text = countdown.name;
 		
 		if (countdown.type == CountdownTypeTimer) {
@@ -316,12 +348,12 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return (indexPath.section == 0);
+	return (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1));
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section == 0)
+	if (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1))
 		return UITableViewCellEditingStyleDelete;
 	
 	return UITableViewCellEditingStyleNone;
@@ -331,33 +363,45 @@ const NSInteger kDoneButtonItemTag = 1;
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		
-		NSInteger index = indexPath.row;
-		[self removeCountdown:[Countdown countdownAtIndex:index]
-						index:index];
+        Countdown * countdown = _allCountdowns[indexPath.row];
+        if (TARGET_IS_IOS8_OR_LATER) {
+            countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
+        }
+		[self removeCountdown:countdown index:index];
 		// @TODO: animated the row deletion
 	}
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return (indexPath.section == 0);
+	return (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1));
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {
-	if (proposedDestinationIndexPath.section > 0)
-		return [NSIndexPath indexPathForRow:(countdowns.count - 1) inSection:0];
+    if /**/ (!TARGET_IS_IOS8_OR_LATER && proposedDestinationIndexPath.section > 0)
+        return [NSIndexPath indexPathForRow:(_allCountdowns.count - 1) inSection:0];
+	else if (TARGET_IS_IOS8_OR_LATER && proposedDestinationIndexPath.section > 1)
+		return [NSIndexPath indexPathForRow:(_notIncludedCountdowns.count - 1) inSection:1];
 	
 	return proposedDestinationIndexPath;
 }
 
 - (void)tableView:(UITableView *)aTableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-	if (destinationIndexPath.section == 0) {
-		[Countdown moveCountdownAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
-		//[self reloadData];
-		// @TODO: animated the row movement
-	}
+    if (destinationIndexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && destinationIndexPath.section == 1)) {
+        NSUInteger sourceIndex = sourceIndexPath.section * _includedCountdowns.count + sourceIndexPath.row;
+        NSUInteger destinationIndex = destinationIndexPath.section * (_includedCountdowns.count - 1) + destinationIndexPath.row;
+        Countdown * countdown = _allCountdowns[sourceIndex];
+        countdown.notificationCenter = (destinationIndexPath.section == 0);
+        forceReloadData = YES;
+        if (sourceIndex != destinationIndex) {
+            [Countdown moveCountdownAtIndex:sourceIndex toIndex:destinationIndex];
+        } else {
+            [self reloadData];
+        }
+        // @TODO: animated the row movement
+    }
 }
 
 #pragma mark -
@@ -365,18 +409,20 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section == 0) {
-		settingsViewController.countdown = countdowns[indexPath.row];
-		
-		[aTableView deselectRowAtIndexPath:indexPath animated:YES];
-		
-		[Countdown synchronize];
-		
-		[self dismissViewControllerAnimated:YES completion:NULL];
-	} else {
+    if (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1)) {
+        
+        Countdown * countdown = _allCountdowns[indexPath.row];
+        if (TARGET_IS_IOS8_OR_LATER) {
+            countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
+        }
+        settingsViewController.countdown = countdown;
+        [Countdown synchronize];
+        [aTableView deselectRowAtIndexPath:indexPath animated:YES];
+        [self dismissViewControllerAnimated:YES completion:NULL];
+        
+    } else {
 		switch (indexPath.row) {// Import From Calendar
 			case 0: {
-				
 				BOOL granted = YES;
 				if ([EKEventStore instancesRespondToSelector:@selector(requestAccessToEntityType:completion:)]) {
 					EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];

@@ -12,13 +12,8 @@
 @class MainViewController_Pad;
 
 @interface CloserAppDelegate_Pad : NSObject <UIApplicationDelegate>
-{
-	@private
-	AVAudioPlayer * player;
-}
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
-
 @property (strong, nonatomic) IBOutlet MainViewController_Pad * viewController;
 
 @end

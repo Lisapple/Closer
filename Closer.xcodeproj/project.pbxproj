@@ -27,8 +27,14 @@
 		5012B63717B91EAA00F8B228 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
 		501412311312B51500D61066 /* CountdownPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5014122F1312B51500D61066 /* CountdownPageView.m */; };
 		501412321312B51500D61066 /* CountdownPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501412301312B51500D61066 /* CountdownPageView.xib */; };
+		502405CF1A901FEF00F8C935 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50F918FD149D3C87003F33B8 /* Localizable.strings */; };
 		5029FA8A1610CEE5002E2FC0 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */; };
 		502AEA5B15FA44E3009D9764 /* ExportToWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */; };
+		504B56471A7D5C9900292475 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
+		504B564D1A7D5C9900292475 /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 504B564C1A7D5C9900292475 /* TodayViewController.m */; };
+		504B564F1A7D5C9900292475 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504B564E1A7D5C9900292475 /* MainInterface.storyboard */; };
+		504B56521A7D5C9900292475 /* Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 504B56451A7D5C9900292475 /* Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		504B565B1A7D6B7900292475 /* CountdownTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 504B565A1A7D6B7900292475 /* CountdownTableViewCell.m */; };
 		504FD338164D2F3200D54381 /* CloserAppDelegate_Pad.m in Sources */ = {isa = PBXBuildFile; fileRef = 504FD336164D2F3200D54381 /* CloserAppDelegate_Pad.m */; };
 		504FD339164D2F3200D54381 /* MainViewController_Pad.m in Sources */ = {isa = PBXBuildFile; fileRef = 504FD337164D2F3200D54381 /* MainViewController_Pad.m */; };
 		504FD33D164D2F8200D54381 /* MainViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 504FD33C164D2F8200D54381 /* MainViewController_Pad.xib */; };
@@ -45,8 +51,10 @@
 		507A116717133D7A004909D0 /* ExportToWebsiteViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507A116917133D7A004909D0 /* ExportToWebsiteViewController_Pad.xib */; };
 		507AD4D113533D6200011051 /* PageThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AD4CF13533D6200011051 /* PageThemeViewController.m */; };
 		507AD4D213533D6200011051 /* PageThemeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507AD4D013533D6200011051 /* PageThemeViewController.xib */; };
+		507C345A1A8C0A3600C485C3 /* TimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */; };
 		508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 508578F316BC5F4900A04DAE /* UINavigationController+additions.m */; };
 		508D9C261338E2AC008C04FF /* UIView+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 508D9C251338E2AC008C04FF /* UIView+addition.m */; };
+		508F82591A816C4E006BFBB8 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
 		5092AB771509337B005D6B12 /* VCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5092AB761509337B005D6B12 /* VCalendar.m */; };
 		509ED3D8198B0AA800CCC424 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509ED3D6198B0AA800CCC424 /* EditViewController.m */; };
 		509ED3D9198B0AA800CCC424 /* EditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509ED3D7198B0AA800CCC424 /* EditViewController.xib */; };
@@ -94,6 +102,30 @@
 		9C00BDE919D2DA9B00E93271 /* Launch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C00BDE819D2DA9B00E93271 /* Launch.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		504B56501A7D5C9900292475 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 504B56441A7D5C9900292475;
+			remoteInfo = CloserWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		504B56581A7D5C9A00292475 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				504B56521A7D5C9900292475 /* Widget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* CloserAppDelegate_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CloserAppDelegate_Phone.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -127,6 +159,16 @@
 		501412301312B51500D61066 /* CountdownPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountdownPageView.xib; sourceTree = "<group>"; };
 		5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		504B56451A7D5C9900292475 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		504B56461A7D5C9900292475 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		504B564A1A7D5C9900292475 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		504B564B1A7D5C9900292475 /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		504B564C1A7D5C9900292475 /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
+		504B564E1A7D5C9900292475 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
+		504B56591A7D6B7900292475 /* CountdownTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountdownTableViewCell.h; sourceTree = "<group>"; };
+		504B565A1A7D6B7900292475 /* CountdownTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountdownTableViewCell.m; sourceTree = "<group>"; };
+		504B565E1A7DA8B400292475 /* Closer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Closer.entitlements; path = Closer/Closer.entitlements; sourceTree = "<group>"; };
+		504B565F1A7DA90300292475 /* Widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Widget.entitlements; path = ../Widget.entitlements; sourceTree = "<group>"; };
 		504FD334164D2F3200D54381 /* CloserAppDelegate_Pad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CloserAppDelegate_Pad.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		504FD335164D2F3200D54381 /* MainViewController_Pad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MainViewController_Pad.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		504FD336164D2F3200D54381 /* CloserAppDelegate_Pad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CloserAppDelegate_Pad.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -155,6 +197,8 @@
 		507AD4CE13533D6200011051 /* PageThemeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PageThemeViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		507AD4CF13533D6200011051 /* PageThemeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PageThemeViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		507AD4D013533D6200011051 /* PageThemeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageThemeViewController.xib; sourceTree = "<group>"; };
+		507C34581A8C0A3600C485C3 /* TimerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerTableViewCell.h; sourceTree = "<group>"; };
+		507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerTableViewCell.m; sourceTree = "<group>"; };
 		508578F216BC5F4900A04DAE /* UINavigationController+additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+additions.h"; sourceTree = "<group>"; };
 		508578F316BC5F4900A04DAE /* UINavigationController+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+additions.m"; sourceTree = "<group>"; };
 		508D9C241338E2AC008C04FF /* UIView+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIView+addition.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -251,6 +295,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		504B56421A7D5C9900292475 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				504B56471A7D5C9900292475 /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -269,6 +321,7 @@
 			isa = PBXGroup;
 			children = (
 				1D6058910D05DD3D006BFB54 /* Closer.app */,
+				504B56451A7D5C9900292475 /* Widget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -283,6 +336,7 @@
 				50C5A18E12E335F30013605C /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				504B56481A7D5C9900292475 /* Widget */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -301,6 +355,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				504B565E1A7DA8B400292475 /* Closer.entitlements */,
 				50F3F51119880D1D00817B98 /* Images.xcassets */,
 				50F918F5149D3C5F003F33B8 /* Countdown.plist */,
 				50F918F9149D3C7E003F33B8 /* songs.plist */,
@@ -323,6 +378,7 @@
 				288765580DF743DE002DB57D /* CoreGraphics.framework */,
 				50C5A2E512E3504B0013605C /* AudioToolbox.framework */,
 				50FF49D5131E996D0094645C /* AVFoundation.framework */,
+				504B56461A7D5C9900292475 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -347,6 +403,31 @@
 				507A116917133D7A004909D0 /* ExportToWebsiteViewController_Pad.xib */,
 			);
 			name = iPad;
+			sourceTree = "<group>";
+		};
+		504B56481A7D5C9900292475 /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				504B565F1A7DA90300292475 /* Widget.entitlements */,
+				504B56591A7D6B7900292475 /* CountdownTableViewCell.h */,
+				504B565A1A7D6B7900292475 /* CountdownTableViewCell.m */,
+				507C34581A8C0A3600C485C3 /* TimerTableViewCell.h */,
+				507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */,
+				504B564B1A7D5C9900292475 /* TodayViewController.h */,
+				504B564C1A7D5C9900292475 /* TodayViewController.m */,
+				504B564E1A7D5C9900292475 /* MainInterface.storyboard */,
+				504B56491A7D5C9900292475 /* Supporting Files */,
+			);
+			name = Widget;
+			path = CloserWidget;
+			sourceTree = "<group>";
+		};
+		504B56491A7D5C9900292475 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				504B564A1A7D5C9900292475 /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		504FD31B164D2A2900D54381 /* iPhone */ = {
@@ -501,15 +582,34 @@
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				504B56581A7D5C9A00292475 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				504B56511A7D5C9900292475 /* PBXTargetDependency */,
 			);
 			name = Closer;
 			productName = Closer;
 			productReference = 1D6058910D05DD3D006BFB54 /* Closer.app */;
 			productType = "com.apple.product-type.application";
+		};
+		504B56441A7D5C9900292475 /* Widget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 504B56571A7D5C9A00292475 /* Build configuration list for PBXNativeTarget "Widget" */;
+			buildPhases = (
+				504B56411A7D5C9900292475 /* Sources */,
+				504B56421A7D5C9900292475 /* Frameworks */,
+				504B56431A7D5C9900292475 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Widget;
+			productName = CloserWidget;
+			productReference = 504B56451A7D5C9900292475 /* Widget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -518,6 +618,25 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0600;
+				TargetAttributes = {
+					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = 79MVQZ8SAR;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					504B56441A7D5C9900292475 = {
+						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 79MVQZ8SAR;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Closer" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -536,6 +655,7 @@
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Closer */,
+				504B56441A7D5C9900292475 /* Widget */,
 			);
 		};
 /* End PBXProject section */
@@ -577,6 +697,15 @@
 				500AC00F19899BCF00217E92 /* Background.png in Resources */,
 				50D5B5D017847C8000140DDB /* PromptViewController.xib in Resources */,
 				50D5B5D51784800F00140DDB /* DurationPickerViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		504B56431A7D5C9900292475 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				504B564F1A7D5C9900292475 /* MainInterface.storyboard in Resources */,
+				502405CF1A901FEF00F8C935 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,7 +765,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		504B56411A7D5C9900292475 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				508F82591A816C4E006BFBB8 /* NSArray+addition.m in Sources */,
+				504B564D1A7D5C9900292475 /* TodayViewController.m in Sources */,
+				504B565B1A7D6B7900292475 /* CountdownTableViewCell.m in Sources */,
+				507C345A1A8C0A3600C485C3 /* TimerTableViewCell.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		504B56511A7D5C9900292475 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 504B56441A7D5C9900292475 /* Widget */;
+			targetProxy = 504B56501A7D5C9900292475 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		507A116117133D3E004909D0 /* ImportFromWebsiteViewController_Pad.xib */ = {
@@ -704,7 +852,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = Closer/Closer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -715,6 +865,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Closer;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -727,7 +878,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = Closer/Closer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Closer_Prefix.pch;
@@ -735,23 +888,185 @@
 				INFOPLIST_FILE = "Closer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = Closer;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
 			};
 			name = Release;
 		};
+		504B56531A7D5C9A00292475 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = CloserWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		504B56541A7D5C9A00292475 /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = CloserWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad Hoc";
+		};
+		504B56551A7D5C9A00292475 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = CloserWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
+		};
+		504B56561A7D5C9A00292475 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = CloserWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		5054DB06131FBED100F98B20 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: maxime leroy";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: maxime leroy";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
-				PROVISIONING_PROFILE = "5BA53F1A-4EBC-43DD-B954-662B0926538F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BA53F1A-4EBC-43DD-B954-662B0926538F";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				SDKROOT = iphoneos;
 			};
 			name = "Ad Hoc";
@@ -763,7 +1078,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = Closer/Closer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -782,14 +1099,10 @@
 		50A1F16A133A331F00596F1B /* App Store */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: maxime leroy";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: maxime leroy";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
-				PROVISIONING_PROFILE = "B2E661A1-F840-4996-8959-CA503DDDB93F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B7A7F1E6-2F01-402E-8606-19A8F5818208";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				SDKROOT = iphoneos;
 			};
 			name = "App Store";
@@ -801,7 +1114,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = Closer/Closer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -822,15 +1137,11 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: maxime leroy (VM9FMBHPX4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -838,15 +1149,11 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: maxime leroy (VM9FMBHPX4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -861,6 +1168,17 @@
 				5054DB07131FBED100F98B20 /* Ad Hoc */,
 				50A1F16B133A331F00596F1B /* App Store */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		504B56571A7D5C9A00292475 /* Build configuration list for PBXNativeTarget "Widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				504B56531A7D5C9A00292475 /* Debug */,
+				504B56541A7D5C9A00292475 /* Ad Hoc */,
+				504B56551A7D5C9A00292475 /* App Store */,
+				504B56561A7D5C9A00292475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

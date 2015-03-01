@@ -13,9 +13,6 @@
 @interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UITableView * tableView;
-	NSArray * countdowns;
-	
-	SettingsViewController_Phone * settingsViewController;
 }
 
 @property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;

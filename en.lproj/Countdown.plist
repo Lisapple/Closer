@@ -8,9 +8,9 @@
 		<key>name</key>
 		<string>Countdown 1</string>
 		<key>endDate</key>
-		<date>2014-12-31T23:00:00Z</date>
+		<date>2015-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Happy new Year 2015!</string>
+		<string>Happy new Year 2016!</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>
@@ -19,6 +19,8 @@
 		<integer>0</integer>
 		<key>type</key>
 		<integer>0</integer>
+		<key>notificationCenter</key>
+		<true/>
 	</dict>
 	<dict>
 		<key>index</key>
@@ -26,9 +28,9 @@
 		<key>name</key>
 		<string>Countdown 2</string>
 		<key>endDate</key>
-		<date>2015-12-31T23:00:00Z</date>
+		<date>2016-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Happy new Year 2016!</string>
+		<string>Happy new Year 2017!</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>
@@ -37,6 +39,8 @@
 		<integer>1</integer>
 		<key>type</key>
 		<integer>0</integer>
+		<key>notificationCenter</key>
+		<true/>
 	</dict>
 	<dict>
 		<key>index</key>
@@ -58,6 +62,8 @@
 		<integer>2</integer>
 		<key>durationIndex</key>
 		<integer>0</integer>
+		<key>notificationCenter</key>
+		<false/>
 	</dict>
 </array>
 </plist>
