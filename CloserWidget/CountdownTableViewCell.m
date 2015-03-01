@@ -83,7 +83,7 @@
     NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:[_name stringByAppendingString:@"\t"]
                                                                                 attributes:@{ NSForegroundColorAttributeName : [UIColor whiteColor] }];
     [string appendAttributedString:[[NSAttributedString alloc] initWithString:self.endDateDescription
-                                                                   attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithWhite:1. alpha:0.15] }]];
+                                                                   attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithWhite:1. alpha:0.2] }]];
     _label.attributedText = string;
     
     double seconds = [_endDate timeIntervalSinceNow];
