@@ -35,14 +35,18 @@
                                            _tableView.rowHeight * _countdowns.count);
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.
                                               target:_tableView
                                             selector:@selector(reloadData)
                                             userInfo:nil
                                              repeats:YES];
+	
+	NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
+	_countdowns = [widgetDefaults arrayForKey:@"countdowns"];
+	[_tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -59,11 +63,7 @@
 
 - (void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult))completionHandler
 {
-    NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
-    _countdowns = [widgetDefaults arrayForKey:@"countdowns"];
-    [_tableView reloadData];
-    
-    completionHandler(NCUpdateResultNewData);
+	completionHandler(NCUpdateResultNewData);
 }
 
 #pragma mark - TableView Datasource
@@ -101,9 +101,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString * identifier = _countdowns[indexPath.row][@"identifier"];
-    NSURL * appURL = [NSURL URLWithString:[NSString stringWithFormat:@"closer://countdown#%@", identifier]];
-    [self.extensionContext openURL:appURL completionHandler:NULL];
+	/*
+	[self.extensionContext completeRequestReturningItems:@[ _countdowns.firstObject ]
+									   completionHandler:^(BOOL expired) {
+									   }];
+	*/
+	 NSString * identifier = _countdowns[indexPath.row][@"identifier"];
+	 NSURL * appURL = [NSURL URLWithString:[NSString stringWithFormat:@"closer://countdown#%@", identifier]];
+	 [self.extensionContext openURL:appURL completionHandler:NULL];
 }
 
 @end

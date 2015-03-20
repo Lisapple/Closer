@@ -127,6 +127,9 @@ static NSMutableArray * _countdowns = nil;
 															  [widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
 																				 forKey:@"countdowns"];
 															  [widgetDefaults synchronize];
+															  
+															  [[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
+																					 forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
 														  }
 													  }];
         if (_countdowns.count > 0) {

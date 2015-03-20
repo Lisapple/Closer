@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <NotificationCenter/NotificationCenter.h>
 
 extern NSString * const CountdownDidSynchronizeNotification;
 extern NSString * const CountdownDidUpdateNotification;

@@ -91,6 +91,7 @@
 		50DF430E17736AB900AAA6C9 /* PageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF430D17736AB900AAA6C9 /* PageView.m */; };
 		50DF431117736AD000AAA6C9 /* TimerPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF431017736AD000AAA6C9 /* TimerPageView.m */; };
 		50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DF431217736AE800AAA6C9 /* TimerPageView.xib */; };
+		50E937B11ABCE0C100E0F6E7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
 		50EC72D316BD4F9D00BB7CA7 /* EKEventStore+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */; };
 		50F3F51219880D1D00817B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50F3F51119880D1D00817B98 /* Images.xcassets */; };
 		50F918F3149D3C5F003F33B8 /* Countdown.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50F918F5149D3C5F003F33B8 /* Countdown.plist */; };
@@ -285,6 +286,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50E937B11ABCE0C100E0F6E7 /* NotificationCenter.framework in Frameworks */,
 				50CEFB6015FCF3FB0044AED0 /* SystemConfiguration.framework in Frameworks */,
 				50036EF3150A42DC006BE168 /* EventKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
