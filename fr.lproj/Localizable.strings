@@ -22,7 +22,7 @@
 /* SettingsViewController */
 "Settings" = "Réglages";
 "Edit All" = "Tout Modifier";
-"Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n" = "Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n";
+"Closer & Closer %@\nCopyright © 2015, Lis@cintosh" = "Closer & Closer %@\nCopyright © 2015, Lis@cintosh";
 "Name" = "Nom";
 "Date & Time" = "Date et Heure";
 "Message" = "Message";

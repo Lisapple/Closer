@@ -119,7 +119,7 @@ const NSInteger kDoneButtonItemTag = 1;
 - (IBAction)moreInfo:(id)sender
 {
 	NSDictionary * infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © 2014, Lis@cintosh\n", nil), infoDictionary[@"CFBundleShortVersionString"]]; // @TODO: generate the year
+	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © 2015, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"]]; // @TODO: generate the year
 	
 	UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:title
 															  delegate:self
