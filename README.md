@@ -15,6 +15,6 @@ The code source and resources are under MIT licence.
 ![Screen Shot 2](http://lisacintosh.com/closer/images/screenshot-2.png)
 ![Screen Shot 3](http://lisacintosh.com/closer/images/screenshot-3.png)
 ![Screen Shot 4](http://lisacintosh.com/closer/images/screenshot-4.png)
-
+![Screen Shot 5](http://lisacintosh.com/closer/images/Watch-UI.png)
 
 [AppStore Link](https://itunes.apple.com/us/app/closer-closer/id426017193?ls=1&mt=8)
