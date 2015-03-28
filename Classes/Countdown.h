@@ -37,6 +37,7 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 	@private
 	NSString * identifier;
 	NSMutableArray * durations;
+	NSTimeInterval remaining;
 	BOOL active;
 }
 
@@ -48,6 +49,7 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 @property (nonatomic, assign) CountdownType type;
 @property (nonatomic, assign) PromptState promptState;
 @property (nonatomic, assign) NSInteger durationIndex;
+@property (nonatomic, readonly, getter=isPaused) BOOL paused;
 @property (nonatomic, assign) BOOL notificationCenter;
 
 // Private
@@ -84,7 +86,10 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
  */
 + (NSArray *)styles;
 
-- (id)initWithIdentifier:(NSString *)anIdentifier;
+- (instancetype)initWithIdentifier:(NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
+- (instancetype)init UNAVAILABLE_ATTRIBUTE;
+
+#pragma mark Timer methods
 
 - (NSNumber *)currentDuration;
 - (NSArray *)durations;
@@ -94,14 +99,20 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 - (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2;
 - (void)removeDurationAtIndex:(NSUInteger)index;
+- (void)resetDurationIndex;
+- (void)resume;
+- (void)pause;
+- (void)reset;
+
+#pragma mark Activation methods
 
 - (void)activate; /* Make the countdown active to send local notification */
 - (void)desactivate;
 
+#pragma mark Localized description methods
+
 - (NSString *)descriptionOfDurationAtIndex:(NSInteger)index;
 - (NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index;
-
-- (void)resetDurationIndex;
 
 @end
 

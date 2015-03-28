@@ -30,6 +30,8 @@
 		502405CF1A901FEF00F8C935 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50F918FD149D3C87003F33B8 /* Localizable.strings */; };
 		5029FA8A1610CEE5002E2FC0 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */; };
 		502AEA5B15FA44E3009D9764 /* ExportToWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */; };
+		50432A4B1AC369EF00D3B424 /* TimerDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50432A4A1AC369EF00D3B424 /* TimerDetailsController.swift */; };
+		50432A4D1AC36A0900D3B424 /* CountdownDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50432A4C1AC36A0900D3B424 /* CountdownDetailsController.swift */; };
 		504B56471A7D5C9900292475 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
 		504B564D1A7D5C9900292475 /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 504B564C1A7D5C9900292475 /* TodayViewController.m */; };
 		504B564F1A7D5C9900292475 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504B564E1A7D5C9900292475 /* MainInterface.storyboard */; };
@@ -91,6 +93,15 @@
 		50DF430E17736AB900AAA6C9 /* PageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF430D17736AB900AAA6C9 /* PageView.m */; };
 		50DF431117736AD000AAA6C9 /* TimerPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF431017736AD000AAA6C9 /* TimerPageView.m */; };
 		50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DF431217736AE800AAA6C9 /* TimerPageView.xib */; };
+		50E00D261AC0AA9000784B98 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D251AC0AA9000784B98 /* InterfaceController.swift */; };
+		50E00D281AC0AA9000784B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D271AC0AA9000784B98 /* Images.xcassets */; };
+		50E00D2C1AC0AA9000784B98 /* Closer WatchKit App.app in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */; };
+		50E00D341AC0AA9000784B98 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D321AC0AA9000784B98 /* Interface.storyboard */; };
+		50E00D361AC0AA9000784B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D351AC0AA9000784B98 /* Images.xcassets */; };
+		50E00D391AC0AA9000784B98 /* Closer WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		50E00D471AC0AAB700784B98 /* TimerInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D441AC0AAB700784B98 /* TimerInterfaceController.swift */; };
+		50E00D481AC0AAB700784B98 /* CountdownInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */; };
+		50E00D491AC0AAB700784B98 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D461AC0AAB700784B98 /* ColorExtension.swift */; };
 		50E937B11ABCE0C100E0F6E7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
 		50EC72D316BD4F9D00BB7CA7 /* EKEventStore+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */; };
 		50F3F51219880D1D00817B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50F3F51119880D1D00817B98 /* Images.xcassets */; };
@@ -111,6 +122,20 @@
 			remoteGlobalIDString = 504B56441A7D5C9900292475;
 			remoteInfo = CloserWidget;
 		};
+		50E00D2D1AC0AA9000784B98 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50E00D2A1AC0AA9000784B98;
+			remoteInfo = "Closer WatchKit App";
+		};
+		50E00D371AC0AA9000784B98 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50E00D201AC0AA9000784B98;
+			remoteInfo = "Closer WatchKit Extension";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -121,6 +146,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				504B56521A7D5C9900292475 /* Widget.appex in Embed App Extensions */,
+				50E00D391AC0AA9000784B98 /* Closer WatchKit Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,6 +186,8 @@
 		501412301312B51500D61066 /* CountdownPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountdownPageView.xib; sourceTree = "<group>"; };
 		5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		50432A4A1AC369EF00D3B424 /* TimerDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerDetailsController.swift; sourceTree = "<group>"; };
+		50432A4C1AC36A0900D3B424 /* CountdownDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownDetailsController.swift; sourceTree = "<group>"; };
 		504B56451A7D5C9900292475 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		504B56461A7D5C9900292475 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		504B564A1A7D5C9900292475 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -182,6 +210,7 @@
 		5051305516600DE20056CB42 /* NSObject+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+additions.m"; sourceTree = "<group>"; };
 		505904C91352351B00959167 /* FontDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FontDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505904CA1352351B00959167 /* FontDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FontDescription.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		505B2AA01AC0D28000B6F84A /* Closer WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Closer WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		505DCD1915EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		505DCD1B15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportFromWebsiteViewController_Phone.xib; sourceTree = "<group>"; };
@@ -264,6 +293,17 @@
 		50DF430F17736AD000AAA6C9 /* TimerPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerPageView.h; sourceTree = "<group>"; };
 		50DF431017736AD000AAA6C9 /* TimerPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerPageView.m; sourceTree = "<group>"; };
 		50DF431217736AE800AAA6C9 /* TimerPageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimerPageView.xib; sourceTree = "<group>"; };
+		50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Closer WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		50E00D241AC0AA9000784B98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		50E00D251AC0AA9000784B98 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		50E00D271AC0AA9000784B98 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Closer WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		50E00D311AC0AA9000784B98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		50E00D331AC0AA9000784B98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		50E00D351AC0AA9000784B98 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		50E00D441AC0AAB700784B98 /* TimerInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerInterfaceController.swift; sourceTree = "<group>"; };
+		50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownInterfaceController.swift; sourceTree = "<group>"; };
+		50E00D461AC0AAB700784B98 /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		50EC72D116BD4F9D00BB7CA7 /* EKEventStore+additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EKEventStore+additions.h"; sourceTree = "<group>"; };
 		50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EKEventStore+additions.m"; sourceTree = "<group>"; };
 		50F3F51119880D1D00817B98 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Closer/Images.xcassets; sourceTree = "<group>"; };
@@ -305,6 +345,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		50E00D1E1AC0AA9000784B98 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -324,6 +371,8 @@
 			children = (
 				1D6058910D05DD3D006BFB54 /* Closer.app */,
 				504B56451A7D5C9900292475 /* Widget.appex */,
+				50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */,
+				50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -339,6 +388,8 @@
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				504B56481A7D5C9900292475 /* Widget */,
+				50E00D221AC0AA9000784B98 /* Closer WatchKit Extension */,
+				50E00D2F1AC0AA9000784B98 /* Closer WatchKit App */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -574,6 +625,48 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		50E00D221AC0AA9000784B98 /* Closer WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				505B2AA01AC0D28000B6F84A /* Closer WatchKit Extension.entitlements */,
+				50E00D251AC0AA9000784B98 /* InterfaceController.swift */,
+				50E00D441AC0AAB700784B98 /* TimerInterfaceController.swift */,
+				50432A4A1AC369EF00D3B424 /* TimerDetailsController.swift */,
+				50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */,
+				50432A4C1AC36A0900D3B424 /* CountdownDetailsController.swift */,
+				50E00D461AC0AAB700784B98 /* ColorExtension.swift */,
+				50E00D271AC0AA9000784B98 /* Images.xcassets */,
+				50E00D231AC0AA9000784B98 /* Supporting Files */,
+			);
+			path = "Closer WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		50E00D231AC0AA9000784B98 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				50E00D241AC0AA9000784B98 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		50E00D2F1AC0AA9000784B98 /* Closer WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				50E00D321AC0AA9000784B98 /* Interface.storyboard */,
+				50E00D351AC0AA9000784B98 /* Images.xcassets */,
+				50E00D301AC0AA9000784B98 /* Supporting Files */,
+			);
+			path = "Closer WatchKit App";
+			sourceTree = "<group>";
+		};
+		50E00D301AC0AA9000784B98 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				50E00D311AC0AA9000784B98 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -590,6 +683,7 @@
 			);
 			dependencies = (
 				504B56511A7D5C9900292475 /* PBXTargetDependency */,
+				50E00D381AC0AA9000784B98 /* PBXTargetDependency */,
 			);
 			name = Closer;
 			productName = Closer;
@@ -612,6 +706,39 @@
 			productName = CloserWidget;
 			productReference = 504B56451A7D5C9900292475 /* Widget.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		50E00D201AC0AA9000784B98 /* Closer WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50E00D431AC0AA9100784B98 /* Build configuration list for PBXNativeTarget "Closer WatchKit Extension" */;
+			buildPhases = (
+				50E00D1D1AC0AA9000784B98 /* Sources */,
+				50E00D1E1AC0AA9000784B98 /* Frameworks */,
+				50E00D1F1AC0AA9000784B98 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				50E00D2E1AC0AA9000784B98 /* PBXTargetDependency */,
+			);
+			name = "Closer WatchKit Extension";
+			productName = "Closer WatchKit Extension";
+			productReference = 50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit-extension";
+		};
+		50E00D2A1AC0AA9000784B98 /* Closer WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50E00D421AC0AA9100784B98 /* Build configuration list for PBXNativeTarget "Closer WatchKit App" */;
+			buildPhases = (
+				50E00D291AC0AA9000784B98 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Closer WatchKit App";
+			productName = "Closer WatchKit App";
+			productReference = 50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp";
 		};
 /* End PBXNativeTarget section */
 
@@ -638,6 +765,19 @@
 							};
 						};
 					};
+					50E00D201AC0AA9000784B98 = {
+						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 79MVQZ8SAR;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					50E00D2A1AC0AA9000784B98 = {
+						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 79MVQZ8SAR;
+					};
 				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Closer" */;
@@ -651,6 +791,7 @@
 				German,
 				en,
 				fr,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -658,6 +799,8 @@
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Closer */,
 				504B56441A7D5C9900292475 /* Widget */,
+				50E00D201AC0AA9000784B98 /* Closer WatchKit Extension */,
+				50E00D2A1AC0AA9000784B98 /* Closer WatchKit App */,
 			);
 		};
 /* End PBXProject section */
@@ -708,6 +851,24 @@
 			files = (
 				504B564F1A7D5C9900292475 /* MainInterface.storyboard in Resources */,
 				502405CF1A901FEF00F8C935 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50E00D1F1AC0AA9000784B98 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50E00D2C1AC0AA9000784B98 /* Closer WatchKit App.app in Resources */,
+				50E00D281AC0AA9000784B98 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50E00D291AC0AA9000784B98 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50E00D341AC0AA9000784B98 /* Interface.storyboard in Resources */,
+				50E00D361AC0AA9000784B98 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -778,6 +939,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		50E00D1D1AC0AA9000784B98 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50432A4D1AC36A0900D3B424 /* CountdownDetailsController.swift in Sources */,
+				50E00D261AC0AA9000784B98 /* InterfaceController.swift in Sources */,
+				50E00D471AC0AAB700784B98 /* TimerInterfaceController.swift in Sources */,
+				50E00D481AC0AAB700784B98 /* CountdownInterfaceController.swift in Sources */,
+				50E00D491AC0AAB700784B98 /* ColorExtension.swift in Sources */,
+				50432A4B1AC369EF00D3B424 /* TimerDetailsController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -785,6 +959,16 @@
 			isa = PBXTargetDependency;
 			target = 504B56441A7D5C9900292475 /* Widget */;
 			targetProxy = 504B56501A7D5C9900292475 /* PBXContainerItemProxy */;
+		};
+		50E00D2E1AC0AA9000784B98 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50E00D2A1AC0AA9000784B98 /* Closer WatchKit App */;
+			targetProxy = 50E00D2D1AC0AA9000784B98 /* PBXContainerItemProxy */;
+		};
+		50E00D381AC0AA9000784B98 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50E00D201AC0AA9000784B98 /* Closer WatchKit Extension */;
+			targetProxy = 50E00D371AC0AA9000784B98 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -816,6 +1000,14 @@
 			);
 			name = ExportToWebsiteViewController_Pad.xib;
 			sourceTree = SOURCE_ROOT;
+		};
+		50E00D321AC0AA9000784B98 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50E00D331AC0AA9000784B98 /* Base */,
+			);
+			name = Interface.storyboard;
+			sourceTree = "<group>";
 		};
 		50F918F5149D3C5F003F33B8 /* Countdown.plist */ = {
 			isa = PBXVariantGroup;
@@ -858,6 +1050,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -884,6 +1077,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Closer_Prefix.pch;
 				GCC_VERSION = "";
@@ -1084,6 +1278,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1120,6 +1315,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1135,6 +1331,337 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "App Store";
+		};
+		50E00D3A1AC0AA9100784B98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "Closer WatchKit Extension/Closer WatchKit Extension.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		50E00D3B1AC0AA9100784B98 /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "Closer WatchKit Extension/Closer WatchKit Extension.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad Hoc";
+		};
+		50E00D3C1AC0AA9100784B98 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "Closer WatchKit Extension/Closer WatchKit Extension.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
+		};
+		50E00D3D1AC0AA9100784B98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "Closer WatchKit Extension/Closer WatchKit Extension.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		50E00D3E1AC0AA9100784B98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				IBSC_MODULE = Closer_WatchKit_Extension;
+				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+			};
+			name = Debug;
+		};
+		50E00D3F1AC0AA9100784B98 /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				IBSC_MODULE = Closer_WatchKit_Extension;
+				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad Hoc";
+		};
+		50E00D401AC0AA9100784B98 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				IBSC_MODULE = Closer_WatchKit_Extension;
+				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
+		};
+		50E00D411AC0AA9100784B98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				IBSC_MODULE = Closer_WatchKit_Extension;
+				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1181,6 +1708,28 @@
 				504B56541A7D5C9A00292475 /* Ad Hoc */,
 				504B56551A7D5C9A00292475 /* App Store */,
 				504B56561A7D5C9A00292475 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50E00D421AC0AA9100784B98 /* Build configuration list for PBXNativeTarget "Closer WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50E00D3E1AC0AA9100784B98 /* Debug */,
+				50E00D3F1AC0AA9100784B98 /* Ad Hoc */,
+				50E00D401AC0AA9100784B98 /* App Store */,
+				50E00D411AC0AA9100784B98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50E00D431AC0AA9100784B98 /* Build configuration list for PBXNativeTarget "Closer WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50E00D3A1AC0AA9100784B98 /* Debug */,
+				50E00D3B1AC0AA9100784B98 /* Ad Hoc */,
+				50E00D3C1AC0AA9100784B98 /* App Store */,
+				50E00D3D1AC0AA9100784B98 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

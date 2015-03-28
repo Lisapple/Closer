@@ -55,8 +55,7 @@
 	[_mainViewController showPageAtIndex:index animated:NO];
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification
-													  object:nil
-													   queue:[NSOperationQueue currentQueue]
+													  object:nil queue:NSOperationQueue.currentQueue
 												  usingBlock:^(NSNotification *note) {
 													  /* Update the frame of the white view under the status bar */
 													  UIView * statusBarView = [_window viewWithTag:4567];
@@ -160,6 +159,24 @@
     }
     
     return YES;
+}
+
+- (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *replyInfo))reply
+{
+	NSString * identifier = userInfo[@"identifier"];
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSString * action = userInfo[@"action"];
+	if /***/ ([action isEqualToString:@"play"] && !countdown.isPaused) {
+		[countdown pause];
+	} else if ([action isEqualToString:@"resume"] && countdown.isPaused) {
+		[countdown resume];
+	} else if ([action isEqualToString:@"reset"]) {
+		[countdown reset];
+	} else if ([action isEqualToString:@"delete"]) {
+		[Countdown removeCountdown:countdown];
+	} else {
+		NSLog(@"Unknown Apple Watch request with action: \"%@\"", action);
+	}
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

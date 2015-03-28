@@ -210,7 +210,7 @@ const NSInteger kDoneButtonItemTag = 1;
 		
 	} else {
 		
-		Countdown * aCountDown = [[Countdown alloc] init];
+		Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
 		aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
 		[Countdown addCountdown:aCountDown];
 		/* Note: the tableView is automatically reloaded */

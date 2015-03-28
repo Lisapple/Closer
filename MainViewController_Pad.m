@@ -137,7 +137,7 @@
 - (IBAction)new:(id)sender
 {
 	/* Create the countdown */
-	__block Countdown * aCountDown = [[Countdown alloc] init];
+	__block Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
 	aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
 	
 	int numberOfRows = 2;

@@ -111,7 +111,7 @@
 
 + (Countdown *)countdownWithEvent:(EKEvent *)event
 {
-	Countdown * countdown = [[Countdown alloc] init];
+	Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
 	countdown.name = event.title;
 	countdown.endDate = event.startDate;
 	countdown.message = event.notes;

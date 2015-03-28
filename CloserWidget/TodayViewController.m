@@ -23,30 +23,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
-    _countdowns = [widgetDefaults arrayForKey:@"countdowns"];
-  
+	
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.rowHeight = 37.;
     _tableView.separatorInset = UIEdgeInsetsZero;
-    
-    self.preferredContentSize = CGSizeMake(_tableView.contentSize.width,
-                                           _tableView.rowHeight * _countdowns.count);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.
-                                              target:_tableView
-                                            selector:@selector(reloadData)
-                                            userInfo:nil
-                                             repeats:YES];
+                                              target:_tableView selector:@selector(reloadData)
+                                            userInfo:nil repeats:YES];
 	
 	NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
 	_countdowns = [widgetDefaults arrayForKey:@"countdowns"];
 	[_tableView reloadData];
+	self.preferredContentSize = CGSizeMake(_tableView.contentSize.width,
+										   _tableView.rowHeight * _countdowns.count);
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -80,35 +74,30 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary * countdown = _countdowns[indexPath.row];
-    if ([countdown[@"type"] integerValue] == 1) { // Timer
-        TimerTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"TimerCellID" forIndexPath:indexPath];
-        cell.name = countdown[@"name"];
-        NSInteger index = [countdown[@"durationIndex"] integerValue];
-        cell.duration = [countdown[@"durations"][index] integerValue];
-        cell.remaining = [countdown[@"endDate"] timeIntervalSinceNow];
-        return cell;
-    }
-    else { // Countdown
-        CountdownTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"CountdownCellID" forIndexPath:indexPath];
-        cell.name = countdown[@"name"];
-        cell.endDate = countdown[@"endDate"];
-        return cell;
-    }
+	NSDictionary * countdown = _countdowns[indexPath.row];
+	if ([countdown[@"type"] integerValue] == 1) { // Timer
+		TimerTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"TimerCellID" forIndexPath:indexPath];
+		cell.name = countdown[@"name"];
+		NSInteger index = [countdown[@"durationIndex"] integerValue];
+		cell.duration = [countdown[@"durations"][index] integerValue];
+		cell.remaining = [countdown[@"endDate"] timeIntervalSinceNow];
+		return cell;
+	}
+	else { // Countdown
+		CountdownTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"CountdownCellID" forIndexPath:indexPath];
+		cell.name = countdown[@"name"];
+		cell.endDate = countdown[@"endDate"];
+		return cell;
+	}
 }
 
 #pragma mark - TableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	/*
-	[self.extensionContext completeRequestReturningItems:@[ _countdowns.firstObject ]
-									   completionHandler:^(BOOL expired) {
-									   }];
-	*/
-	 NSString * identifier = _countdowns[indexPath.row][@"identifier"];
-	 NSURL * appURL = [NSURL URLWithString:[NSString stringWithFormat:@"closer://countdown#%@", identifier]];
-	 [self.extensionContext openURL:appURL completionHandler:NULL];
+	NSString * identifier = _countdowns[indexPath.row][@"identifier"];
+	NSURL * appURL = [NSURL URLWithString:[NSString stringWithFormat:@"closer://countdown#%@", identifier]];
+	[self.extensionContext openURL:appURL completionHandler:NULL];
 }
 
 @end

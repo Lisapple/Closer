@@ -112,8 +112,7 @@ static NSMutableArray * _countdowns = nil;
 		}
 		
         [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification
-                                                          object:nil
-                                                           queue:NSOperationQueue.currentQueue
+                                                          object:nil queue:NSOperationQueue.currentQueue
 													  usingBlock:^(NSNotification *note) {
 														  if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
 															  static NSUserDefaults * widgetDefaults = nil;
@@ -246,6 +245,7 @@ static NSMutableArray * _countdowns = nil;
 	[_countdowns addObject:countdown];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+	[self synchronize];
 }
 
 + (void)addCountdowns:(NSArray *)countdowns
@@ -256,6 +256,7 @@ static NSMutableArray * _countdowns = nil;
 	[_countdowns addObjectsFromArray:countdowns];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+	[self synchronize];
 }
 
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex
@@ -266,6 +267,7 @@ static NSMutableArray * _countdowns = nil;
 		[_countdowns insertObject:countdown atIndex:toIndex];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+		[self synchronize];
 	}
 }
 
@@ -274,15 +276,17 @@ static NSMutableArray * _countdowns = nil;
 	[_countdowns exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+	[self synchronize];
 }
 
 + (void)removeCountdown:(Countdown *)countdown
 {
 	[countdown remove];
-	[_countdowns removeObject:countdown];
 	[countdown desactivate];
+	[_countdowns removeObject:countdown];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+	[self synchronize];
 }
 
 + (void)removeCountdownAtIndex:(NSInteger)index
@@ -293,6 +297,7 @@ static NSMutableArray * _countdowns = nil;
 	[_countdowns removeObjectAtIndex:index];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+	[self synchronize];
 }
 
 + (NSArray *)styles
@@ -352,30 +357,6 @@ static NSMutableArray * _countdowns = nil;
         _notificationCenter = YES;
 		
 		identifier = anIdentifier;
-		
-		[self update];
-	}
-	
-	return self;
-}
-
-- (id)init
-{
-	if ((self = [super init])) {
-		CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
-		CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-		identifier = (__bridge NSString *)uuidString;
-		CFRelease(uuidString);
-		CFRelease(uuidRef);
-		
-		/* Don't call self.xxx to not call updateLocalNotification many times */
-		name = NSLocalizedString(@"NO_TITLE_PLACEHOLDER", nil);
-		endDate = nil;
-		message = @"";
-		songID = @"default";
-		style = 0;
-		_type = CountdownTypeCountdown;
-        _notificationCenter = YES;
 		
 		[self update];
 	}
@@ -506,6 +487,40 @@ static NSMutableArray * _countdowns = nil;
 {
 	_durationIndex = 0;
 }
+
+- (void)resume
+{
+	if (_type == CountdownTypeTimer && _paused) {
+		endDate = [NSDate dateWithTimeIntervalSinceNow:remaining];
+		remaining = 0.;
+		[self updateLocalNotification];
+		_paused = NO;
+		[Countdown synchronize];
+	}
+}
+
+- (void)pause
+{
+	if (_type == CountdownTypeTimer && !_paused) {
+		remaining = endDate.timeIntervalSinceNow;
+		endDate = nil;
+		[self updateLocalNotification];
+		_paused = YES;
+		[Countdown synchronize];
+	}
+}
+
+- (void)reset
+{
+	if (_type == CountdownTypeTimer) {
+		endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
+		_paused = NO;
+		[self updateLocalNotification];
+		[Countdown synchronize];
+	}
+}
+
+#pragma mark Localized description methods
 
 - (NSString *)descriptionOfDurationAtIndex:(NSInteger)index
 {

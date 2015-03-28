@@ -60,6 +60,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[super viewWillAppear:animated];
 	
 	[self reload];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reload)
+												 name:CountdownDidSynchronizeNotification object:nil];
 	
 	if (TARGET_IS_IOS7_OR_LATER())
 		[self setNeedsStatusBarAppearanceUpdate];
@@ -76,6 +78,12 @@ const NSTimeInterval kAnimationDelay = 5.;
 		UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:editAllCountdownViewController];
 		[self presentViewController:navigationController animated:NO completion:NULL];
 	}
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[super viewWillDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:CountdownDidSynchronizeNotification];
 }
 
 #pragma mark - Current Page Index
@@ -170,11 +178,13 @@ const NSTimeInterval kAnimationDelay = 5.;
 	CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageControl.currentPage, 0.);
 	[scrollView setContentOffset:contentOffset animated:NO];
 	
-	pageControl.numberOfPages = pages.count;
-	PageView * pageView = pages[pageControl.currentPage];
-	UIColor * textColor = [UIColor textColorForPageStyle:pageView.style];
-	pageControl.currentPageIndicatorTintColor = textColor;
-	pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
+	if (pages.count) {
+		pageControl.numberOfPages = pages.count;
+		PageView * pageView = pages[pageControl.currentPage];
+		UIColor * textColor = [UIColor textColorForPageStyle:pageView.style];
+		pageControl.currentPageIndicatorTintColor = textColor;
+		pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
+	}
 }
 
 - (void)updateContentView
@@ -438,8 +448,11 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-	PageView * pageView = pages[pageControl.currentPage];
-	return (pageView.style == PageViewStyleDay || pageView.style == PageViewStyleSpring) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+	if (pages.count) {
+		PageView * pageView = pages[pageControl.currentPage];
+		return (pageView.style == PageViewStyleDay || pageView.style == PageViewStyleSpring) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+	}
+	return UIStatusBarStyleDefault;
 }
 
 #pragma mark - UIPageControl Managment

@@ -89,7 +89,8 @@
     double seconds = [_endDate timeIntervalSinceNow];
     CGRect frame = _progressionView.frame;
     if (seconds > 0.) {
-        frame.size.width = (self.frame.size.width - 8.) * (1. - ((double)log(seconds / (60. * M_E)) - 1.) / 14.);
+		CGFloat progression = 1. - ((double)log(seconds / (60. * M_E)) - 1.) / 14.;
+        frame.size.width = (self.frame.size.width - 8.) * progression;
         frame.origin.y = self.frame.size.height - 1.;
     } else {
         frame.size.width = 0.;

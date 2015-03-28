@@ -114,6 +114,25 @@
     return YES;
 }
 
+// Even if iPad can be used with AppleWatch implement this method for consistency
+- (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *replyInfo))reply
+{
+	NSString * identifier = userInfo[@"identifier"];
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSString * action = userInfo[@"action"];
+	if /***/ ([action isEqualToString:@"play"] && !countdown.isPaused) {
+		[countdown pause];
+	} else if ([action isEqualToString:@"resume"] && countdown.isPaused) {
+		[countdown resume];
+	} else if ([action isEqualToString:@"reset"]) {
+		[countdown reset];
+	} else if ([action isEqualToString:@"delete"]) {
+		[Countdown removeCountdown:countdown];
+	} else {
+		NSLog(@"Unknown Apple Watch request with action: \"%@\"", action);
+	}
+}
+
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
 	[Countdown synchronize];

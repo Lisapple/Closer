@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="3737"/>
+    </dependencies>
+    <scenes>
+        <!--Timer-->
+        <scene sceneID="Dv4-Dt-cge">
+            <objects>
+                <controller identifier="TimerItem" title="Timer" id="P3y-OZ-n9y" customClass="TimerInterfaceController" customModule="Closer_WatchKit_Extension">
+                    <items>
+                        <imageView width="1" height="1" alignment="left" contentMode="center" id="EzX-Gb-enK"/>
+                        <button width="1" alignment="left" title="Pause" id="2Pc-Pw-Pto">
+                            <connections>
+                                <action selector="tooglePauseAction" destination="P3y-OZ-n9y" id="Gia-VR-y49"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <connections>
+                        <outlet property="image" destination="EzX-Gb-enK" id="zIn-8Z-bCu"/>
+                        <outlet property="toogleButton" destination="2Pc-Pw-Pto" id="1pi-dv-vXQ"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="278" y="297.5"/>
+        </scene>
+        <!--Countdown-->
+        <scene sceneID="JZO-PS-Goh">
+            <objects>
+                <controller identifier="CountdownItem" title="Countdown" id="Nfd-Sl-zfc" customClass="CountdownInterfaceController" customModule="Closer_WatchKit_Extension">
+                    <items>
+                        <imageView width="1" height="1" alignment="left" id="OW7-NF-RDE"/>
+                    </items>
+                    <connections>
+                        <outlet property="image" destination="OW7-NF-RDE" id="Byu-0c-5g9"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="486" y="298"/>
+        </scene>
+        <!--TimerDetails-->
+        <scene sceneID="3Du-5k-b9n">
+            <objects>
+                <controller identifier="TimerDetails" id="f5c-wY-SYf" customClass="TimerDetailsController" customModule="Closer_WatchKit_Extension">
+                    <items>
+                        <label width="1" alignment="left" text="Name" textAlignment="center" id="Kf4-g4-5ue"/>
+                        <table alignment="left" id="pUv-qO-QhH">
+                            <items>
+                                <tableRow identifier="TimerDurationRow" selectable="NO" id="6PG-mb-FcT" customClass="TimerDetailsRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" alignment="left" id="jny-re-VAn">
+                                        <items>
+                                            <label height="1" alignment="left" text="Duration" id="YoZ-S1-RQ3"/>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="label" destination="YoZ-S1-RQ3" id="tC3-75-zSJ"/>
+                                    </connections>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                    <connections>
+                        <outlet property="label" destination="Kf4-g4-5ue" id="utO-a5-iAt"/>
+                        <outlet property="table" destination="pUv-qO-QhH" id="odW-zd-2bz"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="278" y="557"/>
+        </scene>
+        <!--CountdownDetails-->
+        <scene sceneID="vZt-hP-OmP">
+            <objects>
+                <controller identifier="CountdownDetails" id="doU-Xk-g7G" customClass="CountdownDetailsController" customModule="Closer_WatchKit_Extension">
+                    <items>
+                        <label width="1" alignment="left" text="Name" textAlignment="center" id="4sb-e2-WfW"/>
+                        <separator alignment="left" id="0jg-9Z-IR1">
+                            <color key="color" white="0.10025185032894739" alpha="1" colorSpace="calibratedWhite"/>
+                        </separator>
+                        <label alignment="left" text="Date" id="E40-qH-IxR"/>
+                        <label alignment="left" text="Message" numberOfLines="0" id="ZCf-UI-Mgp"/>
+                    </items>
+                    <connections>
+                        <outlet property="date" destination="E40-qH-IxR" id="eM2-TM-UHe"/>
+                        <outlet property="label" destination="4sb-e2-WfW" id="Brv-ZW-iQX"/>
+                        <outlet property="message" destination="ZCf-UI-Mgp" id="PUD-ya-OZF"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="486" y="557"/>
+        </scene>
+        <!--Interface Controller-->
+        <scene sceneID="Wqd-9I-Pmg">
+            <objects>
+                <controller id="6R1-w5-qUn" customClass="InterfaceController" customModule="Closer_WatchKit_Extension"/>
+            </objects>
+            <point key="canvasLocation" x="51" y="298"/>
+        </scene>
+    </scenes>
+</document>
