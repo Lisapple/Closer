@@ -94,7 +94,6 @@
 		50DF431117736AD000AAA6C9 /* TimerPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF431017736AD000AAA6C9 /* TimerPageView.m */; };
 		50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DF431217736AE800AAA6C9 /* TimerPageView.xib */; };
 		50E00D261AC0AA9000784B98 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D251AC0AA9000784B98 /* InterfaceController.swift */; };
-		50E00D281AC0AA9000784B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D271AC0AA9000784B98 /* Images.xcassets */; };
 		50E00D2C1AC0AA9000784B98 /* Closer WatchKit App.app in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */; };
 		50E00D341AC0AA9000784B98 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D321AC0AA9000784B98 /* Interface.storyboard */; };
 		50E00D361AC0AA9000784B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D351AC0AA9000784B98 /* Images.xcassets */; };
@@ -296,7 +295,6 @@
 		50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Closer WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E00D241AC0AA9000784B98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50E00D251AC0AA9000784B98 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
-		50E00D271AC0AA9000784B98 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Closer WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E00D311AC0AA9000784B98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50E00D331AC0AA9000784B98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
@@ -635,7 +633,6 @@
 				50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */,
 				50432A4C1AC36A0900D3B424 /* CountdownDetailsController.swift */,
 				50E00D461AC0AAB700784B98 /* ColorExtension.swift */,
-				50E00D271AC0AA9000784B98 /* Images.xcassets */,
 				50E00D231AC0AA9000784B98 /* Supporting Files */,
 			);
 			path = "Closer WatchKit Extension";
@@ -859,7 +856,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				50E00D2C1AC0AA9000784B98 /* Closer WatchKit App.app in Resources */,
-				50E00D281AC0AA9000784B98 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
