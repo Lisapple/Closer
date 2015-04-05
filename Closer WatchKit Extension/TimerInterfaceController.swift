@@ -195,9 +195,9 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		}
 		
 		clearAllMenuItems()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Play, title: "Resume", action: Selector("resumeMenuAction"))
-		addMenuItemWithItemIcon(WKMenuItemIcon.Block, title: "Reset", action: Selector("resetMenuAction")) // Replace the icon
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: Selector("deleteMenuAction"))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Play, title: "Resume", action: "resumeMenuAction")
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
 	@IBAction func resumeMenuAction() {
@@ -216,9 +216,9 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		}
 		
 		clearAllMenuItems()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: Selector("pauseMenuAction"))
-		addMenuItemWithItemIcon(WKMenuItemIcon.Block, title: "Reset", action: Selector("resetMenuAction")) // Replace the icon
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: Selector("deleteMenuAction"))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
 	@IBAction func resetMenuAction() {
@@ -237,9 +237,9 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		}
 		
 		clearAllMenuItems()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: Selector("pauseMenuAction"))
-		addMenuItemWithItemIcon(WKMenuItemIcon.Block, title: "Reset", action: Selector("resetMenuAction")) // Replace the icon
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: Selector("deleteMenuAction"))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
 	@IBAction func infoMenuAction() {
