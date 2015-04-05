@@ -10,12 +10,7 @@ import WatchKit
 import Foundation
 import CoreText
 
-
-protocol ContextProtocol {
-	var context: AnyObject? { get set }
-}
-
-class TimerInterfaceController: WKInterfaceController, ContextProtocol {
+class TimerInterfaceController: WKInterfaceController {
 	
 	@IBOutlet weak var image: WKInterfaceImage!
 	@IBOutlet weak var toogleButton: WKInterfaceButton!
@@ -25,7 +20,7 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 	var remaining: NSTimeInterval = 0.0
 	var duration: NSTimeInterval = 0.0
 	var colorStyle: ColorStyle = .ColorStyleNight
-	var timer: NSTimer?
+	weak var timer: NSTimer?
 	
 	var _paused: Bool = false
 	var paused: Bool {
@@ -47,7 +42,9 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		let dictContext:[String : AnyObject] = context as Dictionary
 		title = dictContext["name"] as String
 		self.setTitle(self.title)
-		duration = (dictContext["durations"] as Array)[dictContext["durationIndex"] as Int]
+		if (dictContext["durations"] != nil) {
+			duration = (dictContext["durations"] as Array)[dictContext["durationIndex"] as Int]
+		}
 		endDate = dictContext["endDate"] as NSDate?
 		self.paused = (endDate == nil)
 		colorStyle = ColorStyle.fromString(dictContext["style"] as String)
@@ -56,7 +53,7 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		// @TODO: Update only when changes to display
 		if (!paused) {
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateUI"), userInfo: nil, repeats: true)
+				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
 				self.timer!.tolerance = 0.2
 				self.paused = false;
 			})
@@ -64,13 +61,13 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		updateUI()
 		
 		if (paused) {
-			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Resume", action: Selector("resumeMenuAction"))
+			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Resume", action: "resumeMenuAction")
 		} else {
-			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: Selector("pauseMenuAction"))
+			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		}
-		addMenuItemWithItemIcon(WKMenuItemIcon.Block, title: "Reset", action: Selector("resetMenuAction")) // Replace the icon
-		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: Selector("infoMenuAction"))
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: Selector("deleteMenuAction"))
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
 	func updateUI() {
@@ -94,7 +91,8 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		CGContextStrokePath(bitmapContext)
 		
 		let progression:Double = 1.0 - ((endDate != nil) ? endDate!.timeIntervalSinceNow : remaining) / duration
-		CGContextAddArc(bitmapContext, center.x, center.y, radius, CGFloat(-M_PI_2 * 0.98), CGFloat(2 * M_PI * progression * 0.99 - M_PI_2), 0)
+		// @TODO: Clip progression minimum to get progress bar start
+		CGContextAddArc(bitmapContext, center.x, center.y, radius, CGFloat(-M_PI_2 * 0.98), CGFloat(2 * M_PI * (progression * 0.98 + 0.01) - M_PI_2), 0)
 		
 		let path:CGPathRef = CGContextCopyPath(bitmapContext)
 		CGContextSetLineCap(bitmapContext, kCGLineCapRound)
@@ -142,7 +140,7 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 			attributes = [
 				NSForegroundColorAttributeName : color,
 				NSFontAttributeName : UIFont.systemFontOfSize(32.0) ]
-			string = NSAttributedString(string: "Resume", attributes: attributes)
+			string = NSAttributedString(string: "Paused", attributes: attributes)
 		}
 		
 		var line:CTLineRef = CTLineCreateWithAttributedString(string as CFAttributedStringRef!)
@@ -185,6 +183,7 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 			endDate = nil
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				self.timer!.invalidate()
+				self.timer = nil
 			})
 		}
 		updateUI()
@@ -204,7 +203,7 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 		if (paused) {
 			endDate = NSDate().dateByAddingTimeInterval(remaining)
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateUI"), userInfo: nil, repeats: true)
+				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
 				self.timer!.tolerance = 0.2
 			})
 			updateUI()
@@ -222,15 +221,15 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
 	}
 	
 	@IBAction func resetMenuAction() {
+		endDate = NSDate().dateByAddingTimeInterval(duration)
 		if (self.timer?.valid == nil) {
-			endDate = NSDate().dateByAddingTimeInterval(duration)
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateUI"), userInfo: nil, repeats: true)
+				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
 				self.timer!.tolerance = 0.2
 				self.paused = false;
 			})
-			updateUI()
 		}
+		updateUI()
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "reset"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
 				println(replyInfo?["result"])
@@ -261,4 +260,9 @@ class TimerInterfaceController: WKInterfaceController, ContextProtocol {
     override func didDeactivate() {
         super.didDeactivate()
     }
+	
+	deinit {
+		self.paused = true
+		self.timer?.invalidate()
+	}
 }

@@ -16,6 +16,11 @@ class InterfaceController: WKInterfaceController {
         super.awakeWithContext(context)
 		
 		InterfaceController.reload()
+		
+		NotificationHelper.sharedInstance().startObservingNotificationName("Darwin_CountdownDidSynchronizeNotification");
+		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidSynchronizeNotification", object: nil, queue: nil) {
+			(notification) -> Void in InterfaceController.reload()
+		}
     }
 	
 	class func reload() {
@@ -40,7 +45,7 @@ class InterfaceController: WKInterfaceController {
     override func willActivate() {
         super.willActivate()
     }
-
+	
     override func didDeactivate() {
         super.didDeactivate()
     }

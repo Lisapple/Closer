@@ -58,6 +58,7 @@
 		508D9C261338E2AC008C04FF /* UIView+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 508D9C251338E2AC008C04FF /* UIView+addition.m */; };
 		508F82591A816C4E006BFBB8 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
 		5092AB771509337B005D6B12 /* VCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5092AB761509337B005D6B12 /* VCalendar.m */; };
+		509E8F761AD13BBB00D22AAD /* NotificationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 509E8F751AD13BBB00D22AAD /* NotificationHelper.m */; };
 		509ED3D8198B0AA800CCC424 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509ED3D6198B0AA800CCC424 /* EditViewController.m */; };
 		509ED3D9198B0AA800CCC424 /* EditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509ED3D7198B0AA800CCC424 /* EditViewController.xib */; };
 		50A2080E12E4E52200D8FCAA /* NSBundle+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A2080D12E4E52200D8FCAA /* NSBundle+addition.m */; };
@@ -234,6 +235,8 @@
 		508D9C251338E2AC008C04FF /* UIView+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIView+addition.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5092AB751509337B005D6B12 /* VCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VCalendar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5092AB761509337B005D6B12 /* VCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VCalendar.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		509E8F711AD13B2300D22AAD /* Closer WatchKit Extension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Closer WatchKit Extension-Bridging-Header.h"; sourceTree = "<group>"; };
+		509E8F751AD13BBB00D22AAD /* NotificationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationHelper.m; sourceTree = "<group>"; };
 		509ED3D5198B0AA800CCC424 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
 		509ED3D6198B0AA800CCC424 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
 		509ED3D7198B0AA800CCC424 /* EditViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditViewController.xib; sourceTree = "<group>"; };
@@ -641,6 +644,8 @@
 		50E00D231AC0AA9000784B98 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				509E8F711AD13B2300D22AAD /* Closer WatchKit Extension-Bridging-Header.h */,
+				509E8F751AD13BBB00D22AAD /* NotificationHelper.m */,
 				50E00D241AC0AA9000784B98 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -750,6 +755,12 @@
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
+							};
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.SafariKeychain = {
+								enabled = 0;
 							};
 						};
 					};
@@ -944,6 +955,7 @@
 				50E00D471AC0AAB700784B98 /* TimerInterfaceController.swift in Sources */,
 				50E00D481AC0AAB700784B98 /* CountdownInterfaceController.swift in Sources */,
 				50E00D491AC0AAB700784B98 /* ColorExtension.swift in Sources */,
+				509E8F761AD13BBB00D22AAD /* NotificationHelper.m in Sources */,
 				50432A4B1AC369EF00D3B424 /* TimerDetailsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1370,6 +1382,7 @@
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1410,6 +1423,7 @@
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Ad Hoc";
@@ -1450,6 +1464,7 @@
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "App Store";
@@ -1490,6 +1505,7 @@
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

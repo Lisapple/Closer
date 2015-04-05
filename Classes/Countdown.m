@@ -130,6 +130,9 @@ static NSMutableArray * _countdowns = nil;
 															  [[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
 																					 forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
 														  }
+														  
+														  CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+														  CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidSynchronizeNotification"), NULL, NULL, YES);
 													  }];
         if (_countdowns.count > 0) {
             [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];

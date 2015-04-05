@@ -11,12 +11,13 @@ import Foundation
 import CoreText
 
 
-class CountdownInterfaceController: WKInterfaceController, ContextProtocol {
+class CountdownInterfaceController: WKInterfaceController {
 	
 	@IBOutlet weak var image : WKInterfaceImage!
 	var endDate:NSDate?
 	var colorStyle:ColorStyle = .ColorStyleNight
 	var identifier: String = ""
+	weak var timer: NSTimer?
 	
 	var context: AnyObject? = nil
 	
@@ -31,11 +32,11 @@ class CountdownInterfaceController: WKInterfaceController, ContextProtocol {
 		identifier = dictContext["identifier"] as String
 		
 		// @TODO: Update only when changes to display
-		NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateUI"), userInfo: nil, repeats: true)
+		timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
 		updateUI()
 		
-		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: Selector("infoMenuAction"))
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: Selector("deleteMenuAction"))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
 	func updateUI() {
@@ -175,5 +176,9 @@ class CountdownInterfaceController: WKInterfaceController, ContextProtocol {
 	
 	override func didDeactivate() {
 		super.didDeactivate()
+	}
+	
+	deinit {
+		self.timer?.invalidate()
 	}
 }
