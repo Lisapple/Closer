@@ -198,16 +198,6 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	@IBAction func pauseMenuAction() {
-		/*
-		if (!paused && endDate != nil) {
-			remaining = endDate!.timeIntervalSinceNow
-			endDate = nil
-			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				self.timer!.invalidate()
-				self.timer = nil
-			})
-		}
-		*/
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "pause"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
 			println(replyInfo?["result"])
@@ -222,16 +212,6 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	@IBAction func resumeMenuAction() {
-		if (paused) {
-			/*
-			endDate = NSDate().dateByAddingTimeInterval(remaining)
-			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
-				self.timer!.tolerance = 0.2
-			})
-			updateUI()
-			*/
-		}
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "resume"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
 			println(replyInfo?["result"])
@@ -247,20 +227,11 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	@IBAction func resetMenuAction() {
-		endDate = NSDate().dateByAddingTimeInterval(duration)
-		/*
-		if (self.timer?.valid == nil) {
-			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
-				self.timer!.tolerance = 0.2
-				self.paused = false;
-			})
-		}
-		*/
-		updateUI()
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "reset"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
-				println(replyInfo?["result"])
+			println(replyInfo?["result"])
+			self.endDate = NSDate().dateByAddingTimeInterval(self.duration)
+			self.updateUI()
 		}
 		
 		clearAllMenuItems()

@@ -155,8 +155,8 @@ class CountdownInterfaceController: WKInterfaceController {
 		UIGraphicsEndImageContext()
 		
 		// @TODO: Update only when changes to display
-		//timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: false)
-		//timer!.tolerance = 0.2
+		timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: false)
+		timer!.tolerance = 0.2
 	}
 	
 	@IBAction func infoMenuAction() {
