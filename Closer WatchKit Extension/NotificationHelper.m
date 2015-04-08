@@ -11,7 +11,10 @@
 
 static void countdownsSynchronised(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:(__bridge NSString *)name object:nil];
+	// If center is a Darwin notification center, |object| and |userInfo| are ignored.
+	[[NSNotificationCenter defaultCenter] postNotificationName:(__bridge NSString *)name
+														object:(__bridge id)object
+													  userInfo:(__bridge NSDictionary *)userInfo];
 }
 
 @implementation NotificationHelper
@@ -30,11 +33,6 @@ static void countdownsSynchronised(CFNotificationCenterRef center, void *observe
 {
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge const void *)(self),
 									countdownsSynchronised, (__bridge CFStringRef)name, NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-}
-
-+ (void(*)(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo))notif
-{
-	return countdownsSynchronised;
 }
 
 - (void)stopObservingNotificationName:(NSString *)name

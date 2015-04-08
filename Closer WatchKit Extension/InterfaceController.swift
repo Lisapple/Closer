@@ -17,6 +17,8 @@ class InterfaceController: WKInterfaceController {
 		
 		InterfaceController.reload()
 		
+		NotificationHelper.sharedInstance().startObservingNotificationName("Darwin_CountdownDidUpdateNotification");
+		
 		NotificationHelper.sharedInstance().startObservingNotificationName("Darwin_CountdownDidSynchronizeNotification");
 		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidSynchronizeNotification", object: nil, queue: nil) {
 			(notification) -> Void in InterfaceController.reload()
@@ -30,7 +32,7 @@ class InterfaceController: WKInterfaceController {
 		let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
 		let countdowns = userDefaults.arrayForKey("countdowns")! as [[String : AnyObject]]
 		for countdown in countdowns {
-			if (countdown["type"] as UInt == 1) {
+			if (countdown["type"] as UInt == 1 /* Timer */) {
 				names.append("TimerItem")
 			} else {
 				names.append("CountdownItem")

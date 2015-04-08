@@ -114,22 +114,12 @@ static NSMutableArray * _countdowns = nil;
         [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification
                                                           object:nil queue:NSOperationQueue.currentQueue
 													  usingBlock:^(NSNotification *note) {
-														  if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
-															  static NSUserDefaults * widgetDefaults = nil;
-															  if (!widgetDefaults)
-																  widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
-															  
-															  NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
-															  [includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
-																  return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
-															  
-															  [widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
-																				 forKey:@"countdowns"];
-															  [widgetDefaults synchronize];
-															  
-															  [[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
-																					 forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
-														  }
+														  [self updateUserDefaults];
+														  
+														  NSPredicate * predicate = [NSPredicate predicateWithFormat:@"notificationCenter == YES"];
+														  NSArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate];
+														  [[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
+																				 forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
 														  
 														  CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
 														  CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidSynchronizeNotification"), NULL, NULL, YES);
@@ -137,6 +127,23 @@ static NSMutableArray * _countdowns = nil;
         if (_countdowns.count > 0) {
             [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
         }
+	}
+}
+
++ (void)updateUserDefaults
+{
+	if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
+		static NSUserDefaults * widgetDefaults = nil;
+		if (!widgetDefaults)
+			widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
+		
+		NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
+		[includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+			return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
+		
+		[widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
+						   forKey:@"countdowns"];
+		[widgetDefaults synchronize];
 	}
 }
 
@@ -396,6 +403,7 @@ static NSMutableArray * _countdowns = nil;
 - (void)setEndDate:(NSDate *)aDate
 {
 	endDate = aDate;
+	_paused = (endDate == nil);
 	[self update];
 }
 
@@ -496,9 +504,12 @@ static NSMutableArray * _countdowns = nil;
 	if (_type == CountdownTypeTimer && _paused) {
 		endDate = [NSDate dateWithTimeIntervalSinceNow:remaining];
 		remaining = 0.;
-		[self updateLocalNotification];
 		_paused = NO;
-		[Countdown synchronize];
+		[self updateLocalNotification];
+		
+		[self.class updateUserDefaults];
+		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
@@ -507,9 +518,12 @@ static NSMutableArray * _countdowns = nil;
 	if (_type == CountdownTypeTimer && !_paused) {
 		remaining = endDate.timeIntervalSinceNow;
 		endDate = nil;
-		[self updateLocalNotification];
 		_paused = YES;
-		[Countdown synchronize];
+		[self updateLocalNotification];
+		
+		[self.class updateUserDefaults];
+		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
@@ -519,7 +533,10 @@ static NSMutableArray * _countdowns = nil;
 		endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
 		_paused = NO;
 		[self updateLocalNotification];
-		[Countdown synchronize];
+		
+		[self.class updateUserDefaults];
+		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 

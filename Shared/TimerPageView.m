@@ -69,19 +69,15 @@
 																	   usingBlock:^(NSNotification * notification)
 						  {
 							  /* If the current timer's endDate change, reset the timer */
-							  if (countdown.currentDuration.doubleValue != duration && !isPaused) {
-								  
+							  if (countdown.currentDuration.doubleValue != duration && !countdown.isPaused) {
 								  duration = countdown.currentDuration.doubleValue;
 								  remainingSeconds = duration;
-								  countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:duration];
 								  _timerView.progression = 0.;
-								  
-								  isPaused = YES;
-								  
+								  [countdown reset];
 								  NSDebugLog(@"End date changed for \"%@\"", countdown.name);
 							  }
-							  
 							  _nameLabel.text = countdown.name;
+							  [self reload];
 						  }];
 		
 		continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
@@ -89,7 +85,7 @@
 																			  queue:[NSOperationQueue currentQueue]
 																		 usingBlock:^(NSNotification * notification)
 							{
-								if (notification.object == countdown && isPaused)
+								if (notification.object == countdown && countdown.isPaused)
 									[self start];
 							}];
 		
@@ -133,13 +129,17 @@
 		remainingSeconds = [countdown.endDate timeIntervalSinceNow];
 	}
 	
-	if (remainingSeconds <= 0.) { // If the timer is finished
-		isPaused = YES;
+	if (countdown.endDate && remainingSeconds <= 0.) { // If the timer is finished
 		isFinished = YES;
+		countdown.durationIndex++;
+		[countdown reset];
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
 		_descriptionLabel.hidden = YES;
 		
 		[self updateLeftButton];
+	} else if (!countdown.endDate) {
+		_timeLabel.text = NSLocalizedString(@"Resume", nil);
+		_descriptionLabel.hidden = YES;
 	}
 	
 	[self update];
@@ -203,7 +203,7 @@
 	}
 	
 	NSString * filename = [NSString stringWithFormat:@"%@-%@-iOS%d",
-						   ((isPaused) ? @"reset" : @"pause"),
+						   ((countdown.isPaused) ? @"reset" : @"pause"),
 						   name,
 						   (TARGET_IS_IOS7_OR_LATER()) ? 7 : 6];
 	[_leftButton setImage:[UIImage imageNamed:filename]
@@ -263,7 +263,7 @@
 		_timeLabel.text = NSLocalizedString(@"No Durations", nil);
 		_descriptionLabel.hidden = YES;
 		
-	} else if (!isPaused) {
+	} else if (!countdown.isPaused) {
 		if (countdown.endDate && countdown.durations.count) {
 			remainingSeconds = countdown.endDate.timeIntervalSinceNow;
 			
@@ -333,7 +333,7 @@
 
 - (IBAction)pauseButtonAction:(id)sender
 {
-	if (isPaused) { // If already paused, reset the timer
+	if (countdown.isPaused) { // If already paused, reset the timer
 		remainingSeconds = duration = countdown.currentDuration.doubleValue;
 		_timerView.progression = 0.;
 	}
@@ -347,36 +347,31 @@
 		[self pause];
 		
 	} else {
-		if (isPaused) [self start];
+		if (countdown.isPaused) [self start];
 		else [self pause];
 	}
 }
 
 - (void)pause
 {
-	isPaused = YES;
-	
 	_timeLabel.text = NSLocalizedString(@"Resume", nil);
 	
 	remainingSeconds = [countdown.endDate timeIntervalSinceNow];
-	countdown.endDate = nil;
+	[countdown pause];
 	
 	[self reload];
 }
 
 - (void)start
 {
-	isPaused = NO;
-	
 	/* If the timer is finished, start the next */
 	if (isFinished) {
 		countdown.durationIndex++;
-		remainingSeconds = duration = countdown.currentDuration.doubleValue;
-		countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:duration];
+		[countdown reset];
 		_timerView.progression = 0.;
 		isFinished = NO;
 	} else {
-		countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:(0. < remainingSeconds && remainingSeconds < duration) ? remainingSeconds : duration];
+		[countdown resume];
 	}
 	
 	[self reload];
@@ -386,7 +381,10 @@
 {
 	[self updateLeftButton];
 	
-	_descriptionLabel.hidden = isPaused;
+	if (countdown.isPaused) {
+		_timeLabel.text = NSLocalizedString(@"Resume", nil);
+	}
+	_descriptionLabel.hidden = countdown.isPaused;
 	
 	[self update];
 }
@@ -421,6 +419,7 @@
 	_timeLabel.text = NSLocalizedString(@"Resume", nil);
 	remainingSeconds = duration = self.countdown.currentDuration.doubleValue;
 	isFinished = NO;
+	[countdown reset];
 	[self reload];
 	[self showConfirmationToolbar:NO];
 }
@@ -483,7 +482,7 @@
 
 - (void)timerDidDragged:(UIGestureRecognizer *)gesture
 {
-	if (!isPaused)
+	if (!countdown.isPaused)
 		return ;
 	
 	if (gesture.state == UIGestureRecognizerStateBegan) {

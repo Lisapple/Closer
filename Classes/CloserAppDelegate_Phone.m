@@ -166,7 +166,7 @@
 	NSString * identifier = userInfo[@"identifier"];
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSString * action = userInfo[@"action"];
-	if /***/ ([action isEqualToString:@"play"] && !countdown.isPaused) {
+	if /***/ ([action isEqualToString:@"pause"] && !countdown.isPaused) {
 		[countdown pause];
 	} else if ([action isEqualToString:@"resume"] && countdown.isPaused) {
 		[countdown resume];
@@ -177,6 +177,7 @@
 	} else {
 		NSLog(@"Unknown Apple Watch request with action: \"%@\"", action);
 	}
+	reply(@{ @"result" : @"OK" });
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

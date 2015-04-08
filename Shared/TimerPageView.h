@@ -26,7 +26,7 @@
 	// Private
 	NSTimeInterval remainingSeconds, duration /* DUration of the current timer */;
 	NSDate * nextEndDate;
-	BOOL isPaused, isFinished;
+	BOOL isFinished;
 	BOOL _loaded;
 }
 

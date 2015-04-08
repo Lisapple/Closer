@@ -20,13 +20,14 @@ class TimerInterfaceController: WKInterfaceController {
 	var remaining: NSTimeInterval = 0.0
 	var duration: NSTimeInterval = 0.0
 	var colorStyle: ColorStyle = .ColorStyleNight
-	weak var timer: NSTimer?
+	var timer: NSTimer?
 	
 	var _paused: Bool = false
 	var paused: Bool {
 		set {
 			_paused = newValue
 			toogleButton?.setTitle((paused) ? "Resume" : "Pause")
+			self.updateUI()
 		}
 		get {
 			return _paused
@@ -51,6 +52,7 @@ class TimerInterfaceController: WKInterfaceController {
 		identifier = dictContext["identifier"] as String
 		
 		// @TODO: Update only when changes to display
+		/*
 		if (!paused) {
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
@@ -58,6 +60,7 @@ class TimerInterfaceController: WKInterfaceController {
 				self.paused = false;
 			})
 		}
+		*/
 		updateUI()
 		
 		if (paused) {
@@ -68,6 +71,10 @@ class TimerInterfaceController: WKInterfaceController {
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
+		
+		if (identifier == NSUserDefaults().stringForKey("selectedIdentifier")) {
+			self.becomeCurrentPage()
+		}
 	}
 	
 	func updateUI() {
@@ -119,23 +126,30 @@ class TimerInterfaceController: WKInterfaceController {
 		var string:NSAttributedString?
 		var description:String?
 		if (endDate != nil) {
-			var seconds = endDate!.timeIntervalSinceNow
-			let days = floor(seconds / (24 * 60 * 60)); seconds -= days * (24 * 60 * 60)
-			let hours = floor(seconds / (60 * 60)); seconds -= hours * (60 * 60)
-			let minutes = floor(seconds / 60); seconds -= minutes * 60
-			var count = seconds
-			description = "seconds"
-			if days >= 3 {
-				count = days
-				description = "days"
-			} else if hours >= 3 {
-				count = hours
-				description = "hours"
-			} else if minutes >= 3 {
-				count = minutes
-				description = "minutes"
+			let seconds = endDate!.timeIntervalSinceNow
+			if (seconds > 0.0) {
+				let days = seconds / (24 * 60 * 60);
+				let hours = seconds / (60 * 60);
+				let minutes = seconds / 60;
+				var count = seconds
+				description = "seconds"
+				if days >= 2 {
+					count = ceil(days)
+					description = "days"
+				} else if hours >= 2 {
+					count = ceil(hours)
+					description = "hours"
+				} else if minutes >= 2 {
+					count = ceil(minutes)
+					description = "minutes"
+				}
+				string = NSAttributedString(string: UInt(count).description, attributes: attributes)
+			} else {
+				attributes = [
+					NSForegroundColorAttributeName : color,
+					NSFontAttributeName : UIFont.systemFontOfSize(32.0) ]
+				string = NSAttributedString(string: "Paused", attributes: attributes)
 			}
-			string = NSAttributedString(string: UInt(count).description, attributes: attributes)
 		} else {
 			attributes = [
 				NSForegroundColorAttributeName : color,
@@ -167,6 +181,12 @@ class TimerInterfaceController: WKInterfaceController {
 
 		image.setImage(UIGraphicsGetImageFromCurrentImageContext())
 		UIGraphicsEndImageContext()
+		
+		if (!paused) {
+			timer?.invalidate()
+			timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: false)
+			timer!.tolerance = 0.2
+		}
     }
 	
 	@IBAction func tooglePauseAction() {
@@ -178,6 +198,7 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	@IBAction func pauseMenuAction() {
+		/*
 		if (!paused && endDate != nil) {
 			remaining = endDate!.timeIntervalSinceNow
 			endDate = nil
@@ -186,11 +207,12 @@ class TimerInterfaceController: WKInterfaceController {
 				self.timer = nil
 			})
 		}
-		updateUI()
+		*/
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "pause"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
 			println(replyInfo?["result"])
 			self.paused = true;
+			self.updateUI()
 		}
 		
 		clearAllMenuItems()
@@ -201,17 +223,21 @@ class TimerInterfaceController: WKInterfaceController {
 	
 	@IBAction func resumeMenuAction() {
 		if (paused) {
+			/*
 			endDate = NSDate().dateByAddingTimeInterval(remaining)
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
 				self.timer!.tolerance = 0.2
 			})
 			updateUI()
+			*/
 		}
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "resume"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
-				println(replyInfo?["result"])
+			println(replyInfo?["result"])
 			self.paused = false;
+			self.endDate = NSDate().dateByAddingTimeInterval((self.remaining > 0.0) ? self.remaining : self.duration)
+			self.updateUI()
 		}
 		
 		clearAllMenuItems()
@@ -222,6 +248,7 @@ class TimerInterfaceController: WKInterfaceController {
 	
 	@IBAction func resetMenuAction() {
 		endDate = NSDate().dateByAddingTimeInterval(duration)
+		/*
 		if (self.timer?.valid == nil) {
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
@@ -229,6 +256,7 @@ class TimerInterfaceController: WKInterfaceController {
 				self.paused = false;
 			})
 		}
+		*/
 		updateUI()
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "reset"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
@@ -255,10 +283,33 @@ class TimerInterfaceController: WKInterfaceController {
     override func willActivate() {
         super.willActivate()
 		updateUI()
+		
+		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidUpdateNotification", object: nil, queue: nil) {
+			(notification) -> Void in
+			
+			let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
+			var countdowns = userDefaults.arrayForKey("countdowns")! as [[String : AnyObject]]
+			countdowns = countdowns.filter({ (countdown: [String : AnyObject]) -> Bool in
+				return countdown["identifier"] as? String == self.identifier
+			})
+			
+			if countdowns.first != nil {
+				let countdown = countdowns.first! as [String : AnyObject]
+				self.endDate = countdown["endDate"] as? NSDate
+				let durations = countdown["durations"] as [NSTimeInterval]
+				let index = countdown["durationIndex"] as NSNumber
+				self.duration = durations[index.integerValue]
+				self.paused = (self.endDate == nil)
+				self.updateUI()
+			}
+		}
+		
+		NSUserDefaults().setObject(identifier, forKey: "selectedIdentifier");
     }
 
     override func didDeactivate() {
         super.didDeactivate()
+		NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 	
 	deinit {

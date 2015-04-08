@@ -31,10 +31,7 @@ class CountdownInterfaceController: WKInterfaceController {
 		colorStyle = ColorStyle.fromString(dictContext["style"] as String)
 		identifier = dictContext["identifier"] as String
 		
-		// @TODO: Update only when changes to display
-		timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
 		updateUI()
-		
 		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
@@ -156,6 +153,10 @@ class CountdownInterfaceController: WKInterfaceController {
 		
 		image.setImage(UIGraphicsGetImageFromCurrentImageContext())
 		UIGraphicsEndImageContext()
+		
+		// @TODO: Update only when changes to display
+		//timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: false)
+		//timer!.tolerance = 0.2
 	}
 	
 	@IBAction func infoMenuAction() {
