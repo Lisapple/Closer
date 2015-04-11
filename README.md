@@ -5,7 +5,7 @@ Closer &amp; Closer
 
 [Closer &amp; Closer](http://www.lisacintosh.com/closer/) for iOS (iPhone and iPad) is a countdown application to use for last moments before a special event.
 
-Compiled with Xcode 6.x and iOS 8.x, for iOS 6.0+
+Compiled with Xcode 6.x and iOS 8.x, for iOS 7.0+
 
 The code source and resources are under MIT licence.
 
