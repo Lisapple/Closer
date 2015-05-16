@@ -25,11 +25,11 @@ class CountdownInterfaceController: WKInterfaceController {
 		super.awakeWithContext(context)
 		self.context = context
 		
-		let dictContext:[String : AnyObject] = context as Dictionary
+		let dictContext:[String : AnyObject] = context as! Dictionary
 		self.setTitle(dictContext["name"] as? String)
 		endDate = dictContext["endDate"] as? NSDate
-		colorStyle = ColorStyle.fromString(dictContext["style"] as String)
-		identifier = dictContext["identifier"] as String
+		colorStyle = ColorStyle.fromString(dictContext["style"] as! String)
+		identifier = dictContext["identifier"] as! String
 		
 		updateUI()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
@@ -86,7 +86,7 @@ class CountdownInterfaceController: WKInterfaceController {
 		let pathLength:CGFloat = (frame.height - 2.0 * border - 2.0 * cornerRadius) * 4.0 + 2.0 * CGFloat(M_PI) * cornerRadius
 		var lengths:[CGFloat] = [ progression * pathLength, CGFloat.max ]
 		var transform:CGAffineTransform = CGAffineTransformIdentity
-		var dashingPath:CGPath = CGPathCreateCopyByDashingPath(path, &transform, 0.0, &lengths, UInt(lengths.count))
+		var dashingPath:CGPath = CGPathCreateCopyByDashingPath(path, &transform, 0.0, &lengths, Int(lengths.count))
 		
 		CGContextBeginPath(bitmapContext)
 		CGContextAddPath(bitmapContext, dashingPath)
@@ -129,7 +129,7 @@ class CountdownInterfaceController: WKInterfaceController {
 			description = "minutes"
 		}
 		
-		var string:NSAttributedString = NSAttributedString(string: UInt(count).description, attributes: attributes)
+		var string:NSAttributedString = NSAttributedString(string: UInt(count).description, attributes: attributes as [NSObject : AnyObject])
 		var line:CTLineRef = CTLineCreateWithAttributedString(string as CFAttributedStringRef)
 		let flush:CGFloat = 0.5 // Centered
 		var offset = CTLineGetPenOffsetForFlush(line, flush, Double(frame.size.width))
@@ -142,7 +142,7 @@ class CountdownInterfaceController: WKInterfaceController {
 		attributes = [
 			NSForegroundColorAttributeName : color.colorWithAlphaComponent(0.5),
 			NSFontAttributeName : UIFont.systemFontOfSize(18.0) ]
-		string = NSAttributedString(string: description, attributes: attributes)
+		string = NSAttributedString(string: description, attributes: attributes as [NSObject : AnyObject])
 		
 		line = CTLineCreateWithAttributedString(string as CFAttributedStringRef)
 		offset = CTLineGetPenOffsetForFlush(line, flush, Double(frame.size.width))
@@ -173,10 +173,33 @@ class CountdownInterfaceController: WKInterfaceController {
 	override func willActivate() {
 		super.willActivate()
 		updateUI()
+		
+		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidUpdateNotification", object: nil, queue: nil) {
+			(notification) -> Void in
+			
+			let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
+			var countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
+			countdowns = countdowns.filter({ (countdown: [String : AnyObject]) -> Bool in
+				return countdown["identifier"] as? String == self.identifier
+			})
+			
+			if (countdowns.first != nil) {
+				let countdown = countdowns.first! as [String : AnyObject]
+				if (countdown["durations"] != nil) {
+					self.setTitle(countdown["name"] as? String)
+					self.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
+					self.endDate = countdown["endDate"] as? NSDate
+					self.updateUI()
+				}
+			}
+		}
+		
+		NSUserDefaults().setObject(identifier, forKey: "selectedIdentifier");
 	}
 	
 	override func didDeactivate() {
 		super.didDeactivate()
+		NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 	
 	deinit {

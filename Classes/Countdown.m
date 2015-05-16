@@ -428,6 +428,10 @@ static NSMutableArray * _countdowns = nil;
 - (void)update
 {
     [self updateLocalNotification];
+	
+	[self.class updateUserDefaults];
+	CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+	CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 }
 
 - (void)remove

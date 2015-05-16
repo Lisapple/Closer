@@ -42,12 +42,12 @@ class TimerDetailsController: WKInterfaceController {
 	override func awakeWithContext(context: AnyObject?) {
 		super.awakeWithContext(context)
 		
-		let contextDict = context as [String : AnyObject]
+		let contextDict = context as! [String : AnyObject]
 		label.setText(contextDict["name"] as? String)
-		let durations = contextDict["durations"] as [NSNumber]
+		let durations = contextDict["durations"] as! [NSNumber]
 		table.setNumberOfRows(durations.count, withRowType: "TimerDurationRow")
 		for i in 0..<durations.count {
-			var row:TimerDetailsRowController = table.rowControllerAtIndex(i) as TimerDetailsRowController
+			var row:TimerDetailsRowController = table.rowControllerAtIndex(i) as! TimerDetailsRowController
 			row.setText(durations[i].localizedDurationDescription)
 		}
 	}

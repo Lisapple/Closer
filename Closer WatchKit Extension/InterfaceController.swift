@@ -25,27 +25,32 @@ class InterfaceController: WKInterfaceController {
 		}
     }
 	
+	static var pageCount:Int = 0;
 	class func reload() {
 		var names:[String] = []
 		var contexts:[[String : AnyObject]] = []
 		
 		let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-		let countdowns = userDefaults.arrayForKey("countdowns")! as [[String : AnyObject]]
+		let countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
 		for countdown in countdowns {
-			if (countdown["type"] as UInt == 1 /* Timer */) {
+			if (countdown["type"] as! UInt == 1 /* Timer */) {
 				names.append("TimerItem")
 			} else {
 				names.append("CountdownItem")
 			}
 			var context:[String : AnyObject] = countdown as [String : AnyObject]
-			context["style"] = ColorStyle.fromInt(countdown["style"] as Int).toString()
+			context["style"] = ColorStyle.fromInt(countdown["style"] as! Int).toString()
 			contexts.append(context)
 		}
-		WKInterfaceController.reloadRootControllersWithNames(names, contexts: contexts)
+		if (pageCount != contexts.count) {
+			WKInterfaceController.reloadRootControllersWithNames(names, contexts: contexts)
+			pageCount = contexts.count;
+		}
 	}
 
     override func willActivate() {
         super.willActivate()
+		//InterfaceController.reload()
     }
 	
     override func didDeactivate() {

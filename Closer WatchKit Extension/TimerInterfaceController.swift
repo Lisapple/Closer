@@ -15,7 +15,6 @@ class TimerInterfaceController: WKInterfaceController {
 	@IBOutlet weak var image: WKInterfaceImage!
 	@IBOutlet weak var toogleButton: WKInterfaceButton!
 	var identifier: String = ""
-	var title: String = ""
 	var endDate: NSDate?
 	var remaining: NSTimeInterval = 0.0
 	var duration: NSTimeInterval = 0.0
@@ -40,16 +39,15 @@ class TimerInterfaceController: WKInterfaceController {
         super.awakeWithContext(context)
 		self.context = context
 		
-		let dictContext:[String : AnyObject] = context as Dictionary
-		title = dictContext["name"] as String
-		self.setTitle(self.title)
+		let dictContext:[String : AnyObject] = context as! Dictionary
+		self.setTitle(dictContext["name"] as? String)
 		if (dictContext["durations"] != nil) {
-			duration = (dictContext["durations"] as Array)[dictContext["durationIndex"] as Int]
+			duration = (dictContext["durations"] as! Array)[dictContext["durationIndex"] as! Int]
 		}
-		endDate = dictContext["endDate"] as NSDate?
+		endDate = dictContext["endDate"] as! NSDate?
 		self.paused = (endDate == nil)
-		colorStyle = ColorStyle.fromString(dictContext["style"] as String)
-		identifier = dictContext["identifier"] as String
+		colorStyle = ColorStyle.fromString(dictContext["style"] as! String)
+		identifier = dictContext["identifier"] as! String
 		
 		// @TODO: Update only when changes to display
 		/*
@@ -143,18 +141,18 @@ class TimerInterfaceController: WKInterfaceController {
 					count = ceil(minutes)
 					description = "minutes"
 				}
-				string = NSAttributedString(string: UInt(count).description, attributes: attributes)
+				string = NSAttributedString(string: UInt(count).description, attributes: attributes as [NSObject : AnyObject])
 			} else {
 				attributes = [
 					NSForegroundColorAttributeName : color,
 					NSFontAttributeName : UIFont.systemFontOfSize(32.0) ]
-				string = NSAttributedString(string: "Paused", attributes: attributes)
+				string = NSAttributedString(string: "Paused", attributes: attributes as [NSObject : AnyObject])
 			}
 		} else {
 			attributes = [
 				NSForegroundColorAttributeName : color,
 				NSFontAttributeName : UIFont.systemFontOfSize(32.0) ]
-			string = NSAttributedString(string: "Paused", attributes: attributes)
+			string = NSAttributedString(string: "Paused", attributes: attributes as [NSObject : AnyObject])
 		}
 		
 		var line:CTLineRef = CTLineCreateWithAttributedString(string as CFAttributedStringRef!)
@@ -170,7 +168,7 @@ class TimerInterfaceController: WKInterfaceController {
 			attributes = [
 				NSForegroundColorAttributeName : color.colorWithAlphaComponent(0.5),
 				NSFontAttributeName : UIFont.systemFontOfSize(18.0) ]
-			string = NSAttributedString(string: description!, attributes: attributes)
+			string = NSAttributedString(string: description!, attributes: attributes as [NSObject : AnyObject])
 			line = CTLineCreateWithAttributedString(string as CFAttributedStringRef!)
 			offset = CTLineGetPenOffsetForFlush(line, flush, Double(frame.size.width))
 			bounds = CTLineGetImageBounds(line, bitmapContext)
@@ -208,6 +206,7 @@ class TimerInterfaceController: WKInterfaceController {
 		clearAllMenuItems()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Play, title: "Resume", action: "resumeMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
@@ -223,6 +222,7 @@ class TimerInterfaceController: WKInterfaceController {
 		clearAllMenuItems()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
@@ -237,6 +237,7 @@ class TimerInterfaceController: WKInterfaceController {
 		clearAllMenuItems()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
@@ -259,19 +260,23 @@ class TimerInterfaceController: WKInterfaceController {
 			(notification) -> Void in
 			
 			let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-			var countdowns = userDefaults.arrayForKey("countdowns")! as [[String : AnyObject]]
+			var countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
 			countdowns = countdowns.filter({ (countdown: [String : AnyObject]) -> Bool in
 				return countdown["identifier"] as? String == self.identifier
 			})
 			
-			if countdowns.first != nil {
+			if (countdowns.first != nil) {
 				let countdown = countdowns.first! as [String : AnyObject]
-				self.endDate = countdown["endDate"] as? NSDate
-				let durations = countdown["durations"] as [NSTimeInterval]
-				let index = countdown["durationIndex"] as NSNumber
-				self.duration = durations[index.integerValue]
-				self.paused = (self.endDate == nil)
-				self.updateUI()
+				if (countdown["durations"] != nil) {
+					self.setTitle(countdown["name"] as? String)
+					self.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
+					self.endDate = countdown["endDate"] as? NSDate
+					let durations = countdown["durations"] as! [NSTimeInterval]
+					let index = countdown["durationIndex"] as! NSNumber
+					self.duration = durations[index.integerValue]
+					self.paused = (self.endDate == nil)
+					self.updateUI()
+				}
 			}
 		}
 		

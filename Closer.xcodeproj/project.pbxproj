@@ -672,9 +672,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* Closer */ = {
+		1D6058900D05DD3D006BFB54 /* Closer & Closer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Closer" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Closer & Closer" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -687,7 +687,7 @@
 				504B56511A7D5C9900292475 /* PBXTargetDependency */,
 				50E00D381AC0AA9000784B98 /* PBXTargetDependency */,
 			);
-			name = Closer;
+			name = "Closer & Closer";
 			productName = Closer;
 			productReference = 1D6058910D05DD3D006BFB54 /* Closer.app */;
 			productType = "com.apple.product-type.application";
@@ -805,7 +805,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* Closer */,
+				1D6058900D05DD3D006BFB54 /* Closer & Closer */,
 				504B56441A7D5C9900292475 /* Widget */,
 				50E00D201AC0AA9000784B98 /* Closer WatchKit Extension */,
 				50E00D2A1AC0AA9000784B98 /* Closer WatchKit App */,
@@ -1702,7 +1702,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Closer" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Closer & Closer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,

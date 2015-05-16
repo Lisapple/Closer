@@ -19,7 +19,7 @@ class CountdownDetailsController: WKInterfaceController {
 	override func awakeWithContext(context: AnyObject?) {
 		super.awakeWithContext(context)
 		
-		let contextDict = context as [String : AnyObject]
+		let contextDict = context as! [String : AnyObject]
 		label.setText(contextDict["name"] as? String)
 		let endDate = contextDict["endDate"] as? NSDate
 		var formatter = NSDateFormatter()
