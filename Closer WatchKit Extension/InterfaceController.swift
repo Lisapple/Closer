@@ -31,18 +31,22 @@ class InterfaceController: WKInterfaceController {
 		var contexts:[[String : AnyObject]] = []
 		
 		let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-		let countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
-		for countdown in countdowns {
-			if (countdown["type"] as! UInt == 1 /* Timer */) {
-				names.append("TimerItem")
-			} else {
-				names.append("CountdownItem")
+		if (userDefaults.arrayForKey("countdowns") != nil) {
+			let countdowns = userDefaults.arrayForKey("countdowns") as! [[String : AnyObject]]
+			for countdown in countdowns {
+				if (countdown["type"] as! UInt == 1 /* Timer */) {
+					names.append("TimerItem")
+				} else {
+					names.append("CountdownItem")
+				}
+				var context:[String : AnyObject] = countdown as [String : AnyObject]
+				context["style"] = ColorStyle.fromInt(countdown["style"] as! Int).toString()
+				contexts.append(context)
 			}
-			var context:[String : AnyObject] = countdown as [String : AnyObject]
-			context["style"] = ColorStyle.fromInt(countdown["style"] as! Int).toString()
-			contexts.append(context)
 		}
-		if (pageCount != contexts.count) {
+		if (contexts.count == 0) { // No countdowns, show error message
+			WKInterfaceController.reloadRootControllersWithNames(["NoCountdowns"], contexts: [])
+		} else if (pageCount != contexts.count) {
 			WKInterfaceController.reloadRootControllersWithNames(names, contexts: contexts)
 			pageCount = contexts.count;
 		}
@@ -50,7 +54,7 @@ class InterfaceController: WKInterfaceController {
 
     override func willActivate() {
         super.willActivate()
-		//InterfaceController.reload()
+		InterfaceController.reload()
     }
 	
     override func didDeactivate() {

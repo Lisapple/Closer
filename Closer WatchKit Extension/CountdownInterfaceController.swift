@@ -185,12 +185,10 @@ class CountdownInterfaceController: WKInterfaceController {
 			
 			if (countdowns.first != nil) {
 				let countdown = countdowns.first! as [String : AnyObject]
-				if (countdown["durations"] != nil) {
-					self.setTitle(countdown["name"] as? String)
-					self.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
-					self.endDate = countdown["endDate"] as? NSDate
-					self.updateUI()
-				}
+				self.setTitle(countdown["name"] as? String)
+				self.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
+				self.endDate = countdown["endDate"] as? NSDate
+				self.updateUI()
 			}
 		}
 		

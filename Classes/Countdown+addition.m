@@ -53,7 +53,7 @@
                 
                 NSString * messageString = message;
                 if (!message || [message isEqualToString:@""]) {// If no message, show the default message
-                    if (self.style == CountdownTypeTimer) {
+                    if (self.type == CountdownTypeTimer) {
                         if (name)// If name was set, add it to default message
                             messageString = [NSString stringWithFormat:NSLocalizedString(@"TIMER_FINISHED_MESSAGE %@", nil), self.name];
                         else // Else if wasn't set, just show the default message

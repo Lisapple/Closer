@@ -17,6 +17,14 @@ typedef NS_OPTIONS(NSUInteger, CountdownType) {
 	CountdownTypeTimer
 };
 
+typedef NS_OPTIONS(NSUInteger, CountdownStyle) {
+	CountdownStyleNight = 0, // Default
+	CountdownStyleDay,
+	CountdownStyleDawn,
+	CountdownStyleOasis,
+	CountdownStyleSpring,
+};
+
 typedef NS_OPTIONS(NSUInteger, PromptState) {
 	PromptStateNone = 0,
 	PromptStateEveryTimers,
@@ -29,10 +37,6 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 	NSDate * endDate;
 	NSString * message;
 	NSString * songID;
-	NSInteger style;
-	CountdownType type;
-	PromptState promptState;
-	NSInteger durationIndex;
 	
 	@private
 	NSString * identifier;
@@ -45,7 +49,7 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 @property (nonatomic, strong) NSDate * endDate;
 @property (nonatomic, strong) NSString * message;
 @property (nonatomic, strong) NSString * songID;
-@property (nonatomic, assign) NSInteger style;
+@property (nonatomic, assign) CountdownStyle style;
 @property (nonatomic, assign) CountdownType type;
 @property (nonatomic, assign) PromptState promptState;
 @property (nonatomic, assign) NSInteger durationIndex;

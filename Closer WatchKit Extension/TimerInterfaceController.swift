@@ -62,7 +62,7 @@ class TimerInterfaceController: WKInterfaceController {
 		updateUI()
 		
 		if (paused) {
-			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Resume", action: "resumeMenuAction")
+			addMenuItemWithItemIcon(WKMenuItemIcon.Resume, title: "Resume", action: "resumeMenuAction")
 		} else {
 			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		}
@@ -199,6 +199,9 @@ class TimerInterfaceController: WKInterfaceController {
 		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "pause"]) {
 			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
 			println(replyInfo?["result"])
+			if (self.endDate != nil) {
+				self.remaining = NSDate().timeIntervalSinceDate(self.endDate!)
+			}
 			self.paused = true;
 			self.updateUI()
 		}
@@ -262,7 +265,7 @@ class TimerInterfaceController: WKInterfaceController {
 			let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
 			var countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
 			countdowns = countdowns.filter({ (countdown: [String : AnyObject]) -> Bool in
-				return countdown["identifier"] as? String == self.identifier
+				return (countdown["identifier"] as? String == self.identifier)
 			})
 			
 			if (countdowns.first != nil) {

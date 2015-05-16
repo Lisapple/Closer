@@ -21,10 +21,6 @@ NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotificati
 @synthesize endDate;
 @synthesize message;
 @synthesize songID;
-@synthesize style;
-@synthesize type = _type;
-@synthesize promptState = _promptState;
-@synthesize durationIndex = _durationIndex;
 
 @synthesize identifier;
 
@@ -111,22 +107,29 @@ static NSMutableArray * _countdowns = nil;
 			[_countdowns addObject:aCountdown];
 		}
 		
-        [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification
-                                                          object:nil queue:NSOperationQueue.currentQueue
-													  usingBlock:^(NSNotification *note) {
-														  [self updateUserDefaults];
-														  
-														  NSPredicate * predicate = [NSPredicate predicateWithFormat:@"notificationCenter == YES"];
-														  NSArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate];
-														  [[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
-																				 forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
-														  
-														  CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-														  CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidSynchronizeNotification"), NULL, NULL, YES);
-													  }];
-        if (_countdowns.count > 0) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
-        }
+		[NSNotificationCenter.defaultCenter addObserverForName:CountdownDidUpdateNotification
+														object:nil queue:NSOperationQueue.currentQueue
+													usingBlock:^(NSNotification *note) {
+														[self.class updateUserDefaults];
+														CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+														CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
+													}];
+		[NSNotificationCenter.defaultCenter addObserverForName:CountdownDidSynchronizeNotification
+														object:nil queue:NSOperationQueue.currentQueue
+													usingBlock:^(NSNotification *note) {
+														[self updateUserDefaults];
+														
+														NSPredicate * predicate = [NSPredicate predicateWithFormat:@"notificationCenter == YES"];
+														NSArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate];
+														[[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
+																			   forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
+														
+														CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+														CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidSynchronizeNotification"), NULL, NULL, YES);
+													}];
+		if (_countdowns.count > 0) {
+			[NSNotificationCenter.defaultCenter postNotificationName:CountdownDidSynchronizeNotification object:nil];
+		}
 	}
 }
 
@@ -362,7 +365,7 @@ static NSMutableArray * _countdowns = nil;
 		endDate = nil;
 		message = @"";
 		songID = @"default";
-		style = 0;
+		_style = 0;
 		_type = CountdownTypeCountdown;
         _notificationCenter = YES;
 		
@@ -388,6 +391,7 @@ static NSMutableArray * _countdowns = nil;
 {
 	if (aName && ![aName isEqualToString:name]) {
 		name = aName;
+		[self update];
 	}
 }
 
@@ -395,7 +399,6 @@ static NSMutableArray * _countdowns = nil;
 {
 	if (aMessage && ![aMessage isEqualToString:message]) {
 		message = aMessage;
-		
 		[self update];
 	}
 }
@@ -411,7 +414,14 @@ static NSMutableArray * _countdowns = nil;
 {
 	if (aSongID && ![aSongID isEqualToString:songID]) {
 		songID = aSongID;
-		
+		[self update];
+	}
+}
+
+- (void)setStyle:(CountdownStyle)style
+{
+	if (_style != style) {
+		_style = style;
 		[self update];
 	}
 }
@@ -420,7 +430,6 @@ static NSMutableArray * _countdowns = nil;
 {
 	if (_type != newType) {
 		_type = newType;
-		
 		[self update];
 	}
 }
@@ -428,10 +437,6 @@ static NSMutableArray * _countdowns = nil;
 - (void)update
 {
     [self updateLocalNotification];
-	
-	[self.class updateUserDefaults];
-	CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-	CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 }
 
 - (void)remove
@@ -510,10 +515,6 @@ static NSMutableArray * _countdowns = nil;
 		remaining = 0.;
 		_paused = NO;
 		[self updateLocalNotification];
-		
-		[self.class updateUserDefaults];
-		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
@@ -524,10 +525,6 @@ static NSMutableArray * _countdowns = nil;
 		endDate = nil;
 		_paused = YES;
 		[self updateLocalNotification];
-		
-		[self.class updateUserDefaults];
-		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
@@ -537,10 +534,6 @@ static NSMutableArray * _countdowns = nil;
 		endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
 		_paused = NO;
 		[self updateLocalNotification];
-		
-		[self.class updateUserDefaults];
-		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
