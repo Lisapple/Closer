@@ -35,32 +35,17 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Date & Time", nil);
+	self.view.tintColor = [UIColor blackColor];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-	
 	[tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
 						   animated:NO
 					 scrollPosition:UITableViewScrollPositionNone];
-	
     tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        
-        tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView = backgroundView;
-    }
-	
 	tableView.alwaysBounceVertical = NO;
 	tableView.scrollEnabled = NO;
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
 	
 	[self reloadData];
 	

@@ -22,25 +22,11 @@
 	[super viewDidLoad];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	
-	UIBarButtonItem * doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																					 target:self
-																					 action:@selector(done:)];
-	if (!TARGET_IS_IOS7_OR_LATER())
-		doneButtonItem.tintColor = [UIColor doneButtonColor];
-	
-	self.navigationItem.rightBarButtonItem = doneButtonItem;
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+																						   target:self
+																						   action:@selector(done:)];
 	
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		self.tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        self.tableView.backgroundView = backgroundView;
-    }
-    
 	self.tableView.allowsSelectionDuringEditing = YES;
 	self.tableView.editing = YES;
     [self reloadData];

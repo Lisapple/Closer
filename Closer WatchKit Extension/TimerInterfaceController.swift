@@ -182,8 +182,9 @@ class TimerInterfaceController: WKInterfaceController {
 		
 		if (!paused) {
 			timer?.invalidate()
-			timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: false)
-			timer!.tolerance = 0.2
+			let interval: NSTimeInterval = (endDate != nil && endDate!.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0;
+			timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "updateUI", userInfo: nil, repeats: false)
+			timer!.tolerance = interval / 5.0;
 		}
     }
 	

@@ -23,21 +23,10 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	
 	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        _tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView = backgroundView;
-    }
 	_tableView.alwaysBounceVertical = YES;
 	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
+	self.view.tintColor = [UIColor blackColor];
 	
     [super viewDidLoad];
 }

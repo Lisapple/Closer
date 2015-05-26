@@ -237,21 +237,12 @@
 	
 	self.navigationController.delegate = self;
 	
-	UIBarButtonItem * doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 																				 target:self
 																				 action:@selector(close:)];
-	if (!TARGET_IS_IOS7_OR_LATER())
-		doneButton.tintColor = [UIColor doneButtonColor];
-	self.navigationItem.rightBarButtonItem = doneButton;
 	
 	_viewControllers = [[NSMutableArray alloc] initWithCapacity:2];
 	[_viewControllers addObject:self];
-	
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		self.tableView.backgroundView = backgroundView;
-	}
     
 	[self reloadData];
 }

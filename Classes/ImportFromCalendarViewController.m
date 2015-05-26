@@ -24,95 +24,20 @@
 {
 	[super viewDidLoad];
 	
-	NSString * title = NSLocalizedString(@"Choose Events", nil);
-	NSArray * components = [title componentsSeparatedByString:@"\n"];
-	
-	if (TARGET_IS_IOS7_OR_LATER()) {
-		self.title = title;
-	} else {
-		if (components.count == 1) {
-			UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, 40.)];
-			titleLabel.backgroundColor = [UIColor clearColor];
-			titleLabel.text = title;
-			titleLabel.font = [UIFont boldSystemFontOfSize:20.];
-			titleLabel.minimumScaleFactor = (14. / 20.);
-			titleLabel.adjustsFontSizeToFitWidth = YES;
-			titleLabel.textAlignment = NSTextAlignmentCenter;
-			titleLabel.textColor = [UIColor whiteColor];
-			titleLabel.shadowOffset = CGSizeMake(0., -1);
-			titleLabel.shadowColor = [UIColor blackColor];
-			self.navigationItem.titleView = titleLabel;
-			
-		} else {
-			
-			CGRect rect = CGRectMake(0., 0., self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
-			UIView * titleView = [[UIView alloc] initWithFrame:rect];
-			
-			float height = self.navigationController.navigationBar.frame.size.height / 3.;
-			
-			UILabel * upTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height / 2., self.navigationController.navigationBar.frame.size.width, height)];
-			upTitleLabel.backgroundColor = [UIColor clearColor];
-			upTitleLabel.text = components[0];
-			upTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
-			upTitleLabel.textAlignment = NSTextAlignmentCenter;
-			upTitleLabel.textColor = [UIColor whiteColor];
-			upTitleLabel.shadowOffset = CGSizeMake(0., -1);
-			upTitleLabel.shadowColor = [UIColor blackColor];
-			
-			upTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-			
-			[titleView addSubview:upTitleLabel];
-			
-			UILabel * downTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0., height * (1.5), self.navigationController.navigationBar.frame.size.width, height)];
-			downTitleLabel.backgroundColor = [UIColor clearColor];
-			downTitleLabel.text = components[1];
-			downTitleLabel.font = [UIFont boldSystemFontOfSize:14.];
-			downTitleLabel.textAlignment = NSTextAlignmentCenter;
-			downTitleLabel.textColor = [UIColor whiteColor];
-			downTitleLabel.shadowOffset = CGSizeMake(0., -1);
-			downTitleLabel.shadowColor = [UIColor blackColor];
-			
-			downTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-			
-			[titleView addSubview:downTitleLabel];
-			
-			titleView.autoresizesSubviews = YES;
-			self.navigationItem.titleView = titleView;
-		}
-	}
-	
-	
-	UIBarButtonItem * importButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
-																	  style:UIBarButtonItemStyleDone
-																	 target:self
-																	 action:@selector(import:)];
-	if (!TARGET_IS_IOS7_OR_LATER())
-		importButton.tintColor = [UIColor doneButtonColor];
-	
-	self.navigationItem.rightBarButtonItem = importButton;
-	
-	UIBarButtonItem * cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-																				   target:self
-																				   action:@selector(cancel:)];
-	self.navigationItem.leftBarButtonItem = cancelButton;
+	self.title = NSLocalizedString(@"Choose Events", nil);
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
+																			  style:UIBarButtonItemStyleDone
+																			 target:self
+																			 action:@selector(import:)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+																						  target:self
+																						  action:@selector(cancel:)];
 	
 	selectedEvents = [[NSMutableArray alloc] initWithCapacity:10];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-	
-	if (TARGET_IS_IOS7_OR_LATER()) {
-		tableView.contentInset = UIEdgeInsetsMake(20., 0., 0., 0.);
-	} else {
-		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		tableView.backgroundView = backgroundView;
-	}
-	
+	tableView.contentInset = UIEdgeInsetsMake(20., 0., 0., 0.);
 	[tableView reloadData];
 	
 	/* Show the spinning wheel */
@@ -260,20 +185,9 @@
 		label.lineBreakMode = NSLineBreakByCharWrapping;
 		label.numberOfLines = 0;// Infinite number of line
 		label.textAlignment = NSTextAlignmentCenter;
-		
-		if (TARGET_IS_IOS7_OR_LATER()) {
-			label.textColor = [UIColor blackColor];
-			label.font = [UIFont systemFontOfSize:17.];
-			
-		} else {
-			label.textColor = [UIColor darkGrayColor];
-			label.font = [UIFont boldSystemFontOfSize:18.];
-			label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
-			label.shadowOffset = CGSizeMake(0., 1.);
-		}
-		
+		label.textColor = [UIColor blackColor];
+		label.font = [UIFont systemFontOfSize:17.];
 		label.text = NSLocalizedString(@"No Future Events", nil);
-		
 		self.tableView.tableHeaderView = label;
 	}
 }
@@ -368,7 +282,7 @@
 	
 	if (calendar.type == EKCalendarTypeBirthday) {
 		UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(8., 11., 16., 16.)];
-		imageView.image = (TARGET_IS_IOS7_OR_LATER()) ? [UIImage imageNamed:@"birthdays-iOS7"] : [UIImage imageNamed:@"birthdays"];
+		imageView.image = [UIImage imageNamed:@"birthdays-iOS7"];
 		[headerView addSubview:imageView];
 	} else {
 		UIView * pinView = [[UIView alloc] initWithFrame:CGRectMake(15., 15., 10., 10.)];
@@ -379,15 +293,9 @@
 	
 	UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(30., 10., 160., 20.)];
 	label.backgroundColor = [UIColor clearColor];
-	if (TARGET_IS_IOS7_OR_LATER()) {
-		label.text = calendar.title.uppercaseString;
-		label.textColor = [UIColor grayColor];
-		label.font = [UIFont systemFontOfSize:14.];
-		
-	} else {
-		label.text = calendar.title;
-		label.textColor = [UIColor grayColor];
-	}
+	label.text = calendar.title.uppercaseString;
+	label.textColor = [UIColor grayColor];
+	label.font = [UIFont systemFontOfSize:14.];
 	[headerView addSubview:label];
 	
 	return headerView;

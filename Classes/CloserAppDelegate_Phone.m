@@ -36,15 +36,9 @@
     
 	application.applicationSupportsShakeToEdit = YES; // Enabled shake to undo
 	
-	if (TARGET_IS_IOS7_OR_LATER()) {
-		_window.tintColor = [UIColor darkGrayColor];
-		application.statusBarStyle = UIStatusBarStyleDefault;
-		application.statusBarHidden = YES;
-	} else {
-		/* Set the background to have a nice animation effect (black background break this effect) */
-		_window.backgroundColor = [UIColor colorWithWhite:0.13 alpha:1.];
-		application.statusBarStyle = 2 /* UIStatusBarStyleBlackTranslucent */;
-	}
+	/* Set the background to have a nice animation effect (black background break this effect) */
+	_window.backgroundColor = [UIColor colorWithWhite:0.13 alpha:1.];
+	application.statusBarStyle = 2 /* UIStatusBarStyleBlackTranslucent */;
 	
 	_window.rootViewController = _mainViewController;
 	[_window makeKeyAndVisible];

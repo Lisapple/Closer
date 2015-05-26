@@ -42,12 +42,6 @@ const NSInteger kDoneButtonItemTag = 1;
 																					 target:self
 																					 action:@selector(done:)];
 	doneButtonItem.tag = kDoneButtonItemTag;
-	
-	if (!TARGET_IS_IOS7_OR_LATER()) {
-		self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-		doneButtonItem.tintColor = [UIColor doneButtonColor];
-	}
-	
 	self.navigationItem.rightBarButtonItem = doneButtonItem;
 	
 	UIBarButtonItem * addButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
@@ -56,8 +50,7 @@ const NSInteger kDoneButtonItemTag = 1;
 	UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
 	button.frame = CGRectMake(0., 0., 23., 23.);
 	[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
-	if (TARGET_IS_IOS7_OR_LATER())
-        button.tintColor = self.view.window.tintColor;
+	button.tintColor = self.view.window.tintColor;
 	
     UIBarButtonItem * infoButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 	
@@ -65,20 +58,9 @@ const NSInteger kDoneButtonItemTag = 1;
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-	
     tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView = backgroundView;
-    }
-    
 	tableView.allowsSelectionDuringEditing = YES;
 	tableView.editing = YES;
-	
 	[self reloadData];
 	
 	[NetworkStatus startObserving];
@@ -154,9 +136,6 @@ const NSInteger kDoneButtonItemTag = 1;
 		UIBarButtonItem * saveButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
 																						 target:self
 																						 action:@selector(done:)];
-		if (!TARGET_IS_IOS7_OR_LATER())
-			saveButtonItem.tintColor = [UIColor doneButtonColor];
-		
 		[self.navigationItem setRightBarButtonItem:saveButtonItem animated:animated];
         
         forceReloadData = NO;

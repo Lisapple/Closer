@@ -44,16 +44,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 	
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		self.tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		self.tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		self.tableView.backgroundView = backgroundView;
-	}
-    
+	
 	cellTextView.text = countdown.message;
 	cellTextView.delegate = self;
 	cellTextView.scrollEnabled = NO;

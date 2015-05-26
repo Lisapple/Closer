@@ -34,5 +34,5 @@ CG_INLINE void NSFrameLog(CGRect rect)
 //#define MIN(A,B)	({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
 //#endif
 
-#define TARGET_IS_IOS7_OR_LATER() ([UIDevice currentDevice].systemVersion.floatValue >= 7.)
+#define TARGET_IS_IOS7_OR_LATER() (1)
 #define TARGET_IS_IOS8_OR_LATER   ([UIDevice currentDevice].systemVersion.floatValue >= 8.)

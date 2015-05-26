@@ -62,9 +62,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[self reload];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reload)
 												 name:CountdownDidSynchronizeNotification object:nil];
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		[self setNeedsStatusBarAppearanceUpdate];
+	[self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -256,11 +254,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 		settingsViewController.countdown = currentCountdown;
 		
 		UINavigationController * aNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
-		
-		if (!TARGET_IS_IOS7_OR_LATER()) {
-		/* Force the tintColor of the navigationBar (done on "settingsViewController" when instanced, not each time when navigationController is created) */
-		aNavigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-		}
 		aNavigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentViewController:aNavigationController animated:YES completion:NULL];
 		
@@ -390,8 +383,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 							 
 							 [self presentViewController:navigationController animated:YES completion:NULL];
 						 }
-						 if (TARGET_IS_IOS7_OR_LATER())
-							 [self setNeedsStatusBarAppearanceUpdate];
+						 [self setNeedsStatusBarAppearanceUpdate];
 						 
 						 [self reload];
 					 }];
@@ -428,9 +420,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		} else if (scrollView.contentOffset.x > (scrollView.frame.size.width * (pageControl.numberOfPages - 1))) {
 			[self setBackgroundImageOffset:CGPointMake((scrollView.frame.size.width * (pageControl.numberOfPages - 1)) - scrollView.contentOffset.x, 0.)];
 		}
-		
-		if (TARGET_IS_IOS7_OR_LATER())
-			[self setNeedsStatusBarAppearanceUpdate];
+		[self setNeedsStatusBarAppearanceUpdate];
 	}
 }
 

@@ -69,13 +69,6 @@
 	
 	_tableView.dataSource = self;
 	_tableView.delegate = self;
-	
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	}
     
 	[_hiddenTextField becomeFirstResponder];
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -212,14 +205,10 @@
 	
 	
 	if (countdowns.count > 0) {
-		UIBarButtonItem * importButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
 																			  style:UIBarButtonItemStyleDone
 																			 target:self
 																			 action:@selector(import:)];
-		if (!TARGET_IS_IOS7_OR_LATER())
-			importButtonItem.tintColor = [UIColor doneButtonColor];
-		
-		self.navigationItem.rightBarButtonItem = importButtonItem;
 	}
 	
 	[self updateUI];

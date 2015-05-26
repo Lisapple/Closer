@@ -46,29 +46,12 @@
 	self.title = NSLocalizedString(@"Exported to Website", nil);
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	
-	UIBarButtonItem * doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 																				 target:self
 																				 action:@selector(done:)];
-	if (!TARGET_IS_IOS7_OR_LATER())
-		doneButton.tintColor = [UIColor doneButtonColor];
-	
-	self.navigationItem.rightBarButtonItem = doneButton;
-	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        _tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView = backgroundView;
-	}
-    
 	[self export:nil];
 }
 

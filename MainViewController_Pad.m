@@ -88,16 +88,11 @@
 		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
 		button.frame = frame;
 		[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
-		if (TARGET_IS_IOS7_OR_LATER())
-			button.tintColor = self.view.window.tintColor;
+		button.tintColor = self.view.window.tintColor;
 		
-		if (TARGET_IS_IOS7_OR_LATER()) {
-			UIBarButtonItem * spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-			spaceItem.width = 90.;
-			self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:button], spaceItem];
-		} else {
-			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-		}
+		UIBarButtonItem * spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
+		spaceItem.width = 90.;
+		self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:button], spaceItem];
 		
 		pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
 		pageControl.pageIndicatorTintColor = [UIColor colorWithWhite:1. alpha:0.3];
@@ -319,9 +314,6 @@
 	
 	popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
 	popover.delegate = self;
-	
-	if (!TARGET_IS_IOS7_OR_LATER())
-		popover.popoverContentSize = CGSizeMake(popover.popoverContentSize.width, 480.);
 	
 	settingsViewController.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	
@@ -680,8 +672,7 @@
 {
 	[super viewDidLoad];
 	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.automaticallyAdjustsScrollViewInsets = NO;
+	self.automaticallyAdjustsScrollViewInsets = NO;
 	
 	currentSettingsPageIndex = -1;
 	
@@ -701,13 +692,6 @@
 	}
 	
 	[self updateLayoutWithOrientation:self.interfaceOrientation animated:NO];
-	
-	if (!TARGET_IS_IOS7_OR_LATER()) {
-		CGRect frame = scrollView.frame;
-		frame.origin.y -= 20.;
-		frame.size.height += 20.;
-		scrollView.frame = frame;
-	}
 	
 	scrollView.pagingEnabled = YES;
 	scrollView.delegate = self;
@@ -772,9 +756,7 @@
 											 selector:@selector(keyboardWillHide:)
 												 name:UIKeyboardWillHideNotification
 											   object:nil];
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		[self setNeedsStatusBarAppearanceUpdate];
+	[self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -793,7 +775,7 @@
 						 animations:^{
 							 CGRect frame = scrollView.frame;
 							 CGFloat height = MIN(keyboardSize.height, keyboardSize.width);// Get the real size from that the keyboard frame doesn't change depending of the rotation of the screen; the smaller value is the real height
-							 frame.origin.y = ((TARGET_IS_IOS7_OR_LATER()) ? 64. : 44.) + 40. /* 40px margin*/ - height;
+							 frame.origin.y = 64. + 40. /* 40px margin*/ - height;
 							 scrollView.frame = frame;
 						 }];
 	}
@@ -804,8 +786,7 @@
 	[UIView animateWithDuration:0.25
 					 animations:^{
 						 CGRect frame = scrollView.frame;
-						 frame.origin.y = (TARGET_IS_IOS7_OR_LATER()) ? 64. : 44.;
-						 
+						 frame.origin.y = 64.;
 						 scrollView.frame = frame;
 					 }];
 }

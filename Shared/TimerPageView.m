@@ -40,25 +40,6 @@
 		_contentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self.scrollView addSubview:_contentView];
 		
-		// On iOS 6, create a custom info button (because tint color for info button doesn't work)
-		if (!TARGET_IS_IOS7_OR_LATER()) {
-			UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-			
-			CGFloat margin = 10.;
-			CGRect rect = _infoButton.frame;
-			button.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
-									  rect.size.width + 2. * margin, rect.size.height + 2. * margin);
-			
-			button.autoresizingMask = _infoButton.autoresizingMask;
-			NSString * actionString = [_infoButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].lastObject;
-			[button addTarget:self
-					   action:NSSelectorFromString(actionString)
-			 forControlEvents:UIControlEventTouchUpInside];
-			_infoButton.hidden = YES;
-			_tintedInfoButton = button;
-			[_contentView.subviews.lastObject addSubview:_tintedInfoButton];
-		}
-		
 		[_timerView addTarget:self
 					   action:@selector(timerDidSelectAction:)
 			 forControlEvents:UIControlEventTouchUpInside];
@@ -161,27 +142,7 @@
 	_contentView.backgroundColor = [[UIColor backgroundColorForPageStyle:aStyle] colorWithAlphaComponent:0.7];
 	[self setTextColor:[UIColor textColorForPageStyle:aStyle]];
 	
-	NSString * name = nil;
-	switch (aStyle) {
-		case PageViewStyleDay:
-			name = @"button-day"; break;
-		case PageViewStyleDawn:
-			name = @"button-dawn"; break;
-		case PageViewStyleOasis:
-			name = @"button-oasis"; break;
-		case PageViewStyleSpring:
-			name = @"button-spring"; break;
-		case PageViewStyleNight:
-		default:
-			name = @"button-night"; break;
-	}
-	if (!TARGET_IS_IOS7_OR_LATER()) {
-		NSString * filename = [NSString stringWithFormat:@"info-%@-iOS6", name];
-		[_tintedInfoButton setImage:[UIImage imageNamed:filename]
-						   forState:UIControlStateNormal];
-	} else {
-		_infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
-	}
+	_infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
 	[self updateLeftButton];
 }
 
@@ -202,10 +163,7 @@
 			name = @"button-night"; break;
 	}
 	
-	NSString * filename = [NSString stringWithFormat:@"%@-%@-iOS%d",
-						   ((countdown.isPaused) ? @"reset" : @"pause"),
-						   name,
-						   (TARGET_IS_IOS7_OR_LATER()) ? 7 : 6];
+	NSString * filename = [NSString stringWithFormat:@"%@-%@-iOS7", ((countdown.isPaused) ? @"reset" : @"pause"), name];
 	[_leftButton setImage:[UIImage imageNamed:filename]
 				 forState:UIControlStateNormal];
 }
@@ -275,32 +233,19 @@
 				_descriptionLabel.text = [self formattedDescription];
 				_descriptionLabel.hidden = NO;
 				
-                if (0. < remainingSeconds && remainingSeconds <= 5.) {
-					if (TARGET_IS_IOS7_OR_LATER()) {
-						[UIView animateKeyframesWithDuration:1.
-													   delay:0.
-													 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
-												  animations:^{
-													  UIColor * backgroundColor = _contentView.backgroundColor;
-													  [UIView addKeyframeWithRelativeStartTime:0. relativeDuration:0.5 animations:^{
-														  _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }];
-													  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-														  _contentView.backgroundColor = backgroundColor; }];
-												  }
-												  completion:NULL];
-					} else {
-						UIColor * backgroundColor = _contentView.backgroundColor;
-						[UIView animateWithDuration:0.5 delay:0.
-											options:(UIViewAnimationOptionAllowUserInteraction)
-										 animations:^{ _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }
-										 completion:^(BOOL finished) {
-											 [UIView animateWithDuration:0.5 delay:0.
-																 options:(UIViewAnimationOptionAllowUserInteraction)
-															  animations:^{ _contentView.backgroundColor = backgroundColor; }
-															  completion:NULL];
-										 }];
-					}
-                }
+				if (0. < remainingSeconds && remainingSeconds <= 5.) {
+					[UIView animateKeyframesWithDuration:1.
+												   delay:0.
+												 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
+											  animations:^{
+												  UIColor * backgroundColor = _contentView.backgroundColor;
+												  [UIView addKeyframeWithRelativeStartTime:0. relativeDuration:0.5 animations:^{
+													  _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }];
+												  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+													  _contentView.backgroundColor = backgroundColor; }];
+											  }
+											  completion:NULL];
+				}
 			} else { // Timer done or paused
 				if (!isFinished) {
 					if (countdown.promptState == PromptStateEveryTimers ||

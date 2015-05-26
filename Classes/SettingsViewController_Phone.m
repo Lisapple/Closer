@@ -36,37 +36,19 @@ const NSInteger kDeleteButtonTag = 345;
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Settings", nil);
+	self.view.tintColor = [UIColor blackColor];
+	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	
-	UIBarButtonItem * doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																					 target:self
-																					 action:@selector(done:)];
-	if (!TARGET_IS_IOS7_OR_LATER())
-        doneButtonItem.tintColor = [UIColor doneButtonColor];
-	
-	self.navigationItem.rightBarButtonItem = doneButtonItem;
-	
-    UIBarButtonItem * editButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", nil)
-																		style:UIBarButtonItemStylePlain
-																	   target:self
-																	   action:@selector(editAllCountdowns:)];
-    self.navigationItem.leftBarButtonItem = editButtonItem;
-	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+																						   target:self
+																						   action:@selector(done:)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", nil)
+																			 style:UIBarButtonItemStylePlain
+																			target:self
+																			action:@selector(editAllCountdowns:)];
 	tableView.delegate = self;
 	tableView.dataSource = self;
-	
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView = backgroundView;
-	}
-    
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
 	
 	[self reloadData];
 	
@@ -315,12 +297,6 @@ const NSInteger kDeleteButtonTag = 345;
 			
 			cell.textLabel.text = NSLocalizedString(@"Delete", nil);
 			cell.textLabel.font = [UIFont systemFontOfSize:20.];
-			
-            if (!TARGET_IS_IOS7_OR_LATER()) {
-                cell.textLabel.shadowColor = [UIColor colorWithRed:0.3 green:0. blue:0. alpha:0.8];
-                cell.textLabel.shadowOffset = CGSizeMake(0., -1.);
-                cell.textLabel.font = [UIFont boldSystemFontOfSize:18.];
-            }
 		}
 	}
 	

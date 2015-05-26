@@ -28,15 +28,8 @@
     
 	self.viewController = [[MainViewController_Pad alloc] initWithNibName:@"MainViewController_Pad" bundle:nil];
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-	if (TARGET_IS_IOS7_OR_LATER()) {
-		navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:0.1 alpha:1.];
-		navigationController.navigationBar.tintColor = [UIColor whiteColor];
-	} else {
-		navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-		navigationController.navigationBar.translucent = YES;
-	}
-	
-	
+	navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:0.1 alpha:1.];
+	navigationController.navigationBar.tintColor = [UIColor whiteColor];
 	self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
 	

@@ -78,17 +78,6 @@
 	_tableView.dataSource = self;
 	_tableView.delegate = self;
 	
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		_tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		self.view.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		_tableView.backgroundView = backgroundView;
-	}
-    
 	_hiddenTextField1.keyboardType = _hiddenTextField2.keyboardType = UIKeyboardTypeNumberPad;
 	_hiddenTextField1.delegate = _hiddenTextField2.delegate = self;
 	
@@ -228,14 +217,10 @@
 	
 	
 	if (countdowns.count > 0) {
-		UIBarButtonItem * importButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
 																			  style:UIBarButtonItemStyleDone
 																			 target:self
 																			 action:@selector(import:)];
-		if (!TARGET_IS_IOS7_OR_LATER())
-			importButtonItem.tintColor = [UIColor doneButtonColor];
-		
-		self.navigationItem.rightBarButtonItem = importButtonItem;
 	}
 	
 	[self updateUI];

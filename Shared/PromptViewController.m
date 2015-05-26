@@ -22,26 +22,13 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Ask to Continue", nil);
+	self.view.tintColor = [UIColor blackColor];
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	
     _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		_tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		_tableView.backgroundView = backgroundView;
-	}
-    
     _tableView.alwaysBounceVertical = YES;
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
 	
 	cellsTitle = @[NSLocalizedString(@"Never", nil), NSLocalizedString(@"At the end of each timer", nil), NSLocalizedString(@"When all timers are finished", nil)];
 }

@@ -39,25 +39,6 @@
 		
 		UINib * nib = [UINib nibWithNibName:@"CountdownPageView" bundle:[NSBundle mainBundle]];
 		[nib instantiateWithOwner:self options:nil];
-		
-		// On iOS 6, create a custom info button (because tint color doesn't work)
-		if (!TARGET_IS_IOS7_OR_LATER()) {
-			_tintedInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			
-			CGFloat margin = 10.;
-			CGRect rect = self.infoButton.frame;
-			_tintedInfoButton.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
-												 rect.size.width + 2. * margin, rect.size.height + 2. * margin);
-			
-			_tintedInfoButton.autoresizingMask = self.infoButton.autoresizingMask;
-			NSString * actionString = [self.infoButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].lastObject;
-			[_tintedInfoButton addTarget:self
-								  action:NSSelectorFromString(actionString)
-						forControlEvents:UIControlEventTouchUpInside];
-			[_contentView.subviews.lastObject addSubview:_tintedInfoButton];
-			self.infoButton.hidden = YES;
-		}
-		
 		_contentView.frame = self.bounds;
 		_contentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self.scrollView addSubview:_contentView];
@@ -109,13 +90,6 @@
 	[nameLabel setY:y];
 	[self.infoButton setY:y];
 	
-	if (!TARGET_IS_IOS7_OR_LATER()) {
-		CGFloat margin = 10.;
-		CGRect rect = self.infoButton.frame;
-		_tintedInfoButton.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
-											 rect.size.width + 2. * margin, rect.size.height + 2. * margin);
-	}
-	
 	UIView * containerView = _contentView.subviews.lastObject;
 	CGRect frame = containerView.frame;
 	frame.origin.x = ceilf((self.frame.size.width - containerView.frame.size.width) / 2.);
@@ -137,28 +111,6 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 	
 	_contentView.backgroundColor = [[UIColor backgroundColorForPageStyle:aStyle] colorWithAlphaComponent:0.7];
 	[self setTextColor:[UIColor textColorForPageStyle:aStyle]];
-	
-	if (!TARGET_IS_IOS7_OR_LATER()) {
-		NSString * name = nil;
-		switch (aStyle) {
-			case PageViewStyleDay:
-				name = @"button-day"; break;
-			case PageViewStyleDawn:
-				name = @"button-dawn"; break;
-			case PageViewStyleOasis:
-				name = @"button-oasis"; break;
-			case PageViewStyleSpring:
-				name = @"button-spring"; break;
-			case PageViewStyleNight:
-			default:
-				name = @"button-night"; break;
-		}
-		if (name) {
-			NSString * filename = [NSString stringWithFormat:@"info-%@-iOS6", name];
-			[_tintedInfoButton setImage:[UIImage imageNamed:filename]
-							   forState:UIControlStateNormal];
-		}
-	}
 }
 
 - (void)setTextColor:(UIColor *)textColor

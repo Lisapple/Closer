@@ -25,26 +25,13 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Duration", nil);
+	self.view.tintColor = [UIColor blackColor];
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	
 	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-	_tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-	_tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView = backgroundView;
-    }
-    
 	_tableView.alwaysBounceVertical = YES;
 	_tableView.rowHeight = 82.;
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
 	
 	cellsTitle = @[NSLocalizedString(@"Days", nil), NSLocalizedString(@"Hours", nil), NSLocalizedString(@"Minutes", nil), NSLocalizedString(@"Seconds", nil)];
 	durationPickers = [[NSMutableArray alloc] initWithCapacity:4];

@@ -22,27 +22,15 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Sound", nil);
+	self.view.tintColor = [UIColor blackColor];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-	
     tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView = backgroundView;
-	}
     
 	NSString * path = [[NSBundle mainBundle] pathForResource:@"songs" ofType:@"plist"];
 	songs = [[NSMutableArray alloc] initWithContentsOfFile:path];
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
 	
 	self.songID = countdown.songID;
 	
