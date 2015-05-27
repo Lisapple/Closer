@@ -33,11 +33,10 @@
     }
     
 	application.applicationSupportsShakeToEdit = YES; // Enabled shake to undo
+	application.statusBarStyle = UIStatusBarStyleDefault;
+	application.statusBarHidden = YES;
 	
-	/* Set the background to have a nice animation effect (black background break this effect) */
-	_window.backgroundColor = [UIColor colorWithWhite:0.13 alpha:1.];
-	application.statusBarStyle = 2 /* UIStatusBarStyleBlackTranslucent */;
-	
+	_window.tintColor = [UIColor darkGrayColor];
 	_window.rootViewController = _mainViewController;
 	[_window makeKeyAndVisible];
 	
