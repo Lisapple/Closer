@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="3737"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="7701"/>
     </dependencies>
     <scenes>
         <!--Timer-->
@@ -104,6 +104,37 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="486" y="557"/>
+        </scene>
+        <!--Glance Interface Controller-->
+        <scene sceneID="5so-X5-HCr">
+            <objects>
+                <glanceController topTemplateType="body1Medium" bottomTemplateType="groupBody1Footer" id="Aqf-9n-ola" customClass="GlanceInterfaceController" customModule="Closer_WatchKit_Extension">
+                    <items>
+                        <label alignment="left" text="Closer &amp; Closer" id="OR2-bJ-PtH">
+                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        </label>
+                        <label alignment="left" text="Title" minimumScaleFactor="0.5" id="Da9-UV-tEt"/>
+                        <group alignment="left" id="C5u-oM-nrV">
+                            <items>
+                                <imageView width="74" height="74" alignment="left" id="BNc-ff-TdN"/>
+                                <timer width="56" height="74" alignment="right" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="Lsa-Rz-BmJ">
+                                    <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
+                                </timer>
+                            </items>
+                        </group>
+                        <label alignment="left" text="End date label" minimumScaleFactor="0.5" id="mET-hT-nv5"/>
+                        <label alignment="left" text="Next label" minimumScaleFactor="0.5" id="c0V-Vx-CDm"/>
+                    </items>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="mET-hT-nv5" id="LEc-w6-WlD"/>
+                        <outlet property="detailsLabel" destination="c0V-Vx-CDm" id="Yaa-NS-N1R"/>
+                        <outlet property="imageView" destination="BNc-ff-TdN" id="8hU-iI-2uC"/>
+                        <outlet property="timerLabel" destination="Lsa-Rz-BmJ" id="sg4-JA-3d0"/>
+                        <outlet property="titleLabel" destination="Da9-UV-tEt" id="K7D-au-PJL"/>
+                    </connections>
+                </glanceController>
+            </objects>
+            <point key="canvasLocation" x="51" y="43"/>
         </scene>
         <!--Interface Controller-->
         <scene sceneID="Wqd-9I-Pmg">

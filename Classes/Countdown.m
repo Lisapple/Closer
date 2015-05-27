@@ -136,17 +136,21 @@ static NSMutableArray * _countdowns = nil;
 + (void)updateUserDefaults
 {
 	if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
-		static NSUserDefaults * widgetDefaults = nil;
-		if (!widgetDefaults)
-			widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
+		static NSUserDefaults * sharedDefaults = nil;
+		if (!sharedDefaults)
+			sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
 		
 		NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
 		[includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
 			return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
 		
-		[widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
+		[sharedDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
 						   forKey:@"countdowns"];
-		[widgetDefaults synchronize];
+		
+		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+		Countdown * countdown = _countdowns[ [userDefaults integerForKey:kLastSelectedPageIndex] ];
+		[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
+		[sharedDefaults synchronize];
 	}
 }
 

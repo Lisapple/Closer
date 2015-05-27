@@ -22,8 +22,6 @@
 
 @implementation CloserAppDelegate_Phone
 
-#define kLastSelectedPageIndex @"last_selected_page_index"
-
 #pragma mark -
 #pragma mark Application lifecycle
 
