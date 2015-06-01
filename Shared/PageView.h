@@ -40,7 +40,7 @@
 
 static const NSTimeInterval kDoubleTapDelay = 0.35;
 
-typedef NS_OPTIONS(NSUInteger, PageViewStyle) {
+typedef NS_ENUM(NSUInteger, PageViewStyle) {
 	PageViewStyleNight = 0, // Default
 	PageViewStyleDay,
 	PageViewStyleDawn,

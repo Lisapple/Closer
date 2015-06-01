@@ -31,6 +31,7 @@ class InterfaceController: WKInterfaceController {
 		var contexts:[[String : AnyObject]] = []
 		
 		let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
+		let representation = userDefaults.dictionaryRepresentation()
 		if (userDefaults.arrayForKey("countdowns") != nil) {
 			let countdowns = userDefaults.arrayForKey("countdowns") as! [[String : AnyObject]]
 			for countdown in countdowns {
@@ -40,7 +41,7 @@ class InterfaceController: WKInterfaceController {
 					names.append("CountdownItem")
 				}
 				var context:[String : AnyObject] = countdown as [String : AnyObject]
-				context["style"] = ColorStyle.fromInt(countdown["style"] as! Int).toString()
+				context["style"] = countdown["style"] as! Int
 				contexts.append(context)
 			}
 		}

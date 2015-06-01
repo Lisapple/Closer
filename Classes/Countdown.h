@@ -12,12 +12,12 @@
 extern NSString * const CountdownDidSynchronizeNotification;
 extern NSString * const CountdownDidUpdateNotification;
 
-typedef NS_OPTIONS(NSUInteger, CountdownType) {
+typedef NS_ENUM(NSUInteger, CountdownType) {
 	CountdownTypeCountdown = 0,
 	CountdownTypeTimer
 };
 
-typedef NS_OPTIONS(NSUInteger, CountdownStyle) {
+typedef NS_ENUM(NSUInteger, CountdownStyle) {
 	CountdownStyleNight = 0, // Default
 	CountdownStyleDay,
 	CountdownStyleDawn,
@@ -25,7 +25,7 @@ typedef NS_OPTIONS(NSUInteger, CountdownStyle) {
 	CountdownStyleSpring,
 };
 
-typedef NS_OPTIONS(NSUInteger, PromptState) {
+typedef NS_ENUM(NSUInteger, PromptState) {
 	PromptStateNone = 0,
 	PromptStateEveryTimers,
 	PromptStateEnd

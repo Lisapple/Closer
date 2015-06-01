@@ -46,19 +46,9 @@ class TimerInterfaceController: WKInterfaceController {
 		}
 		endDate = dictContext["endDate"] as! NSDate?
 		self.paused = (endDate == nil)
-		colorStyle = ColorStyle.fromString(dictContext["style"] as! String)
+		colorStyle = ColorStyle.fromInt(dictContext["style"] as! Int)
 		identifier = dictContext["identifier"] as! String
 		
-		// @TODO: Update only when changes to display
-		/*
-		if (!paused) {
-			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateUI", userInfo: nil, repeats: true)
-				self.timer!.tolerance = 0.2
-				self.paused = false;
-			})
-		}
-		*/
 		updateUI()
 		
 		if (paused) {
@@ -260,26 +250,27 @@ class TimerInterfaceController: WKInterfaceController {
         super.willActivate()
 		updateUI()
 		
+		weak var _self_ = self
 		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidUpdateNotification", object: nil, queue: nil) {
 			(notification) -> Void in
 			
 			let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
 			var countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
 			countdowns = countdowns.filter({ (countdown: [String : AnyObject]) -> Bool in
-				return (countdown["identifier"] as? String == self.identifier)
+				return (countdown["identifier"] as? String == _self_!.identifier)
 			})
 			
 			if (countdowns.first != nil) {
 				let countdown = countdowns.first! as [String : AnyObject]
 				if (countdown["durations"] != nil) {
-					self.setTitle(countdown["name"] as? String)
-					self.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
-					self.endDate = countdown["endDate"] as? NSDate
+					_self_!.setTitle(countdown["name"] as? String)
+					_self_!.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
+					_self_!.endDate = countdown["endDate"] as? NSDate
 					let durations = countdown["durations"] as! [NSTimeInterval]
 					let index = countdown["durationIndex"] as! NSNumber
-					self.duration = durations[index.integerValue]
-					self.paused = (self.endDate == nil)
-					self.updateUI()
+					_self_!.duration = durations[index.integerValue]
+					_self_!.paused = (_self_!.endDate == nil)
+					_self_!.updateUI()
 				}
 			}
 		}

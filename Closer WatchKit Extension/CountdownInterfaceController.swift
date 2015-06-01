@@ -28,7 +28,7 @@ class CountdownInterfaceController: WKInterfaceController {
 		let dictContext:[String : AnyObject] = context as! Dictionary
 		self.setTitle(dictContext["name"] as? String)
 		endDate = dictContext["endDate"] as? NSDate
-		colorStyle = ColorStyle.fromString(dictContext["style"] as! String)
+		colorStyle = ColorStyle.fromInt(dictContext["style"] as! Int)
 		identifier = dictContext["identifier"] as! String
 		
 		updateUI()
@@ -174,21 +174,22 @@ class CountdownInterfaceController: WKInterfaceController {
 		super.willActivate()
 		updateUI()
 		
+		weak var _self_ = self
 		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidUpdateNotification", object: nil, queue: nil) {
 			(notification) -> Void in
 			
 			let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
 			var countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
 			countdowns = countdowns.filter({ (countdown: [String : AnyObject]) -> Bool in
-				return countdown["identifier"] as? String == self.identifier
+				return countdown["identifier"] as? String == _self_!.identifier
 			})
 			
 			if (countdowns.first != nil) {
 				let countdown = countdowns.first! as [String : AnyObject]
-				self.setTitle(countdown["name"] as? String)
-				self.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
-				self.endDate = countdown["endDate"] as? NSDate
-				self.updateUI()
+				_self_!.setTitle(countdown["name"] as? String)
+				_self_!.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
+				_self_!.endDate = countdown["endDate"] as? NSDate
+				_self_!.updateUI()
 			}
 		}
 		

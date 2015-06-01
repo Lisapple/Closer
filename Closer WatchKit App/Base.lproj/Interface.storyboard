@@ -117,7 +117,10 @@
                         <group alignment="left" id="C5u-oM-nrV">
                             <items>
                                 <imageView width="74" height="74" alignment="left" id="BNc-ff-TdN"/>
-                                <timer width="56" height="74" alignment="right" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="Lsa-Rz-BmJ">
+                                <separator alignment="left" id="Ols-dc-1gI">
+                                    <color key="color" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </separator>
+                                <timer height="74" alignment="left" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="Lsa-Rz-BmJ">
                                     <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
                                 </timer>
                             </items>
