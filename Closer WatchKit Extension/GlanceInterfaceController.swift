@@ -28,7 +28,7 @@ class GlanceInterfaceController: WKInterfaceController {
 		let countdowns = userDefaults.arrayForKey("countdowns") as? [[String:AnyObject]]
 		var countdown: [String:AnyObject]?
 		if (countdowns != nil) {
-			let identifier = userDefaults.stringForKey("selectedIdentifier")
+			let identifier = NSUserDefaults().stringForKey("selectedIdentifier")
 			countdown = countdowns!.filter({ (countdown: [String : AnyObject]) -> Bool in
 				return countdown["identifier"] as? String == identifier
 			}).first
@@ -38,6 +38,7 @@ class GlanceInterfaceController: WKInterfaceController {
 		}
 		
 		if (countdown != nil) {
+			endDate = countdown!["endDate"] as? NSDate
 			
 			let colorStyle: ColorStyle = ColorStyle.fromInt(countdown!["style"] as! Int)
 			let color = UIColor(colorStyle: colorStyle)
@@ -52,7 +53,6 @@ class GlanceInterfaceController: WKInterfaceController {
 				if (durations.count > 0) {
 					let duration = durations[index]
 					
-					endDate = countdown!["endDate"] as? NSDate
 					if (endDate != nil) {
 						timerLabel.setDate(endDate!)
 					} else {
@@ -81,7 +81,6 @@ class GlanceInterfaceController: WKInterfaceController {
 					detailsLabel.setHidden(durations.count < 2)
 				}
 			} else {
-				let endDate = countdown!["endDate"] as? NSDate
 				if (endDate != nil) {
 					let seconds = max(floor(endDate!.timeIntervalSinceNow), 0)
 					let progression: CGFloat = 1.0 - (CGFloat(log(seconds / (60.0 * M_E))) - 1.0) / 14.0;

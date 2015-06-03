@@ -42,8 +42,11 @@
 	
 	/* Retreive the last selected page index and selected it */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	NSInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
-	[_mainViewController showPageAtIndex:index animated:NO];
+	NSString *identifier = [userDefaults stringForKey:kLastSelectedCountdownIdentifierKey];
+	NSUInteger index = [Countdown.allCountdowns indexOfObject:[Countdown countdownWithIdentifier:identifier]];
+	if (index != NSNotFound) {
+		[_mainViewController showPageAtIndex:index animated:NO];
+	}
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification
 													  object:nil queue:NSOperationQueue.currentQueue

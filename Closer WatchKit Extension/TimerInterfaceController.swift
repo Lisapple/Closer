@@ -276,6 +276,8 @@ class TimerInterfaceController: WKInterfaceController {
 		}
 		
 		NSUserDefaults().setObject(identifier, forKey: "selectedIdentifier");
+		let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
+		userDefaults.setObject(identifier, forKey: "lastSelectedCountdownIdentifier");
     }
 
     override func didDeactivate() {

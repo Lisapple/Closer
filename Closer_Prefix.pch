@@ -30,6 +30,7 @@ CG_INLINE void NSFrameLog(CGRect rect)
 #define OrderComparisonResult(A, B) ( ((A) < (B))? NSOrderedAscending : (((A) > (B))? NSOrderedDescending : NSOrderedSame) )
 #endif
 
-#define kLastSelectedPageIndex @"last_selected_page_index"
+#define kLastSelectedPageIndex				@"last_selected_page_index"
+#define kLastSelectedCountdownIdentifierKey	@"lastSelectedCountdownIdentifier"
 
 #define TARGET_IS_IOS8_OR_LATER   ([UIDevice currentDevice].systemVersion.floatValue >= 8.)
