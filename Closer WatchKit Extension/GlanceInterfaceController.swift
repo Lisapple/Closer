@@ -28,12 +28,67 @@ class GlanceInterfaceController: WKInterfaceController {
 		let countdowns = userDefaults.arrayForKey("countdowns") as? [[String:AnyObject]]
 		var countdown: [String:AnyObject]?
 		if (countdowns != nil) {
-			let identifier = NSUserDefaults().stringForKey("selectedIdentifier")
-			countdown = countdowns!.filter({ (countdown: [String : AnyObject]) -> Bool in
-				return countdown["identifier"] as? String == identifier
-			}).first
-			if (countdown == nil) {
-				countdown = countdowns?.first
+			
+			let glanceType = userDefaults.stringForKey("glance_type")
+			if (glanceType == "closest_countdown") {
+				// Get all countdowns sorted by endDate
+				let sortedCountdowns = countdowns!.filter({ (countdown: [String : AnyObject]) -> Bool in
+					return (countdown["type"] as! UInt == 0 /* Countdown */)
+				}).sorted({ (countdown1: [String : AnyObject], countdown2: [String : AnyObject]) -> Bool in
+					let endDate1 = countdown1["endDate"] as? NSDate
+					let endDate2 = countdown2["endDate"] as? NSDate
+					if (endDate2 != nil) {
+						return (endDate1?.timeIntervalSinceDate(endDate2!) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
+					}
+					return false
+				})
+				// Set |countdown| with the closest countdown to finish (if any)
+				if (sortedCountdowns.first != nil) {
+					let closestCountdown = sortedCountdowns.first! as [String:AnyObject]
+					if (closestCountdown["endDate"] != nil) {
+						countdown = closestCountdown
+					}
+				}
+			}
+			else if (glanceType == "closest_timer") {
+				// Get all timers sorted by endDate
+				let sortedTimers = countdowns!.filter({ (timer: [String : AnyObject]) -> Bool in
+					return (timer["type"] as! UInt == 1 /* Timer */)
+				}).sorted({ (timer1: [String : AnyObject], timer2: [String : AnyObject]) -> Bool in
+					let endDate1 = timer1["endDate"] as? NSDate
+					let endDate2 = timer2["endDate"] as? NSDate
+					if (endDate2 != nil) {
+						return (endDate1?.timeIntervalSinceDate(endDate2!) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
+					}
+					return false
+				})
+				// Set |countdown| with the closest timer to finish (if any, find the timer with the shortest duration else)
+				if (sortedTimers.first != nil) {
+					let closestTimer = sortedTimers.first! as [String:AnyObject]
+					if (closestTimer["endDate"] != nil) {
+						countdown = closestTimer
+					} else {
+						let shortestTimers = sortedTimers.sorted({ (timer1: [String : AnyObject], timer2: [String : AnyObject]) -> Bool in
+							let durationIndex1 = timer1["durationIndex"] as! Int
+							let currentDuration1 = (timer1["durations"] as! [NSTimeInterval])[durationIndex1]
+							let durationIndex2 = timer2["durationIndex"] as! Int
+							let currentDuration2 = (timer2["durations"] as! [NSTimeInterval])[durationIndex2]
+							return currentDuration1 < currentDuration2 // asc order
+						})
+						if (shortestTimers.first != nil) {
+							countdown = shortestTimers.first
+						}
+					}
+				}
+			}
+			if (glanceType == "last_selected" || countdown == nil) {
+				let identifier = NSUserDefaults().stringForKey("selectedIdentifier")
+				countdown = countdowns!.filter({ (countdown: [String : AnyObject]) -> Bool in
+					return countdown["identifier"] as? String == identifier
+				}).first
+				if (countdown == nil) {
+					countdown = countdowns?.first
+				}
 			}
 		}
 		

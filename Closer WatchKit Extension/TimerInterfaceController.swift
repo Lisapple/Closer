@@ -52,7 +52,7 @@ class TimerInterfaceController: WKInterfaceController {
 		updateUI()
 		
 		if (paused) {
-			addMenuItemWithItemIcon(WKMenuItemIcon.Resume, title: "Resume", action: "resumeMenuAction")
+			addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction")
 		} else {
 			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		}
@@ -198,7 +198,7 @@ class TimerInterfaceController: WKInterfaceController {
 		}
 		
 		clearAllMenuItems()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Play, title: "Resume", action: "resumeMenuAction")
+		addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")

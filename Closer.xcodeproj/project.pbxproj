@@ -55,6 +55,7 @@
 		507AD4D213533D6200011051 /* PageThemeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507AD4D013533D6200011051 /* PageThemeViewController.xib */; };
 		507C345A1A8C0A3600C485C3 /* TimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */; };
 		508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 508578F316BC5F4900A04DAE /* UINavigationController+additions.m */; };
+		508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 508677E31B34BC9E00891644 /* Settings-Watch.bundle */; };
 		508D9C261338E2AC008C04FF /* UIView+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 508D9C251338E2AC008C04FF /* UIView+addition.m */; };
 		508F82591A816C4E006BFBB8 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
 		5092AB771509337B005D6B12 /* VCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5092AB761509337B005D6B12 /* VCalendar.m */; };
@@ -232,6 +233,7 @@
 		507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerTableViewCell.m; sourceTree = "<group>"; };
 		508578F216BC5F4900A04DAE /* UINavigationController+additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+additions.h"; sourceTree = "<group>"; };
 		508578F316BC5F4900A04DAE /* UINavigationController+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+additions.m"; sourceTree = "<group>"; };
+		508677E31B34BC9E00891644 /* Settings-Watch.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "Settings-Watch.bundle"; path = "Closer WatchKit Extension/Settings-Watch.bundle"; sourceTree = "<group>"; };
 		508D9C241338E2AC008C04FF /* UIView+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIView+addition.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		508D9C251338E2AC008C04FF /* UIView+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIView+addition.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5092AB751509337B005D6B12 /* VCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VCalendar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -420,6 +422,7 @@
 				8D1107310486CEB800E47090 /* Closer-Info.plist */,
 				50C5A32512E352590013605C /* Songs */,
 				9C00BDE819D2DA9B00E93271 /* Launch.xib */,
+				508677E31B34BC9E00891644 /* Settings-Watch.bundle */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -829,6 +832,7 @@
 				50C5A32712E352590013605C /* Songs in Resources */,
 				50C5A37412E37AD90013605C /* MessageViewControler.xib in Resources */,
 				50F3F51219880D1D00817B98 /* Images.xcassets in Resources */,
+				508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */,
 				50B208FD1307F73C00AF2320 /* EditAllCountdownViewController.xib in Resources */,
 				501412321312B51500D61066 /* CountdownPageView.xib in Resources */,
 				50FF483B131E711B0094645C /* NameViewController.xib in Resources */,
