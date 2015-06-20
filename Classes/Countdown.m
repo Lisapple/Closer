@@ -79,7 +79,6 @@ static NSMutableArray * _countdowns = nil;
 		if (![_propertyList isKindOfClass:[NSMutableArray class]])
 			[NSException raise:@"CountdownException" format:@"Countdown.plist should be an mutable array based format."];
 		
-		
 		_countdowns = [[NSMutableArray alloc] initWithCapacity:_propertyList.count];
 		for (NSDictionary * dictionary in _propertyList) {
 			
@@ -106,6 +105,7 @@ static NSMutableArray * _countdowns = nil;
 			[aCountdown activate];
 			[_countdowns addObject:aCountdown];
 		}
+		[_countdowns sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"notificationCenter" ascending:NO] ]];
 		
 		[NSNotificationCenter.defaultCenter addObserverForName:CountdownDidUpdateNotification
 														object:nil queue:NSOperationQueue.currentQueue

@@ -370,12 +370,12 @@ const NSInteger kDoneButtonItemTag = 1;
 {
     if (destinationIndexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && destinationIndexPath.section == 1)) {
         NSUInteger sourceIndex = sourceIndexPath.section * _includedCountdowns.count + sourceIndexPath.row;
-        NSUInteger destinationIndex = destinationIndexPath.section * (_includedCountdowns.count - 1) + destinationIndexPath.row;
+        NSUInteger destinationIndex = destinationIndexPath.section * _includedCountdowns.count + destinationIndexPath.row;
         Countdown * countdown = _allCountdowns[sourceIndex];
         countdown.notificationCenter = (destinationIndexPath.section == 0);
         forceReloadData = YES;
         if (sourceIndex != destinationIndex) {
-            [Countdown moveCountdownAtIndex:sourceIndex toIndex:destinationIndex];
+            [Countdown moveCountdownAtIndex:sourceIndex toIndex:MIN(destinationIndex, _allCountdowns.count - 1)];
         } else {
             [self reloadData];
         }
