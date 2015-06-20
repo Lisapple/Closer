@@ -148,7 +148,8 @@ static NSMutableArray * _countdowns = nil;
 						   forKey:@"countdowns"];
 		
 		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-		Countdown * countdown = _countdowns[ [userDefaults integerForKey:kLastSelectedPageIndex] ];
+		NSUInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
+		Countdown * countdown = _countdowns[MIN(_countdowns.count - 1, index)];
 		[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
 		[sharedDefaults synchronize];
 	}
