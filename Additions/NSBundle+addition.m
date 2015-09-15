@@ -59,7 +59,7 @@
 	if (!filename)
 		return nil;
 	
-	return [NSString stringWithFormat:@"%@/Songs/%@", [[NSBundle mainBundle] bundlePath], filename];
+	return [NSString stringWithFormat:@"%@/Songs/%@", [NSBundle mainBundle].bundlePath, filename];
 }
 
 - (NSString *)pathForDefaultSong

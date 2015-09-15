@@ -91,7 +91,6 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 + (NSArray *)styles;
 
 - (instancetype)initWithIdentifier:(NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
-- (instancetype)init UNAVAILABLE_ATTRIBUTE;
 
 #pragma mark Timer methods
 

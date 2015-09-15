@@ -11,14 +11,26 @@
 
 @implementation Countdown (LocalNotification)
 
++ (void)removeInvalidLocalNotifications
+{
+	NSArray * allLocalNotifications = [UIApplication sharedApplication].scheduledLocalNotifications;
+	for (UILocalNotification * localNotif in allLocalNotifications) {
+		NSString * anIdentifier = localNotif.userInfo[@"identifier"];
+		Countdown * countdown = [Countdown countdownWithIdentifier:anIdentifier];
+		if (!countdown || ![countdown.endDate isEqualToDate:localNotif.fireDate]) {
+			[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
+		}
+	}
+}
+
 - (UILocalNotification *)localNotification
 {
-    NSArray * allLocalNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    NSArray * allLocalNotifications = [UIApplication sharedApplication].scheduledLocalNotifications;
     for (UILocalNotification * localNotif in allLocalNotifications) {
         
-        NSString * anIdentifier = (localNotif.userInfo)[@"identifier"];
+        NSString * anIdentifier = localNotif.userInfo[@"identifier"];
         if ([anIdentifier isEqualToString:self.identifier]) {
-            return localNotif;// Return the localNotification
+            return localNotif; // Return the localNotification
         }
     }
     
@@ -31,7 +43,7 @@
     UILocalNotification * localNotif = [[UILocalNotification alloc] init];
     
     localNotif.timeZone = [NSTimeZone localTimeZone];
-    localNotif.userInfo = @{@"identifier": self.identifier};
+    localNotif.userInfo = @{ @"identifier": self.identifier };
     
     return localNotif;
 }
@@ -115,7 +127,6 @@
 	countdown.name = event.title;
 	countdown.endDate = event.startDate;
 	countdown.message = event.notes;
-	
 	return countdown;
 }
 

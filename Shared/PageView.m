@@ -12,7 +12,7 @@
 
 @implementation _DeleteButton
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
 		_titleLabel = [[UILabel alloc] initWithFrame:self.bounds];
@@ -42,7 +42,7 @@
 @synthesize countdown;
 @synthesize position;
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
 		
@@ -89,6 +89,9 @@
 {
 	/* Subsclasses must implement it */
 }
+
+- (void)viewWillShow:(BOOL)animated { }
+- (void)viewDidHide:(BOOL)animated { }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {

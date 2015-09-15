@@ -14,23 +14,12 @@
 	
 @end
 
+
 @interface MessageViewControler : UITableViewController <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
-{
-	IBOutlet MyTextView * cellTextView;
-	
-	UITableViewCell * messageCell;
-	
-	Countdown * countdown;
-	
-	NSUndoManager * undoManager;
-}
 
-@property (nonatomic, strong) IBOutlet UITextView * cellTextView;
-
+@property (nonatomic, strong) IBOutlet MyTextView * cellTextView;
 @property (nonatomic, strong) UITableViewCell * messageCell;
-
 @property (nonatomic, strong) Countdown * countdown;
-
 @property (nonatomic, strong) NSUndoManager * undoManager;
 
 - (IBAction)clear:(id)sender;

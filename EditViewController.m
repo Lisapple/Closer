@@ -145,7 +145,7 @@
             cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
         }
     } else {
-        cell.detailTextLabel.text = [countdown.endDate description];
+        cell.detailTextLabel.text = countdown.endDate.description;
     }
     
     return cell;

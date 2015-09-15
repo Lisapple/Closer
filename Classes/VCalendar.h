@@ -23,7 +23,7 @@
 
 + (VEvent *)eventFromCountdown:(Countdown *)countdown;
 
-- (id)initWithUUID:(NSString *)seed;
+- (instancetype)initWithUUID:(NSString *)seed NS_DESIGNATED_INITIALIZER;
 
 @end
 
@@ -34,7 +34,7 @@
 	NSMutableArray * events;
 }
 
-- (id)initWithVersion:(NSString *)versionString;
+- (instancetype)initWithVersion:(NSString *)versionString NS_DESIGNATED_INITIALIZER;
 
 - (void)addEvent:(VEvent *)event;
 - (void)removeEvent:(VEvent *)event;

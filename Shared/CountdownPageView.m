@@ -23,6 +23,7 @@
 @interface CountdownPageView ()
 {
 	CGPoint _location;
+	BOOL idleTimerDisabled;
 }
 @end
 
@@ -33,7 +34,7 @@
 @synthesize daysDescriptionLabel, hoursDescriptionLabel, minutesDescriptionLabel, secondsDescriptionLabel;
 @synthesize nameLabel;
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
 		
@@ -42,6 +43,8 @@
 		_contentView.frame = self.bounds;
 		_contentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self.scrollView addSubview:_contentView];
+		
+		idleTimerDisabled = NO;
 	}
 	
 	return self;
@@ -52,7 +55,7 @@
 	[super layoutSubviews];
 	
 	NSDate * date = countdown.endDate;
-	NSTimeInterval timeInterval = [date timeIntervalSinceNow];
+	NSTimeInterval timeInterval = date.timeIntervalSinceNow;
 	timeInterval = (timeInterval > 0.) ? timeInterval : 0.;// Clip timeInterval to zero
 	
 	int days = (int)(timeInterval / (24. * 60. * 60.));
@@ -132,12 +135,32 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 	self.style = countdown.style;
 }
 
+- (void)viewWillShow:(BOOL)animated
+{
+	[super viewWillShow:animated];
+	
+	if (ABS(countdown.endDate.timeIntervalSinceNow) < 3. * 60. && !idleTimerDisabled) {
+		[[UIApplication sharedApplication] disableIdleTimer];
+		idleTimerDisabled = YES;
+	}
+}
+
+- (void)viewDidHide:(BOOL)animated
+{
+	[super viewDidHide:animated];
+	
+	if (idleTimerDisabled) {
+		[[UIApplication sharedApplication] enableIdleTimer];
+		idleTimerDisabled = NO;
+	}
+}
+
 - (void)update
 {
 	[self setNeedsLayout];
 	
 	NSDate * date = countdown.endDate;
-	NSTimeInterval timeInterval = [date timeIntervalSinceNow];
+	NSTimeInterval timeInterval = date.timeIntervalSinceNow;
 	timeInterval = (timeInterval > 0.)? timeInterval: 0.;// Clip timeInterval to zero
 	
 	NSUInteger days = timeInterval / (24. * 60. * 60.);

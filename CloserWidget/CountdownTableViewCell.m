@@ -55,13 +55,13 @@
 
 - (NSString *)endDateDescription
 {
-    long seconds = [_endDate timeIntervalSinceNow];
+    long seconds = _endDate.timeIntervalSinceNow;
     if (seconds <= 0)
         return NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil);
     
     long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
     long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
-    long minutes = seconds / 60; seconds -= minutes * 60;
+    long minutes = seconds / 60; //seconds -= minutes * 60;
     
     NSInteger numberOfComponents = (days > 0) + (hours > 0) + (minutes > 0);
     NSMutableArray * components = [[NSMutableArray alloc] initWithCapacity:4];
@@ -86,7 +86,7 @@
                                                                    attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithWhite:1. alpha:0.2] }]];
     _label.attributedText = string;
     
-    double seconds = [_endDate timeIntervalSinceNow];
+    double seconds = _endDate.timeIntervalSinceNow;
     CGRect frame = _progressionView.frame;
     if (seconds > 0.) {
 		CGFloat progression = 1. - ((double)log(seconds / (60. * M_E)) - 1.) / 14.;

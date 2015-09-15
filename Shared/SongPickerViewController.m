@@ -22,12 +22,9 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Sound", nil);
-	self.view.tintColor = [UIColor blackColor];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     
 	NSString * path = [[NSBundle mainBundle] pathForResource:@"songs" ofType:@"plist"];
 	songs = [[NSMutableArray alloc] initWithContentsOfFile:path];

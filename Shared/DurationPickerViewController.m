@@ -25,11 +25,9 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Duration", nil);
-	self.view.tintColor = [UIColor blackColor];
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	_tableView.alwaysBounceVertical = YES;
 	_tableView.rowHeight = 82.;
 	

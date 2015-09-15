@@ -75,4 +75,7 @@ typedef NS_ENUM(NSUInteger, PageViewStyle) {
 - (void)hideDeleteConfirmation; // Always with an animation
 - (void)hideDeleteConfirmationWithAnimation:(BOOL)animated;
 
+- (void)viewWillShow:(BOOL)animated;
+- (void)viewDidHide:(BOOL)animated;
+
 @end

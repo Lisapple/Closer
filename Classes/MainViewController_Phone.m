@@ -52,7 +52,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	scrollView.delegate = self;
     scrollView.clipsToBounds = YES;
 	
-	pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight;// Add flexible height (Unavailable from IB)
+	pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight; // Add flexible height (Unavailable from IB)
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -190,7 +190,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	// Re-order pages
 	int index = 0;
 	for (PageView * page in pages) {
-		CGFloat y = (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) ? (scrollView.frame.size.height - 423.) / 2. : 0.;// The height of the background image of the pageView is 423pt
+		CGFloat y = (scrollView.frame.size.height - 423.) / 2.; // The height of the background image of the pageView is 423pt
 		CGRect frame = CGRectMake(index * scrollView.frame.size.width, (int)y, scrollView.frame.size.width, scrollView.frame.size.height);
 		page.frame = frame;
 		
@@ -214,6 +214,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (void)removePageAtIndex:(NSInteger)index
 {
 	PageView * pageView = pages[index];
+	[pageView viewDidHide:NO];
 	[pageView removeFromSuperview];
 	[pages removeObjectAtIndex:index];
 }
@@ -221,6 +222,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (void)removeAllPages
 {
 	for (PageView * page in pages) {
+		[page viewDidHide:NO];
 		[page removeFromSuperview];
 	}
 	
@@ -236,6 +238,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		pageControl.currentPage = pageIndex;
 		CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageIndex, 0.);
 		[scrollView setContentOffset:contentOffset animated:animated];
+		[pages[pageIndex] viewWillShow:animated];
 	}
 }
 
@@ -255,7 +258,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 		
 		UINavigationController * aNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
 		aNavigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentViewController:aNavigationController animated:YES completion:NULL];
+		[self presentViewController:aNavigationController animated:YES completion:^{
+			[pages[pageIndex] viewDidHide:animated]; }];
 		
 		[self stopUpdateTimeLabels];
 	}
@@ -266,11 +270,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (void)startUpdateTimeLabels
 {
 	[updateTimeLabelTimer invalidate];
-	self.updateTimeLabelTimer = [NSTimer scheduledTimerWithTimeInterval:1.
-																 target:self
-															   selector:@selector(updateTimeLabels)
-															   userInfo:nil
-																repeats:YES];
+	self.updateTimeLabelTimer = [NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(updateTimeLabels)
+															   userInfo:nil repeats:YES];
 	[self updateTimeLabels];
 }
 
@@ -310,6 +311,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		pageControl.currentPage = pageIndex;
 		CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageIndex, 0.);
 		[scrollView setContentOffset:contentOffset animated:NO];
+		[pages[pageIndex] viewWillShow:YES];
 		
 		[self startUpdateTimeLabels];
 		

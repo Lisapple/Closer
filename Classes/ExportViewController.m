@@ -101,15 +101,18 @@
 		title = [NSString  stringWithFormat:NSLocalizedString(@"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?", nil), [UIDevice currentDevice].localizedModel];
 	}
 	
-	UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:title
-															  delegate:self
-													 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-												destructiveButtonTitle:nil
-													 otherButtonTitles:NSLocalizedString(@"Export as iCalendar", nil), NSLocalizedString(@"Export to calendar", nil),
-								   (isConnected)? NSLocalizedString(@"Export to website", nil) : nil, nil, nil];
-	
-	actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-	[actionSheet showInView:self.view];// @TODO: If "[NetworkStatus isConnected]" change, remove the actionSheet from screen
+	UIAlertController * alert = [UIAlertController alertControllerWithTitle:title
+																	message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export as iCalendar", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+		[self exportiCalFile]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export to calendar", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+		[self exportToCalendar]; }]];
+	if (isConnected) {
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export to website", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+			[self exportToWebsite]; }]];
+	}
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
+	[self presentViewController:alert animated:YES completion:NULL];
 }
 
 - (IBAction)cancel:(id)sender
@@ -139,7 +142,7 @@
 	UITableViewCell * cell = nil;
 	
 	Countdown * countdown = countdowns[indexPath.row];
-	if ([countdown.endDate timeIntervalSinceNow] > 0. || countdown.type == CountdownTypeTimer) { // Disable finished countdowns and timers
+	if (countdown.endDate.timeIntervalSinceNow > 0. || countdown.type == CountdownTypeTimer) { // Disable finished countdowns and timers
 		
 		static NSString * cellIdentifier = @"CellID";
 		cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -151,7 +154,7 @@
 		cell.textLabel.text = countdown.name;
 		
 		cell.textLabel.textColor = [UIColor blackColor];
-		cell.detailTextLabel.text = [countdown.endDate description];
+		cell.detailTextLabel.text = countdown.endDate.description;
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		
 	} else {
@@ -182,7 +185,7 @@
 {
 	Countdown * countdown = countdowns[indexPath.row];
 	
-	if ([countdown.endDate timeIntervalSinceNow] > 0.) {// Change check state only for valid (not finished) countdowns
+	if (countdown.endDate.timeIntervalSinceNow > 0.) {// Change check state only for valid (not finished) countdowns
 		UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
 		if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
 			
@@ -203,31 +206,6 @@
 	}
 }
 
-#pragma mark - Action sheet delegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	switch (buttonIndex) {
-		case 0: {// Export to iCalendar
-			[self exportiCalFile];
-		}
-			break;
-		case 1: {// Export to iOS' calendar
-			[self exportToCalendar];
-		}
-			break;
-		case 2: {// Export to closer website OR Cancel
-			/* *Four* buttons means that we have "Export to website", else means that is the cancel button */
-			if (actionSheet.numberOfButtons == 4)
-				[self exportToWebsite];
-		}
-			break;
-		default:// Cancel
-			break;
-	}
-	
-}
-
 - (void)exportiCalFile
 {
 	if (selectedCountdowns.count  > 0) {// Create export file only when we've got one or many selected countdowns
@@ -243,7 +221,7 @@
 		}
 		
 		const NSString * extension = @"ics";
-		NSString * documentFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+		NSString * documentFolderPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
 		NSString * path = [NSString stringWithFormat:@"%@/%@.%@", documentFolderPath, filename, extension];// ex: "~/Documents/Countdown 1 and 2 more.ics"
 		
 		if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {// If file already exist at path, try to find a free filename
@@ -267,12 +245,12 @@
 		[calendar writeToFile:path atomically:YES];
 		
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"You can retreive the export file as \"%@.%@\" into iTunes Sharing.", nil), filename, extension];
-		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Export Succeed!", nil)
-															 message:message
-															delegate:nil
-												   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-												   otherButtonTitles:nil];
-		[alertView show];
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Export Succeed!", nil)
+																		message:message
+																 preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+		[self presentViewController:alert animated:YES completion:nil];
 	}
 }
 
@@ -280,7 +258,7 @@
 {
 	BOOL success = YES;
 	EKEventStore * eventStore = [[EKEventStore alloc] init];
-	EKCalendar * defaultCalendar = [eventStore defaultCalendarForNewEvents];// Choose default calendar to put events
+	EKCalendar * defaultCalendar = eventStore.defaultCalendarForNewEvents;// Choose default calendar to put events
 	for (Countdown * countdown in selectedCountdowns) {
 		
 		EKEvent * event = [EKEvent eventWithEventStore:eventStore];
@@ -294,19 +272,19 @@
 		NSError * error = nil;
 		BOOL succeed = [eventStore saveEvent:event span:EKSpanThisEvent error:&error];
 		if (!succeed && error) {
-			NSLog(@"saveEvent:span:error: %@", [error localizedDescription]); // @TODO: Show errors
+			NSLog(@"saveEvent:span:error: %@", error.localizedDescription); // @TODO: Show errors
 			success = NO;
 		}
 	}
 	
 	if (success) {
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"All countdowns have been added as event in the calendar app into the calendar named \"%@\".", nil), defaultCalendar.title];
-		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Export Succeed!", nil)
-															 message:message
-															delegate:nil
-												   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-												   otherButtonTitles:nil];
-		[alertView show];
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Export Succeed!", nil)
+																		message:message
+																 preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+		[self presentViewController:alert animated:YES completion:nil];
 	}
 }
 

@@ -33,7 +33,7 @@
 	return helper;
 }
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init])) {
 		_link = [[UIScreen mainScreen] displayLinkWithTarget:self

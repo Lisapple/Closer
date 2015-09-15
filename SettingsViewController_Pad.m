@@ -114,8 +114,8 @@
 					break;
 				case 1: { // Date & Time
 					NSDate * date = countdown.endDate;
-					if (date && ([date timeIntervalSinceNow] > 0.)) {
-						cell.detailTextLabel.text = [date description];
+					if (date && (date.timeIntervalSinceNow > 0.)) {
+						cell.detailTextLabel.text = date.description;
 						cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 					} else {
 						cell.detailTextLabel.text = @"!";

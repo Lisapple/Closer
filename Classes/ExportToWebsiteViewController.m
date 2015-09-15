@@ -30,7 +30,7 @@
 
 @synthesize activityIndicator = _activityIndicator;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
 	NSString * nibName = (TARGET_IS_IPAD())? @"ExportToWebsiteViewController_Pad" : @"ExportToWebsiteViewController_Phone";
 	if ((self = [super initWithNibName:nibName bundle:[NSBundle mainBundle]])) {
@@ -113,8 +113,8 @@
 	[data appendData:[@"json_data=" dataUsingEncoding:NSUTF8StringEncoding]];
 	[data appendData:JSONData];
 	
-	[request setHTTPBody:data];
-	[request setHTTPMethod:@"POST"];
+	request.HTTPBody = data;
+	request.HTTPMethod = @"POST";
 	
 	NSURLConnection * connection = [NSURLConnection connectionWithRequest:request delegate:self];
 	[connection start];
@@ -124,12 +124,12 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error!", nil)
-														 message:error.localizedDescription
-														delegate:nil
-											   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-											   otherButtonTitles:nil];
-	[alertView show];
+	UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
+																	message:error.localizedDescription
+															 preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+	[self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data

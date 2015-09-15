@@ -10,7 +10,7 @@
 
 @class SettingsViewController_Phone;
 
-@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UIActionSheetDelegate>
+@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 {
 	IBOutlet UITableView * tableView;
 }

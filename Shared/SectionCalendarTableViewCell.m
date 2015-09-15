@@ -12,7 +12,7 @@
 
 @synthesize CGColor;
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
 		
@@ -96,7 +96,7 @@
 
 @synthesize CGColor;
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         

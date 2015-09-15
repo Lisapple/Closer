@@ -14,6 +14,8 @@
 
 #import "NetworkStatus.h"
 
+#import "NSDate+addition.h"
+
 @interface EditAllCountdownViewController ()
 {
     BOOL forceReloadData;
@@ -30,32 +32,15 @@
 
 @synthesize settingsViewController;
 
-const NSInteger kDoneButtonItemTag = 1;
-
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"All Countdowns", nil);
-	
-	UIBarButtonItem * doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																					 target:self
-																					 action:@selector(done:)];
-	doneButtonItem.tag = kDoneButtonItemTag;
-	self.navigationItem.rightBarButtonItem = doneButtonItem;
-	
-	UIBarButtonItem * addButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-																					target:self
-																					action:@selector(add:)];
-	UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
-	button.frame = CGRectMake(0., 0., 23., 23.);
-	[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
-	button.tintColor = self.view.window.tintColor;
-	
-    UIBarButtonItem * infoButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	
-	self.navigationItem.leftBarButtonItems = @[addButtonItem, infoButtonItem];
-	
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+																						   target:self action:@selector(done:)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+																						  target:self action:@selector(add:)];
 	tableView.delegate = self;
 	tableView.dataSource = self;
     tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
@@ -64,8 +49,7 @@ const NSInteger kDoneButtonItemTag = 1;
 	[self reloadData];
 	
 	[NetworkStatus startObserving];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(networkStatusDidChange:)
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusDidChange:)
 												 name:kNetworkStatusDidChangeNotification
 											   object:nil];
 }
@@ -81,11 +65,9 @@ const NSInteger kDoneButtonItemTag = 1;
 {
 	[super viewDidAppear:animated];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(reloadData)
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData)
 												 name:CountdownDidSynchronizeNotification
 											   object:nil]; // @TODO: don't reload on changes
-	
 	[self reloadData];
 }
 
@@ -100,21 +82,20 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (IBAction)moreInfo:(id)sender
 {
-	NSDictionary * infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © 2015, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"]]; // @TODO: generate the year
+	NSDictionary * infoDictionary = [NSBundle mainBundle].infoDictionary;
+	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © %lu, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"], [NSDate date].year];
 	
-	UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:title
-															  delegate:self
-													 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-												destructiveButtonTitle:nil
-													 otherButtonTitles:
-								   NSLocalizedString(@"Show Countdowns Online", nil),
-								   NSLocalizedString(@"Feedback & Support", nil),
-								   NSLocalizedString(@"Go to my website", nil),
-								   NSLocalizedString(@"See all my applications", nil), nil];
-	
-	actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-	[actionSheet showInView:self.view];
+	UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Show Countdowns Online", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com/"]]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Feedback & Support", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Go to my website", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"See all my applications", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://applestore.com/lisacintosh"]]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
+	[self presentViewController:alert animated:YES completion:NULL];
 }
 
 - (void)reloadData
@@ -131,13 +112,6 @@ const NSInteger kDoneButtonItemTag = 1;
             return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
         
 		[tableView reloadData];
-		
-		BOOL animated = (self.navigationItem.rightBarButtonItem.tag == kDoneButtonItemTag);
-		UIBarButtonItem * saveButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-																						 target:self
-																						 action:@selector(done:)];
-		[self.navigationItem setRightBarButtonItem:saveButtonItem animated:animated];
-        
         forceReloadData = NO;
 	}
 	
@@ -161,7 +135,6 @@ const NSInteger kDoneButtonItemTag = 1;
 - (NSString *)proposedNameForType:(CountdownType)type
 {
 	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
-	
     NSArray * names = [_allCountdowns valueForKeyPath:@"name"];
 	int index = 1;
 	while (1) {
@@ -178,20 +151,15 @@ const NSInteger kDoneButtonItemTag = 1;
 - (IBAction)add:(id)sender
 {
 	if (_allCountdowns.count > 18) {// The limit of countdown for the pageControl view is 18
-		UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"You must delete at least one countdown to add a new countdown.", nil)
-																  delegate:nil
-														 cancelButtonTitle:NSLocalizedString(@"OK", nil)
-													destructiveButtonTitle:nil
-														 otherButtonTitles:nil];
-		
-		actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-		[actionSheet showInView:self.view];
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"You must delete at least one countdown to add a new countdown.", nil)
+																		message:nil preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:NULL]];
+		[self presentViewController:alert animated:YES completion:NULL];
 		
 	} else {
-		
 		Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
 		aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
-		[Countdown addCountdown:aCountDown];
+		[self insertCountdown:aCountDown atIndex:0];
 		/* Note: the tableView is automatically reloaded */
 		// @TODO: animated the row insertion
 		
@@ -211,6 +179,22 @@ const NSInteger kDoneButtonItemTag = 1;
 	// @TODO: animated the row insertion
 }
 
+- (void)moveCountdownAtIndex:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+	NSUInteger sourceIndex = indexPath.section * _includedCountdowns.count + indexPath.row;
+	NSUInteger destinationIndex = toIndexPath.section * _includedCountdowns.count + toIndexPath.row;
+	Countdown * countdown = _allCountdowns[sourceIndex];
+	countdown.notificationCenter = (toIndexPath.section == 0);
+	forceReloadData = YES;
+	if (sourceIndex != destinationIndex) {
+		[Countdown moveCountdownAtIndex:sourceIndex toIndex:MIN(destinationIndex, _allCountdowns.count - 1)];
+		[[self.undoManager prepareWithInvocationTarget:self] moveCountdownAtIndex:toIndexPath toIndexPath:indexPath];
+		[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
+	} else {
+		[self reloadData];
+	}
+}
+
 - (void)removeCountdown:(Countdown *)countdown index:(NSInteger)index
 {
 	[[self.undoManager prepareWithInvocationTarget:self] insertCountdown:countdown atIndex:index];
@@ -226,40 +210,49 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (TARGET_IS_IOS8_OR_LATER)
-        return 3; // "Include in notification center", "Do not include" and Import/Export
-    
-	return 2; // One section for countdowns and one for Import/Export
+	return 4; // "Include in notification center", "Do not include", Import and Export
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (TARGET_IS_IOS8_OR_LATER) {
-        if /**/ (section == 0)
-            return NSLocalizedString(@"Include in notification center", nil);
-        else if (section == 1)
-            return NSLocalizedString(@"Do not include", nil);
-    }
-    return nil;
+	if /**/ (section == 0)
+		return NSLocalizedString(@"Include in notification center", nil);
+	else if (section == 1)
+		return NSLocalizedString(@"Do not include", nil);
+	
+	return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+	return (section == 3) ? 44. : 0.;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+	if (section == 3) {
+		UIView * contentView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., self.view.frame.size.width, 44.)];
+		//contentView.backgroundColor = [UIColor clearColor];
+		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
+		button.frame = CGRectMake(self.view.frame.size.width - 15. - 23., 44. - 23., 23., 23.);
+		[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
+		button.tintColor = self.view.window.tintColor;
+		[contentView addSubview:button];
+		return contentView;
+	}
+	return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (TARGET_IS_IOS8_OR_LATER) {
-        if /**/ (section == 0)
-            return self.includedCountdowns.count;
-        else if (section == 1)
-            return self.notIncludedCountdowns.count;
-        else if (section == 2)
-            return ([NetworkStatus isConnected] == YES)? 3: 2; // Remove the "Import with Passwords" if no internet connection
-        
-        return 0;
-    }
-    
-	if (section == 0)
-		return _allCountdowns.count;
+	if /**/ (section == 0)
+		return self.includedCountdowns.count;
 	else if (section == 1)
-		return ([NetworkStatus isConnected] == YES)? 3: 2; // Remove the "Import with Passwords" if no internet connection
+		return self.notIncludedCountdowns.count;
+	else if (section == 2) // Import
+		return 1 + ([NetworkStatus isConnected] == YES); // Remove the "Import with Passwords" if no internet connection
+	else if (section == 3) // Export
+		return 1;
 	
 	return 0;
 }
@@ -268,7 +261,7 @@ const NSInteger kDoneButtonItemTag = 1;
 {
 	UITableViewCell * cell = nil;
 	
-	if (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1)) {
+	if (indexPath.section <= 1) {
 		static NSString * countdownCellIdentifier = @"countdownCellIdentifier";
 		cell = [tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
 		
@@ -277,10 +270,7 @@ const NSInteger kDoneButtonItemTag = 1;
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		}
 		
-		Countdown * countdown = _allCountdowns[indexPath.row];
-        if (TARGET_IS_IOS8_OR_LATER) {
-            countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-        }
+		Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 		cell.textLabel.text = countdown.name;
 		
 		if (countdown.type == CountdownTypeTimer) {
@@ -292,33 +282,25 @@ const NSInteger kDoneButtonItemTag = 1;
 				cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
 			}
 		} else {
-			cell.detailTextLabel.text = [countdown.endDate description];
+			cell.detailTextLabel.text = (countdown.endDate).description;
 		}
 		
 	} else {
 		static NSString * shareCellIdentifier = @"shareCellIdentifier";
 		cell = [tableView dequeueReusableCellWithIdentifier:shareCellIdentifier];
-		
 		if (cell == nil) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:shareCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 			cell.textLabel.textAlignment = NSTextAlignmentCenter;
 		}
-		
-		switch (indexPath.row) {
-			case 0:
+		if (indexPath.section == 2) { // Import
+			if (indexPath.row == 0) {
 				cell.textLabel.text = NSLocalizedString(@"Import from Calendar", nil);
-				break;
-			case 1: {
-				BOOL isConnected = [NetworkStatus isConnected];
-				if (isConnected) {
-					cell.textLabel.text = NSLocalizedString(@"Import with Passwords", nil);
-					break;
-				}
+			} else { // Shown only if connected to network
+				cell.textLabel.text = NSLocalizedString(@"Import with Passwords", nil);
 			}
-			default:
-				cell.textLabel.text = NSLocalizedString(@"Export Countdowns...", nil);
-				break;
+		} else { // Export
+			cell.textLabel.text = NSLocalizedString(@"Export Countdowns...", nil);
 		}
 	}
 	
@@ -327,12 +309,12 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1));
+	return (indexPath.section <= 1);
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1))
+	if (indexPath.section <= 1)
 		return UITableViewCellEditingStyleDelete;
 	
 	return UITableViewCellEditingStyleNone;
@@ -341,11 +323,7 @@ const NSInteger kDoneButtonItemTag = 1;
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		
-        Countdown * countdown = _allCountdowns[indexPath.row];
-        if (TARGET_IS_IOS8_OR_LATER) {
-            countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-        }
+        Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 		[self removeCountdown:countdown index:index];
 		// @TODO: animated the row deletion
 	}
@@ -353,14 +331,12 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1));
+	return (indexPath.section <= 1);
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {
-    if /**/ (!TARGET_IS_IOS8_OR_LATER && proposedDestinationIndexPath.section > 0)
-        return [NSIndexPath indexPathForRow:(_allCountdowns.count - 1) inSection:0];
-	else if (TARGET_IS_IOS8_OR_LATER && proposedDestinationIndexPath.section > 1)
+	if (proposedDestinationIndexPath.section > 1)
 		return [NSIndexPath indexPathForRow:(_notIncludedCountdowns.count - 1) inSection:1];
 	
 	return proposedDestinationIndexPath;
@@ -368,19 +344,8 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (void)tableView:(UITableView *)aTableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    if (destinationIndexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && destinationIndexPath.section == 1)) {
-        NSUInteger sourceIndex = sourceIndexPath.section * _includedCountdowns.count + sourceIndexPath.row;
-        NSUInteger destinationIndex = destinationIndexPath.section * _includedCountdowns.count + destinationIndexPath.row;
-        Countdown * countdown = _allCountdowns[sourceIndex];
-        countdown.notificationCenter = (destinationIndexPath.section == 0);
-        forceReloadData = YES;
-        if (sourceIndex != destinationIndex) {
-            [Countdown moveCountdownAtIndex:sourceIndex toIndex:MIN(destinationIndex, _allCountdowns.count - 1)];
-        } else {
-            [self reloadData];
-        }
-        // @TODO: animated the row movement
-    }
+	if (destinationIndexPath.section <= 1)
+		[self moveCountdownAtIndex:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
 #pragma mark -
@@ -388,57 +353,52 @@ const NSInteger kDoneButtonItemTag = 1;
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0 || (TARGET_IS_IOS8_OR_LATER && indexPath.section == 1)) {
-        
-        Countdown * countdown = _allCountdowns[indexPath.row];
-        if (TARGET_IS_IOS8_OR_LATER) {
-            countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-        }
+    if (indexPath.section <= 1) {
+        Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
         settingsViewController.countdown = countdown;
         [Countdown synchronize];
         [aTableView deselectRowAtIndexPath:indexPath animated:YES];
         [self dismissViewControllerAnimated:YES completion:NULL];
         
-    } else {
-		switch (indexPath.row) {// Import From Calendar
-			case 0: {
-				BOOL granted = YES;
-				if ([EKEventStore instancesRespondToSelector:@selector(requestAccessToEntityType:completion:)]) {
-					EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
-					granted = (status == EKAuthorizationStatusAuthorized || status == EKAuthorizationStatusNotDetermined);
-				}
-				
-				if (granted) {
-					ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
-					[self.navigationController pushViewController:importFromCalendarViewController animated:YES];
-				} else {
-					NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
-					UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Access Denied!", nil)
-																		 message:message
-																		delegate:nil
-															   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-															   otherButtonTitles:nil];
-					[alertView show];
-				}
-			}
-				break;
-			case 1: {
-				NSInteger numberOfRows = [tableView numberOfRowsInSection:1];
-				/* 3 rows means that the "Import with Passwords" is active, else this cell is "Export..." */
-				if (numberOfRows == 3) {// Import with Passwords
+    } else if (indexPath.section == 2) { // Import
+			switch (indexPath.row) { // Import From Calendar
+				case 0: {
+					BOOL granted = YES;
+					if ([EKEventStore instancesRespondToSelector:@selector(requestAccessToEntityType:completion:)]) {
+						EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+						granted = (status == EKAuthorizationStatusAuthorized || status == EKAuthorizationStatusNotDetermined);
+					}
 					
+					if (granted) {
+						ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
+						[self.navigationController pushViewController:importFromCalendarViewController animated:YES];
+					} else {
+						NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
+						UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Access Denied!", nil)
+																						message:message
+																				 preferredStyle:UIAlertControllerStyleAlert];
+						[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+							[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+						[self presentViewController:alert animated:YES completion:nil];
+					}
+				}
+					break;
+				case 1: { // Import with Passwords
 					/* Show an alertView to introduce the import from passwords (if not already done) */
 					NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 					BOOL showsIntroductionMessage = !([userDefaults boolForKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"]);
 					if (showsIntroductionMessage) {
-						
 						NSString * message = NSLocalizedString(@"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE", nil);
-						UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Import with Passwords", nil)
-																			 message:message
-																			delegate:self
-																   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-																   otherButtonTitles:nil];
-						[alertView show];
+						UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
+																						message:message
+																				 preferredStyle:UIAlertControllerStyleAlert];
+						[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+							[alert dismissViewControllerAnimated:YES completion:^{
+								ImportFromWebsiteViewController_Phone * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Phone alloc] init];
+								UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
+								[self presentViewController:navigationController animated:YES completion:NULL];
+							}]; }]];
+						[self presentViewController:alert animated:YES completion:nil];
 						
 						[userDefaults setBool:YES forKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"];
 					} else {
@@ -446,55 +406,16 @@ const NSInteger kDoneButtonItemTag = 1;
 						UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
 						[self presentViewController:navigationController animated:YES completion:NULL];
 					}
-					
 					break;
-				}// else, for "Export...", don't break for executing the default case
+				}
+				default: break;
 			}
-			default: {
-				ExportViewController * exportViewController = [[ExportViewController alloc] init];
-				[self.navigationController pushViewController:exportViewController animated:YES];
-			}
-				break;
-		}
+	} else { // Export
+		ExportViewController * exportViewController = [[ExportViewController alloc] init];
+		[self.navigationController pushViewController:exportViewController animated:YES];
+	}
 		
-		[aTableView deselectRowAtIndexPath:indexPath animated:YES];
-	}
-}
-
-#pragma mark - UIActionSheet Delegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	switch (buttonIndex) {
-		case 0:// Show Countdowns Online
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com/index.php"]];
-			break;
-		case 1:// Feedback & Support
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]];
-			break;
-		case 2:// Go to my website
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]];
-			break;
-		case 3: {// See all my applications
-			/* Link via iTunes -> AppStore, I haven't found better! */
-			NSString * iTunesLink = @"https://itunes.apple.com/us/artist/lisacintosh/id320891279?uo=4";// old link = http://search.itunes.apple.com/WebObjects/MZContentLink.woa/wa/link?path=apps%2flisacintosh
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
-			
-			/* Link via Safari -> iTunes -> AppStore */
-			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.com/apps/lisacintosh/"]];
-		}
-			break;
-		default:// Cancel
-			break;
-	}
-}
-
-#pragma mark - UIAlertView Delegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	ImportFromWebsiteViewController_Phone * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Phone alloc] init];
-	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-	[self presentViewController:navigationController animated:YES completion:NULL];
+	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (BOOL)canBecomeFirstResponder

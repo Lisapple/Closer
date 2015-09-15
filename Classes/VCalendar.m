@@ -38,7 +38,7 @@
 	return nil;
 }
 
-- (id)initWithUUID:(NSString *)seed
+- (instancetype)initWithUUID:(NSString *)seed
 {
 	if ((self = [super init])) {
 		UUID = [seed copy];
@@ -52,7 +52,7 @@
 
 @implementation VCalendar
 
-- (id)initWithVersion:(NSString *)versionString
+- (instancetype)initWithVersion:(NSString *)versionString
 {
     if ((self = [super init])) {
 		version = versionString;
@@ -81,8 +81,8 @@
 	[string appendString:@"BEGIN:VCALENDAR\n"];
 	[string appendFormat:@"VERSION:%@\n", version];
 	
-	NSString * currentLanguage = (NSString *)[[NSBundle mainBundle] preferredLocalizations][0];
-	[string appendFormat:@"PRODID:-//Lis@cintosh//NONSGML Closer&Closer//%@\n", [currentLanguage uppercaseString]];
+	NSString * currentLanguage = (NSString *)[NSBundle mainBundle].preferredLocalizations[0];
+	[string appendFormat:@"PRODID:-//Lis@cintosh//NONSGML Closer&Closer//%@\n", currentLanguage.uppercaseString];
 	
 	for (VEvent * event in events) {
 		

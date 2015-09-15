@@ -44,13 +44,9 @@
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Theme", nil);
-	self.view.tintColor = [UIColor blackColor];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-	
-    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     
 	[super viewDidLoad];
 }

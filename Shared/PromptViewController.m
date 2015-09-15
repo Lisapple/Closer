@@ -22,12 +22,9 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Ask to Continue", nil);
-	self.view.tintColor = [UIColor blackColor];
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     _tableView.alwaysBounceVertical = YES;
 	
 	cellsTitle = @[NSLocalizedString(@"Never", nil), NSLocalizedString(@"At the end of each timer", nil), NSLocalizedString(@"When all timers are finished", nil)];

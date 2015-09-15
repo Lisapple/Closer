@@ -19,8 +19,6 @@
 	
 	@private
 	NSRegularExpression * regex;
-	UIAlertView * pasteAlertView, * noCountdownFoundAlertView;
-	
 	BOOL pushed, sended;
 }
 

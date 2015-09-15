@@ -37,14 +37,14 @@ static NSMutableArray * _countdowns = nil;
 		initialized = YES;
 		
 		/* Since Closer uses UIFileSharingEnabled, Document folder is reserved for sharing only, move Countdowns.plist (renamed from Countdown.plist) file to ~/Library/Preferences/ */
-		NSString * preferencesFolderPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+		NSString * preferencesFolderPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject;
 		_countdownsListPath = [[NSString alloc] initWithFormat:@"%@/Preferences/Countdowns.plist", preferencesFolderPath];
 		
 		NSError * error = nil;
 		NSData * data = [NSData dataWithContentsOfFile:_countdownsListPath];
 		if (!data) {// If no Countdowns.plist have been found, look up at ~/Documents/Countdown.plist ...
 			
-			NSString * documentFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+			NSString * documentFolderPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
 			NSString * oldCountdownPath = [NSString stringWithFormat:@"%@/Countdown.plist", documentFolderPath];
 			data = [NSData dataWithContentsOfFile:oldCountdownPath];
 			
@@ -57,7 +57,7 @@ static NSMutableArray * _countdowns = nil;
 			BOOL success = [data writeToFile:_countdownsListPath options:NSDataWritingAtomic error:&error];
 			
 			if (!success) {
-				NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, [error localizedDescription]);
+				NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, error.localizedDescription);
 			}
 			
 			// And then, remove the file at ~/Documents/Countdown.plist to not show it on iTunes Sharing */
@@ -66,7 +66,7 @@ static NSMutableArray * _countdowns = nil;
 				success = [[NSFileManager defaultManager] removeItemAtPath:oldCountdownPath error:&error];
 				
 				if (!success) {
-					NSLog(@"error when removing file to : %@ => [%@]", _countdownsListPath, [error localizedDescription]);
+					NSLog(@"error when removing file to : %@ => [%@]", _countdownsListPath, error.localizedDescription);
 				}
 			}
 		}
@@ -159,12 +159,13 @@ static NSMutableArray * _countdowns = nil;
 {
     [self synchronizeWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
-            UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
-                                                                 message:error.localizedDescription
-                                                                delegate:nil
-                                                       cancelButtonTitle:nil
-                                                       otherButtonTitles:nil, nil];
-            [alertView show];
+			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
+																			message:error.localizedDescription
+																	 preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+			UIViewController * rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+			[rootViewController presentViewController:alert animated:YES completion:nil];
         }
     }];
 }
@@ -354,7 +355,12 @@ static NSMutableArray * _countdowns = nil;
 	return dictionary;
 }
 
-- (id)initWithIdentifier:(NSString *)anIdentifier
+- (instancetype)init
+{
+	return [self initWithIdentifier:nil];
+}
+
+- (instancetype)initWithIdentifier:(NSString *)anIdentifier
 {
 	if ((self = [super init])) {
 		if (!anIdentifier) {

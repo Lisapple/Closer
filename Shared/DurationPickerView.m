@@ -36,7 +36,7 @@
 
 - (void)setFrame:(CGRect)frame
 {
-	[super setFrame:frame];
+	super.frame = frame;
 	
 	/* Force the view to redraw (iOS will upscale the view for performance propose but the arrow be will scaled as well) */
 	[self setNeedsDisplay];
@@ -49,7 +49,7 @@
 
 @synthesize touchDelegate = _touchDelegate;
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
 		self.showsHorizontalScrollIndicator = NO;
@@ -65,7 +65,7 @@
 
 - (void)setContentOffset:(CGPoint)contentOffset
 {
-	[super setContentOffset:contentOffset];
+	super.contentOffset = contentOffset;
 	
 	/* Force the scrollView to redraw when scrolling (not done since iOS 6, to move the background) */
 	[self setNeedsDisplay];
@@ -106,7 +106,7 @@
 
 @synthesize selectedIndex = _selectedIndex;
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
         [self initialize];
@@ -114,7 +114,7 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
 	if ((self = [super initWithCoder:aDecoder])) {
         [self initialize];
@@ -191,7 +191,7 @@
 
 - (void)setFrame:(CGRect)frame
 {
-	[super setFrame:frame];
+	super.frame = frame;
 	
 	[self updateLayout];
 }

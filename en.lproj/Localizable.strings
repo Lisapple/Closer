@@ -22,7 +22,7 @@
 /* SettingsViewController */
 "Settings";
 "Edit All";
-"Closer & Closer %@\nCopyright © 2015, Lis@cintosh";
+"Closer & Closer %@\nCopyright © %lu, Lis@cintosh";
 "Name";
 "Date & Time";
 "Message";

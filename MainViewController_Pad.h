@@ -13,7 +13,7 @@
 
 @class PageView;
 
-@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, PageViewDelegate, UIPopoverControllerDelegate>
+@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, PageViewDelegate, UIPopoverControllerDelegate>
 {
 	IBOutlet UIView * defaultNavigationBarView, * editNavigationBarView;
 	IBOutlet UIBarButtonItem * doneButton;
@@ -23,7 +23,7 @@
 	@private
 	NSInteger currentSettingsPageIndex;
 	NSInteger currentNavigationBarTag;
-	NSMutableArray * pageViews;
+	NSMutableArray <PageView *> * pageViews;
 	PageView * currentPageWithConfirmation;
 	
 	BOOL shareActionSheetShowing;

@@ -25,12 +25,9 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Durations", nil);
-	self.view.tintColor = [UIColor blackColor];
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     _tableView.alwaysBounceVertical = YES;
 	_tableView.allowsSelectionDuringEditing = YES;
 	_tableView.editing = YES;

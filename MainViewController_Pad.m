@@ -18,10 +18,10 @@
 #import "EditViewController.h"
 
 #import "Countdown.h"
-
 #import "NetworkStatus.h"
 
 #import "NSObject+additions.h"
+#import "NSDate+addition.h"
 
 @interface MainViewController_Pad (PrivateMethods)
 
@@ -148,8 +148,7 @@
 		scrollView.contentSize = CGSizeMake(numberOfPages * scrollView.frame.size.width, 0.);
 		
 		/* Scroll to the countdown new position */
-		[scrollView setContentOffset:rect.origin
-							animated:YES];
+		[scrollView setContentOffset:rect.origin animated:YES];
 		
 		pageControl.numberOfPages = numberOfPages;
 		pageControl.currentPage = (numberOfPages - 1);
@@ -241,12 +240,18 @@
 			if (showsIntroductionMessage) {
 				
 				NSString * message = NSLocalizedString(@"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE", nil);
-				UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Import with Passwords", nil)
-																	 message:message
-																	delegate:self
-														   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-														   otherButtonTitles:nil];
-				[alertView show];
+				UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
+																				message:message
+																		 preferredStyle:UIAlertControllerStyleAlert];
+				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+					[alert dismissViewControllerAnimated:YES completion:^{
+						ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
+						UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
+						navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+						navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+						[self presentViewController:navigationController animated:YES completion:NULL];
+					}]; }]];
+				[self presentViewController:alert animated:YES completion:nil];
 				
 				[userDefaults setBool:YES forKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"];
 			} else if (buttonIndex >= 1) {
@@ -289,17 +294,6 @@
 {
 	if (actionSheet.tag == kShareAlertTag)
 		shareActionSheetShowing = NO;
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
-	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-	navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentViewController:navigationController
-					   animated:YES
-					 completion:NULL];
 }
 
 - (void)showSettingsForPageAtIndex:(NSInteger)index
@@ -355,15 +349,15 @@
 - (IBAction)showSettings:(id)sender
 {
 	UIButton * button = sender;
-	PageView * page = (PageView *)[[button superview] superview];
+	PageView * page = (PageView *)button.superview.superview;
 	if ([pageViews indexOfObject:page] != NSNotFound)
 		[self showSettingsForPageAtIndex:[pageViews indexOfObject:page]];
 }
 
 - (IBAction)moreInfo:(id)sender
 {
-	NSDictionary * infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © 2015, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"]];
+	NSDictionary * infoDictionary = [NSBundle mainBundle].infoDictionary;
+	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © %lu, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"], [NSDate date].year];
 	
 	UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:title
 															  delegate:self
@@ -381,7 +375,7 @@
 
 - (void)handleTapFrom:(UIGestureRecognizer *)recognizer
 {
-	[self showSettingsForPageAtIndex:[pageViews indexOfObject:recognizer.view]];
+	[self showSettingsForPageAtIndex:[pageViews indexOfObject:(PageView *)recognizer.view]];
 }
 
 #pragma mark - PageView Delegate
@@ -646,7 +640,7 @@
 		
 		[scrollView addSubview:pageView];
 		[pageViews[index] removeFromSuperview];
-		[pageViews replaceObjectAtIndex:index withObject:pageView];
+		pageViews[index] = pageView;
 	} else { // Just refresh the page view
 		((PageView *)pageViews[index]).countdown = countdown;
 	}
@@ -698,37 +692,26 @@
 	
 	pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight;// Add flexible height (Unavailable from IB)
 	
-	[NSTimer scheduledTimerWithTimeInterval:1.
-									 target:self
-								   selector:@selector(update)
-								   userInfo:nil
-									repeats:YES];
+	[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(update)
+								   userInfo:nil repeats:YES];
 	[self update];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(closeActiveSettings)
-												 name:@"SettingsViewControllerDidCloseNotification"
-											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeActiveSettings)
+												 name:@"SettingsViewControllerDidCloseNotification" object:nil];
 	
-	[[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification
-													  object:nil
-													   queue:[NSOperationQueue currentQueue]
+	[[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification object:nil queue:nil
 												  usingBlock:^(NSNotification *note) {
 													  [self update];
 													  [self invalidateLayoutWithOrientation:self.interfaceOrientation animated:NO];
 												  }];
 	
-	[[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification
-													  object:nil
-													   queue:[NSOperationQueue currentQueue]
+	[[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification object:nil queue:nil
 												  usingBlock:^(NSNotification *note) {
 													  [self update];
 													  [self invalidateLayoutWithOrientation:self.interfaceOrientation animated:NO];
 												  }];
 	
-	[[NSNotificationCenter defaultCenter] addObserverForName:@"CountdownDidCreateNewNotification"
-													  object:nil
-													   queue:[NSOperationQueue currentQueue]
+	[[NSNotificationCenter defaultCenter] addObserverForName:@"CountdownDidCreateNewNotification" object:nil queue:nil
 												  usingBlock:^(NSNotification *note) {
 													  /* Invalidate the layout */
 													  [self invalidateLayout];
@@ -741,22 +724,23 @@
 												  }];
 	
 	[NetworkStatus startObserving];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(networkStatusDidChange:)
-												 name:kNetworkStatusDidChangeNotification
-											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusDidChange:)
+												 name:kNetworkStatusDidChangeNotification object:nil];
 	
 	/* Keyboard showing/hidding notifications */
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(keyboardDidShow:)
-												 name:UIKeyboardDidShowNotification
-											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:)
+												 name:UIKeyboardDidShowNotification object:nil];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(keyboardWillHide:)
-												 name:UIKeyboardWillHideNotification
-											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
+												 name:UIKeyboardWillHideNotification object:nil];
 	[self setNeedsStatusBarAppearanceUpdate];
+	
+	[pageControl addObserver:self forKeyPath:@"currentPage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:nil];
+}
+
+- (void)dealloc
+{
+	[pageControl removeObserver:self forKeyPath:@"currentPage"];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -800,6 +784,22 @@
 }
 
 #pragma mark - UIPageControl Managment
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+	if (object == pageControl && [keyPath isEqualToString:@"currentPage"]) {
+		
+		NSUInteger oldPage = [change[NSKeyValueChangeOldKey] integerValue];
+		NSArray <PageView *> * pages = [pageViews subarrayWithRange:NSMakeRange(MIN(pageViews.count, oldPage * 4), MIN(pageViews.count, oldPage + 1 * 4))];
+		for (PageView * pageView in pages) {
+			[pageView viewDidHide:YES]; }
+		
+		NSUInteger currentPage = [change[NSKeyValueChangeNewKey] integerValue];
+		pages = [pageViews subarrayWithRange:NSMakeRange(MIN(pageViews.count, currentPage * 4), MIN(pageViews.count, currentPage + 1 * 4))];
+		for (PageView * pageView in pages) {
+			[pageView viewWillShow:YES]; }
+	}
+}
 
 - (void)showPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated
 {

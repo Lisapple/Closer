@@ -64,19 +64,21 @@
 				 
 			 } else if (!granted) {
 				 NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
-				 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Access Denied!", nil)
-											 message:message
-											delegate:nil
-								   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-								   otherButtonTitles:nil] show];
+				 UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Access Denied!", nil)
+																				 message:message
+																		  preferredStyle:UIAlertControllerStyleAlert];
+				 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+					 [alert dismissViewControllerAnimated:YES completion:nil]; }]];
+				 [self presentViewController:alert animated:YES completion:nil];
 				 
 			 } else if (error) {
 				 /* Show an alert with the error */
-				 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error!", nil)
-											 message:error.localizedDescription
-											delegate:nil
-								   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-								   otherButtonTitles:nil] show];
+				 UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
+																				 message:error.localizedDescription
+																		  preferredStyle:UIAlertControllerStyleAlert];
+				 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+					 [alert dismissViewControllerAnimated:YES completion:nil]; }]];
+				 [self presentViewController:alert animated:YES completion:nil];
 			 }
 		 });
 	 }];
@@ -86,28 +88,18 @@
 {
 	[super viewWillAppear:animated];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(reload)
-												 name:EKEventStoreChangedNotification
-											   object:nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(deviceOrientationDidChange:)
-												 name:UIDeviceOrientationDidChangeNotification
-											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reload)
+												 name:EKEventStoreChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:)
+												 name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:EKEventStoreChangedNotification
-												  object:nil];
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:UIDeviceOrientationDidChangeNotification
-												  object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:EKEventStoreChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)reload
@@ -226,12 +218,12 @@
 					   event.title, andMoreString, NSLocalizedString(@"Delete some countdowns and retry to import these events.", nil)];
 		}
 		
-		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Countdown Limit Reached!", nil)
-															 message:message
-															delegate:nil
-												   cancelButtonTitle:NSLocalizedString(@"OK", nil)
-												   otherButtonTitles:nil];
-		[alertView show];
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Countdown Limit Reached!", nil)
+																		message:message
+																 preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+		[self presentViewController:alert animated:YES completion:nil];
 		
 		[selectedEvents removeAllObjects];
 		[tableView reloadData];
@@ -316,7 +308,7 @@
 	
 	EKEvent * event = events[indexPath.row];// Offset the row by one to count the section adding on tableView:numberOfRowsInSection:
 	cell.textLabel.text = event.title;
-	cell.detailTextLabel.text = [event.startDate description];
+	cell.detailTextLabel.text = event.startDate.description;
 	
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	if ([selectedEvents containsObject:event]) {

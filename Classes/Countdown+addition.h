@@ -11,6 +11,8 @@
 
 @interface Countdown (LocalNotification)
 
++ (void)removeInvalidLocalNotifications;
+
 - (UILocalNotification *)localNotification;
 - (UILocalNotification *)createLocalNotification;
 - (void)updateLocalNotification;

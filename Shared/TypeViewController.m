@@ -23,10 +23,7 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	_tableView.alwaysBounceVertical = YES;
-	
-	self.view.tintColor = [UIColor blackColor];
 	
     [super viewDidLoad];
 }
@@ -41,8 +38,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	/* Two for "Countdown" and "Timer" */
-	return 2;
+	return 2; // "Countdown" and "Timer"
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -62,13 +58,10 @@
 	
 	switch (indexPath.row) {
 		case 1:
-			cell.textLabel.text = NSLocalizedString(@"Timer", nil);
-			break;
+			cell.textLabel.text = NSLocalizedString(@"Timer", nil); break;
 		default:
-			cell.textLabel.text = NSLocalizedString(@"Countdown", nil);
-			break;
+			cell.textLabel.text = NSLocalizedString(@"Countdown", nil); break;
 	}
-	
 	cell.accessoryType = (_countdown.type == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 	
 	return cell;

@@ -12,7 +12,7 @@
 {
 	id updateObserver, continueObserver;
 	
-	BOOL dragging, showingChangeConfirmation;
+	BOOL dragging, showingChangeConfirmation, idleTimerDisabled;
 	CGPoint startLocation;
 	NSTimeInterval originalDuration, delta;
 }
@@ -30,7 +30,7 @@
 @synthesize backgroundImageView;
 @synthesize infoButton = _infoButton;
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
 		UINib * nib = [UINib nibWithNibName:@"TimerPageView" bundle:[NSBundle mainBundle]];
@@ -78,6 +78,8 @@
 		for (UIGestureRecognizer * gesture in self.superview.gestureRecognizers)
 			[pan requireGestureRecognizerToFail:gesture];
 		[self addGestureRecognizer:pan];
+		
+		idleTimerDisabled = NO;
     }
     return self;
 }
@@ -107,7 +109,7 @@
 	
 	if (countdown.durations.count) {
 		duration = [countdown.durations[(countdown.durationIndex % countdown.durations.count)] doubleValue];
-		remainingSeconds = [countdown.endDate timeIntervalSinceNow];
+		remainingSeconds = countdown.endDate.timeIntervalSinceNow;
 	}
 	
 	if (countdown.endDate && remainingSeconds <= 0.) { // If the timer is finished
@@ -144,6 +146,26 @@
 	
 	_infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
 	[self updateLeftButton];
+}
+
+- (void)viewWillShow:(BOOL)animated
+{
+	[super viewWillShow:animated];
+	
+	if (duration < 3. * 60. && !idleTimerDisabled) {
+		[[UIApplication sharedApplication] disableIdleTimer];
+		idleTimerDisabled = YES;
+	}
+}
+
+- (void)viewDidHide:(BOOL)animated
+{
+	[super viewDidHide:animated];
+	
+	if (idleTimerDisabled) {
+		[[UIApplication sharedApplication] enableIdleTimer];
+		idleTimerDisabled = NO;
+	}
 }
 
 - (void)updateLeftButton
@@ -225,6 +247,11 @@
 		if (countdown.endDate && countdown.durations.count) {
 			remainingSeconds = countdown.endDate.timeIntervalSinceNow;
 			
+			if (remainingSeconds < 3. * 60. && !idleTimerDisabled) {
+				[[UIApplication sharedApplication] disableIdleTimer];
+				idleTimerDisabled = YES;
+			}
+			
 			if (remainingSeconds >= 0. && duration > 1) {
 				[_timerView cancelProgressionAnimation];
 				[_timerView setProgression:(duration - remainingSeconds) / (duration - 1)
@@ -301,7 +328,7 @@
 {
 	_timeLabel.text = NSLocalizedString(@"Resume", nil);
 	
-	remainingSeconds = [countdown.endDate timeIntervalSinceNow];
+	remainingSeconds = countdown.endDate.timeIntervalSinceNow;
 	[countdown pause];
 	
 	[self reload];

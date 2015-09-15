@@ -9,6 +9,7 @@
 	#import "Countdown.h"
 	// Additions
 	#import "UIColor+addition.h"
+	#import "UIApplication+addition.h"
 #endif
 
 #if TARGET_IPHONE_SIMULATOR

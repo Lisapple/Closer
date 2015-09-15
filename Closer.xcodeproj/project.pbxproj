@@ -21,7 +21,6 @@
 		50036EE9150A3D0F006BE168 /* ImportFromCalendarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50036EE7150A3D0F006BE168 /* ImportFromCalendarViewController.xib */; };
 		50036EF3150A42DC006BE168 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50036EF2150A42DC006BE168 /* EventKit.framework */; };
 		500ABFF519892B2200217E92 /* CCLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 500ABFF419892B2200217E92 /* CCLabel.m */; };
-		500AC00F19899BCF00217E92 /* Background.png in Resources */ = {isa = PBXBuildFile; fileRef = 500AC00E19899BCF00217E92 /* Background.png */; };
 		50107E0B1770E39C00184976 /* DurationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50107E091770E39C00184976 /* DurationsViewController.m */; };
 		50107E0C1770E39C00184976 /* DurationsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50107E0A1770E39C00184976 /* DurationsViewController.xib */; };
 		5012B63717B91EAA00F8B228 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
@@ -54,6 +53,7 @@
 		507AD4D113533D6200011051 /* PageThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AD4CF13533D6200011051 /* PageThemeViewController.m */; };
 		507AD4D213533D6200011051 /* PageThemeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507AD4D013533D6200011051 /* PageThemeViewController.xib */; };
 		507C345A1A8C0A3600C485C3 /* TimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */; };
+		507F9BE41B38C381002B5CF4 /* Closer WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 508578F316BC5F4900A04DAE /* UINavigationController+additions.m */; };
 		508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 508677E31B34BC9E00891644 /* Settings-Watch.bundle */; };
 		508D9C261338E2AC008C04FF /* UIView+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 508D9C251338E2AC008C04FF /* UIView+addition.m */; };
@@ -97,14 +97,13 @@
 		50DF431117736AD000AAA6C9 /* TimerPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF431017736AD000AAA6C9 /* TimerPageView.m */; };
 		50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DF431217736AE800AAA6C9 /* TimerPageView.xib */; };
 		50E00D261AC0AA9000784B98 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D251AC0AA9000784B98 /* InterfaceController.swift */; };
-		50E00D2C1AC0AA9000784B98 /* Closer WatchKit App.app in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */; };
 		50E00D341AC0AA9000784B98 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D321AC0AA9000784B98 /* Interface.storyboard */; };
 		50E00D361AC0AA9000784B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D351AC0AA9000784B98 /* Images.xcassets */; };
-		50E00D391AC0AA9000784B98 /* Closer WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		50E00D471AC0AAB700784B98 /* TimerInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D441AC0AAB700784B98 /* TimerInterfaceController.swift */; };
 		50E00D481AC0AAB700784B98 /* CountdownInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */; };
 		50E00D491AC0AAB700784B98 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D461AC0AAB700784B98 /* ColorExtension.swift */; };
 		50E937B11ABCE0C100E0F6E7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
+		50E954181BA6F21E00FC8CD1 /* UIApplication+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */; settings = {ASSET_TAGS = (); }; };
 		50EC72D316BD4F9D00BB7CA7 /* EKEventStore+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */; };
 		50F3F51219880D1D00817B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50F3F51119880D1D00817B98 /* Images.xcassets */; };
 		50F918F3149D3C5F003F33B8 /* Countdown.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50F918F5149D3C5F003F33B8 /* Countdown.plist */; };
@@ -124,14 +123,7 @@
 			remoteGlobalIDString = 504B56441A7D5C9900292475;
 			remoteInfo = CloserWidget;
 		};
-		50E00D2D1AC0AA9000784B98 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 50E00D2A1AC0AA9000784B98;
-			remoteInfo = "Closer WatchKit App";
-		};
-		50E00D371AC0AA9000784B98 /* PBXContainerItemProxy */ = {
+		507F9BE21B38C381002B5CF4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
@@ -148,9 +140,29 @@
 			dstSubfolderSpec = 13;
 			files = (
 				504B56521A7D5C9900292475 /* Widget.appex in Embed App Extensions */,
-				50E00D391AC0AA9000784B98 /* Closer WatchKit Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		507F9BE81B38C382002B5CF4 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				507F9BE41B38C381002B5CF4 /* Closer WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		507F9BE91B38C382002B5CF4 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -177,7 +189,6 @@
 		50036EF2150A42DC006BE168 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		500ABFF319892B2200217E92 /* CCLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLabel.h; sourceTree = "<group>"; };
 		500ABFF419892B2200217E92 /* CCLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLabel.m; sourceTree = "<group>"; };
-		500AC00E19899BCF00217E92 /* Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Background.png; sourceTree = "<group>"; };
 		50107E081770E39C00184976 /* DurationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DurationsViewController.h; sourceTree = "<group>"; };
 		50107E091770E39C00184976 /* DurationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DurationsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50107E0A1770E39C00184976 /* DurationsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DurationsViewController.xib; sourceTree = "<group>"; };
@@ -309,6 +320,8 @@
 		50E00D441AC0AAB700784B98 /* TimerInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerInterfaceController.swift; sourceTree = "<group>"; };
 		50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownInterfaceController.swift; sourceTree = "<group>"; };
 		50E00D461AC0AAB700784B98 /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		50E954161BA6F21E00FC8CD1 /* UIApplication+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+addition.h"; sourceTree = "<group>"; };
+		50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+addition.m"; sourceTree = "<group>"; };
 		50EC72D116BD4F9D00BB7CA7 /* EKEventStore+additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EKEventStore+additions.h"; sourceTree = "<group>"; };
 		50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EKEventStore+additions.m"; sourceTree = "<group>"; };
 		50F3F51119880D1D00817B98 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Closer/Images.xcassets; sourceTree = "<group>"; };
@@ -418,7 +431,6 @@
 				50F918F5149D3C5F003F33B8 /* Countdown.plist */,
 				50F918F9149D3C7E003F33B8 /* songs.plist */,
 				50F918FD149D3C87003F33B8 /* Localizable.strings */,
-				50A1A5C1198FBE0100133954 /* Images */,
 				8D1107310486CEB800E47090 /* Closer-Info.plist */,
 				50C5A32512E352590013605C /* Songs */,
 				9C00BDE819D2DA9B00E93271 /* Launch.xib */,
@@ -584,6 +596,8 @@
 				508578F316BC5F4900A04DAE /* UINavigationController+additions.m */,
 				50EC72D116BD4F9D00BB7CA7 /* EKEventStore+additions.h */,
 				50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */,
+				50E954161BA6F21E00FC8CD1 /* UIApplication+addition.h */,
+				50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */,
 			);
 			path = Additions;
 			sourceTree = "<group>";
@@ -596,14 +610,6 @@
 				5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */,
 			);
 			name = "Application Delegate";
-			sourceTree = "<group>";
-		};
-		50A1A5C1198FBE0100133954 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				500AC00E19899BCF00217E92 /* Background.png */,
-			);
-			path = Images;
 			sourceTree = "<group>";
 		};
 		50C5A18E12E335F30013605C /* Classes */ = {
@@ -686,12 +692,12 @@
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
 				504B56581A7D5C9A00292475 /* Embed App Extensions */,
+				507F9BE91B38C382002B5CF4 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				504B56511A7D5C9900292475 /* PBXTargetDependency */,
-				50E00D381AC0AA9000784B98 /* PBXTargetDependency */,
 			);
 			name = "Closer & Closer";
 			productName = Closer;
@@ -726,27 +732,28 @@
 			buildRules = (
 			);
 			dependencies = (
-				50E00D2E1AC0AA9000784B98 /* PBXTargetDependency */,
 			);
 			name = "Closer WatchKit Extension";
 			productName = "Closer WatchKit Extension";
 			productReference = 50E00D211AC0AA9000784B98 /* Closer WatchKit Extension.appex */;
-			productType = "com.apple.product-type.watchkit-extension";
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 		50E00D2A1AC0AA9000784B98 /* Closer WatchKit App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 50E00D421AC0AA9100784B98 /* Build configuration list for PBXNativeTarget "Closer WatchKit App" */;
 			buildPhases = (
 				50E00D291AC0AA9000784B98 /* Resources */,
+				507F9BE81B38C382002B5CF4 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				507F9BE31B38C381002B5CF4 /* PBXTargetDependency */,
 			);
 			name = "Closer WatchKit App";
 			productName = "Closer WatchKit App";
 			productReference = 50E00D2B1AC0AA9000784B98 /* Closer WatchKit App.app */;
-			productType = "com.apple.product-type.application.watchapp";
+			productType = "com.apple.product-type.application.watchapp2";
 		};
 /* End PBXNativeTarget section */
 
@@ -754,7 +761,8 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 79MVQZ8SAR;
@@ -854,7 +862,6 @@
 				50AF1326176F4D230092E255 /* TypeViewController.xib in Resources */,
 				50107E0C1770E39C00184976 /* DurationsViewController.xib in Resources */,
 				50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */,
-				500AC00F19899BCF00217E92 /* Background.png in Resources */,
 				50D5B5D017847C8000140DDB /* PromptViewController.xib in Resources */,
 				50D5B5D51784800F00140DDB /* DurationPickerViewController.xib in Resources */,
 			);
@@ -873,7 +880,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50E00D2C1AC0AA9000784B98 /* Closer WatchKit App.app in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,6 +908,7 @@
 				50C5A23A12E33F8B0013605C /* NSDate+addition.m in Sources */,
 				50C5A26712E3496C0013605C /* SongPickerViewController.m in Sources */,
 				50CDA6301988133D001C1F54 /* DeleteTableViewCell.m in Sources */,
+				50E954181BA6F21E00FC8CD1 /* UIApplication+addition.m in Sources */,
 				50A6E53913291BC9007C0C79 /* MessageViewControler.m in Sources */,
 				50A2080E12E4E52200D8FCAA /* NSBundle+addition.m in Sources */,
 				50B208FC1307F73C00AF2320 /* EditAllCountdownViewController.m in Sources */,
@@ -976,15 +983,10 @@
 			target = 504B56441A7D5C9900292475 /* Widget */;
 			targetProxy = 504B56501A7D5C9900292475 /* PBXContainerItemProxy */;
 		};
-		50E00D2E1AC0AA9000784B98 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 50E00D2A1AC0AA9000784B98 /* Closer WatchKit App */;
-			targetProxy = 50E00D2D1AC0AA9000784B98 /* PBXContainerItemProxy */;
-		};
-		50E00D381AC0AA9000784B98 /* PBXTargetDependency */ = {
+		507F9BE31B38C381002B5CF4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 50E00D201AC0AA9000784B98 /* Closer WatchKit Extension */;
-			targetProxy = 50E00D371AC0AA9000784B98 /* PBXContainerItemProxy */;
+			targetProxy = 507F9BE21B38C381002B5CF4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1071,8 +1073,8 @@
 				GCC_PREFIX_HEADER = Closer_Prefix.pch;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Closer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				ONLY_ACTIVE_ARCH = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer;
 				PRODUCT_NAME = "Closer & Closer";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1088,14 +1090,15 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = Closer/Closer.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Closer_Prefix.pch;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Closer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer;
 				PRODUCT_NAME = "Closer & Closer";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1141,6 +1144,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1178,6 +1182,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1203,7 +1208,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1216,6 +1221,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1241,7 +1247,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1254,6 +1260,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -1267,7 +1274,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				SDKROOT = iphoneos;
 			};
 			name = "Ad Hoc";
@@ -1288,7 +1295,8 @@
 				GCC_PREFIX_HEADER = Closer_Prefix.pch;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Closer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer;
 				PRODUCT_NAME = "Closer & Closer";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1302,7 +1310,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				SDKROOT = iphoneos;
 			};
 			name = "App Store";
@@ -1315,7 +1323,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = Closer/Closer.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -1323,7 +1331,8 @@
 				GCC_PREFIX_HEADER = Closer_Prefix.pch;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Closer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer;
 				PRODUCT_NAME = "Closer & Closer";
 				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1367,11 +1376,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1406,11 +1416,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
@@ -1435,7 +1446,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "Closer WatchKit Extension/Closer WatchKit Extension.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1445,11 +1456,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
@@ -1474,7 +1486,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "Closer WatchKit Extension/Closer WatchKit Extension.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1485,11 +1497,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = "Closer WatchKit Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Closer WatchKit Extension/Closer WatchKit Extension-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
@@ -1514,7 +1527,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1531,12 +1544,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				IBSC_MODULE = Closer_WatchKit_Extension;
 				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
 			};
 			name = Debug;
 		};
@@ -1558,7 +1570,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1569,12 +1581,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				IBSC_MODULE = Closer_WatchKit_Extension;
 				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Ad Hoc";
@@ -1597,7 +1608,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1608,12 +1619,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				IBSC_MODULE = Closer_WatchKit_Extension;
 				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "App Store";
@@ -1636,7 +1646,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1647,12 +1657,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				IBSC_MODULE = Closer_WatchKit_Extension;
 				INFOPLIST_FILE = "Closer WatchKit App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lisacintosh.closer.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1660,10 +1669,11 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -1675,7 +1685,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 			};

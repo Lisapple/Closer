@@ -35,15 +35,12 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Date & Time", nil);
-	self.view.tintColor = [UIColor blackColor];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
 	[tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
 						   animated:NO
 					 scrollPosition:UITableViewScrollPositionNone];
-    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	tableView.alwaysBounceVertical = NO;
 	tableView.scrollEnabled = NO;
 	
@@ -57,9 +54,9 @@
 	[super viewWillAppear:animated];
 	
 	NSDate * endDate = countdown.endDate;
-	hasTimeDate = (endDate != nil && ([endDate timeIntervalSinceNow] > 0));// If endDate is nil or passed, we don't have a valid date and consider time as invalid
+	hasTimeDate = (endDate != nil && (endDate.timeIntervalSinceNow > 0));// If endDate is nil or passed, we don't have a valid date and consider time as invalid
 	
-	if (!endDate || ([endDate timeIntervalSinceNow] <= 0)) {
+	if (!endDate || (endDate.timeIntervalSinceNow <= 0)) {
 		self.date = [[NSDate date] dateByAddingTimeInterval:60];// date = now + 1 minute
 	} else {
 		self.date = endDate;
@@ -98,14 +95,14 @@
 	[super viewWillDisappear:animated];
 	
 	if (hasTimeDate) {
-		NSTimeInterval timeIntervalSince1970 = [date timeIntervalSince1970];
+		NSTimeInterval timeIntervalSince1970 = date.timeIntervalSince1970;
 		NSTimeInterval seconds = (timeIntervalSince1970 - ((int)(timeIntervalSince1970 / 60) * 60.));
 		self.countdown.endDate = [date dateByAddingTimeInterval:-seconds];// Fix seconds from date to zero to finish countdown at hh:mm:00 (and not hh:mm:ss)
 	}
 	
 	self.undoManager = nil;
 	
-	if ([updateDatePickerTimer isValid]) {
+	if (updateDatePickerTimer.valid) {
 		[updateDatePickerTimer invalidate];
 		updateDatePickerTimer = nil;
 	}
@@ -140,7 +137,7 @@
 - (void)reloadData
 {
 	/* Reload tableView and retain the current selection */
-	NSIndexPath * selectedCellIndexPath = [tableView indexPathForSelectedRow];
+	NSIndexPath * selectedCellIndexPath = tableView.indexPathForSelectedRow;
 	[tableView reloadData];
 	[tableView selectRowAtIndexPath:selectedCellIndexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
 }

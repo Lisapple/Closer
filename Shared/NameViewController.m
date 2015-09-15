@@ -18,12 +18,9 @@
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Name", nil);
-	self.view.tintColor = [UIColor blackColor];
 	
 	tableView.delegate = self;
 	tableView.dataSource = self;
-    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     tableView.alwaysBounceVertical = YES;
 	
 	cellTextField.text = countdown.name;

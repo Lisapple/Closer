@@ -19,7 +19,6 @@
 	
 	@private
 	NSRegularExpression * regex;
-	UIAlertView * pasteAlertView, * noCountdownFoundAlertView;
 }
 
 @property (nonatomic, strong) IBOutlet UITextField * hiddenTextField1, * hiddenTextField2;
