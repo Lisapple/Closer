@@ -57,7 +57,10 @@
 
 - (void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult))completionHandler
 {
-	completionHandler(NCUpdateResultNewData);
+	NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
+	NSArray * countdowns = [widgetDefaults arrayForKey:@"countdowns"];
+	NCUpdateResult result = (countdowns.count > 0) ? NCUpdateResultNewData : NCUpdateResultNoData;
+	completionHandler(result);
 }
 
 #pragma mark - TableView Datasource
