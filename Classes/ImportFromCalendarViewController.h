@@ -10,21 +10,8 @@
 #import <EventKit/EventKit.h>
 
 @interface ImportFromCalendarViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-{
-	IBOutlet UITableView * tableView;
-	
-	UITableViewCell * checkedCell;
-	
-	NSMutableArray * calendars, * calendarsEvents;
-	NSMutableArray * selectedEvents;
-	
-	EKEventStore * eventStore;
-	
-	NSInteger numberOfEvents;
-}
 
 @property (nonatomic, strong) IBOutlet UITableView * tableView;
-
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView * activityIndicatorView;
 
 - (IBAction)import:(id)sender;

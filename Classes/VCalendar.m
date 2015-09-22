@@ -12,66 +12,70 @@
 
 @implementation VEvent
 
-@synthesize startDate;
-@synthesize duration;
-@synthesize summary, description;
-@synthesize UUID;
-
 + (VEvent *)eventFromCountdown:(Countdown *)countdown
 {
 	if (countdown.endDate) {
-		CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
-		CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-		CFRelease(uuidRef);
-		
-		VEvent * event = [[VEvent alloc] initWithUUID:(__bridge NSString *)uuidString];
-		CFRelease(uuidString);
-		
+		VEvent * event = [[VEvent alloc] initWithUUID:[NSUUID UUID].UUIDString];
 		event.startDate = countdown.endDate;
 		event.duration = kDefaultEventDuration;
-		
 		event.summary = countdown.name;
-		event.description = countdown.message;
+		event.message = countdown.message;
 		
 		return event;
 	}
 	return nil;
 }
 
+- (instancetype)init
+{
+	if ((self = [self initWithUUID:nil])) {}
+	return self;
+}
+
 - (instancetype)initWithUUID:(NSString *)seed
 {
 	if ((self = [super init])) {
-		UUID = [seed copy];
+		_UUID = [seed copy];
 	}
-	
 	return self;
 }
 
 @end
 
+@interface VCalendar ()
+
+@property (nonatomic, strong) NSString * version;
+@property (nonatomic, strong) NSMutableArray <VEvent *> * events;
+
+@end
 
 @implementation VCalendar
+
+- (instancetype)init
+{
+	if ((self = [self initWithVersion:@"2.0"])) {}
+	return self;
+}
 
 - (instancetype)initWithVersion:(NSString *)versionString
 {
     if ((self = [super init])) {
-		version = versionString;
-		
-		events = [[NSMutableArray alloc] initWithCapacity:3];
+		_version = versionString;
+		_events = [[NSMutableArray alloc] initWithCapacity:3];
     }
     return self;
 }
 
 - (void)addEvent:(VEvent *)event
 {
-	if (event && ![events containsObject:event]) {
-		[events addObject:event];
+	if (event && ![_events containsObject:event]) {
+		[_events addObject:event];
 	}
 }
 
 - (void)removeEvent:(VEvent *)event
 {
-	[events removeObject:event];
+	[_events removeObject:event];
 }
 
 - (BOOL)writeToFile:(NSString *)path atomically:(BOOL)flag
@@ -79,12 +83,12 @@
 	NSMutableString * string = [NSMutableString stringWithCapacity:200];
 	
 	[string appendString:@"BEGIN:VCALENDAR\n"];
-	[string appendFormat:@"VERSION:%@\n", version];
+	[string appendFormat:@"VERSION:%@\n", _version];
 	
 	NSString * currentLanguage = (NSString *)[NSBundle mainBundle].preferredLocalizations[0];
 	[string appendFormat:@"PRODID:-//Lis@cintosh//NONSGML Closer&Closer//%@\n", currentLanguage.uppercaseString];
 	
-	for (VEvent * event in events) {
+	for (VEvent * event in _events) {
 		
 		/* Example of ICAL event format:
 		 BEGIN:VEVENT

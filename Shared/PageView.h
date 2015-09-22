@@ -9,9 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface _DeleteButton : UIButton
-{
-	UILabel * _titleLabel;
-}
 
 @end
 
@@ -50,15 +47,6 @@ typedef NS_ENUM(NSUInteger, PageViewStyle) {
 
 /*** @abstract: abstract method used for CountdownPageView and TimerPageView ***/
 @interface PageView : UIView <UIScrollViewDelegate>
-{
-	UIButton * _deleteButton;
-	
-	Countdown * countdown;
-	CGPoint position;
-	
-	CGPoint _startLocation, _offset;
-	BOOL _shouldShowDeleteConfirmation;
-}
 
 @property (nonatomic, assign) BOOL showDeleteConfirmation;
 @property (nonatomic, strong) Countdown * countdown;

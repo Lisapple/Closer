@@ -9,11 +9,12 @@
 #import "TodayViewController.h"
 #import "TimerTableViewCell.h"
 #import "CountdownTableViewCell.h"
+#import "Countdown.h"
 
 @interface TodayViewController () <NCWidgetProviding, UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) NSArray * countdowns;
+@property (strong, nonatomic) NSArray <NSDictionary *> * countdowns;
 @property (strong, nonatomic) NSTimer * timer;
 
 @end

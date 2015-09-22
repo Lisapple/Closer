@@ -10,8 +10,6 @@
 
 @implementation _InternalSectionCalendarView
 
-@synthesize CGColor;
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
@@ -26,8 +24,8 @@
 
 - (void)setCGColor:(CGColorRef)colorRef
 {
-	CGColorRelease(CGColor);
-	CGColor = CGColorRetain(colorRef);
+	CGColorRelease(_CGColor);
+	_CGColor = CGColorRetain(colorRef);
 	
 	[self setNeedsDisplay];
 }
@@ -53,8 +51,8 @@
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	
-	NSInteger number = (NSInteger)CGColorGetNumberOfComponents(CGColor);
-	CGFloat * components = (CGFloat *)CGColorGetComponents(CGColor);
+	NSInteger number = (NSInteger)CGColorGetNumberOfComponents(_CGColor);
+	CGFloat * components = (CGFloat *)CGColorGetComponents(_CGColor);
 	
 	/* Compute lighter color */
 	CGFloat lighterComponents[4];
@@ -77,7 +75,7 @@
 	
 	 CFMutableArrayRef colors = CFArrayCreateMutable(kCFAllocatorDefault, 3, NULL);
 	 CFArrayAppendValue(colors, lighterColorRef);
-	 CFArrayAppendValue(colors, CGColor);
+	 CFArrayAppendValue(colors, _CGColor);
 	 CFArrayAppendValue(colors, darkerColorRef);
 	
 	CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, colors, locations);
@@ -94,8 +92,6 @@
 
 @implementation SectionCalendarTableViewCell
 
-@synthesize CGColor;
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
@@ -108,7 +104,7 @@
 
 - (void)setCGColor:(CGColorRef)colorRef
 {
-	CGColor = CGColorRetain(colorRef);
+	_CGColor = CGColorRetain(colorRef);
 	
 	_InternalSectionCalendarView * _internalSectionCalendarView = (_InternalSectionCalendarView *)self.backgroundView;
 	_internalSectionCalendarView.CGColor = colorRef;

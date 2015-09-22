@@ -9,18 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface _InternalSectionCalendarView : UIView
-{
-	CGColorRef CGColor;
-}
 
 @property (nonatomic, assign) CGColorRef CGColor;
 
 @end
 
+
 @interface SectionCalendarTableViewCell : UITableViewCell
-{
-	CGColorRef CGColor;
-}
 
 @property (nonatomic, assign) CGColorRef CGColor;
 

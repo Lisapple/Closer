@@ -19,6 +19,7 @@
 		Countdown * countdown = [Countdown countdownWithIdentifier:anIdentifier];
 		if (!countdown || ![countdown.endDate isEqualToDate:localNotif.fireDate]) {
 			[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
+			NSDebugLog(@"Remove local notification: name = %@, endDate = %@", countdown.name, localNotif.fireDate);
 		}
 	}
 }
@@ -39,7 +40,7 @@
 
 - (UILocalNotification *)createLocalNotification
 {
-    NSDebugLog(@"Create new local notification for countdown : %@ => %@", self.name, [endDate description]);
+    NSDebugLog(@"Create new local notification for countdown : %@ => %@", self.name, [self.endDate description]);
     UILocalNotification * localNotif = [[UILocalNotification alloc] init];
     
     localNotif.timeZone = [NSTimeZone localTimeZone];
@@ -50,9 +51,9 @@
 
 - (void)updateLocalNotification
 {
-    if (active) {
+    if (self.isActive) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (endDate && endDate.timeIntervalSinceNow > 0.) {
+            if (self.endDate && self.endDate.timeIntervalSinceNow > 0.) {
                 
                 UILocalNotification * localNotif = [self localNotification];
                 if (localNotif) {
@@ -63,15 +64,15 @@
                 
                 localNotif.fireDate = self.endDate;
                 
-                NSString * messageString = message;
-                if (!message || [message isEqualToString:@""]) {// If no message, show the default message
+                NSString * messageString = self.message;
+                if (!self.message || [self.message isEqualToString:@""]) {// If no message, show the default message
                     if (self.type == CountdownTypeTimer) {
-                        if (name)// If name was set, add it to default message
+                        if (self.name)// If name was set, add it to default message
                             messageString = [NSString stringWithFormat:NSLocalizedString(@"TIMER_FINISHED_MESSAGE %@", nil), self.name];
                         else // Else if wasn't set, just show the default message
                             messageString = NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil);
                     } else {
-                        if (name) messageString = [NSString stringWithFormat:NSLocalizedString(@"COUNTDOWN_FINISHED_MESSAGE %@", nil), self.name];
+                        if (self.name) messageString = [NSString stringWithFormat:NSLocalizedString(@"COUNTDOWN_FINISHED_MESSAGE %@", nil), self.name];
                         else messageString = NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil);
                     }
                 }

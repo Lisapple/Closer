@@ -11,10 +11,6 @@
 #import "DurationPickerView.h"
 
 @interface DurationPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, DurationPickerViewDelegate, DurationPickerViewDataSource>
-{
-	NSArray * cellsTitle;
-	NSMutableArray * durationPickers;
-}
 
 @property (nonatomic, strong) IBOutlet UITableView * tableView;
 @property (nonatomic, strong) Countdown * countdown;

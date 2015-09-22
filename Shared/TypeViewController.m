@@ -14,9 +14,6 @@
 
 @implementation TypeViewController
 
-@synthesize tableView = _tableView;
-@synthesize countdown = _countdown;
-
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Type", nil);

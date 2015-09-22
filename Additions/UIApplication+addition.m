@@ -16,6 +16,7 @@ static NSUInteger __idleTimerCount = 0;
 {
 	++__idleTimerCount;
 	self.idleTimerDisabled = NO;
+	NSDebugLog(@"idle timer enabled");
 }
 
 - (void)disableIdleTimer
@@ -23,6 +24,7 @@ static NSUInteger __idleTimerCount = 0;
 	__idleTimerCount = MAX(0, __idleTimerCount - 1);
 	if (__idleTimerCount == 0) {
 		self.idleTimerDisabled = YES;
+		NSDebugLog(@"idle timer disabled");
 	}
 }
 

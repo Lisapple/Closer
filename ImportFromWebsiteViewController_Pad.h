@@ -9,17 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ImportFromWebsiteViewController_Pad : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
-{
-	NSString * password1, * password2;
-	NSArray * countdowns;
-	
-	NSURLConnection * connection;
-	
-	NSMutableArray * selectedCountdowns;
-	
-	@private
-	NSRegularExpression * regex;
-}
 
 @property (nonatomic, strong) IBOutlet UITextField * hiddenTextField1, * hiddenTextField2;
 

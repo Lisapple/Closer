@@ -12,23 +12,17 @@
 
 #import "NSDate+addition.h"
 
-@interface DatePickerViewController (PrivateMethods)
+@interface DatePickerViewController ()
+
+@property (nonatomic, assign) BOOL hasTimeDate;
+@property (nonatomic, strong) NSTimer * updateDatePickerTimer;
 
 - (void)updatePickerMinimalDate;
-
 - (void)updateWithOrientation:(UIInterfaceOrientation)orientation;
 
 @end
 
 @implementation DatePickerViewController
-
-@synthesize tableView;
-@synthesize datePicker;
-
-@synthesize date;
-@synthesize countdown;
-
-@synthesize undoManager;
 
 - (void)viewDidLoad
 {
@@ -36,13 +30,13 @@
 	
 	self.title = NSLocalizedString(@"Date & Time", nil);
 	
-	tableView.delegate = self;
-	tableView.dataSource = self;
-	[tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
+	[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
 						   animated:NO
 					 scrollPosition:UITableViewScrollPositionNone];
-	tableView.alwaysBounceVertical = NO;
-	tableView.scrollEnabled = NO;
+	_tableView.alwaysBounceVertical = NO;
+	_tableView.scrollEnabled = NO;
 	
 	[self reloadData];
 	
@@ -53,8 +47,8 @@
 {
 	[super viewWillAppear:animated];
 	
-	NSDate * endDate = countdown.endDate;
-	hasTimeDate = (endDate != nil && (endDate.timeIntervalSinceNow > 0));// If endDate is nil or passed, we don't have a valid date and consider time as invalid
+	NSDate * endDate = _countdown.endDate;
+	_hasTimeDate = (endDate != nil && (endDate.timeIntervalSinceNow > 0));// If endDate is nil or passed, we don't have a valid date and consider time as invalid
 	
 	if (!endDate || (endDate.timeIntervalSinceNow <= 0)) {
 		self.date = [[NSDate date] dateByAddingTimeInterval:60];// date = now + 1 minute
@@ -62,15 +56,14 @@
 		self.date = endDate;
 	}
 	
-	[datePicker setDate:date animated:NO];
-	datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60];// minimumDate = now + 1 minute
-	datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:(100. * 365. * 24. * 60. * 60.)];// maximumDate = now + 100 years
+	[_datePicker setDate:_date animated:NO];
+	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60];// minimumDate = now + 1 minute
+	_datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:(100. * 365. * 24. * 60. * 60.)];// maximumDate = now + 100 years
 	
 	[self reloadData];
 	
 	NSUndoManager * anUndomanager = [[NSUndoManager alloc] init];
 	self.undoManager = anUndomanager;
-	
 	
 	[self updateWithOrientation:[UIApplication sharedApplication].statusBarOrientation];
 	
@@ -82,11 +75,9 @@
 	/* Start -[DatePickerViewController updatePickerMinimalDate] to set minimum date at the next time change and call it every minutes */
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-		updateDatePickerTimer = [NSTimer scheduledTimerWithTimeInterval:60.// Every minutes
-                                                                 target:self
-                                                               selector:@selector(updatePickerMinimalDate)
-                                                               userInfo:nil
-                                                                repeats:YES];
+		_updateDatePickerTimer = [NSTimer scheduledTimerWithTimeInterval:60. // Every minutes
+                                                                 target:self selector:@selector(updatePickerMinimalDate)
+                                                               userInfo:nil repeats:YES];
 	});
 }
 
@@ -94,23 +85,23 @@
 {
 	[super viewWillDisappear:animated];
 	
-	if (hasTimeDate) {
-		NSTimeInterval timeIntervalSince1970 = date.timeIntervalSince1970;
+	if (_hasTimeDate) {
+		NSTimeInterval timeIntervalSince1970 = _date.timeIntervalSince1970;
 		NSTimeInterval seconds = (timeIntervalSince1970 - ((int)(timeIntervalSince1970 / 60) * 60.));
-		self.countdown.endDate = [date dateByAddingTimeInterval:-seconds];// Fix seconds from date to zero to finish countdown at hh:mm:00 (and not hh:mm:ss)
+		self.countdown.endDate = [_date dateByAddingTimeInterval:-seconds];// Fix seconds from date to zero to finish countdown at hh:mm:00 (and not hh:mm:ss)
 	}
 	
 	self.undoManager = nil;
 	
-	if (updateDatePickerTimer.valid) {
-		[updateDatePickerTimer invalidate];
-		updateDatePickerTimer = nil;
+	if (_updateDatePickerTimer.valid) {
+		[_updateDatePickerTimer invalidate];
+		_updateDatePickerTimer = nil;
 	}
 }
 
 - (void)setDatePickerDate:(NSDate *)aDate
 {
-	datePicker.date = aDate;
+	_datePicker.date = aDate;
 	self.date = aDate;
 	
 	[self reloadData];
@@ -124,22 +115,22 @@
 	
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DATE_ACTION", nil)];
 	
-	self.date = datePicker.date;
+	self.date = _datePicker.date;
 	[self reloadData];
 }
 
 - (void)updatePickerMinimalDate
 {
-	datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60];// minimumDate = now + 1 minute
+	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60];// minimumDate = now + 1 minute
 	[self reloadData];// Force reload data to prevent change from datePicker
 }
 
 - (void)reloadData
 {
 	/* Reload tableView and retain the current selection */
-	NSIndexPath * selectedCellIndexPath = tableView.indexPathForSelectedRow;
-	[tableView reloadData];
-	[tableView selectRowAtIndexPath:selectedCellIndexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
+	NSIndexPath * selectedCellIndexPath = _tableView.indexPathForSelectedRow;
+	[_tableView reloadData];
+	[_tableView selectRowAtIndexPath:selectedCellIndexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
 }
 
 #pragma mark -
@@ -168,7 +159,7 @@
 {
 	static NSString * cellIdentifier = @"CellID";
 	
-	UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -185,10 +176,10 @@
 		cell.textLabel.textColor = [UIColor blackColor];
 	
 	if (indexPath.row == 0)
-		cell.textLabel.text = [date naturalDateString];
+		cell.textLabel.text = [_date naturalDateString];
 	else {
-		if (hasTimeDate) {
-			cell.textLabel.text = [date naturalTimeString];
+		if (_hasTimeDate) {
+			cell.textLabel.text = [_date naturalTimeString];
 		} else {
 			cell.textLabel.text = @"-:--";
 			cell.textLabel.textColor = [UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.];
@@ -203,16 +194,16 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	datePicker.date = date;
+	_datePicker.date = _date;
 	
 	if (indexPath.row == 0) {// Days
-		datePicker.datePickerMode = UIDatePickerModeDate;
+		_datePicker.datePickerMode = UIDatePickerModeDate;
 	} else {// Time
-		datePicker.datePickerMode = UIDatePickerModeTime;
+		_datePicker.datePickerMode = UIDatePickerModeTime;
 		
-		if (!hasTimeDate) {
+		if (!_hasTimeDate) {
 			[self datePickerDidChange:nil];// Force datePickerDidChange: call when datePicker set minimum date automatly (when date is earlier than datePicker minium date per example)
-			hasTimeDate = YES;
+			_hasTimeDate = YES;
 		}
 	}
 	
@@ -225,8 +216,8 @@
 - (void)updateWithOrientation:(UIInterfaceOrientation)orientation
 {
 	CGFloat newPickerHeight = UIInterfaceOrientationIsLandscape(orientation)? 162. : 216;
-	datePicker.frame = CGRectMake(0., self.view.frame.size.height - newPickerHeight, self.view.frame.size.width, newPickerHeight);
-	tableView.frame = CGRectMake(0., 0, self.view.frame.size.width, self.view.frame.size.height - newPickerHeight);
+	_datePicker.frame = CGRectMake(0., self.view.frame.size.height - newPickerHeight, self.view.frame.size.width, newPickerHeight);
+	_tableView.frame = CGRectMake(0., 0, self.view.frame.size.width, self.view.frame.size.height - newPickerHeight);
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration

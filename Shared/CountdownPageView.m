@@ -10,29 +10,15 @@
 
 #import "UIView+addition.h"
 
-@interface CountdownPageView (PrivatesMethods)
-
-+ (UINib *)landscapeNib;
-
-- (void)setLabelFontDescription:(FontDescription *)fontDescription;
-- (void)setDescriptionLabelFontDescription:(FontDescription *)fontDescription;
-- (void)setNameFontDescription:(FontDescription *)fontDescription;
-
-@end
-
 @interface CountdownPageView ()
-{
-	CGPoint _location;
-	BOOL idleTimerDisabled;
-}
+
+@property (nonatomic, assign) IBOutlet UIView * contentView;
+@property (nonatomic, assign) CGPoint location;
+@property (nonatomic, assign) BOOL idleTimerDisabled;
+
 @end
 
 @implementation CountdownPageView
-
-// Private
-@synthesize daysLabel, hoursLabel, minutesLabel, secondsLabel;
-@synthesize daysDescriptionLabel, hoursDescriptionLabel, minutesDescriptionLabel, secondsDescriptionLabel;
-@synthesize nameLabel;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -44,7 +30,7 @@
 		_contentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self.scrollView addSubview:_contentView];
 		
-		idleTimerDisabled = NO;
+		_idleTimerDisabled = NO;
 	}
 	
 	return self;
@@ -54,43 +40,43 @@
 {
 	[super layoutSubviews];
 	
-	NSDate * date = countdown.endDate;
+	NSDate * date = self.countdown.endDate;
 	NSTimeInterval timeInterval = date.timeIntervalSinceNow;
 	timeInterval = (timeInterval > 0.) ? timeInterval : 0.;// Clip timeInterval to zero
 	
 	int days = (int)(timeInterval / (24. * 60. * 60.));
 	
-	daysLabel.hidden = (days == 0);
-	daysDescriptionLabel.hidden = (days == 0);
+	_daysLabel.hidden = (days == 0);
+	_daysDescriptionLabel.hidden = (days == 0);
 	
-	CGFloat totalHeight = hoursLabel.frame.size.height + minutesLabel.frame.size.height
-	+ secondsLabel.frame.size.height + nameLabel.frame.size.height;
+	CGFloat totalHeight = _hoursLabel.frame.size.height + _minutesLabel.frame.size.height
+	+ _secondsLabel.frame.size.height + _nameLabel.frame.size.height;
 	if (days)
-		totalHeight += daysLabel.frame.size.height;
+		totalHeight += _daysLabel.frame.size.height;
 	
 	int numberOfLabels = (days) ? 5 : 4;
 	CGFloat margin = ceilf((self.frame.size.height - 20. - totalHeight) / (float)(numberOfLabels + 1));
 	
 	CGFloat y = margin;
 	if (days > 0) {
-		[daysLabel setY:y];
-		[daysDescriptionLabel setY:(y + 25.)];
-		y += margin + daysLabel.frame.size.height;
+		[_daysLabel setY:y];
+		[_daysDescriptionLabel setY:(y + 25.)];
+		y += margin + _daysLabel.frame.size.height;
 	}
 	
-	[hoursLabel setY:y];
-	[hoursDescriptionLabel setY:(y + 25.)];
+	[_hoursLabel setY:y];
+	[_hoursDescriptionLabel setY:(y + 25.)];
 	
-	y += margin + hoursLabel.frame.size.height;
-	[minutesLabel setY:y];
-	[minutesDescriptionLabel setY:(y + 25.)];
+	y += margin + _hoursLabel.frame.size.height;
+	[_minutesLabel setY:y];
+	[_minutesDescriptionLabel setY:(y + 25.)];
 	
-	y += margin + minutesLabel.frame.size.height;
-	[secondsLabel setY:y];
-	[secondsDescriptionLabel setY:(y + 25.)];
+	y += margin + _minutesLabel.frame.size.height;
+	[_secondsLabel setY:y];
+	[_secondsDescriptionLabel setY:(y + 25.)];
 	
-	y += margin + secondsLabel.frame.size.height;
-	[nameLabel setY:y];
+	y += margin + _secondsLabel.frame.size.height;
+	[_nameLabel setY:y];
 	[self.infoButton setY:y];
 	
 	UIView * containerView = _contentView.subviews.lastObject;
@@ -118,30 +104,30 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 
 - (void)setTextColor:(UIColor *)textColor
 {
-    daysLabel.textColor = hoursLabel.textColor = minutesLabel.textColor = secondsLabel.textColor = textColor;
-    daysDescriptionLabel.textColor = hoursDescriptionLabel.textColor = minutesDescriptionLabel.textColor = secondsDescriptionLabel.textColor = textColor;
+    _daysLabel.textColor = _hoursLabel.textColor = _minutesLabel.textColor = _secondsLabel.textColor = textColor;
+    _daysDescriptionLabel.textColor = _hoursDescriptionLabel.textColor = _minutesDescriptionLabel.textColor = _secondsDescriptionLabel.textColor = textColor;
     
-	nameLabel.textColor = textColor;
+	_nameLabel.textColor = textColor;
 	
     self.infoButton.tintColor = textColor;
 }
 
 - (void)setCountdown:(Countdown *)aCountdown
 {
-	countdown = aCountdown;
+	super.countdown = aCountdown;
 	
-	nameLabel.text = countdown.name;
+	_nameLabel.text = self.countdown.name;
 	
-	self.style = countdown.style;
+	self.style = self.countdown.style;
 }
 
 - (void)viewWillShow:(BOOL)animated
 {
 	[super viewWillShow:animated];
 	
-	if (ABS(countdown.endDate.timeIntervalSinceNow) < 3. * 60. && !idleTimerDisabled) {
+	if (ABS(self.countdown.endDate.timeIntervalSinceNow) < 3. * 60. && !_idleTimerDisabled) {
 		[[UIApplication sharedApplication] disableIdleTimer];
-		idleTimerDisabled = YES;
+		_idleTimerDisabled = YES;
 	}
 }
 
@@ -149,9 +135,9 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 {
 	[super viewDidHide:animated];
 	
-	if (idleTimerDisabled) {
+	if (_idleTimerDisabled) {
 		[[UIApplication sharedApplication] enableIdleTimer];
-		idleTimerDisabled = NO;
+		_idleTimerDisabled = NO;
 	}
 }
 
@@ -159,7 +145,7 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 {
 	[self setNeedsLayout];
 	
-	NSDate * date = countdown.endDate;
+	NSDate * date = self.countdown.endDate;
 	NSTimeInterval timeInterval = date.timeIntervalSinceNow;
 	timeInterval = (timeInterval > 0.)? timeInterval: 0.;// Clip timeInterval to zero
 	
@@ -174,26 +160,26 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 	
 	NSUInteger seconds = timeInterval;
 	
-	daysLabel.hidden = (days == 0);
-	daysDescriptionLabel.hidden = (days == 0);
+	_daysLabel.hidden = (days == 0);
+	_daysDescriptionLabel.hidden = (days == 0);
 	
 	if (days > 0) {
-		daysLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(days, NO)];
-		hoursLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(hours, YES)];
+		_daysLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(days, NO)];
+		_hoursLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(hours, YES)];
 	} else {
-		hoursLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(hours, YES)];
+		_hoursLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(hours, YES)];
 	}
 	
-	minutesLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(minutes, YES)];
-	secondsLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(seconds, YES)];
+	_minutesLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(minutes, YES)];
+	_secondsLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(seconds, YES)];
 	
-	daysDescriptionLabel.animatedText = (days > 1)? NSLocalizedString(@"DAYS_MANY", nil):
+	_daysDescriptionLabel.animatedText = (days > 1)? NSLocalizedString(@"DAYS_MANY", nil):
 	((days == 1)? NSLocalizedString(@"DAY_ONE", nil): NSLocalizedString(@"DAYS_ZERO", nil));
-	hoursDescriptionLabel.animatedText = (hours > 1)? NSLocalizedString(@"HOURS_MANY", nil):
+	_hoursDescriptionLabel.animatedText = (hours > 1)? NSLocalizedString(@"HOURS_MANY", nil):
 	((hours == 1)? NSLocalizedString(@"HOUR_ONE", nil): NSLocalizedString(@"HOURS_ZERO", nil));
-	minutesDescriptionLabel.animatedText = (minutes > 1)? NSLocalizedString(@"MINUTES_MANY", nil):
+	_minutesDescriptionLabel.animatedText = (minutes > 1)? NSLocalizedString(@"MINUTES_MANY", nil):
 	((minutes == 1)? NSLocalizedString(@"MINUTE_ONE", nil): NSLocalizedString(@"MINUTES_ZERO", nil));
-	secondsDescriptionLabel.animatedText = (seconds > 1)? NSLocalizedString(@"SECONDS_MANY", nil):
+	_secondsDescriptionLabel.animatedText = (seconds > 1)? NSLocalizedString(@"SECONDS_MANY", nil):
 	((seconds == 1)? NSLocalizedString(@"SECOND_ONE", nil): NSLocalizedString(@"SECONDS_ZERO", nil));
 }
 
@@ -211,10 +197,10 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 
 - (void)setPosition:(CGPoint)aPosition
 {
-	position = aPosition;
+	self.position = aPosition;
 	
 	CGRect rect = _contentView.frame;
-	self.frame = CGRectMake(position.x, position.y, rect.size.width, rect.size.height);
+	self.frame = CGRectMake(self.position.x, self.position.y, rect.size.width, rect.size.height);
 	
 	NSDebugLog(@"{%.1f, %.1f} {%.1f, %.1f}",
 			   _contentView.frame.origin.x, _contentView.frame.origin.y,

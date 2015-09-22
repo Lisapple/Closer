@@ -10,19 +10,25 @@
 
 #import "NSObject+additions.h"
 
+@interface _DeleteButton ()
+
+@property (nonatomic, strong) UILabel * label;
+
+@end
+
 @implementation _DeleteButton
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
-		_titleLabel = [[UILabel alloc] initWithFrame:self.bounds];
-		_titleLabel.textColor = [UIColor whiteColor];
-		_titleLabel.backgroundColor = [UIColor clearColor];
-		_titleLabel.textAlignment = NSTextAlignmentCenter;
-		_titleLabel.font = [UIFont systemFontOfSize:20.];
-		[self addSubview:_titleLabel];
+		_label = [[UILabel alloc] initWithFrame:self.bounds];
+		_label.textColor = [UIColor whiteColor];
+		_label.backgroundColor = [UIColor clearColor];
+		_label.textAlignment = NSTextAlignmentCenter;
+		_label.font = [UIFont systemFontOfSize:20.];
+		[self addSubview:_label];
 		
-		_titleLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
+		_label.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
 		
 		self.clipsToBounds = YES;
 	}
@@ -31,16 +37,22 @@
 
 - (void)setTitle:(NSString *)title forState:(UIControlState)state
 {
-	_titleLabel.text = title;
+	_label.text = title;
 }
 
 @end
 
 
-@implementation PageView
+@interface PageView ()
 
-@synthesize countdown;
-@synthesize position;
+@property (nonatomic, strong) UIButton * deleteButton;
+
+@property (nonatomic, assign) CGPoint startLocation, offset;
+@property (nonatomic, assign) BOOL shouldShowDeleteConfirmation;
+
+@end
+
+@implementation PageView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {

@@ -10,14 +10,10 @@
 
 @implementation MyTextView
 
-@synthesize undoManager = _undoManager;
-
 @end
 
 
 @implementation MessageViewControler
-
-@synthesize undoManager = _undoManager;
 
 const CGFloat kHeightRowLandscape = 60.;
 const CGFloat kHeightRowPortrait = 120.;

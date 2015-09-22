@@ -15,14 +15,15 @@
 NSString * const CountdownDidSynchronizeNotification = @"CountdownDidSynchronizeNotification";
 NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotification";
 
+@interface Countdown ()
+
+@property (nonatomic, strong) NSMutableArray <NSNumber *> * durations;
+@property (nonatomic, assign) NSTimeInterval remaining;
+@property (nonatomic, assign) BOOL active;
+
+@end
+
 @implementation Countdown
-
-@synthesize name;
-@synthesize endDate;
-@synthesize message;
-@synthesize songID;
-
-@synthesize identifier;
 
 static NSString * _countdownsListPath = nil;
 static NSMutableArray * _propertyList = nil;
@@ -339,7 +340,7 @@ static NSMutableArray * _countdowns = nil;
 		if (self.endDate) dictionary[@"endDate"] = self.endDate;
 		if (self.message) dictionary[@"message"] = self.message;
 	} else {
-		if (durations) dictionary[@"durations"] = durations;
+		if (self.durations) dictionary[@"durations"] = self.durations;
 		dictionary[@"durationIndex"] = @(self.durationIndex);
 		
 		if (self.endDate) dictionary[@"endDate"] = self.endDate;
@@ -364,23 +365,19 @@ static NSMutableArray * _countdowns = nil;
 {
 	if ((self = [super init])) {
 		if (!anIdentifier) {
-			CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
-			CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-			anIdentifier = (__bridge NSString *)uuidString;
-			CFRelease(uuidString);
-			CFRelease(uuidRef);
+			anIdentifier = [NSUUID UUID].UUIDString;
 		}
 		
 		/* Don't call self.xxx to not call updateLocalNotification many times */
-		name = NSLocalizedString(@"NO_TITLE_PLACEHOLDER", nil);
-		endDate = nil;
-		message = @"";
-		songID = @"default";
+		_name = NSLocalizedString(@"NO_TITLE_PLACEHOLDER", nil);
+		_endDate = nil;
+		_message = @"";
+		_songID = @"default";
 		_style = 0;
 		_type = CountdownTypeCountdown;
         _notificationCenter = YES;
 		
-		identifier = anIdentifier;
+		_identifier = anIdentifier;
 		
 		[self update];
 	}
@@ -388,43 +385,48 @@ static NSMutableArray * _countdowns = nil;
 	return self;
 }
 
+- (BOOL)isActive
+{
+	return _active;
+}
+
 - (void)activate
 {
-	active = YES;
+	_active = YES;
 }
 
 - (void)desactivate
 {
-	active = NO;
+	_active = NO;
 }
 
 - (void)setName:(NSString *)aName
 {
-	if (aName && ![aName isEqualToString:name]) {
-		name = aName;
+	if (aName && ![aName isEqualToString:_name]) {
+		_name = aName;
 		[self update];
 	}
 }
 
 - (void)setMessage:(NSString *)aMessage
 {
-	if (aMessage && ![aMessage isEqualToString:message]) {
-		message = aMessage;
+	if (aMessage && ![aMessage isEqualToString:_message]) {
+		_message = aMessage;
 		[self update];
 	}
 }
 
 - (void)setEndDate:(NSDate *)aDate
 {
-	endDate = aDate;
-	_paused = (endDate == nil);
+	_endDate = aDate;
+	_paused = (_endDate == nil);
 	[self update];
 }
 
 - (void)setSongID:(NSString *)aSongID
 {
-	if (aSongID && ![aSongID isEqualToString:songID]) {
-		songID = aSongID;
+	if (aSongID && ![aSongID isEqualToString:_songID]) {
+		_songID = aSongID;
 		[self update];
 	}
 }
@@ -466,52 +468,52 @@ static NSMutableArray * _countdowns = nil;
 - (NSNumber *)currentDuration
 {
 	/* Return the current duration (at index "duratonIndex" if not out of bounds, else return the first duration if exists, else return "nil" */
-	return (_durationIndex <= ((NSInteger)durations.count - 1)) ? durations[_durationIndex] : ((durations.count > 0) ? durations[0] : nil);
+	return (_durationIndex <= ((NSInteger)_durations.count - 1)) ? _durations[_durationIndex] : ((_durations.count > 0) ? _durations[0] : nil);
 }
 
 - (NSArray *)durations
 {
-	return durations;
+	return _durations;
 }
 
 - (void)addDuration:(NSNumber *)duration
 {
-	if (!durations)
-		durations = [[NSMutableArray alloc] initWithCapacity:5];
+	if (!_durations)
+		_durations = [[NSMutableArray alloc] initWithCapacity:5];
 	
-	[durations addObject:duration];
+	[_durations addObject:duration];
 }
 
 - (void)addDurations:(NSArray *)someDurations
 {
-	if (!durations)
-		durations = [[NSMutableArray alloc] initWithCapacity:5];
+	if (!_durations)
+		_durations = [[NSMutableArray alloc] initWithCapacity:5];
 	
-	[durations addObjectsFromArray:someDurations];
+	[_durations addObjectsFromArray:someDurations];
 }
 
 - (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index
 {
-	durations[index] = duration;
+	_durations[index] = duration;
 }
 
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex
 {
 	if (fromIndex != toIndex) {
-		NSNumber * duration = durations[fromIndex];
-		[durations removeObjectAtIndex:fromIndex];
-		[durations insertObject:duration atIndex:toIndex];
+		NSNumber * duration = _durations[fromIndex];
+		[_durations removeObjectAtIndex:fromIndex];
+		[_durations insertObject:duration atIndex:toIndex];
 	}
 }
 
 - (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2
 {
-	[durations exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+	[_durations exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
 - (void)removeDurationAtIndex:(NSUInteger)index
 {
-	[durations removeObjectAtIndex:index];
+	[_durations removeObjectAtIndex:index];
 }
 
 - (void)resetDurationIndex
@@ -522,8 +524,8 @@ static NSMutableArray * _countdowns = nil;
 - (void)resume
 {
 	if (_type == CountdownTypeTimer && _paused) {
-		endDate = [NSDate dateWithTimeIntervalSinceNow:remaining];
-		remaining = 0.;
+		_endDate = [NSDate dateWithTimeIntervalSinceNow:_remaining];
+		_remaining = 0.;
 		_paused = NO;
 		[self updateLocalNotification];
 	}
@@ -532,8 +534,8 @@ static NSMutableArray * _countdowns = nil;
 - (void)pause
 {
 	if (_type == CountdownTypeTimer && !_paused) {
-		remaining = endDate.timeIntervalSinceNow;
-		endDate = nil;
+		_remaining = _endDate.timeIntervalSinceNow;
+		_endDate = nil;
 		_paused = YES;
 		[self updateLocalNotification];
 	}
@@ -542,7 +544,7 @@ static NSMutableArray * _countdowns = nil;
 - (void)reset
 {
 	if (_type == CountdownTypeTimer) {
-		endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
+		_endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
 		_paused = NO;
 		[self updateLocalNotification];
 	}
@@ -552,7 +554,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)descriptionOfDurationAtIndex:(NSInteger)index
 {
-	long seconds = [durations[index] longValue];
+	long seconds = _durations[index].longValue;
 	long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
@@ -577,7 +579,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index
 {
-	long seconds = [durations[index] longValue];
+	long seconds = _durations[index].longValue;
 	long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
@@ -629,9 +631,9 @@ static NSMutableArray * _countdowns = nil;
 - (NSString *)description
 {
 	if (_type == CountdownTypeTimer)
-		return [NSString stringWithFormat:@"<Countdown (Timer): 0x%p; name = %@; durations = %@; songID = %@>", self, name, [durations componentsJoinedByString:@","], songID];
+		return [NSString stringWithFormat:@"<Countdown (Timer): 0x%p; name = %@; durations = %@; songID = %@>", self, _name, [_durations componentsJoinedByString:@","], _songID];
 	else
-		return [NSString stringWithFormat:@"<Countdown: 0x%p; name = %@; endDate = %@; songID = %@>", self, name, endDate, songID];
+		return [NSString stringWithFormat:@"<Countdown: 0x%p; name = %@; endDate = %@; songID = %@>", self, _name, _endDate, _songID];
 }
 
 

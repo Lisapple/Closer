@@ -10,11 +10,6 @@
 
 @implementation NSArray (addition)
 
-- (NSString *)componentsJoinedByString:(NSString *)separator andLastString:(NSString *)endSeparator
-{
-	return [self componentsJoinedByString:separator withLastJoin:endSeparator];
-}
-
 - (NSString *)componentsJoinedByString:(NSString *)join withLastJoin:(NSString *)endJoin
 {
 	NSInteger count = self.count;

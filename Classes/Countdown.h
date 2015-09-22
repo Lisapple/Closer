@@ -32,18 +32,6 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 };
 
 @interface Countdown : NSObject
-{
-	NSString * name;
-	NSDate * endDate;
-	NSString * message;
-	NSString * songID;
-	
-	@private
-	NSString * identifier;
-	NSMutableArray * durations;
-	NSTimeInterval remaining;
-	BOOL active;
-}
 
 @property (nonatomic, strong) NSString * name;
 @property (nonatomic, strong) NSDate * endDate;
@@ -65,7 +53,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 + (NSInteger)numberOfCountdowns;
 
-+ (NSArray *)allCountdowns;
++ (NSArray <Countdown *> *)allCountdowns;
 
 + (Countdown *)countdownWithIdentifier:(NSString *)identifier;
 
@@ -74,7 +62,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 + (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
 + (void)addCountdown:(Countdown *)countdown;
-+ (void)addCountdowns:(NSArray *)countdowns;
++ (void)addCountdowns:(NSArray <Countdown *> *)countdowns;
 
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 + (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2;
@@ -88,14 +76,14 @@ typedef NS_ENUM(NSUInteger, PromptState) {
  * @param none
  * @return an array of NSString with the localized name of all styles
  */
-+ (NSArray *)styles;
++ (NSArray <NSString *> *)styles;
 
 - (instancetype)initWithIdentifier:(NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
 
 #pragma mark Timer methods
 
 - (NSNumber *)currentDuration;
-- (NSArray *)durations;
+- (NSArray <NSNumber *> *)durations;
 - (void)addDuration:(NSNumber *)duration;
 - (void)addDurations:(NSArray *)durations;
 - (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index;
@@ -109,6 +97,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 #pragma mark Activation methods
 
+- (BOOL)isActive;
 - (void)activate; /* Make the countdown active to send local notification */
 - (void)desactivate;
 

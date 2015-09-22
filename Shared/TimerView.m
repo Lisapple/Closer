@@ -18,8 +18,6 @@
 
 @implementation TimerView
 
-@synthesize progression = _progression;
-
 - (void)setProgression:(CGFloat)progression
 {
 	_progression = progression;

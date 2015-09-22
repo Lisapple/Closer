@@ -16,10 +16,6 @@
 
 @implementation DurationsViewController
 
-@synthesize tableView = _tableView;
-
-@synthesize countdown = _countdown;
-
 - (void)viewDidLoad
 {
 	[super viewDidLoad];

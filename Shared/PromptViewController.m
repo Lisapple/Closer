@@ -10,12 +10,11 @@
 
 @interface PromptViewController ()
 
+@property (nonatomic, strong) NSArray * cellsTitle;
+
 @end
 
 @implementation PromptViewController
-
-@synthesize tableView = _tableView;
-@synthesize countdown = _countdown;
 
 - (void)viewDidLoad
 {
@@ -27,7 +26,7 @@
 	_tableView.dataSource = self;
     _tableView.alwaysBounceVertical = YES;
 	
-	cellsTitle = @[NSLocalizedString(@"Never", nil), NSLocalizedString(@"At the end of each timer", nil), NSLocalizedString(@"When all timers are finished", nil)];
+	_cellsTitle = @[NSLocalizedString(@"Never", nil), NSLocalizedString(@"At the end of each timer", nil), NSLocalizedString(@"When all timers are finished", nil)];
 }
 
 #pragma mark -
@@ -41,7 +40,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	/* Three for "Never", "At the end of each timer" and "When all timers are finished" */
-	return cellsTitle.count;
+	return _cellsTitle.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -60,7 +59,7 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	
-	cell.textLabel.text = cellsTitle[indexPath.row];
+	cell.textLabel.text = _cellsTitle[indexPath.row];
 	cell.accessoryType = (_countdown.promptState == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 	
 	return cell;
@@ -72,9 +71,9 @@
 {
 	_countdown.promptState = indexPath.row;
 	
-	for (NSInteger row = 0; row < cellsTitle.count; row++) {
+	for (NSInteger row = 0; row < _cellsTitle.count; row++) {
 		if (row != indexPath.row) {
-			[_tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]]
+			[_tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:0] ]
 							  withRowAnimation:UITableViewRowAnimationNone];
 		}
 	}

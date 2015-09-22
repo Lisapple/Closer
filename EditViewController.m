@@ -10,8 +10,8 @@
 
 @interface EditViewController ()
 
-@property (nonatomic, strong) NSArray * allCountdowns;
-@property (nonatomic, strong) NSMutableArray * includedCountdowns, * notIncludedCountdowns;
+@property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
+@property (nonatomic, strong) NSMutableArray <Countdown *> * includedCountdowns, * notIncludedCountdowns;
 
 @end
 

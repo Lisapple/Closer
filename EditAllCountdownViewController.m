@@ -20,8 +20,8 @@
 {
     BOOL forceReloadData;
 }
-@property (nonatomic, strong) NSArray * allCountdowns;
-@property (nonatomic, strong) NSMutableArray * includedCountdowns, * notIncludedCountdowns;
+@property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
+@property (nonatomic, strong) NSMutableArray <Countdown *> * includedCountdowns, * notIncludedCountdowns;
 
 - (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
 - (void)removeCountdown:(Countdown *)countdown index:(NSInteger)index;
@@ -29,8 +29,6 @@
 @end
 
 @implementation EditAllCountdownViewController
-
-@synthesize settingsViewController;
 
 - (void)viewDidLoad
 {
@@ -41,11 +39,11 @@
 																						   target:self action:@selector(done:)];
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 																						  target:self action:@selector(add:)];
-	tableView.delegate = self;
-	tableView.dataSource = self;
-    tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-	tableView.allowsSelectionDuringEditing = YES;
-	tableView.editing = YES;
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
+    _tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	_tableView.allowsSelectionDuringEditing = YES;
+	_tableView.editing = YES;
 	[self reloadData];
 	
 	[NetworkStatus startObserving];
@@ -57,7 +55,7 @@
 - (void)networkStatusDidChange:(NSNotification *)notification
 {
 	/* Reload the second section (Import/Export) */
-	[tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
+	[_tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
 			 withRowAnimation:UITableViewRowAnimationFade];
 }
 
@@ -84,18 +82,17 @@
 {
 	NSDictionary * infoDictionary = [NSBundle mainBundle].infoDictionary;
 	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © %lu, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"], [NSDate date].year];
-	
-	UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Show Countdowns Online", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com/"]]; }]];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Feedback & Support", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+	UIAlertController * actionSheet = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"closer.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com"]]; }]];
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"support.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]]; }]];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Go to my website", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]]; }]];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"See all my applications", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://applestore.com/lisacintosh"]]; }]];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
-	[self presentViewController:alert animated:YES completion:NULL];
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"appstore.com/lisacintosh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://appstore.com/lisacintosh/"]]; }]];
+	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
+	[self presentViewController:actionSheet animated:NO completion:nil];
 }
 
 - (void)reloadData
@@ -111,7 +108,7 @@
         [_notIncludedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
             return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
         
-		[tableView reloadData];
+		[_tableView reloadData];
         forceReloadData = NO;
 	}
 	
@@ -120,11 +117,11 @@
 
 - (IBAction)done:(id)sender
 {
-	NSInteger index = [Countdown indexOfCountdown:settingsViewController.countdown];
+	NSInteger index = [Countdown indexOfCountdown:_settingsViewController.countdown];
 	if (index == NSNotFound) {
 		NSInteger countdownsCount = [Countdown allCountdowns].count;
 		if (countdownsCount > 0)
-			settingsViewController.countdown = [Countdown countdownAtIndex:(countdownsCount - 1)];
+			_settingsViewController.countdown = [Countdown countdownAtIndex:(countdownsCount - 1)];
 	}
 	
 	[Countdown synchronize];
@@ -163,7 +160,7 @@
 		/* Note: the tableView is automatically reloaded */
 		// @TODO: animated the row insertion
 		
-		[tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(_includedCountdowns.count - 1) inSection:0]
+		[_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(_includedCountdowns.count - 1) inSection:0]
 						 atScrollPosition:UITableViewScrollPositionMiddle
 								 animated:YES];
 	}
@@ -263,7 +260,7 @@
 	
 	if (indexPath.section <= 1) {
 		static NSString * countdownCellIdentifier = @"countdownCellIdentifier";
-		cell = [tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
+		cell = [_tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
 		
 		if (cell == nil) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:countdownCellIdentifier];
@@ -287,7 +284,7 @@
 		
 	} else {
 		static NSString * shareCellIdentifier = @"shareCellIdentifier";
-		cell = [tableView dequeueReusableCellWithIdentifier:shareCellIdentifier];
+		cell = [_tableView dequeueReusableCellWithIdentifier:shareCellIdentifier];
 		if (cell == nil) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:shareCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -355,7 +352,7 @@
 {
     if (indexPath.section <= 1) {
         Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-        settingsViewController.countdown = countdown;
+        _settingsViewController.countdown = countdown;
         [Countdown synchronize];
         [aTableView deselectRowAtIndexPath:indexPath animated:YES];
         [self dismissViewControllerAnimated:YES completion:NULL];

@@ -22,9 +22,6 @@
 @end
 
 @interface _DurationScrollView : UIScrollView
-{
-	UIColor * backgroundColor;
-}
 
 @property (nonatomic, strong) id <_DurationScrollViewDelegate> touchDelegate;
 
@@ -47,11 +44,6 @@
 @end
 
 @interface DurationPickerView : UIView <UIScrollViewDelegate, _DurationScrollViewDelegate>
-{
-	_DurationScrollView * scrollView;
-	NSInteger numberOfItems;
-	NSMutableArray * labels;
-}
 
 @property (nonatomic, strong) id <DurationPickerViewDelegate> delegate;
 @property (nonatomic, strong) id <DurationPickerViewDataSource> dataSource;

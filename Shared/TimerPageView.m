@@ -9,26 +9,21 @@
 #import "TimerPageView.h"
 
 @interface TimerPageView ()
-{
-	id updateObserver, continueObserver;
-	
-	BOOL dragging, showingChangeConfirmation, idleTimerDisabled;
-	CGPoint startLocation;
-	NSTimeInterval originalDuration, delta;
-}
+@property (nonatomic, strong) id updateObserver, continueObserver;
+
+@property (nonatomic, assign) BOOL dragging, showingChangeConfirmation, idleTimerDisabled;
+@property (nonatomic, assign) CGPoint startLocation;
+@property (nonatomic, assign) NSTimeInterval originalDuration, delta;
+
+@property (nonatomic, assign) IBOutlet UIView * contentView;
+
+@property (nonatomic, assign) NSTimeInterval remainingSeconds, duration; // Duration of the current timer
+@property (nonatomic, strong) NSDate * nextEndDate;
+@property (nonatomic, assign) BOOL isFinished, loaded;
+
 @end
 
 @implementation TimerPageView
-
-// Public
-@synthesize timerView = _timerView;
-
-// Private
-@synthesize timeLabel = _timeLabel, descriptionLabel = _descriptionLabel;
-@synthesize leftButton = _leftButton;
-@synthesize nameLabel = _nameLabel;
-@synthesize backgroundImageView;
-@synthesize infoButton = _infoButton;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -44,29 +39,29 @@
 					   action:@selector(timerDidSelectAction:)
 			 forControlEvents:UIControlEventTouchUpInside];
 		
-		updateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification
+		_updateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification
 																		   object:nil
 																			queue:[NSOperationQueue currentQueue]
 																	   usingBlock:^(NSNotification * notification)
 						  {
 							  /* If the current timer's endDate change, reset the timer */
-							  if (countdown.currentDuration.doubleValue != duration && !countdown.isPaused) {
-								  duration = countdown.currentDuration.doubleValue;
-								  remainingSeconds = duration;
+							  if (self.countdown.currentDuration.doubleValue != _duration && !self.countdown.isPaused) {
+								  _duration = self.countdown.currentDuration.doubleValue;
+								  _remainingSeconds = _duration;
 								  _timerView.progression = 0.;
-								  [countdown reset];
-								  NSDebugLog(@"End date changed for \"%@\"", countdown.name);
+								  [self.countdown reset];
+								  NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
 							  }
-							  _nameLabel.text = countdown.name;
+							  _nameLabel.text = self.countdown.name;
 							  [self reload];
 						  }];
 		
-		continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
+		_continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
 																			 object:nil
 																			  queue:[NSOperationQueue currentQueue]
 																		 usingBlock:^(NSNotification * notification)
 							{
-								if (notification.object == countdown && countdown.isPaused)
+								if (notification.object == self.countdown && self.countdown.isPaused)
 									[self start];
 							}];
 		
@@ -79,7 +74,7 @@
 			[pan requireGestureRecognizerToFail:gesture];
 		[self addGestureRecognizer:pan];
 		
-		idleTimerDisabled = NO;
+		_idleTimerDisabled = NO;
     }
     return self;
 }
@@ -87,11 +82,6 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
-	
-	CGFloat margin = 10.;
-	CGRect rect = _infoButton.frame;
-	_tintedInfoButton.frame = CGRectMake(rect.origin.x - margin, rect.origin.y - margin,
-										 rect.size.width + 2. * margin, rect.size.height + 2. * margin);
 	
 	UIView * containerView = _contentView.subviews.lastObject;
 	CGRect frame = containerView.frame;
@@ -102,25 +92,25 @@
 
 - (void)setCountdown:(Countdown *)aCountdown
 {
-	countdown = aCountdown;
+	super.countdown = aCountdown;
 	
 	self.style = aCountdown.style;
 	_nameLabel.text = aCountdown.name;
 	
-	if (countdown.durations.count) {
-		duration = [countdown.durations[(countdown.durationIndex % countdown.durations.count)] doubleValue];
-		remainingSeconds = countdown.endDate.timeIntervalSinceNow;
+	if (self.countdown.durations.count) {
+		_duration = self.countdown.durations[(self.countdown.durationIndex % self.countdown.durations.count)].doubleValue;
+		_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
 	}
 	
-	if (countdown.endDate && remainingSeconds <= 0.) { // If the timer is finished
-		isFinished = YES;
-		countdown.durationIndex++;
-		[countdown reset];
+	if (self.countdown.endDate && _remainingSeconds <= 0.) { // If the timer is finished
+		_isFinished = YES;
+		self.countdown.durationIndex++;
+		[self.countdown reset];
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
 		_descriptionLabel.hidden = YES;
 		
 		[self updateLeftButton];
-	} else if (!countdown.endDate) {
+	} else if (!self.countdown.endDate) {
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
 		_descriptionLabel.hidden = YES;
 	}
@@ -144,7 +134,7 @@
 	_contentView.backgroundColor = [[UIColor backgroundColorForPageStyle:aStyle] colorWithAlphaComponent:0.7];
 	[self setTextColor:[UIColor textColorForPageStyle:aStyle]];
 	
-	_infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
+	self.infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
 	[self updateLeftButton];
 }
 
@@ -152,9 +142,9 @@
 {
 	[super viewWillShow:animated];
 	
-	if (duration < 3. * 60. && !idleTimerDisabled) {
+	if (_duration < 3. * 60. && !_idleTimerDisabled) {
 		[[UIApplication sharedApplication] disableIdleTimer];
-		idleTimerDisabled = YES;
+		_idleTimerDisabled = YES;
 	}
 }
 
@@ -162,32 +152,18 @@
 {
 	[super viewDidHide:animated];
 	
-	if (idleTimerDisabled) {
+	if (_idleTimerDisabled) {
 		[[UIApplication sharedApplication] enableIdleTimer];
-		idleTimerDisabled = NO;
+		_idleTimerDisabled = NO;
 	}
 }
 
 - (void)updateLeftButton
 {
-	NSString * name = nil;
-	switch (self.style) {
-		case PageViewStyleDay:
-			name = @"button-day"; break;
-		case PageViewStyleDawn:
-			name = @"button-dawn"; break;
-		case PageViewStyleOasis:
-			name = @"button-oasis"; break;
-		case PageViewStyleSpring:
-			name = @"button-spring"; break;
-		case PageViewStyleNight:
-		default:
-			name = @"button-night"; break;
-	}
-	
-	NSString * filename = [NSString stringWithFormat:@"%@-%@-iOS7", ((countdown.isPaused) ? @"reset" : @"pause"), name];
-	[_leftButton setImage:[UIImage imageNamed:filename]
-				 forState:UIControlStateNormal];
+	_leftButton.imageView.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
+	NSString * name = [NSString stringWithFormat:@"button-night-%@", (self.countdown.isPaused) ? @"reset" : @"pause"];
+	_leftButton.tintColor = [UIColor textColorForPageStyle:self.countdown.style];
+	[_leftButton setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
 }
 
 - (NSString *)formattedDurationForDuration:(NSTimeInterval)d
@@ -210,7 +186,7 @@
 
 - (NSString *)formattedDuration
 {
-	return [self formattedDurationForDuration:countdown.endDate.timeIntervalSinceNow];
+	return [self formattedDurationForDuration:self.countdown.endDate.timeIntervalSinceNow];
 }
 
 - (NSString *)formattedDescriptionForDuration:(NSTimeInterval)d
@@ -233,34 +209,34 @@
 
 - (NSString *)formattedDescription
 {
-	return [self formattedDescriptionForDuration:countdown.endDate.timeIntervalSinceNow];
+	return [self formattedDescriptionForDuration:self.countdown.endDate.timeIntervalSinceNow];
 }
 
 - (void)update
 {
-	if (countdown.durations.count == 0) {
+	if (self.countdown.durations.count == 0) {
 		
 		_timeLabel.text = NSLocalizedString(@"No Durations", nil);
 		_descriptionLabel.hidden = YES;
 		
-	} else if (!countdown.isPaused) {
-		if (countdown.endDate && countdown.durations.count) {
-			remainingSeconds = countdown.endDate.timeIntervalSinceNow;
+	} else if (!self.countdown.isPaused) {
+		if (self.countdown.endDate && self.countdown.durations.count) {
+			_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
 			
-			if (remainingSeconds < 3. * 60. && !idleTimerDisabled) {
+			if (_remainingSeconds < 3. * 60. && !_idleTimerDisabled) {
 				[[UIApplication sharedApplication] disableIdleTimer];
-				idleTimerDisabled = YES;
+				_idleTimerDisabled = YES;
 			}
 			
-			if (remainingSeconds >= 0. && duration > 1) {
+			if (_remainingSeconds >= 0. && _duration > 1) {
 				[_timerView cancelProgressionAnimation];
-				[_timerView setProgression:(duration - remainingSeconds) / (duration - 1)
+				[_timerView setProgression:(_duration - _remainingSeconds) / (_duration - 1)
 								  animated:YES];
 				_timeLabel.text = [self formattedDuration];
 				_descriptionLabel.text = [self formattedDescription];
 				_descriptionLabel.hidden = NO;
 				
-				if (0. < remainingSeconds && remainingSeconds <= 5.) {
+				if (0. < _remainingSeconds && _remainingSeconds <= 5.) {
 					[UIView animateKeyframesWithDuration:1.
 												   delay:0.
 												 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
@@ -274,21 +250,21 @@
 											  completion:NULL];
 				}
 			} else { // Timer done or paused
-				if (!isFinished) {
-					if (countdown.promptState == PromptStateEveryTimers ||
-						(countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) { // Pause the timer and wait for the used to tap on "Continue"
+				if (!_isFinished) {
+					if (self.countdown.promptState == PromptStateEveryTimers ||
+						(self.countdown.promptState == PromptStateEnd && self.countdown.durationIndex == (self.countdown.durations.count - 1))) { // Pause the timer and wait for the used to tap on "Continue"
 						[self pause];
 						[_timerView cancelProgressionAnimation];
 						_timerView.progression = 0.;
 						_timeLabel.text = NSLocalizedString(@"Continue", nil);
 						_descriptionLabel.hidden = YES;
-						isFinished = YES;
+						_isFinished = YES;
 						
 					} else { // Start the next timer
-						countdown.durationIndex++;
-						duration = countdown.currentDuration.doubleValue;
-						countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:duration];
-						isFinished = NO;
+						self.countdown.durationIndex++;
+						_duration = self.countdown.currentDuration.doubleValue;
+						self.countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:_duration];
+						_isFinished = NO;
 						
 						_timeLabel.text = [self formattedDuration];
 						_descriptionLabel.hidden = NO;
@@ -305,8 +281,8 @@
 
 - (IBAction)pauseButtonAction:(id)sender
 {
-	if (countdown.isPaused) { // If already paused, reset the timer
-		remainingSeconds = duration = countdown.currentDuration.doubleValue;
+	if (self.countdown.isPaused) { // If already paused, reset the timer
+		_remainingSeconds = _duration = self.countdown.currentDuration.doubleValue;
 		_timerView.progression = 0.;
 	}
 	
@@ -315,11 +291,11 @@
 
 - (void)tooglePause
 {
-	if (countdown.durations.count == 0) { // Don't allow "start" if no durations
+	if (self.countdown.durations.count == 0) { // Don't allow "start" if no durations
 		[self pause];
 		
 	} else {
-		if (countdown.isPaused) [self start];
+		if (self.countdown.isPaused) [self start];
 		else [self pause];
 	}
 }
@@ -328,8 +304,8 @@
 {
 	_timeLabel.text = NSLocalizedString(@"Resume", nil);
 	
-	remainingSeconds = countdown.endDate.timeIntervalSinceNow;
-	[countdown pause];
+	_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
+	[self.countdown pause];
 	
 	[self reload];
 }
@@ -337,13 +313,13 @@
 - (void)start
 {
 	/* If the timer is finished, start the next */
-	if (isFinished) {
-		countdown.durationIndex++;
-		[countdown reset];
+	if (_isFinished) {
+		self.countdown.durationIndex++;
+		[self.countdown reset];
 		_timerView.progression = 0.;
-		isFinished = NO;
+		_isFinished = NO;
 	} else {
-		[countdown resume];
+		[self.countdown resume];
 	}
 	
 	[self reload];
@@ -353,17 +329,17 @@
 {
 	[self updateLeftButton];
 	
-	if (countdown.isPaused) {
+	if (self.countdown.isPaused) {
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
 	}
-	_descriptionLabel.hidden = countdown.isPaused;
+	_descriptionLabel.hidden = self.countdown.isPaused;
 	
 	[self update];
 }
 
 - (IBAction)timerDidSelectAction:(id)sender
 {
-	if (!showingChangeConfirmation)
+	if (!_showingChangeConfirmation)
 		[self tooglePause];
 }
 
@@ -376,12 +352,12 @@
 
 - (IBAction)confirmationChangeAction:(id)sender
 {
-	[self.countdown setDuration:@(originalDuration)
+	[self.countdown setDuration:@(_originalDuration)
 						atIndex:self.countdown.durationIndex];
 	
 	_timeLabel.text = NSLocalizedString(@"Resume", nil);
-	remainingSeconds = duration = self.countdown.currentDuration.doubleValue;
-	isFinished = NO;
+	_remainingSeconds = _duration = self.countdown.currentDuration.doubleValue;
+	_isFinished = NO;
 	[self reload];
 	[self showConfirmationToolbar:NO];
 }
@@ -389,16 +365,16 @@
 - (IBAction)resetChangeAction:(id)sender
 {
 	_timeLabel.text = NSLocalizedString(@"Resume", nil);
-	remainingSeconds = duration = self.countdown.currentDuration.doubleValue;
-	isFinished = NO;
-	[countdown reset];
+	_remainingSeconds = _duration = self.countdown.currentDuration.doubleValue;
+	_isFinished = NO;
+	[self.countdown reset];
 	[self reload];
 	[self showConfirmationToolbar:NO];
 }
 
 - (IBAction)showConfirmationToolbar:(BOOL)show
 {
-	showingChangeConfirmation = show;
+	_showingChangeConfirmation = show;
 	
 	static const NSInteger tag = 1234;
 	if (show) {
@@ -444,48 +420,48 @@
 	((UIScrollView *)self.superview).scrollEnabled = !(show);
 	self.scrollView.scrollEnabled =  !(show);
 	self.infoButton.hidden = (show);
-	self.leftButton.hidden = (show);
+	_leftButton.hidden = (show);
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-	return !(dragging);
+	return !(_dragging);
 }
 
 - (void)timerDidDragged:(UIGestureRecognizer *)gesture
 {
-	if (!countdown.isPaused)
+	if (!self.countdown.isPaused)
 		return ;
 	
 	if (gesture.state == UIGestureRecognizerStateBegan) {
-		dragging = YES;
-		startLocation = [gesture locationInView:self];
+		_dragging = YES;
+		_startLocation = [gesture locationInView:self];
 	}
 	else if (gesture.state == UIGestureRecognizerStateEnded) {
-		dragging = NO;
-		originalDuration = MIN(MAX(0., originalDuration + delta), 7 * 24 * 3600);
-		delta = 0.;
+		_dragging = NO;
+		_originalDuration = MIN(MAX(0., _originalDuration + _delta), 7 * 24 * 3600);
+		_delta = 0.;
 	}
 	else {
 		if ((int)((UIScrollView *)self.superview).contentOffset.x % (int)self.frame.size.width > 0) // If the user scolls to left or right, stop "dragging to set"
-			dragging = NO;
-		else if (dragging) {
-			if (!showingChangeConfirmation) {
+			_dragging = NO;
+		else if (_dragging) {
+			if (!_showingChangeConfirmation) {
 				[self showConfirmationToolbar:YES];
-				originalDuration = ((NSNumber *)self.countdown.currentDuration).doubleValue;
+				_originalDuration = ((NSNumber *)self.countdown.currentDuration).doubleValue;
 				
 				_timerView.progression = 0.;
 				_descriptionLabel.hidden = NO;
 			}
 			
 			CGPoint location = [gesture locationInView:self];
-			CGFloat offset = location.y - startLocation.y;
+			CGFloat offset = location.y - _startLocation.y;
 			
 			NSInteger d = (int)(-offset / 10.);
 			NSInteger step;
-			if /**/ (originalDuration <= 60.)
+			if /**/ (_originalDuration <= 60.)
 				step = 1;
-			else if (originalDuration <= 3600)
+			else if (_originalDuration <= 3600)
 				step = 60;
 			else
 				step = 3600;
@@ -495,8 +471,8 @@
 			else
 				d = (ABS(d) - 4) * step * 5 * ((d < 0) ? -1 : 1);
 			
-			delta = d;
-			NSTimeInterval newDuration = MIN(MAX(0., originalDuration + d), 7 * 24 * 3600);
+			_delta = d;
+			NSTimeInterval newDuration = MIN(MAX(0., _originalDuration + d), 7 * 24 * 3600);
 			_timeLabel.text = [self formattedDurationForDuration:newDuration];
 			_descriptionLabel.text = [self formattedDescriptionForDuration:newDuration];
 		}
@@ -505,8 +481,8 @@
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:updateObserver];
-	[[NSNotificationCenter defaultCenter] removeObserver:continueObserver];
+	[[NSNotificationCenter defaultCenter] removeObserver:_updateObserver];
+	[[NSNotificationCenter defaultCenter] removeObserver:_continueObserver];
 }
 
 @end

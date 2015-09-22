@@ -19,9 +19,14 @@
 
 #import "NSBundle+addition.h"
 
-@implementation SettingsViewController_Pad
+@interface SettingsViewController_Pad ()
 
-@synthesize countdown;
+@property (nonatomic, strong) NSArray <NSString *> * cellTitles;
+@property (nonatomic, strong) NSMutableArray <UIViewController *> * viewControllers;
+
+@end
+
+@implementation SettingsViewController_Pad
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -31,7 +36,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (section == 1)
-		return cellTitles.count;
+		return _cellTitles.count;
 	
 	return 1;// Return one row for the type cell
 }
@@ -55,7 +60,7 @@
 		
 		cell.textLabel.text = NSLocalizedString(@"Type", nil);
 		
-		cell.detailTextLabel.text = (countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Timer", nil) : NSLocalizedString(@"Countdown", nil);
+		cell.detailTextLabel.text = (_countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Timer", nil) : NSLocalizedString(@"_countdown", nil);
 		
 	} else if (indexPath.section == 1) {
 		
@@ -69,25 +74,25 @@
 			cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 		}
 		
-		cell.textLabel.text = cellTitles[indexPath.row];
+		cell.textLabel.text = _cellTitles[indexPath.row];
 		
-		if (countdown.type == CountdownTypeTimer) {
+		if (_countdown.type == CountdownTypeTimer) {
 			
 			switch (indexPath.row) {
 				case 0: { // Name
-					cell.detailTextLabel.text = countdown.name;
+					cell.detailTextLabel.text = _countdown.name;
 				}
 					break;
 				case 1: { // Durations
-					if (countdown.durations.count == 0) {
+					if (_countdown.durations.count == 0) {
 						cell.detailTextLabel.text = NSLocalizedString(@"no durations", nil);
 						cell.detailTextLabel.font = [UIFont italicSystemFontOfSize:17.];
 						cell.detailTextLabel.textColor = [UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.];
 					} else {
-						if (countdown.durations.count == 1) {
-							cell.detailTextLabel.text = [countdown shortDescriptionOfDurationAtIndex:0];
+						if (_countdown.durations.count == 1) {
+							cell.detailTextLabel.text = [_countdown shortDescriptionOfDurationAtIndex:0];
 						} else {
-							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)countdown.durations.count];
+							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)_countdown.durations.count];
 						}
 						cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
 						cell.detailTextLabel.textColor = [UIColor darkGrayColor];
@@ -95,12 +100,12 @@
 				}
 					break;
 				case 2: { // Song
-					NSString * songID = countdown.songID;
+					NSString * songID = _countdown.songID;
 					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:songID];
 				}
 					break;
 				case 3: { // Theme
-					NSInteger style = countdown.style;
+					NSInteger style = _countdown.style;
 					cell.detailTextLabel.text = [Countdown styles][style];
 				}
 					break;
@@ -109,11 +114,11 @@
 			
 			switch (indexPath.row) {
 				case 0: { // Name
-					cell.detailTextLabel.text = countdown.name;
+					cell.detailTextLabel.text = _countdown.name;
 				}
 					break;
 				case 1: { // Date & Time
-					NSDate * date = countdown.endDate;
+					NSDate * date = _countdown.endDate;
 					if (date && (date.timeIntervalSinceNow > 0.)) {
 						cell.detailTextLabel.text = date.description;
 						cell.detailTextLabel.textColor = [UIColor darkGrayColor];
@@ -126,16 +131,16 @@
 				}
 					break;
 				case 2: { // Message
-					cell.detailTextLabel.text = (countdown.message)? countdown.message: @"";
+					cell.detailTextLabel.text = (_countdown.message)? _countdown.message: @"";
 				}
 					break;
 				case 3: { // Song
-					NSString * songID = countdown.songID;
+					NSString * songID = _countdown.songID;
 					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:songID];
 				}
 					break;
 				case 4: { // Theme
-					NSInteger style = countdown.style;
+					NSInteger style = _countdown.style;
 					cell.detailTextLabel.text = [Countdown styles][style];
 				}
 					break;
@@ -153,35 +158,35 @@
 {
 	if (indexPath.section == 0) {
 		TypeViewController * typeViewController = [[TypeViewController alloc] init];
-		typeViewController.countdown = countdown;
+		typeViewController.countdown = _countdown;
 		[self.navigationController pushViewController:typeViewController animated:YES];
 		
 	} else if (indexPath.section == 1) {
 		
-		if (countdown.type == CountdownTypeTimer) {
+		if (_countdown.type == CountdownTypeTimer) {
 			
 			switch (indexPath.row) {
 				case 0: { // Name
 					NameViewController * nameViewController = [[NameViewController alloc] init];
-					nameViewController.countdown = countdown;
+					nameViewController.countdown = _countdown;
 					[self.navigationController pushViewController:nameViewController animated:YES];
 				}
 					break;
 				case 1: { // Durations
 					DurationsViewController * durationsViewController = [[DurationsViewController alloc] init];
-					durationsViewController.countdown = countdown;
+					durationsViewController.countdown = _countdown;
 					[self.navigationController pushViewController:durationsViewController animated:YES];
 				}
 					break;
 				case 2: { // Song
 					SongPickerViewController * songPickerViewController = [[SongPickerViewController alloc] init];
-					songPickerViewController.countdown = countdown;
+					songPickerViewController.countdown = _countdown;
 					[self.navigationController pushViewController:songPickerViewController animated:YES];
 				}
 					break;
 				case 3: { // Theme
 					PageThemeViewController * pageThemeViewController = [[PageThemeViewController alloc] init];
-					pageThemeViewController.countdown = countdown;
+					pageThemeViewController.countdown = _countdown;
 					[self.navigationController pushViewController:pageThemeViewController animated:YES];
 				}
 					break;
@@ -191,31 +196,31 @@
 			switch (indexPath.row) {
 				case 0: { // Name
 					NameViewController * nameViewController = [[NameViewController alloc] init];
-					nameViewController.countdown = countdown;
+					nameViewController.countdown = _countdown;
 					[self.navigationController pushViewController:nameViewController animated:YES];
 				}
 					break;
 				case 1: { // Date & Time
 					DatePickerViewController * datePickerViewController = [[DatePickerViewController alloc] init];
-					datePickerViewController.countdown = countdown;
+					datePickerViewController.countdown = _countdown;
 					[self.navigationController pushViewController:datePickerViewController animated:YES];
 				}
 					break;
 				case 2: { // Message
 					MessageViewControler * messageViewControler = [[MessageViewControler alloc] init];
-					messageViewControler.countdown = countdown;
+					messageViewControler.countdown = _countdown;
 					[self.navigationController pushViewController:messageViewControler animated:YES];
 				}
 					break;
 				case 3: { // Song
 					SongPickerViewController * songPickerViewController = [[SongPickerViewController alloc] init];
-					songPickerViewController.countdown = countdown;
+					songPickerViewController.countdown = _countdown;
 					[self.navigationController pushViewController:songPickerViewController animated:YES];
 				}
 					break;
 				case 4: { // Theme
 					PageThemeViewController * pageThemeViewController = [[PageThemeViewController alloc] init];
-					pageThemeViewController.countdown = countdown;
+					pageThemeViewController.countdown = _countdown;
 					[self.navigationController pushViewController:pageThemeViewController animated:YES];
 				}
 					break;
@@ -249,17 +254,17 @@
 
 - (void)reloadData
 {
-	if (countdown.type == CountdownTypeTimer) {
-		cellTitles = @[NSLocalizedString(@"Name", nil),
-					   NSLocalizedString(@"Durations", nil),
-					   NSLocalizedString(@"Sound", nil),
-					   NSLocalizedString(@"Theme", nil)];
+	if (_countdown.type == CountdownTypeTimer) {
+		_cellTitles = @[ NSLocalizedString(@"Name", nil),
+						 NSLocalizedString(@"Durations", nil),
+						 NSLocalizedString(@"Sound", nil),
+						 NSLocalizedString(@"Theme", nil) ];
 	} else {
-		cellTitles = @[NSLocalizedString(@"Name", nil),
-					   NSLocalizedString(@"Date & Time", nil),
-					   NSLocalizedString(@"Message", nil),
-					   NSLocalizedString(@"Sound", nil),
-					   NSLocalizedString(@"Theme", nil)];
+		_cellTitles = @[ NSLocalizedString(@"Name", nil),
+						 NSLocalizedString(@"Date & Time", nil),
+						 NSLocalizedString(@"Message", nil),
+						 NSLocalizedString(@"Sound", nil),
+						 NSLocalizedString(@"Theme", nil)];
 	}
 	
 	[self.tableView reloadData];

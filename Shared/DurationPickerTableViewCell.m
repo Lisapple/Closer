@@ -10,9 +10,6 @@
 
 @implementation DurationPickerTableViewCell
 
-@synthesize label = _label;
-@synthesize pickerView = _pickerView;
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {

@@ -8,14 +8,14 @@
 
 #import "SongPickerViewController.h"
 
+@interface SongPickerViewController ()
+
+@property (nonatomic, strong) NSIndexPath * checkedIndexPath;
+@property (nonatomic, strong) AVAudioPlayer * player;
+
+@end
+
 @implementation SongPickerViewController
-
-@synthesize tableView;
-
-@synthesize songs;
-@synthesize songID;
-
-@synthesize countdown;
 
 - (void)viewDidLoad
 {
@@ -23,22 +23,22 @@
 	
 	self.title = NSLocalizedString(@"Sound", nil);
 	
-	tableView.delegate = self;
-	tableView.dataSource = self;
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
     
 	NSString * path = [[NSBundle mainBundle] pathForResource:@"songs" ofType:@"plist"];
-	songs = [[NSMutableArray alloc] initWithContentsOfFile:path];
+	_songs = [[NSMutableArray alloc] initWithContentsOfFile:path];
 	
-	self.songID = countdown.songID;
+	self.songID = _countdown.songID;
 	
-	[tableView reloadData];
+	[_tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	countdown.songID = songID;
+	_countdown.songID = _songID;
 	
-	[player pause];
+	[_player pause];
 	
 	[Countdown synchronize];
 	
@@ -63,14 +63,14 @@
 	if (section == 0)
 		return 2;// "no song" and "default"
 	else
-		return songs.count;
+		return _songs.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
 	
-	UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -81,32 +81,25 @@
 	
 	if (indexPath.section == 0) {
 		if (indexPath.row == 0) {
-			if ([songID isEqualToString:@"-1"]) {
+			if ([_songID isEqualToString:@"-1"]) {
 				cell.accessoryType = UITableViewCellAccessoryCheckmark;
-				checkedIndexPath = indexPath;
+				_checkedIndexPath = indexPath;
 			}
-			
 			cell.textLabel.text = NSLocalizedString(@"None", nil);
-			
 		} else if (indexPath.row == 1) {
-			
-			if ([songID isEqualToString:@"default"]) {
+			if ([_songID isEqualToString:@"default"]) {
 				cell.accessoryType = UITableViewCellAccessoryCheckmark;
-				checkedIndexPath = indexPath;
+				_checkedIndexPath = indexPath;
 			}
-			
 			cell.textLabel.text = NSLocalizedString(@"Default", nil);
 		}
-		
 	} else {
-		
-		NSString * thisID = songs[indexPath.row][@"ID"];
-		if ([songID isEqualToString:thisID]) {
+		NSString * thisID = _songs[indexPath.row][@"ID"];
+		if ([_songID isEqualToString:thisID]) {
 			cell.accessoryType = UITableViewCellAccessoryCheckmark;
-			checkedIndexPath = indexPath;
+			_checkedIndexPath = indexPath;
 		}
-		
-		cell.textLabel.text = songs[indexPath.row][@"Name"];
+		cell.textLabel.text = _songs[indexPath.row][@"Name"];
 	}
 	
 	return cell;
@@ -117,17 +110,17 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if ([indexPath compare:checkedIndexPath] != NSOrderedSame) {
+	if ([indexPath compare:_checkedIndexPath] != NSOrderedSame) {
 		
-		UITableViewCell * checkedCell = [aTableView cellForRowAtIndexPath:checkedIndexPath];
+		UITableViewCell * checkedCell = [aTableView cellForRowAtIndexPath:_checkedIndexPath];
 		checkedCell.accessoryType = UITableViewCellAccessoryNone;// Uncheck old checked cell
 		
-		checkedIndexPath = indexPath;
+		_checkedIndexPath = indexPath;
 		
 		UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 		
-		[player pause];
+		[_player pause];
 		
 		if (indexPath.section == 0) {
 			if (indexPath.row == 0) { // "None"
@@ -136,7 +129,7 @@
 				
 				// Play the default song (from complete.caf)
 				NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [NSBundle mainBundle].bundlePath];
-				player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
+				_player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
 #if !TARGET_IPHONE_SIMULATOR
                 /* This can crash on Simulator */
 				[player prepareToPlay];
@@ -147,9 +140,9 @@
 			
 		} else if (indexPath.section == 1) {
 			
-			NSString * fileName = songs[indexPath.row][@"Filename"];
+			NSString * fileName = _songs[indexPath.row][@"Filename"];
 			NSString * path = [NSString stringWithFormat:@"%@/Songs/%@", [NSBundle mainBundle].bundlePath, fileName];
-			player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path]
+			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path]
                                                             error:nil];
 #if !TARGET_IPHONE_SIMULATOR
 			/* This can crash on Simulator */
@@ -157,7 +150,7 @@
 			[player play];
 #endif
 			
-			self.songID = songs[indexPath.row][@"ID"];
+			self.songID = _songs[indexPath.row][@"ID"];
 		}
 	}
 	

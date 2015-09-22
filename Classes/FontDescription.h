@@ -8,13 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-
 @interface FontDescription : NSObject
-{
-	UIFont * font;
-	UIColor * textColor, * shadowColor;
-	CGSize shadowOffset;
-}
 
 @property (nonatomic, strong) UIFont * font;
 @property (nonatomic, strong) UIColor * textColor, * shadowColor;

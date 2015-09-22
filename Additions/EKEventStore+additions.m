@@ -33,7 +33,7 @@
 	return count;
 }
 
-- (NSArray *)eventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar
+- (NSArray <EKEvent *> *)eventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar
 {
 	NSPredicate * predicate = [self predicateForEventsWithStartDate:startDate
 															endDate:endDate// Fetch all future events that the eventStore could store
@@ -65,7 +65,7 @@
 	return count;
 }
 
-- (NSArray *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent
+- (NSArray <EKEvent *> *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent
 {
 	NSPredicate * predicate = [self predicateForEventsWithStartDate:[NSDate date]
 															endDate:[NSDate distantFuture]// Fetch all future events that the eventStore could store

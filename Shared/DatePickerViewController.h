@@ -12,22 +12,9 @@
 @class MyDatePicker;
 
 @interface DatePickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-{
-	IBOutlet UITableView * tableView;
-	IBOutlet UIDatePicker * datePicker;
-	
-	NSDate * date;
-	BOOL hasTimeDate;
-	Countdown * countdown;
-	
-	NSUndoManager * undoManager;
-	
-	@private
-	NSTimer * updateDatePickerTimer;
-}
 
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
-@property (nonatomic, strong) IBOutlet UIDatePicker * datePicker;
+@property (nonatomic, assign) IBOutlet UITableView * tableView;
+@property (nonatomic, assign) IBOutlet UIDatePicker * datePicker;
 
 @property (nonatomic, strong) NSDate * date;
 @property (nonatomic, strong) Countdown * countdown;

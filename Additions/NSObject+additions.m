@@ -17,7 +17,7 @@
 	CADisplayLink * _link;
 }
 
-@property (atomic, strong) NSMutableArray * animationBlocks;
+@property (atomic, strong) NSMutableArray <_AnimationBlock *> * animationBlocks;
 
 @end
 

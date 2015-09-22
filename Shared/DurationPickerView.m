@@ -47,8 +47,6 @@
 
 @implementation _DurationScrollView
 
-@synthesize touchDelegate = _touchDelegate;
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
@@ -67,7 +65,7 @@
 {
 	super.contentOffset = contentOffset;
 	
-	/* Force the scrollView to redraw when scrolling (not done since iOS 6, to move the background) */
+	/* Force the scrollView to redraw when scrolling */
 	[self setNeedsDisplay];
 }
 
@@ -92,6 +90,10 @@
 
 @interface DurationPickerView ()
 
+@property (nonatomic, strong) _DurationScrollView * scrollView;
+@property (nonatomic, assign) NSInteger numberOfItems;
+@property (nonatomic, strong) NSMutableArray <UILabel *> * labels;
+
 - (void)initialize;
 
 - (void)updateLayout;
@@ -100,11 +102,6 @@
 @end
 
 @implementation DurationPickerView
-
-@synthesize delegate = _delegate;
-@synthesize dataSource = _dataSource;
-
-@synthesize selectedIndex = _selectedIndex;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -126,12 +123,12 @@
 {
 	CGRect bounds = self.bounds;
 	bounds.size.height -= 2.;
-	scrollView = [[_DurationScrollView alloc] initWithFrame:bounds];
-	scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	[self addSubview:scrollView];
+	_scrollView = [[_DurationScrollView alloc] initWithFrame:bounds];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	[self addSubview:_scrollView];
 	
-	scrollView.delegate = self;
-	scrollView.touchDelegate = self;
+	_scrollView.delegate = self;
+	_scrollView.touchDelegate = self;
 	
 	_DurationMaskView * maskView = [[_DurationMaskView alloc] initWithFrame:self.bounds];
 	maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -150,17 +147,17 @@
 
 - (void)reloadData
 {
-	numberOfItems = [self.dataSource numberOfNumbersInDurationPickerView:self];
+	_numberOfItems = [self.dataSource numberOfNumbersInDurationPickerView:self];
 	
 	const CGFloat labelWidth = 40., labelHeight = 40.;
 	
-	if (!labels) {
-		labels = [[NSMutableArray alloc] initWithCapacity:numberOfItems];
+	if (!_labels) {
+		_labels = [[NSMutableArray alloc] initWithCapacity:_numberOfItems];
 	}
 	
-	[labels removeAllObjects];
+	[_labels removeAllObjects];
 	
-	for (int index = 0; index < numberOfItems; index++) {
+	for (int index = 0; index < _numberOfItems; index++) {
 		NSInteger number = [self.dataSource durationPickerView:self numberForIndex:index];
 		
 		CGRect rect = CGRectMake(index * labelWidth, 2., labelWidth, labelHeight);
@@ -171,8 +168,8 @@
 		label.font = [UIFont boldSystemFontOfSize:17.];
 		label.textAlignment = NSTextAlignmentCenter;
 		label.text = [NSString stringWithFormat:@"%ld", (long)number];
-		[scrollView addSubview:label];
-		[labels addObject:label];
+		[_scrollView addSubview:label];
+		[_labels addObject:label];
 	}
 	
 	[self updateLayout];
@@ -181,12 +178,12 @@
 - (void)updateLayout
 {
 	const CGFloat labelWidth = 40., labelHeight = 40.;
-	scrollView.contentSize = CGSizeMake(numberOfItems * labelWidth, labelHeight);
+	_scrollView.contentSize = CGSizeMake(_numberOfItems * labelWidth, labelHeight);
 	int margin = (self.frame.size.width - labelWidth) / 2.;
-	scrollView.contentInset = UIEdgeInsetsMake(0., margin, 0., margin);
+	_scrollView.contentInset = UIEdgeInsetsMake(0., margin, 0., margin);
 	
 	/* Scroll to correct position (left by default) */
-	scrollView.contentOffset = CGPointMake(_selectedIndex * labelWidth - margin, 0.);
+	_scrollView.contentOffset = CGPointMake(_selectedIndex * labelWidth - margin, 0.);
 }
 
 - (void)setFrame:(CGRect)frame
@@ -204,11 +201,11 @@
 
 - (void)selectIndex:(NSInteger)index animated:(BOOL)animated
 {
-	if (0 <= index && index < numberOfItems) {
-		UILabel * oldLabel = labels[_selectedIndex];
+	if (0 <= index && index < _numberOfItems) {
+		UILabel * oldLabel = _labels[_selectedIndex];
 		oldLabel.textColor = [self unhighlightedTextColor];
 		
-		UILabel * newLabel = labels[index];
+		UILabel * newLabel = _labels[index];
 		newLabel.textColor = [self highlightedTextColor];
 			
 		_selectedIndex = index;
@@ -217,8 +214,8 @@
 		int margin = self.frame.size.width / 2.;
 		
 		CGFloat newOffset = index * labelWidth - margin + labelWidth / 2.;
-		[scrollView setContentOffset:CGPointMake(newOffset, 0.)
-							animated:animated];
+		[_scrollView setContentOffset:CGPointMake(newOffset, 0.)
+							 animated:animated];
 	}
 }
 
@@ -227,21 +224,21 @@
 {
 	const CGFloat labelWidth = 40.;
 	int margin = self.frame.size.width / 2.;
-	CGFloat offset = scrollView.contentOffset.x + margin;
+	CGFloat offset = _scrollView.contentOffset.x + margin;
 	
 	NSInteger index = offset / labelWidth;
 	
 	CGFloat newOffset = index * labelWidth - margin + labelWidth / 2.;
-	[scrollView setContentOffset:CGPointMake(newOffset, 0.)
+	[_scrollView setContentOffset:CGPointMake(newOffset, 0.)
 						animated:YES];
 	
-	if (0 <= _selectedIndex && _selectedIndex < labels.count) {
-		UILabel * oldLabel = labels[_selectedIndex];
+	if (0 <= _selectedIndex && _selectedIndex < _labels.count) {
+		UILabel * oldLabel = _labels[_selectedIndex];
 		oldLabel.textColor = [self unhighlightedTextColor];
 	}
 	
-	if (0 <= index && index < labels.count) {
-		UILabel * newLabel = labels[index];
+	if (0 <= index && index < _labels.count) {
+		UILabel * newLabel = _labels[index];
 		newLabel.textColor = [self highlightedTextColor];
 	}
 	

@@ -11,19 +11,6 @@
 #import "TimerPageView.h"
 
 @interface MainViewController_Phone : UIViewController <SettingsViewControllerDelegate, UIScrollViewDelegate, PageViewDelegate>
-{
-	IBOutlet UIScrollView * scrollView;
-	IBOutlet UIPageControl * pageControl;
-	IBOutlet UIView * mainView;
-	IBOutlet UILabel * label;
-	IBOutlet UIButton * infoButton;
-	
-	NSTimer * updateTimeLabelTimer, * animationDelay;
-	
-	NSMutableArray * pages;
-	
-	SettingsViewController_Phone * settingsViewController;
-}
 
 @property (nonatomic, strong) IBOutlet UIScrollView * scrollView;
 @property (nonatomic, strong) IBOutlet UIPageControl * pageControl;
@@ -33,7 +20,7 @@
 
 @property (nonatomic, strong) NSTimer * updateTimeLabelTimer, * animationDelay;
 
-@property (nonatomic, strong) NSMutableArray * pages;
+@property (nonatomic, strong) NSMutableArray <PageView *> * pages;
 
 #pragma mark Current Page Index
 

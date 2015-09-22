@@ -12,7 +12,7 @@
 
 - (void)drawRect:(CGRect)rect
 {
-	[[UIImage imageNamed:@"password-field-background-iOS7"] drawInRect:rect];
+	[[UIImage imageNamed:@"password-field-background"] drawInRect:rect];
 	[super drawRect:rect];
 }
 

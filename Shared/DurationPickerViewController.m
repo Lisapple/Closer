@@ -13,12 +13,12 @@
 
 @interface DurationPickerViewController ()
 
+@property (nonatomic, strong) NSArray <NSString *> * cellsTitle;
+@property (nonatomic, strong) NSMutableArray <DurationPickerView *> * durationPickers;
+
 @end
 
 @implementation DurationPickerViewController
-@synthesize tableView = _tableView;
-@synthesize countdown = _countdown;
-@synthesize durationIndex = _durationIndex;
 
 - (void)viewDidLoad
 {
@@ -31,8 +31,8 @@
 	_tableView.alwaysBounceVertical = YES;
 	_tableView.rowHeight = 82.;
 	
-	cellsTitle = @[NSLocalizedString(@"Days", nil), NSLocalizedString(@"Hours", nil), NSLocalizedString(@"Minutes", nil), NSLocalizedString(@"Seconds", nil)];
-	durationPickers = [[NSMutableArray alloc] initWithCapacity:4];
+	_cellsTitle = @[NSLocalizedString(@"Days", nil), NSLocalizedString(@"Hours", nil), NSLocalizedString(@"Minutes", nil), NSLocalizedString(@"Seconds", nil)];
+	_durationPickers = [[NSMutableArray alloc] initWithCapacity:4];
 }
 
 #pragma mark -
@@ -62,21 +62,21 @@
 		pickerView.delegate = self;
 		pickerView.dataSource = self;
 		
-		if ([durationPickers containsObject:pickerView])
-			durationPickers[indexPath.section] = pickerView;
+		if ([_durationPickers containsObject:pickerView])
+			_durationPickers[indexPath.section] = pickerView;
 		else
-			[durationPickers addObject:pickerView];
+			[_durationPickers addObject:pickerView];
 		
 		[pickerView reloadData];
 		
-		long seconds = [self.countdown.durations[_durationIndex] longValue];
+		long seconds = self.countdown.durations[_durationIndex].longValue;
 		long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
 		long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 		long minutes = seconds / 60; seconds -= minutes * 60;
 		pickerView.selectedIndex = (indexPath.section == 0) ? days : ((indexPath.section == 1) ? hours : ((indexPath.section == 2) ? minutes : seconds));
 	}
 	
-	cell.label.text = cellsTitle[indexPath.section];
+	cell.label.text = _cellsTitle[indexPath.section];
 	
 	return cell;
 }
@@ -92,7 +92,7 @@
 
 - (NSInteger)numberOfNumbersInDurationPickerView:(DurationPickerView *)durationPickerView
 {
-	NSInteger section = [durationPickers indexOfObject:durationPickerView];
+	NSInteger section = [_durationPickers indexOfObject:durationPickerView];
 	if (section == 0)
 		return 7;
 	else if (section == 1)
@@ -108,11 +108,11 @@
 
 - (void)durationPickerView:(DurationPickerView *)durationPickerView didSelectIndex:(NSInteger)index
 {
-	NSDebugLog(@"Set value: %ld at index: %ld", (long)index, (long)[durationPickers indexOfObject:durationPickerView]);
+	NSDebugLog(@"Set value: %ld at index: %ld", (long)index, (long)[_durationPickers indexOfObject:durationPickerView]);
 	
 	long duration = 0;
 	int pickerIndex = 0;
-	for (DurationPickerView * pickerView in durationPickers) {
+	for (DurationPickerView * pickerView in _durationPickers) {
 		if (pickerIndex == 0) duration += pickerView.selectedIndex * 24. * 60 * 60;
 		else if (pickerIndex == 1) duration += pickerView.selectedIndex * 60 * 60;
 		else if (pickerIndex == 2) duration += pickerView.selectedIndex * 60;

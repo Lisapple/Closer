@@ -13,16 +13,6 @@
 @class Countdown;
 
 @interface SettingsViewController_Phone : UIViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
-{
-	NSObject <SettingsViewControllerDelegate> * __unsafe_unretained delegate;
-	IBOutlet UITableView * tableView;
-	IBOutlet UILabel * footerLabel;
-	NSArray * cellTitles;
-	
-	Countdown * countdown;
-	
-	BOOL showsDeleteButton;
-}
 
 @property (nonatomic, unsafe_unretained) NSObject <SettingsViewControllerDelegate> * delegate;
 @property (nonatomic, strong) IBOutlet UITableView * tableView;

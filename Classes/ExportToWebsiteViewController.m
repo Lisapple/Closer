@@ -10,7 +10,14 @@
 
 #import "NSDate+addition.h"
 
-@interface ExportToWebsiteViewController (PrivateMethods)
+@interface ExportToWebsiteViewController ()
+
+@property (nonatomic, strong) NSString * password1, * password2;
+
+@property (nonatomic, strong) IBOutlet UILabel * password1Label1, * password1Label2, * password1Label3, * password1Label4;
+@property (nonatomic, strong) IBOutlet UILabel * password2Label1, * password2Label2, * password2Label3, * password2Label4;
+@property (nonatomic, strong) IBOutlet UITableView * tableView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView * activityIndicator;
 
 - (IBAction)done:(id)sender;
 - (IBAction)export:(id)sender;
@@ -20,15 +27,6 @@
 @end
 
 @implementation ExportToWebsiteViewController
-
-@synthesize countdowns = _countdowns;
-
-@synthesize password1Label1 = _password1Label1, password1Label2 = _password1Label2, password1Label3 = _password1Label3, password1Label4 = _password1Label4;
-@synthesize password2Label1 = _password2Label1, password2Label2 = _password2Label2, password2Label3 = _password2Label3, password2Label4 = _password2Label4;
-
-@synthesize tableView = _tableView;
-
-@synthesize activityIndicator = _activityIndicator;
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,11 +75,11 @@
 		
 		NSMutableArray * objects = [[NSMutableArray alloc] initWithCapacity:_countdowns.count];
 		for (Countdown * countdown in _countdowns) {
-			NSDictionary * attributes = @{@"name": countdown.name,
-										 @"endDate": [countdown.endDate SQLDateTime],
-                                         @"message": ((countdown.message)? countdown.message: @""),// If we don't have message (= nil), pass a empty string
-										 @"style": @(countdown.style),
-										 @"client": [UIDevice currentDevice].model};
+			NSDictionary * attributes = @{ @"name": countdown.name,
+										   @"endDate": countdown.endDate.SQLDateTime,
+										   @"message": ((countdown.message)? countdown.message: @""),// If we don't have message (= nil), pass a empty string
+										   @"style": @(countdown.style),
+										   @"client": [UIDevice currentDevice].model };
 			[objects addObject:attributes];
 		}
 		
@@ -94,11 +92,11 @@
 		/* If just one countdown into "_countdowns", create a dictionary with content of the countdown */
 		
 		Countdown * countdown = _countdowns[0];
-		NSDictionary * attributes = @{@"name": countdown.name,
-									 @"endDate": [countdown.endDate SQLDateTime],
-									 @"message": countdown.message,
-									 @"style": @(countdown.style),
-									 @"client": [UIDevice currentDevice].model};
+		NSDictionary * attributes = @{ @"name": countdown.name,
+									   @"endDate": countdown.endDate.SQLDateTime,
+									   @"message": countdown.message,
+									   @"style": @(countdown.style),
+									   @"client": [UIDevice currentDevice].model };
 		
 		JSONData = [NSJSONSerialization dataWithJSONObject:attributes
 													 options:0
@@ -138,40 +136,38 @@
 	
 	NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 	
-	password1 = dictionary[@"password1"];
-	password2 = dictionary[@"password2"];
+	_password1 = dictionary[@"password1"];
+	_password2 = dictionary[@"password2"];
 	
-	NSDebugLog(@"(%@|%@)", password1, password2);
+	NSDebugLog(@"(%@|%@)", _password1, _password2);
 	
-	if (password1 && password2) {
+	if (_password1 && _password2) {
 		
-		_password1Label1.text = [password1 substringWithRange:NSMakeRange(0, 1)];
-		_password1Label2.text = [password1 substringWithRange:NSMakeRange(1, 1)];
-		_password1Label3.text = [password1 substringWithRange:NSMakeRange(2, 1)];
-		_password1Label4.text = [password1 substringWithRange:NSMakeRange(3, 1)];
+		_password1Label1.text = [_password1 substringWithRange:NSMakeRange(0, 1)];
+		_password1Label2.text = [_password1 substringWithRange:NSMakeRange(1, 1)];
+		_password1Label3.text = [_password1 substringWithRange:NSMakeRange(2, 1)];
+		_password1Label4.text = [_password1 substringWithRange:NSMakeRange(3, 1)];
 		
-		_password2Label1.text = [password2 substringWithRange:NSMakeRange(0, 1)];
-		_password2Label2.text = [password2 substringWithRange:NSMakeRange(1, 1)];
-		_password2Label3.text = [password2 substringWithRange:NSMakeRange(2, 1)];
-		_password2Label4.text = [password2 substringWithRange:NSMakeRange(3, 1)];
+		_password2Label1.text = [_password2 substringWithRange:NSMakeRange(0, 1)];
+		_password2Label2.text = [_password2 substringWithRange:NSMakeRange(1, 1)];
+		_password2Label3.text = [_password2 substringWithRange:NSMakeRange(2, 1)];
+		_password2Label4.text = [_password2 substringWithRange:NSMakeRange(3, 1)];
 		
 		// @TODO: Find more possibilities with pasteboard
 		UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
 		pasteboard.URL = [self countdownOnCloserWebsiteURL];
-		pasteboard.string = [NSString stringWithFormat:@"%@ - %@", password1, password2];
+		pasteboard.string = [NSString stringWithFormat:@"%@ - %@", _password1, _password2];
 		
 		_tableView.frame = self.view.frame;
 		[self.view addSubview:_tableView];
 		[_tableView reloadData];
-	} else {
-		
 	}
 }
 
 - (NSURL *)countdownOnCloserWebsiteURL
 {
-	if (password1 && password2) {
-		NSString * urlString = [NSString stringWithFormat:@"http://closer.lisacintosh.com/(%@%%7C%@)", password1, password2];// "%7C" ("%%7C" for the format) for "|" (not reconized by -[NSURL URLWithString:] because this is not a valid character for URL)
+	if (_password1 && _password2) {
+		NSString * urlString = [NSString stringWithFormat:@"http://closer.lisacintosh.com/(%@%%7C%@)", _password1, _password2];// "%7C" ("%%7C" for the format) for "|" (not reconized by -[NSURL URLWithString:] because this is not a valid character for URL)
 		return [NSURL URLWithString:urlString];
 	}
 	
@@ -190,16 +186,14 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellID = @"CellID";
-	UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+	UITableViewCell * cell = [aTableView dequeueReusableCellWithIdentifier:cellID];
 	
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
 	}
-	
 	cell.textLabel.text = NSLocalizedString(@"Show on Safari", nil);
 	cell.textLabel.textAlignment = NSTextAlignmentCenter;
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-	
 	return cell;
 }
 
@@ -210,7 +204,7 @@
 {
 	[[UIApplication sharedApplication] openURL:[self countdownOnCloserWebsiteURL]];
 	
-	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

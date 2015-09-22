@@ -7,19 +7,22 @@
 //
 
 #import "ImportFromWebsiteViewController_Phone.h"
+#import "Countdown.h"
 
-@interface ImportFromWebsiteViewController_Phone (PrivateMethods)
+@interface ImportFromWebsiteViewController_Phone ()
+
+@property (nonatomic, strong) NSString * password1, * password2;
+@property (nonatomic, strong) NSArray <Countdown *> * countdowns;
+@property (nonatomic, strong) NSMutableArray <Countdown *> * selectedCountdowns;
+@property (nonatomic, strong) NSRegularExpression * regex;
+@property (nonatomic, strong) NSURLConnection * connection;
+@property (nonatomic, assign) BOOL pushed, sent;
 
 - (void)updateUI;
 
 @end
 
 @implementation ImportFromWebsiteViewController_Phone
-
-@synthesize hiddenTextField = _hiddenTextField;
-@synthesize instructionLabel = _instructionLabel, passwordLabel1 = _passwordLabel1, passwordLabel2 = _passwordLabel2, passwordLabel3 = _passwordLabel3, passwordLabel4 = _passwordLabel4;
-@synthesize activityIndicator = _activityIndicator;
-@synthesize tableView = _tableView;
 
 - (void)viewDidLoad
 {
@@ -37,13 +40,13 @@
 	if (string.length > 0) {
 		
 		NSError * error = nil;
-		regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{4})\\s?\\-\\s?(\\d{4})$" // Match "dddd - dddd" (with or without spaces)
+		_regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{4})\\s?\\-\\s?(\\d{4})$" // Match "dddd - dddd" (with or without spaces)
 													 options:0 error:&error];
 		if (error) {
 			NSLog(@"regex error: %@", error.localizedDescription);
 		}
 		
-		NSRange range = [regex rangeOfFirstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
+		NSRange range = [_regex rangeOfFirstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
 		if (range.location != NSNotFound) {
 			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Paste", nil)
 																					  style:UIBarButtonItemStylePlain
@@ -54,7 +57,7 @@
 	_instructionLabel.text = NSLocalizedString(@"Enter the First Password", nil);
 	_passwordLabel1.text = _passwordLabel2.text = _passwordLabel3.text = _passwordLabel4.text = @"";
 	
-	pushed = NO, sended = NO;
+	_pushed = NO, _sent = NO;
 	
 	_tableView.dataSource = self;
 	_tableView.delegate = self;
@@ -73,13 +76,13 @@
 - (IBAction)pasteFromPasteboard:(id)sender
 {
 	NSString * string = [UIPasteboard generalPasteboard].string;
-	NSString * _password1 = [regex stringByReplacingMatchesInString:string options:0
+	NSString * password1 = [_regex stringByReplacingMatchesInString:string options:0
 															  range:NSMakeRange(0, string.length) withTemplate:@"$1"];
-	NSString * _password2 = [regex stringByReplacingMatchesInString:string options:0
+	NSString * password2 = [_regex stringByReplacingMatchesInString:string options:0
 															  range:NSMakeRange(0, string.length) withTemplate:@"$2"];
-	if (_password1 && _password2) {
-		password1 = _password1;
-		password2 = _password2;
+	if (password1 && password2) {
+		_password1 = password1;
+		_password2 = password2;
 		
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Do you want to use\n %@ and %@\nas passwords to import?", nil), password1, password2];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Paste Passwords", nil)
@@ -121,19 +124,19 @@
 	NSURL * url = [NSURL URLWithString:@"http://closer.lisacintosh.com/export.php"];
 	NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
 	
-	NSData * data = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", password1, password2] dataUsingEncoding:NSUTF8StringEncoding];
+	NSData * data = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", _password1, _password2] dataUsingEncoding:NSUTF8StringEncoding];
 	
 	request.HTTPBody = data;
 	request.HTTPMethod = @"POST";
 	
-	connection = [[NSURLConnection alloc] initWithRequest:request
+	_connection = [[NSURLConnection alloc] initWithRequest:request
 												 delegate:self
 										 startImmediately:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-	selectedCountdowns = [[NSMutableArray alloc] initWithCapacity:3];
+	_selectedCountdowns = [[NSMutableArray alloc] initWithCapacity:3];
 	
 	NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
 	
@@ -147,7 +150,7 @@
 	
 	if ([dictionary valueForKey:@"group"]) {// If we have a group (many countdowns)
 		
-		NSMutableArray * _countdowns = [[NSMutableArray alloc] initWithCapacity:10];
+		NSMutableArray * countdowns = [[NSMutableArray alloc] initWithCapacity:10];
 		
 		NSArray * array = [dictionary valueForKey:@"group"];
 		for (NSDictionary * attributes in array) {
@@ -158,12 +161,12 @@
 			countdown.style = [attributes[@"style"] integerValue];
 			
 			if (countdown.endDate.timeIntervalSinceNow > 0)
-				[selectedCountdowns addObject:countdown];
+				[_selectedCountdowns addObject:countdown];
 			
-			[_countdowns addObject:countdown];
+			[countdowns addObject:countdown];
 		}
 		
-		countdowns = (NSArray *)_countdowns;
+		_countdowns = (NSArray *)countdowns;
 		
 	} else if ([dictionary valueForKey:@"endDate"]) {// Else is we have just a countdown
 		
@@ -174,12 +177,12 @@
 		countdown.style = [dictionary[@"style"] integerValue];
 		
 		if (countdown.endDate.timeIntervalSinceNow > 0)
-			[selectedCountdowns addObject:countdown];
+			[_selectedCountdowns addObject:countdown];
 		
-		countdowns = @[countdown];
+		_countdowns = @[ countdown ];
 		
 	} else {
-		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Check that:\n%@ and %@\nare two correct passwords.", nil), password1, password2];
+		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Check that:\n%@ and %@\nare two correct passwords.", nil), _password1, _password2];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Countdowns found", nil)
 																		message:message
 																 preferredStyle:UIAlertControllerStyleAlert];
@@ -189,7 +192,7 @@
 		[self presentViewController:alert animated:YES completion:nil];
 	}
 	
-	if (countdowns.count > 0) {
+	if (_countdowns.count > 0) {
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
 																			  style:UIBarButtonItemStyleDone
 																			 target:self action:@selector(import:)];
@@ -205,18 +208,18 @@
 
 - (void)updateUI
 {
-	self.navigationItem.rightBarButtonItem.enabled = (selectedCountdowns.count > 0);
+	self.navigationItem.rightBarButtonItem.enabled = (_selectedCountdowns.count > 0);
 }
 
 - (IBAction)import:(id)sender
 {
 #if TARGET_IPHONE_SIMULATOR
 	NSInteger currentCount = [Countdown allCountdowns].count;
-	NSInteger importedCount = selectedCountdowns.count;
+	NSInteger importedCount = _selectedCountdowns.count;
 	NSDebugLog(@"%li from current countdowns + %ld imported countdowns", (long)currentCount, (long)importedCount);
 #endif
 	
-	[Countdown addCountdowns:selectedCountdowns];
+	[Countdown addCountdowns:_selectedCountdowns];
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -245,22 +248,22 @@
 	
 	if (string.length >= 4) {
 		if ([_instructionLabel.text isEqualToString:NSLocalizedString(@"Enter the First Password", nil)]) {
-			if (!pushed) {
+			if (!_pushed) {
 				[self performSelector:@selector(push)
 						   withObject:nil
 						   afterDelay:0.5];
 				
-				password1 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extre numbers
-				pushed = YES;
+				_password1 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extre numbers
+				_pushed = YES;
 			}
 		} else if ([_instructionLabel.text isEqualToString:NSLocalizedString(@"Enter the Second Password", nil)]) {
-			if (!sended) {
+			if (!_sent) {
 				[self performSelector:@selector(send)
 						   withObject:nil
 						   afterDelay:0.5];
 				
-				password2 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extre numbers
-				sended = YES;
+				_password2 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extre numbers
+				_sent = YES;
 			}
 		}
 	}
@@ -271,7 +274,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return countdowns.count;
+	return _countdowns.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -281,7 +284,7 @@
 	if (!cell)
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
 	
-	Countdown * countdown = countdowns[indexPath.row];
+	Countdown * countdown = _countdowns[indexPath.row];
 	cell.textLabel.text = countdown.name;
 	
 	if (countdown.endDate.timeIntervalSinceNow > 0) {
@@ -289,7 +292,7 @@
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		
-		cell.accessoryType = ([selectedCountdowns containsObject:countdown])? UITableViewCellAccessoryCheckmark: UITableViewCellAccessoryNone;
+		cell.accessoryType = ([_selectedCountdowns containsObject:countdown])? UITableViewCellAccessoryCheckmark: UITableViewCellAccessoryNone;
 		
 	} else {
 		cell.detailTextLabel.text = NSLocalizedString(@"Countdown finished", nil);
@@ -307,35 +310,32 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	Countdown * countdown = countdowns[indexPath.row];
+	Countdown * countdown = _countdowns[indexPath.row];
 	
 	if (countdown.endDate.timeIntervalSinceNow > 0.) {// Change check state only for valid (not finished) countdowns
 		UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
 		if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
 			
-			[selectedCountdowns removeObject:countdown];
+			[_selectedCountdowns removeObject:countdown];
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			
 		} else {
-			
-			if (![selectedCountdowns containsObject:countdown]) {// Just check, there is probably no way to get duplicates, but in the case of...
+			if (![_selectedCountdowns containsObject:countdown]) {// Just check, there is probably no way to get duplicates, but in the case of...
 				
 				NSInteger currentCount = [Countdown allCountdowns].count;
-				NSInteger toImportCount = selectedCountdowns.count;
+				NSInteger toImportCount = _selectedCountdowns.count;
 				
 				// @TODO: show an alert when the limit have been reached the first time
 				
 				if ((toImportCount + currentCount) < 18) {// If the limit (of 18) have don't be reach, add countdown
-					[selectedCountdowns addObject:countdown];
+					[_selectedCountdowns addObject:countdown];
 					cell.accessoryType = UITableViewCellAccessoryCheckmark;
 				} else {
 					// If the limit have been reached, don't show the checkmark and don't add to "selectedCountdowns"
 				}
 			}
 		}
-		
 		[self updateUI];
-		
 		[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
 }

@@ -17,20 +17,11 @@
 @interface MainViewController_Phone ()
 
 @property (nonatomic, strong) IBOutlet UIImageView * imageView;
+@property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
 
 @end
 
 @implementation MainViewController_Phone
-
-@synthesize scrollView;
-@synthesize pageControl;
-@synthesize mainView;
-@synthesize label;
-@synthesize infoButton;
-
-@synthesize updateTimeLabelTimer, animationDelay;
-
-@synthesize pages;
 
 const NSTimeInterval kAnimationDuration = 0.5;
 const NSTimeInterval kAnimationDelay = 5.;
@@ -46,13 +37,13 @@ const NSTimeInterval kAnimationDelay = 5.;
 	
 	_imageView.image = [UIImage imageNamed:@"Background"];
 	
-	scrollView.pagingEnabled = YES;
-	scrollView.showsHorizontalScrollIndicator = NO;
-	scrollView.alwaysBounceHorizontal = YES;
-	scrollView.delegate = self;
-    scrollView.clipsToBounds = YES;
+	_scrollView.pagingEnabled = YES;
+	_scrollView.showsHorizontalScrollIndicator = NO;
+	_scrollView.alwaysBounceHorizontal = YES;
+	_scrollView.delegate = self;
+    _scrollView.clipsToBounds = YES;
 	
-	pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight; // Add flexible height (Unavailable from IB)
+	_pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight; // Add flexible height (Unavailable from IB)
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -88,20 +79,20 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (NSInteger)selectedPageIndex
 {
-	return pageControl.currentPage;
+	return _pageControl.currentPage;
 }
 
 #pragma mark - Add Page
 
 - (void)addPageWithCountDown:(Countdown *)aCountdown
 {
-	[self insertPageWithCountDown:aCountdown atIndex:pages.count];
+	[self insertPageWithCountDown:aCountdown atIndex:_pages.count];
 }
 
 - (void)insertPageWithCountDown:(Countdown *)aCountdown atIndex:(NSInteger)index
 {
-	CGRect frame = CGRectMake(index * scrollView.frame.size.width, 0.,
-							  scrollView.frame.size.width, scrollView.frame.size.height);
+	CGRect frame = CGRectMake(index * _scrollView.frame.size.width, 0.,
+							  _scrollView.frame.size.width, _scrollView.frame.size.height);
 	
 	PageView * page = nil;
 	if (aCountdown.type == CountdownTypeTimer)
@@ -111,11 +102,11 @@ const NSTimeInterval kAnimationDelay = 5.;
 	
 	page.delegate = self;
 	page.countdown = aCountdown;
-	[pages insertObject:page atIndex:index];
+	[_pages insertObject:page atIndex:index];
 	
 	[self.scrollView addSubview:page];
 	
-	[self.view bringSubviewToFront:pageControl];
+	[self.view bringSubviewToFront:_pageControl];
 }
 
 - (void)update
@@ -135,14 +126,14 @@ const NSTimeInterval kAnimationDelay = 5.;
 			NSRange range = NSMakeRange(countdownsCount, pagesCount - countdownsCount);
 			
 			NSIndexSet * indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
-			NSArray * pagesToRemove = [pages objectsAtIndexes:indexSet];
+			NSArray * pagesToRemove = [_pages objectsAtIndexes:indexSet];
 			
 			// Remove pages from superview
 			for (PageView * page in pagesToRemove)
 				[page removeFromSuperview];
 			
 			// Remove pages on array
-			[pages removeObjectsInRange:range];
+			[_pages removeObjectsInRange:range];
 			
 		} else if (pagesCount < countdownsCount) {
 			
@@ -157,7 +148,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	// Reload pages
 	int index = 0;
 	for (Countdown * countdown in [Countdown allCountdowns]) {
-		PageView * page = pages[index];
+		PageView * page = _pages[index];
 		
 		/* If the type of page needs to change, remove the current page and re-create one */
 		if ((countdown.type == CountdownTypeTimer && [page isKindOfClass:[CountdownPageView class]])
@@ -166,22 +157,22 @@ const NSTimeInterval kAnimationDelay = 5.;
 			[self insertPageWithCountDown:countdown atIndex:index];
 		}
 		
-		page.frame = CGRectMake(index * scrollView.frame.size.width, 0.,
-								scrollView.frame.size.width, scrollView.frame.size.height);
+		page.frame = CGRectMake(index * _scrollView.frame.size.width, 0.,
+								_scrollView.frame.size.width, _scrollView.frame.size.height);
 		page.countdown = countdown;
 		index++;
 	}
 	
-	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * pages.count, 0.);
-	CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageControl.currentPage, 0.);
-	[scrollView setContentOffset:contentOffset animated:NO];
+	_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * _pages.count, 0.);
+	CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * _pageControl.currentPage, 0.);
+	[_scrollView setContentOffset:contentOffset animated:NO];
 	
-	if (pages.count) {
-		pageControl.numberOfPages = pages.count;
-		PageView * pageView = pages[pageControl.currentPage];
+	if (_pages.count) {
+		_pageControl.numberOfPages = _pages.count;
+		PageView * pageView = _pages[_pageControl.currentPage];
 		UIColor * textColor = [UIColor textColorForPageStyle:pageView.style];
-		pageControl.currentPageIndicatorTintColor = textColor;
-		pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
+		_pageControl.currentPageIndicatorTintColor = textColor;
+		_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
 	}
 }
 
@@ -189,18 +180,18 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	// Re-order pages
 	int index = 0;
-	for (PageView * page in pages) {
-		CGFloat y = (scrollView.frame.size.height - 423.) / 2.; // The height of the background image of the pageView is 423pt
-		CGRect frame = CGRectMake(index * scrollView.frame.size.width, (int)y, scrollView.frame.size.width, scrollView.frame.size.height);
+	for (PageView * page in _pages) {
+		CGFloat y = (_scrollView.frame.size.height - 423.) / 2.; // The height of the background image of the pageView is 423pt
+		CGRect frame = CGRectMake(index * _scrollView.frame.size.width, (int)y, _scrollView.frame.size.width, _scrollView.frame.size.height);
 		page.frame = frame;
 		
 		index++;
 	}
 	
-	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * pages.count, 0.);
+	_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * _pages.count, 0.);
 	
-	CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageControl.currentPage, 0.);
-	[scrollView setContentOffset:contentOffset animated:NO];
+	CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * _pageControl.currentPage, 0.);
+	[_scrollView setContentOffset:contentOffset animated:NO];
 }
 
 - (void)removePageWithCountdown:(Countdown *)aCountdown
@@ -213,20 +204,19 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)removePageAtIndex:(NSInteger)index
 {
-	PageView * pageView = pages[index];
+	PageView * pageView = _pages[index];
 	[pageView viewDidHide:NO];
 	[pageView removeFromSuperview];
-	[pages removeObjectAtIndex:index];
+	[_pages removeObjectAtIndex:index];
 }
 
 - (void)removeAllPages
 {
-	for (PageView * page in pages) {
+	for (PageView * page in _pages) {
 		[page viewDidHide:NO];
 		[page removeFromSuperview];
 	}
-	
-	[pages removeAllObjects];
+	[_pages removeAllObjects];
 }
 
 #pragma mark - Page and Page's Settings Selection
@@ -235,10 +225,10 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	if (pageIndex < [Countdown allCountdowns].count) {
 		
-		pageControl.currentPage = pageIndex;
-		CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageIndex, 0.);
-		[scrollView setContentOffset:contentOffset animated:animated];
-		[pages[pageIndex] viewWillShow:animated];
+		_pageControl.currentPage = pageIndex;
+		CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * pageIndex, 0.);
+		[_scrollView setContentOffset:contentOffset animated:animated];
+		[_pages[pageIndex] viewWillShow:animated];
 	}
 }
 
@@ -248,18 +238,18 @@ const NSTimeInterval kAnimationDelay = 5.;
 		
 		[UIApplication sharedApplication].statusBarHidden = NO; // @TODO: Remove if unused
 		
-		if (!settingsViewController) {
-			settingsViewController = [[SettingsViewController_Phone alloc] init];
-			settingsViewController.delegate = self;
+		if (!_settingsViewController) {
+			_settingsViewController = [[SettingsViewController_Phone alloc] init];
+			_settingsViewController.delegate = self;
 		}
 		
-		Countdown * currentCountdown = (Countdown *)[Countdown allCountdowns][pageControl.currentPage];
-		settingsViewController.countdown = currentCountdown;
+		Countdown * currentCountdown = (Countdown *)[Countdown allCountdowns][_pageControl.currentPage];
+		_settingsViewController.countdown = currentCountdown;
 		
-		UINavigationController * aNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+		UINavigationController * aNavigationController = [[UINavigationController alloc] initWithRootViewController:_settingsViewController];
 		aNavigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentViewController:aNavigationController animated:YES completion:^{
-			[pages[pageIndex] viewDidHide:animated]; }];
+			[_pages[pageIndex] viewDidHide:animated]; }];
 		
 		[self stopUpdateTimeLabels];
 	}
@@ -269,7 +259,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)startUpdateTimeLabels
 {
-	[updateTimeLabelTimer invalidate];
+	[_updateTimeLabelTimer invalidate];
 	self.updateTimeLabelTimer = [NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(updateTimeLabels)
 															   userInfo:nil repeats:YES];
 	[self updateTimeLabels];
@@ -278,9 +268,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (void)updateTimeLabels
 {
 	int index = 0;
-	for (PageView * page in pages) {
+	for (PageView * page in _pages) {
 		
-		if (ABS(pageControl.currentPage - index) <= 1) {// Update only the current page and it left and right neighbours
+		if (ABS(_pageControl.currentPage - index) <= 1) {// Update only the current page and it left and right neighbours
 			dispatch_async(dispatch_get_main_queue(), ^{ [page update]; });
 		}
 		
@@ -290,7 +280,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)stopUpdateTimeLabels
 {
-	[updateTimeLabelTimer invalidate];
+	[_updateTimeLabelTimer invalidate];
 	self.updateTimeLabelTimer = nil;
 }
 
@@ -306,12 +296,12 @@ const NSTimeInterval kAnimationDelay = 5.;
 		NSInteger pageIndex = [Countdown indexOfCountdown:controller.countdown];
 		
 		if (pageIndex == NSNotFound)
-			pageIndex = pages.count - 1;// Select the last countdown
+			pageIndex = _pages.count - 1;// Select the last countdown
 		
-		pageControl.currentPage = pageIndex;
-		CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageIndex, 0.);
-		[scrollView setContentOffset:contentOffset animated:NO];
-		[pages[pageIndex] viewWillShow:YES];
+		_pageControl.currentPage = pageIndex;
+		CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * pageIndex, 0.);
+		[_scrollView setContentOffset:contentOffset animated:NO];
+		[_pages[pageIndex] viewWillShow:YES];
 		
 		[self startUpdateTimeLabels];
 		
@@ -330,23 +320,23 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)pageViewWillShowSettings:(PageView *)page
 {
-	NSInteger index = [pages indexOfObject:page];
+	NSInteger index = [_pages indexOfObject:page];
 	if (index == NSNotFound)
-		index = pageControl.currentPage;
+		index = _pageControl.currentPage;
 	
 	[self showSettingsForPageAtIndex:index animated:YES];
 }
 
 - (IBAction)showSettings:(id)sender
 {
-	[self showSettingsForPageAtIndex:pageControl.currentPage animated:YES];
+	[self showSettingsForPageAtIndex:_pageControl.currentPage animated:YES];
 }
 
 - (void)pageViewWillShowDeleteConfirmation:(PageView *)page
 {
 	[UIView animateWithDuration:0.1
-					 animations:^{ pageControl.alpha = 0.; }
-					 completion:^(BOOL finished) { pageControl.hidden = YES; }];
+					 animations:^{ _pageControl.alpha = 0.; }
+					 completion:^(BOOL finished) { _pageControl.hidden = YES; }];
 }
 
 - (void)pageViewDidScroll:(PageView *)page offset:(CGPoint)offset
@@ -356,10 +346,10 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)pageViewDidHideDeleteConfirmation:(PageView *)page
 {
-	pageControl.hidden = NO;
+	_pageControl.hidden = NO;
 	[UIView animateWithDuration:0.1
-					 animations:^{ pageControl.alpha = 1.; }
-					 completion:^(BOOL finished) { scrollView.scrollEnabled = YES; }];
+					 animations:^{ _pageControl.alpha = 1.; }
+					 completion:^(BOOL finished) { _scrollView.scrollEnabled = YES; }];
 }
 
 - (void)pageViewDeleteButtonDidTap:(PageView *)page
@@ -373,7 +363,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 					 }
 					 completion:^(BOOL finished) {
 						 /* Get the countdown next this one */
-						 Countdown * countdown = [Countdown countdownAtIndex:(pageControl.currentPage)];
+						 Countdown * countdown = [Countdown countdownAtIndex:(_pageControl.currentPage)];
 						 [Countdown removeCountdown:countdown];
 						 
 						 NSInteger count = [Countdown allCountdowns].count;
@@ -402,25 +392,25 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
-	CGFloat offset = scrollView.contentOffset.x / scrollView.frame.size.width;
+	CGFloat offset = _scrollView.contentOffset.x / _scrollView.frame.size.width;
 	NSInteger index = MAX(roundf(offset), 0);
-	pageControl.currentPage = index;
-	PageView * pageView = pages[index];
+	_pageControl.currentPage = index;
+	PageView * pageView = _pages[index];
 	
 	if (pageView.showDeleteConfirmation) {
-		scrollView.scrollEnabled = NO;
+		_scrollView.scrollEnabled = NO;
 		[pageView hideDeleteConfirmation];
 		
 	} else {
 		UIColor * textColor = [UIColor textColorForPageStyle:pageView.style];
-		pageControl.currentPageIndicatorTintColor = textColor;
-		pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
+		_pageControl.currentPageIndicatorTintColor = textColor;
+		_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
 		
-		if (scrollView.contentOffset.x < 0.) {
-			[self setBackgroundImageOffset:CGPointMake(-scrollView.contentOffset.x, 0.)];
+		if (_scrollView.contentOffset.x < 0.) {
+			[self setBackgroundImageOffset:CGPointMake(-_scrollView.contentOffset.x, 0.)];
 			
-		} else if (scrollView.contentOffset.x > (scrollView.frame.size.width * (pageControl.numberOfPages - 1))) {
-			[self setBackgroundImageOffset:CGPointMake((scrollView.frame.size.width * (pageControl.numberOfPages - 1)) - scrollView.contentOffset.x, 0.)];
+		} else if (_scrollView.contentOffset.x > (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1))) {
+			[self setBackgroundImageOffset:CGPointMake((_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)) - _scrollView.contentOffset.x, 0.)];
 		}
 		[self setNeedsStatusBarAppearanceUpdate];
 	}
@@ -428,10 +418,10 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)aScrollView
 {
-	NSInteger pageIndex = floor(scrollView.contentOffset.x / scrollView.frame.size.width);
+	NSInteger pageIndex = floor(_scrollView.contentOffset.x / _scrollView.frame.size.width);
 	
 	int index = 0;
-	for (PageView * page in pages) {
+	for (PageView * page in _pages) {
 		if (ABS(pageIndex - index) <= 1) // Update only the current page and it left and right neighbours
 			[page update];
 		index++;
@@ -440,8 +430,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-	if (pages.count) {
-		PageView * pageView = pages[pageControl.currentPage];
+	if (_pages.count) {
+		PageView * pageView = _pages[_pageControl.currentPage];
 		return (pageView.style == PageViewStyleDay || pageView.style == PageViewStyleSpring) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 	}
 	return UIStatusBarStyleDefault;
@@ -451,8 +441,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (IBAction)changePage:(id)sender
 {
-	CGPoint contentOffset = CGPointMake(scrollView.frame.size.width * pageControl.currentPage, 0.);
-	[scrollView setContentOffset:contentOffset animated:YES];
+	CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * _pageControl.currentPage, 0.);
+	[_scrollView setContentOffset:contentOffset animated:YES];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
