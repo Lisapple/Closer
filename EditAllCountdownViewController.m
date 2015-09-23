@@ -23,8 +23,8 @@
 @property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
 @property (nonatomic, strong) NSMutableArray <Countdown *> * includedCountdowns, * notIncludedCountdowns;
 
-- (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
-- (void)removeCountdown:(Countdown *)countdown index:(NSInteger)index;
+- (void)insertCountdown:(Countdown *)countdown atIndexPath:(NSIndexPath *)indexPath;
+- (void)removeCountdown:(Countdown *)countdown indexPath:(NSIndexPath *)indexPath;
 
 @end
 
@@ -156,22 +156,23 @@
 	} else {
 		Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
 		aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
-		[self insertCountdown:aCountDown atIndex:0];
+		NSIndexPath * indexPath = [NSIndexPath indexPathForRow:(_includedCountdowns.count - 1) inSection:0];
+		[self insertCountdown:aCountDown atIndexPath:indexPath];
 		/* Note: the tableView is automatically reloaded */
 		// @TODO: animated the row insertion
 		
-		[_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(_includedCountdowns.count - 1) inSection:0]
+		[_tableView scrollToRowAtIndexPath:indexPath
 						 atScrollPosition:UITableViewScrollPositionMiddle
 								 animated:YES];
 	}
 }
 
-- (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index
+- (void)insertCountdown:(Countdown *)countdown atIndexPath:(NSIndexPath *)indexPath
 {
-	[[self.undoManager prepareWithInvocationTarget:self] removeCountdown:countdown index:index];
+	[[self.undoManager prepareWithInvocationTarget:self] removeCountdown:countdown indexPath:indexPath];
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
 	
-	[Countdown insertCountdown:countdown atIndex:index];
+	[Countdown insertCountdown:countdown atIndex:indexPath.row];
 	/* Note: the tableView is automatically reloaded */
 	// @TODO: animated the row insertion
 }
@@ -186,16 +187,16 @@
 	if (sourceIndex != destinationIndex) {
 		[Countdown moveCountdownAtIndex:sourceIndex toIndex:MIN(destinationIndex, _allCountdowns.count - 1)];
 		[[self.undoManager prepareWithInvocationTarget:self] moveCountdownAtIndex:toIndexPath toIndexPath:indexPath];
-		[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
+		[self.undoManager setActionName:NSLocalizedString(@"UNDO_MOVE_COUNTDOWN_ACTION", nil)];
 	} else {
 		[self reloadData];
 	}
 }
 
-- (void)removeCountdown:(Countdown *)countdown index:(NSInteger)index
+- (void)removeCountdown:(Countdown *)countdown indexPath:(NSIndexPath *)indexPath
 {
-	[[self.undoManager prepareWithInvocationTarget:self] insertCountdown:countdown atIndex:index];
-	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
+	[[self.undoManager prepareWithInvocationTarget:self] insertCountdown:countdown atIndexPath:indexPath];
+	[self.undoManager setActionName:NSLocalizedString(@"UNDO_INSERT_COUNTDOWN_ACTION", nil)];
 	
 	[Countdown removeCountdown:countdown];
 	/* Note: the tableView is automatically reloaded */
@@ -321,7 +322,7 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
         Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-		[self removeCountdown:countdown index:index];
+		[self removeCountdown:countdown indexPath:indexPath];
 		// @TODO: animated the row deletion
 	}
 }

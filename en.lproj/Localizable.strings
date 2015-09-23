@@ -104,6 +104,8 @@
 "Import from Calendar";
 "Export...";
 
+"UNDO_INSERT_COUNTDOWN_ACTION" = "Countdown Adding";
+"UNDO_MOVE_COUNTDOWN_ACTION" = "Countdown Moving";
 "UNDO_DELETE_COUNTDOWN_ACTION" = "Countdown Deleting";
 
 /* ExportViewController */

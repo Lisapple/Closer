@@ -78,7 +78,7 @@
 - (void)removeCountdown:(Countdown *)countdown index:(NSInteger)index
 {
 	[[self.undoManager prepareWithInvocationTarget:self] insertCountdown:countdown atIndex:index];
-	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
+	[self.undoManager setActionName:NSLocalizedString(@"UNDO_INSERT_COUNTDOWN_ACTION", nil)];
 	
 	[Countdown removeCountdown:countdown];
 	/* Note: the tableView is automatically reloaded */

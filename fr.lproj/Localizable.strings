@@ -105,6 +105,8 @@
 "Import from Calendar" = "Importer depuis Calendrier";
 "Export..." = "Exporter...";
 
+"UNDO_INSERT_COUNTDOWN_ACTION" = "Ajout";
+"UNDO_MOVE_COUNTDOWN_ACTION" = "Déplacement";
 "UNDO_DELETE_COUNTDOWN_ACTION" = "Suppression";
 
 /* ExportViewController */
