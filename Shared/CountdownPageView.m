@@ -13,7 +13,6 @@
 @interface CountdownPageView ()
 
 @property (nonatomic, assign) IBOutlet UIView * contentView;
-@property (nonatomic, assign) CGPoint location;
 @property (nonatomic, assign) BOOL idleTimerDisabled;
 
 @end

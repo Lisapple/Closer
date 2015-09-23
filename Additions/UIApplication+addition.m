@@ -8,7 +8,7 @@
 
 #import "UIApplication+addition.h"
 
-static NSUInteger __idleTimerCount = 0;
+static NSInteger __idleTimerCount = 0;
 
 @implementation UIApplication (addition)
 

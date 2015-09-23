@@ -8,10 +8,33 @@
 
 #import "MessageViewControler.h"
 
-@implementation MyTextView
+@interface MyTextView ()
+{
+	NSUndoManager * _undoManager;
+}
 
 @end
 
+@implementation MyTextView
+
+- (NSUndoManager *)undoManager
+{
+	return _undoManager;
+}
+
+- (void)setUndoManager:(NSUndoManager *)undoManager
+{
+	_undoManager = undoManager;
+}
+
+@end
+
+
+@interface MessageViewControler ()
+{
+	NSUndoManager * _undoManager;
+}
+@end
 
 @implementation MessageViewControler
 
@@ -43,8 +66,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	NSUndoManager * anUndomanager = [[NSUndoManager alloc] init];
-	self.undoManager = anUndomanager;
+	_undoManager = [[NSUndoManager alloc] init];
 	
 	[super viewWillAppear:animated];
 }
@@ -53,7 +75,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 {
 	[self update];
 	
-	_cellTextView.undoManager = self.undoManager;// Overwrite the cellTextView undo manager with the controller one since [cellTextView becomeFirstResponder] set the default undo manager from cellTextView undo manager (setActionName should not working with this method).
+	_cellTextView.undoManager = _undoManager; // Overwrite the cellTextView undo manager with the controller one since [cellTextView becomeFirstResponder] set the default undo manager from cellTextView undo manager (setActionName should not working with this method).
 	
 	[_cellTextView becomeFirstResponder];
 	
@@ -65,7 +87,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 	_countdown.message = _cellTextView.text;
 	
 	_cellTextView.undoManager = nil;
-	self.undoManager = nil;
+	_undoManager = nil;
 	
 	[super viewWillDisappear:animated];
 }
@@ -78,11 +100,8 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 - (IBAction)clear:(id)sender
 {
 	if (_cellTextView.text.length > 0) {
-		[self.undoManager registerUndoWithTarget:self
-										selector:@selector(setText:)
-										  object:_cellTextView.text];
-		
-		[self.undoManager setActionName:NSLocalizedString(@"UNDO_MESSAGE_ACTION", nil)];
+		[_undoManager registerUndoWithTarget:self selector:@selector(setText:) object:_cellTextView.text];
+		[_undoManager setActionName:NSLocalizedString(@"UNDO_MESSAGE_ACTION", nil)];
 		
 		_cellTextView.text = @"";
 		[self update];

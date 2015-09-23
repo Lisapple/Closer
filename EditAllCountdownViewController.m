@@ -92,7 +92,7 @@
 	[actionSheet addAction:[UIAlertAction actionWithTitle:@"appstore.com/lisacintosh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://appstore.com/lisacintosh/"]]; }]];
 	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
-	[self presentViewController:actionSheet animated:NO completion:nil];
+	[self presentViewController:actionSheet animated:YES completion:nil];
 }
 
 - (void)reloadData

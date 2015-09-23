@@ -350,7 +350,7 @@
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]]; }]];
 	[actionSheet addAction:[UIAlertAction actionWithTitle:@"appstore.com/lisacintosh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://appstore.com/lisacintosh/"]]; }]];
-	[self presentViewController:actionSheet animated:NO completion:nil];
+	[self presentViewController:actionSheet animated:YES completion:nil];
 }
 
 - (void)handleTapFrom:(UIGestureRecognizer *)recognizer

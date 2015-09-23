@@ -19,8 +19,6 @@
 @property (nonatomic, strong) NSDate * date;
 @property (nonatomic, strong) Countdown * countdown;
 
-@property (nonatomic, strong) NSUndoManager * undoManager;
-
 - (IBAction)datePickerDidChange:(id)sender;
 
 - (void)reloadData;

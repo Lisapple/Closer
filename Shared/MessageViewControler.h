@@ -10,7 +10,7 @@
 
 @interface MyTextView : UITextView
 
-@property (nonatomic, strong) NSUndoManager * undoManager;
+- (void)setUndoManager:(NSUndoManager *)undoManager;
 
 @end
 
@@ -20,7 +20,6 @@
 @property (nonatomic, strong) IBOutlet MyTextView * cellTextView;
 @property (nonatomic, strong) UITableViewCell * messageCell;
 @property (nonatomic, strong) Countdown * countdown;
-@property (nonatomic, strong) NSUndoManager * undoManager;
 
 - (IBAction)clear:(id)sender;
 - (CGFloat)rowHeight;

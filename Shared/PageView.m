@@ -102,8 +102,15 @@
 	/* Subsclasses must implement it */
 }
 
-- (void)viewWillShow:(BOOL)animated { }
-- (void)viewDidHide:(BOOL)animated { }
+- (void)viewWillShow:(BOOL)animated
+{
+	_isViewShown = YES;
+}
+
+- (void)viewDidHide:(BOOL)animated
+{
+	_isViewShown = NO;
+}
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {

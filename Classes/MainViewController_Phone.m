@@ -396,7 +396,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 	NSInteger index = MAX(roundf(offset), 0);
 	_pageControl.currentPage = index;
 	PageView * pageView = _pages[index];
-	
 	if (pageView.showDeleteConfirmation) {
 		_scrollView.scrollEnabled = NO;
 		[pageView hideDeleteConfirmation];
@@ -425,6 +424,30 @@ const NSTimeInterval kAnimationDelay = 5.;
 		if (ABS(pageIndex - index) <= 1) // Update only the current page and it left and right neighbours
 			[page update];
 		index++;
+	}
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+	PageView * pageView = _pages[_pageControl.currentPage];
+	if (!pageView.isViewShown) [pageView viewWillShow:YES];
+	for (PageView * aPageView in _pages) {
+		if (aPageView != pageView && aPageView.isViewShown) {
+			[aPageView viewDidHide:YES];
+		}
+	}
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+	if (!decelerate) {
+		PageView * pageView = _pages[_pageControl.currentPage];
+		if (!pageView.isViewShown) [pageView viewWillShow:YES];
+		for (PageView * aPageView in _pages) {
+			if (aPageView != pageView && aPageView.isViewShown) {
+				[aPageView viewDidHide:YES];
+			}
+		}
 	}
 }
 

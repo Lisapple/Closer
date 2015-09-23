@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, PageViewStyle) {
 /*** @abstract: abstract method used for CountdownPageView and TimerPageView ***/
 @interface PageView : UIView <UIScrollViewDelegate>
 
-@property (nonatomic, assign) BOOL showDeleteConfirmation;
+@property (nonatomic, assign) BOOL showDeleteConfirmation, isViewShown;
 @property (nonatomic, strong) Countdown * countdown;
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, weak) NSObject <PageViewDelegate> * delegate;
@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, PageViewStyle) {
 - (void)hideDeleteConfirmation; // Always with an animation
 - (void)hideDeleteConfirmationWithAnimation:(BOOL)animated;
 
+// Subclasses must call these method with super
 - (void)viewWillShow:(BOOL)animated;
 - (void)viewDidHide:(BOOL)animated;
 

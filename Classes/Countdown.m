@@ -256,7 +256,11 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index
 {
+	[countdown activate];
 	[_countdowns insertObject:countdown atIndex:index];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+	[self synchronize];
 }
 
 + (void)addCountdown:(Countdown *)countdown

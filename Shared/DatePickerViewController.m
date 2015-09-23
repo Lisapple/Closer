@@ -13,6 +13,9 @@
 #import "NSDate+addition.h"
 
 @interface DatePickerViewController ()
+{
+	NSUndoManager * _undoManager;
+}
 
 @property (nonatomic, assign) BOOL hasTimeDate;
 @property (nonatomic, strong) NSTimer * updateDatePickerTimer;
@@ -39,8 +42,6 @@
 	_tableView.scrollEnabled = NO;
 	
 	[self reloadData];
-	
-	NSDebugLog(@"scheduledLocalNotifications: %lu local notification(s)", (long)[[UIApplication sharedApplication] scheduledLocalNotifications].count);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -62,8 +63,7 @@
 	
 	[self reloadData];
 	
-	NSUndoManager * anUndomanager = [[NSUndoManager alloc] init];
-	self.undoManager = anUndomanager;
+	_undoManager = [[NSUndoManager alloc] init];
 	
 	[self updateWithOrientation:[UIApplication sharedApplication].statusBarOrientation];
 	
@@ -91,7 +91,7 @@
 		self.countdown.endDate = [_date dateByAddingTimeInterval:-seconds];// Fix seconds from date to zero to finish countdown at hh:mm:00 (and not hh:mm:ss)
 	}
 	
-	self.undoManager = nil;
+	_undoManager = nil;
 	
 	if (_updateDatePickerTimer.valid) {
 		[_updateDatePickerTimer invalidate];
@@ -109,11 +109,8 @@
 
 - (IBAction)datePickerDidChange:(id)sender
 {
-	[self.undoManager registerUndoWithTarget:self
-									selector:@selector(setDatePickerDate:)
-									  object:self.date];
-	
-	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DATE_ACTION", nil)];
+	[_undoManager registerUndoWithTarget:self selector:@selector(setDatePickerDate:) object:self.date];
+	[_undoManager setActionName:NSLocalizedString(@"UNDO_DATE_ACTION", nil)];
 	
 	self.date = _datePicker.date;
 	[self reloadData];
