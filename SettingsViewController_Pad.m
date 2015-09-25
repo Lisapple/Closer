@@ -47,33 +47,24 @@
 	static NSString * cellIdentifier = @"CellID";
 	
 	if (indexPath.section == 0) {
-		
 		cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if (cell == nil) {
+		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
-			
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			
 			cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 		}
-		
 		cell.textLabel.text = NSLocalizedString(@"Type", nil);
-		
-		cell.detailTextLabel.text = (_countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Timer", nil) : NSLocalizedString(@"_countdown", nil);
+		cell.detailTextLabel.text = (_countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Timer", nil) : NSLocalizedString(@"Countdown", nil);
 		
 	} else if (indexPath.section == 1) {
-		
 		cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if (cell == nil) {
+		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
-			
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			
 			cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 		}
-		
 		cell.textLabel.text = _cellTitles[indexPath.row];
 		
 		if (_countdown.type == CountdownTypeTimer) {
@@ -239,13 +230,10 @@
 	
 	self.title = NSLocalizedString(@"Settings", nil);
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	
 	self.navigationController.delegate = self;
-	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 																				 target:self
 																				 action:@selector(close:)];
-	
 	_viewControllers = [[NSMutableArray alloc] initWithCapacity:2];
 	[_viewControllers addObject:self];
     

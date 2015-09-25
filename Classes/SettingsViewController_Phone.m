@@ -30,6 +30,12 @@ const NSInteger kDeleteButtonTag = 345;
 @property (nonatomic, strong) NSArray <NSString *> * cellTitles;
 @property (nonatomic, assign) BOOL showsDeleteButton;
 
+- (IBAction)done:(id)sender;
+- (IBAction)editAllCountdowns:(id)sender;
+- (IBAction)deleteAction:(id)sender;
+
+- (void)deleteCountdown;
+
 @end
 
 @implementation SettingsViewController_Phone
@@ -221,7 +227,7 @@ const NSInteger kDeleteButtonTag = 345;
 						if (_countdown.durations.count == 1) {
 							cell.detailTextLabel.text = [_countdown shortDescriptionOfDurationAtIndex:0];
 						} else {
-							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld timers", nil), (long)_countdown.durations.count]; // @TODO: replace "%ld timers" with "%ld durations"
+							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)_countdown.durations.count];
 						}
 						cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
 						cell.detailTextLabel.textColor = [UIColor darkGrayColor];

@@ -92,6 +92,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 - (void)removeDurationAtIndex:(NSUInteger)index;
 - (void)resetDurationIndex;
 - (void)resume;
+- (void)resumeWithOffset:(NSTimeInterval)offset; // End date = remaining + offset
 - (void)pause;
 - (void)reset;
 

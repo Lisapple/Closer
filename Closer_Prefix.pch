@@ -18,6 +18,8 @@
 #define NSDebugLog(format, ...)
 #endif
 
+#define CLAMP(A, T, B) ( A + (B - A) * T )
+
 CG_INLINE void NSFrameLog(CGRect rect)
 {
 	NSDebugLog(@"{%.1f, %.1f} {%.1f, %.1f}", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);

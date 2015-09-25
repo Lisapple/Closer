@@ -527,8 +527,13 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)resume
 {
+	[self resumeWithOffset:0];
+}
+
+- (void)resumeWithOffset:(NSTimeInterval)offset
+{
 	if (_type == CountdownTypeTimer && _paused) {
-		_endDate = [NSDate dateWithTimeIntervalSinceNow:_remaining];
+		_endDate = [NSDate dateWithTimeIntervalSinceNow:_remaining + offset];
 		_remaining = 0.;
 		_paused = NO;
 		[self updateLocalNotification];

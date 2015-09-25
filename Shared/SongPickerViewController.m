@@ -132,8 +132,8 @@
 				_player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
 #if !TARGET_IPHONE_SIMULATOR
                 /* This can crash on Simulator */
-				[player prepareToPlay];
-				[player play];
+				[_player prepareToPlay];
+				[_player play];
 #endif
 				self.songID = @"default";
 			}
@@ -146,8 +146,8 @@
                                                             error:nil];
 #if !TARGET_IPHONE_SIMULATOR
 			/* This can crash on Simulator */
-			[player prepareToPlay];
-			[player play];
+			[_player prepareToPlay];
+			[_player play];
 #endif
 			
 			self.songID = _songs[indexPath.row][@"ID"];

@@ -20,13 +20,6 @@
 
 @property (nonatomic, strong) Countdown * countdown;
 
-- (IBAction)done:(id)sender;
-- (IBAction)editAllCountdowns:(id)sender;
-- (IBAction)deleteAction:(id)sender;
-
-// TODO: create PrivateMethods category
-- (void)deleteCountdown;
-
 @end
 
 

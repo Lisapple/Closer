@@ -12,6 +12,7 @@
 
 @interface TimerView ()
 {
+	NSUInteger animationIdentifier;
 	BOOL _cancel, _animating;
 }
 @end
@@ -24,32 +25,30 @@
 	[self setNeedsDisplay];
 }
 
-- (void)setProgression:(CGFloat)progression animated:(BOOL)animated
+- (void)setProgression:(CGFloat)finalProgression animated:(BOOL)animated
 {
-	if (animated && progression > _progression) {
+	if (animated && finalProgression > _progression) {
 		if (!_animating) {
 			_cancel = NO;
 			_animating = YES;
 			float startProgression = _progression;
-			[NSObject animationBlock:^(float t) {
-				if (!_cancel) {
-					dispatch_async(dispatch_get_main_queue(), ^{
-						_progression = CLAMP(startProgression, progression, t);
-						[self setNeedsDisplay];
-					});
-				}
-			}
-							duration:1.
-						  completion:^{ _animating = NO; }];
+			animationIdentifier = [NSObject animateWithDuration:1.
+							   animations:^(float progression) {
+								   dispatch_async(dispatch_get_main_queue(), ^{
+									   _progression = CLAMP(startProgression, progression, finalProgression);
+									   [self setNeedsDisplay];
+								   });
+							   }
+							   completion:^{ _animating = NO; }];
 		}
 	} else {
-		self.progression = progression;
+		self.progression = finalProgression;
 	}
 }
 
 - (void)cancelProgressionAnimation
 {
-	_cancel = YES;
+	[NSObject cancelAnimationWithIdentifier:animationIdentifier];
 	_animating = NO;
 }
 

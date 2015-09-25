@@ -104,6 +104,8 @@
 "Import from Calendar";
 "Export...";
 
+"Remove";
+
 "UNDO_INSERT_COUNTDOWN_ACTION" = "Countdown Adding";
 "UNDO_MOVE_COUNTDOWN_ACTION" = "Countdown Moving";
 "UNDO_DELETE_COUNTDOWN_ACTION" = "Countdown Deleting";
@@ -186,7 +188,7 @@
 
 "New Timer";
 "New Timer %i";
-"%ld timers";
+"%ld durations";
 
 "Duration";
 "Durations";
@@ -220,8 +222,8 @@
 "Ask to Continue";
 "Ask";
 "None";
-"For every timers";
-"When all timers finished";
+"For every duration";
+"When all durations finished";
 "An alert can be shown to ask you to continue the timer.";
 
 "Type";

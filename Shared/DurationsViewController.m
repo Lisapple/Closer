@@ -138,10 +138,10 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"Never", nil);
 				break;
 			case PromptStateEveryTimers:
-				cell.detailTextLabel.text = NSLocalizedString(@"For every timers", nil); // @TODO: replace "For every timers" with "For every durations"
+				cell.detailTextLabel.text = NSLocalizedString(@"For every duration", nil);
 				break;
 			case PromptStateEnd:
-				cell.detailTextLabel.text = NSLocalizedString(@"When all timers finished", nil); // @TODO: replace "When all timers finished" with "When all durations finished"
+				cell.detailTextLabel.text = NSLocalizedString(@"When all durations finished", nil);
 				break;
 		}
 		
@@ -163,7 +163,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return NSLocalizedString(@"_Remove", nil);
+	return NSLocalizedString(@"Remove", nil);
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

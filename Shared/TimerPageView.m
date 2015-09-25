@@ -12,12 +12,12 @@
 @property (nonatomic, strong) id updateObserver, continueObserver;
 
 @property (nonatomic, assign) BOOL dragging, showingChangeConfirmation, idleTimerDisabled;
-@property (nonatomic, assign) CGPoint startLocation;
-@property (nonatomic, assign) NSTimeInterval originalDuration, delta;
+@property (nonatomic, assign) CGPoint startLocation, totalOffset;
+//@property (nonatomic, assign) NSTimeInterval originalDuration, delta;
 
 @property (nonatomic, assign) IBOutlet UIView * contentView;
 
-@property (nonatomic, assign) NSTimeInterval remainingSeconds, duration; // Duration of the current timer
+@property (nonatomic, assign) NSTimeInterval remainingSeconds, duration /* Duration of the current timer */, offset /* adjustement offset when modifying current timer progression (by scrolling) */;
 @property (nonatomic, strong) NSDate * nextEndDate;
 @property (nonatomic, assign) BOOL isFinished, loaded;
 
@@ -51,9 +51,9 @@
 								  _timerView.progression = 0.;
 								  [self.countdown reset];
 								  NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
+								  [self reload];
 							  }
 							  _nameLabel.text = self.countdown.name;
-							  [self reload];
 						  }];
 		
 		_continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
@@ -161,14 +161,13 @@
 - (void)updateLeftButton
 {
 	_leftButton.imageView.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
-	NSString * name = [NSString stringWithFormat:@"button-night-%@", (self.countdown.isPaused) ? @"reset" : @"pause"];
+	NSString * name = (self.countdown.isPaused) ? @"reset-button" : @"pause-button";
 	_leftButton.tintColor = [UIColor textColorForPageStyle:self.countdown.style];
 	[_leftButton setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
 }
 
-- (NSString *)formattedDurationForDuration:(NSTimeInterval)d
+- (NSString *)formattedDurationForDuration:(NSTimeInterval)seconds
 {
-	double seconds = d;
 	double days = seconds / (24. * 60. * 60.);
 	if (floor(days) >= 2.)
 		return [NSString stringWithFormat:@"%d", (int)ceil(days)];
@@ -189,9 +188,8 @@
 	return [self formattedDurationForDuration:self.countdown.endDate.timeIntervalSinceNow];
 }
 
-- (NSString *)formattedDescriptionForDuration:(NSTimeInterval)d
+- (NSString *)formattedDescriptionForDuration:(NSTimeInterval)seconds
 {
-	double seconds = d;
 	double days = seconds / (24. * 60. * 60.);
 	if (floor(days) >= 2.)
 		return NSLocalizedString(@"days", nil);
@@ -212,70 +210,95 @@
 	return [self formattedDescriptionForDuration:self.countdown.endDate.timeIntervalSinceNow];
 }
 
+- (void)blinkIfNeeded
+{
+	if (0. < _remainingSeconds && _remainingSeconds <= 5.) {
+		[UIView animateKeyframesWithDuration:1.
+									   delay:0.
+									 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
+								  animations:^{
+									  UIColor * backgroundColor = _contentView.backgroundColor;
+									  [UIView addKeyframeWithRelativeStartTime:0. relativeDuration:0.5 animations:^{
+										  _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }];
+									  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+										  _contentView.backgroundColor = backgroundColor; }];
+								  }
+								  completion:NULL];
+	}
+}
+
+- (void)disableIdleTimerIfNeeded
+{
+	if (_remainingSeconds < 3. * 60. && !_idleTimerDisabled) {
+		[[UIApplication sharedApplication] disableIdleTimer];
+		_idleTimerDisabled = YES;
+	}
+}
+
 - (void)update
 {
-	if (self.countdown.durations.count == 0) {
-		
+	if (self.countdown.durations.count == 0) { // No durations
 		_timeLabel.text = NSLocalizedString(@"No Durations", nil);
 		_descriptionLabel.hidden = YES;
+		return ;
+	}
+	
+	if (self.countdown.isPaused) { // Paused
+		[_timerView cancelProgressionAnimation];
+		//NSLog(@"[paused]");
 		
-	} else if (!self.countdown.isPaused) {
-		if (self.countdown.endDate && self.countdown.durations.count) {
+	} else { // Not paused
+		
+		if (self.countdown.endDate) { // Playing
 			_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
-			
-			if (_remainingSeconds < 3. * 60. && !_idleTimerDisabled) {
-				[[UIApplication sharedApplication] disableIdleTimer];
-				_idleTimerDisabled = YES;
-			}
-			
-			if (_remainingSeconds >= 0. && _duration > 1) {
+			if (_remainingSeconds >= 0. && _duration > 1) { // Remaining time
+				
+				//NSLog(@"[playing : remaining time]");
+				
+				[self disableIdleTimerIfNeeded];
+				[self blinkIfNeeded];
+				
 				[_timerView cancelProgressionAnimation];
-				[_timerView setProgression:(_duration - _remainingSeconds) / (_duration - 1)
+				[_timerView setProgression:(_duration - _remainingSeconds) / (_duration - 1.)
 								  animated:YES];
 				_timeLabel.text = [self formattedDuration];
 				_descriptionLabel.text = [self formattedDescription];
 				_descriptionLabel.hidden = NO;
 				
-				if (0. < _remainingSeconds && _remainingSeconds <= 5.) {
-					[UIView animateKeyframesWithDuration:1.
-												   delay:0.
-												 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
-											  animations:^{
-												  UIColor * backgroundColor = _contentView.backgroundColor;
-												  [UIView addKeyframeWithRelativeStartTime:0. relativeDuration:0.5 animations:^{
-													  _contentView.backgroundColor = [UIColor colorWithRed:1. green:0. blue:0. alpha:0.85]; }];
-												  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-													  _contentView.backgroundColor = backgroundColor; }];
-											  }
-											  completion:NULL];
-				}
-			} else { // Timer done or paused
-				if (!_isFinished) {
-					if (self.countdown.promptState == PromptStateEveryTimers ||
-						(self.countdown.promptState == PromptStateEnd && self.countdown.durationIndex == (self.countdown.durations.count - 1))) { // Pause the timer and wait for the used to tap on "Continue"
-						[self pause];
-						[_timerView cancelProgressionAnimation];
-						_timerView.progression = 0.;
-						_timeLabel.text = NSLocalizedString(@"Continue", nil);
-						_descriptionLabel.hidden = YES;
-						_isFinished = YES;
-						
-					} else { // Start the next timer
-						self.countdown.durationIndex++;
-						_duration = self.countdown.currentDuration.doubleValue;
-						self.countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:_duration];
-						_isFinished = NO;
-						
-						_timeLabel.text = [self formattedDuration];
-						_descriptionLabel.hidden = NO;
-					}
-				}
+			} else if (_isFinished) { // Timer finished
+				
+				//NSLog(@"[timer finished]");
+				
+				// Start next duration
+				self.countdown.durationIndex++;
+				_duration = self.countdown.currentDuration.doubleValue;
+				self.countdown.endDate = [NSDate dateWithTimeIntervalSinceNow:_duration];
+				_isFinished = NO;
+				_timeLabel.text = [self formattedDuration];
+				_descriptionLabel.hidden = NO;
+				
+			} else if (self.countdown.promptState == PromptStateEveryTimers ||
+					   (self.countdown.promptState == PromptStateEnd && self.countdown.durationIndex == (self.countdown.durations.count - 1))) { // Finished and waiting the user to continue
+				// Pause the timer and wait for the used to tap on "Continue"
+				
+				//NSLog(@"[waiting the user to continue to next duration]");
+				
+				[self pause];
+				[_timerView cancelProgressionAnimation];
+				_timerView.progression = 0.;
+				_timeLabel.text = NSLocalizedString(@"Continue", nil);
+				_descriptionLabel.hidden = YES;
+				_isFinished = YES;
+			} else if (_remainingSeconds < 0) { // @FIXME: |_remainingSeconds| shoud not be < 0
+				[self.countdown reset];
+				[self update];
 			}
-		} else {
+			
+		} else { // Waiting for user to continue
 			_timeLabel.text = NSLocalizedString(@"Continue", nil);
+			
+			//NSLog(@"[waiting the user to continue]");
 		}
-	} else { // Paused
-		[_timerView cancelProgressionAnimation];
 	}
 }
 
@@ -293,7 +316,6 @@
 {
 	if (self.countdown.durations.count == 0) { // Don't allow "start" if no durations
 		[self pause];
-		
 	} else {
 		if (self.countdown.isPaused) [self start];
 		else [self pause];
@@ -319,7 +341,9 @@
 		_timerView.progression = 0.;
 		_isFinished = NO;
 	} else {
-		[self.countdown resume];
+		[self.countdown resumeWithOffset:_offset];
+		_offset = 0;
+		_duration = self.countdown.currentDuration.doubleValue;
 	}
 	
 	[self reload];
@@ -332,7 +356,7 @@
 	if (self.countdown.isPaused) {
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
 	}
-	_descriptionLabel.hidden = self.countdown.isPaused;
+	_descriptionLabel.hidden = (self.countdown.isPaused);
 	
 	[self update];
 }
@@ -350,6 +374,7 @@
 		[self.delegate pageViewWillShowSettings:self];
 }
 
+/*
 - (IBAction)confirmationChangeAction:(id)sender
 {
 	[self.countdown setDuration:@(_originalDuration)
@@ -422,6 +447,7 @@
 	self.infoButton.hidden = (show);
 	_leftButton.hidden = (show);
 }
+*/
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
@@ -432,51 +458,55 @@
 {
 	if (!self.countdown.isPaused)
 		return ;
+
+#define kIndexOffset 100.
 	
-	if (gesture.state == UIGestureRecognizerStateBegan) {
+	if (gesture.state == UIGestureRecognizerStateBegan) { // Began
 		_dragging = YES;
 		_startLocation = [gesture locationInView:self];
+		_totalOffset = CGPointZero;
+		_offset = _duration - _remainingSeconds;
 	}
-	else if (gesture.state == UIGestureRecognizerStateEnded) {
+	else if (gesture.state == UIGestureRecognizerStateChanged) { // Changed
+		CGFloat offsetY = _totalOffset.y + (_startLocation.y - [gesture locationInView:self].y);
+		CGFloat progression = (_offset / _duration) + (offsetY / kIndexOffset) - floor(offsetY / kIndexOffset); progression -= floor(progression);
+		
+		NSUInteger count = self.countdown.durations.count;
+		NSInteger index = self.countdown.durationIndex + (_offset / _duration) + (offsetY / kIndexOffset);
+		if /**/ (index >= count) { index %= count; }
+		else if (index < 0) { index += count; }
+		NSTimeInterval duration = self.countdown.durations[index].doubleValue;
+		
+		_timerView.progression = progression;
+		NSTimeInterval remainingDuration = duration * (1. - progression);
+		_timeLabel.text = [self formattedDurationForDuration:remainingDuration];
+		_descriptionLabel.text = [self formattedDescriptionForDuration:remainingDuration];
+		_descriptionLabel.hidden = NO;
+	}
+	else if (gesture.state == UIGestureRecognizerStateEnded) { // Ended
 		_dragging = NO;
-		_originalDuration = MIN(MAX(0., _originalDuration + _delta), 7 * 24 * 3600);
-		_delta = 0.;
-	}
-	else {
-		if ((int)((UIScrollView *)self.superview).contentOffset.x % (int)self.frame.size.width > 0) // If the user scolls to left or right, stop "dragging to set"
-			_dragging = NO;
-		else if (_dragging) {
-			if (!_showingChangeConfirmation) {
-				[self showConfirmationToolbar:YES];
-				_originalDuration = ((NSNumber *)self.countdown.currentDuration).doubleValue;
-				
-				_timerView.progression = 0.;
-				_descriptionLabel.hidden = NO;
-			}
-			
-			CGPoint location = [gesture locationInView:self];
-			CGFloat offset = location.y - _startLocation.y;
-			
-			NSInteger d = (int)(-offset / 10.);
-			NSInteger step;
-			if /**/ (_originalDuration <= 60.)
-				step = 1;
-			else if (_originalDuration <= 3600)
-				step = 60;
-			else
-				step = 3600;
-			
-			if (ABS(d) <= 5)
-				d *= step;
-			else
-				d = (ABS(d) - 4) * step * 5 * ((d < 0) ? -1 : 1);
-			
-			_delta = d;
-			NSTimeInterval newDuration = MIN(MAX(0., _originalDuration + d), 7 * 24 * 3600);
-			_timeLabel.text = [self formattedDurationForDuration:newDuration];
-			_descriptionLabel.text = [self formattedDescriptionForDuration:newDuration];
+		_totalOffset.y += (_startLocation.y - [gesture locationInView:self].y);
+		
+		NSUInteger count = self.countdown.durations.count;
+		NSInteger dIndex = (_offset / _duration) + (_totalOffset.y / kIndexOffset);
+		NSInteger index = self.countdown.durationIndex + dIndex;
+		if /**/ (index >= count) { index %= count; }
+		else if (index < 0) { index += count; }
+		self.countdown.durationIndex = index;
+		CGFloat progression = (_offset / _duration) + (_totalOffset.y / kIndexOffset) - floor(_totalOffset.y / kIndexOffset); progression -= floor(progression);
+		
+		if (dIndex != 0) {
+			_duration = self.countdown.currentDuration.doubleValue;
+			_offset = -_duration * progression;
+			[self.countdown reset];
+			[self.countdown pause];
+		} else {
+			_offset -= _duration * progression;
 		}
+		
+		[self start];
 	}
+#undef kIndexOffset
 }
 
 - (void)dealloc
