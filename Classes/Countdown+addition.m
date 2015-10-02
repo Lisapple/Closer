@@ -57,7 +57,7 @@
                 
                 UILocalNotification * localNotif = [self localNotification];
                 if (localNotif) {
-                    [[UIApplication sharedApplication] cancelLocalNotification:localNotif];
+					[self removeLocalNotification];
                 } else {
                     localNotif = [self createLocalNotification];
                 }
@@ -93,15 +93,11 @@
                 
                 /* localNotif.userInfo => don't change userInfo, it alrealdy contains identifier */
                 
-                NSDebugLog(@"updateLocalNotification: (%@ %@)", localNotif.fireDate, localNotif.alertBody);
+                NSDebugLog(@"Update local notification: (%@ %@)", localNotif.fireDate, localNotif.alertBody);
                 
                 [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
             } else {
-                /* Remove the notification */
-                UILocalNotification * localNotif = [self localNotification];
-                if (localNotif) {
-                    [[UIApplication sharedApplication] cancelLocalNotification:localNotif];
-                }
+				[self removeLocalNotification];
             }
             
             /* Send a notification from the countdown/timer */
@@ -114,8 +110,10 @@
 - (void)removeLocalNotification
 {
     UILocalNotification * localNotif = [self localNotification];
-    if (localNotif)
+	if (localNotif) {
         [[UIApplication sharedApplication] cancelLocalNotification:localNotif];
+		NSDebugLog(@"Cancel local notification for countdown : %@ => %@", self.name, [self.endDate description]);
+	}
 }
 
 @end

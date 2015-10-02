@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <NotificationCenter/NotificationCenter.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 
 extern NSString * const CountdownDidSynchronizeNotification;
 extern NSString * const CountdownDidUpdateNotification;

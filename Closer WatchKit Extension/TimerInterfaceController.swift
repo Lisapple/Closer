@@ -8,276 +8,189 @@
 
 import WatchKit
 import Foundation
-import CoreText
+import WatchConnectivity
 
 class TimerInterfaceController: WKInterfaceController {
 	
-	@IBOutlet weak var image: WKInterfaceImage!
+	@IBOutlet var imageView: WKInterfaceImage!
+	@IBOutlet var timerLabel: WKInterfaceTimer!
+	@IBOutlet var descriptionLabel: WKInterfaceLabel!
 	@IBOutlet weak var toogleButton: WKInterfaceButton!
-	var identifier: String = ""
-	var endDate: NSDate?
-	var remaining: NSTimeInterval = 0.0
-	var duration: NSTimeInterval = 0.0
-	var colorStyle: ColorStyle = .ColorStyleNight
-	var timer: NSTimer?
 	
-	var _paused: Bool = false
-	var paused: Bool {
-		set {
-			_paused = newValue
+	private var remaining: NSTimeInterval = 0.0
+	private var duration: NSTimeInterval = 0.0
+	private var timer: NSTimer?
+	private var paused: Bool = false {
+		didSet {
 			toogleButton?.setTitle((paused) ? "Resume" : "Pause")
 			self.updateUI()
 		}
-		get {
-			return _paused
-		}
 	}
 	
-	var context: AnyObject? = nil
+	private var countdown: Countdown? = nil
+	private var hasChange: Bool = false
 	
 	override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
-		self.context = context
+		self.countdown = context! as? Countdown
 		
 		let dictContext:[String : AnyObject] = context as! Dictionary
 		self.setTitle(dictContext["name"] as? String)
-		if (dictContext["durations"] != nil) {
-			duration = (dictContext["durations"] as! Array)[dictContext["durationIndex"] as! Int]
+		if (countdown?.currentDuration != nil) {
+			duration = countdown!.currentDuration!
 		}
-		endDate = dictContext["endDate"] as! NSDate?
-		self.paused = (endDate == nil)
-		colorStyle = ColorStyle.fromInt(dictContext["style"] as! Int)
-		identifier = dictContext["identifier"] as! String
+		self.paused = (countdown?.endDate == nil)
 		
 		updateUI()
 		
+		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: "newMenuAction")
 		if (paused) {
-			addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction")
-		} else {
-			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
-		}
+			addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction") }
+		else {
+			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction") }
+		
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
+		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 		
-		if (identifier == NSUserDefaults().stringForKey("selectedIdentifier")) {
+		if (countdown?.identifier == NSUserDefaults().stringForKey("selectedIdentifier")) {
 			self.becomeCurrentPage()
 		}
 	}
 	
 	func updateUI() {
-		let frame:CGRect = CGRectMake(0.0, 0.0, self.contentFrame.size.width, self.contentFrame.size.width)
-		UIGraphicsBeginImageContextWithOptions(frame.size, true, 0.0)
+		self.animateWithDuration(0.15) { () -> Void in // IDK if animation is working
+			self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 74/2))
+		}
+		if (countdown!.endDate != nil) {
+		} else {
+			timerLabel.setDate(NSDate())
+		}
 		
-		let bitmapContext:CGContext = UIGraphicsGetCurrentContext()!
-		let border:CGFloat = 2.0
-		let diameter:CGFloat = frame.size.width - 3 * border
-		let radius:CGFloat = ceil(diameter / 2.0)
-		
-		CGContextSaveGState(bitmapContext)
-		let center:CGPoint = CGPointMake(frame.size.width / 2.0, frame.size.height / 2.0)
-		CGContextAddArc(bitmapContext, center.x, center.y, radius, CGFloat(-M_PI_2 * 0.98), CGFloat(2 * M_PI * 0.99 - M_PI_2), 0)
-		
-		let color:UIColor = UIColor(colorStyle: colorStyle)
-		
-		CGContextSetLineCap(bitmapContext, kCGLineCapRound)
-		CGContextSetLineWidth(bitmapContext, border * 2.0)
-		CGContextSetStrokeColorWithColor(bitmapContext, color.colorWithAlphaComponent(0.5).CGColor)
-		CGContextStrokePath(bitmapContext)
-		
-		let progression:Double = 1.0 - ((endDate != nil) ? endDate!.timeIntervalSinceNow : remaining) / duration
-		// @TODO: Clip progression minimum to get progress bar start
-		CGContextAddArc(bitmapContext, center.x, center.y, radius, CGFloat(-M_PI_2 * 0.98), CGFloat(2 * M_PI * (progression * 0.98 + 0.01) - M_PI_2), 0)
-		
-		let path:CGPathRef = CGContextCopyPath(bitmapContext)
-		CGContextSetLineCap(bitmapContext, kCGLineCapRound)
-		CGContextSetLineWidth(bitmapContext, border * 4.0)
-		CGContextSetStrokeColorWithColor(bitmapContext, UIColor.blackColor().CGColor)
-		CGContextStrokePath(bitmapContext)
-		
-		CGContextAddPath(bitmapContext, path)
-		CGContextSetLineCap(bitmapContext, kCGLineCapRound)
-		CGContextSetLineWidth(bitmapContext, border * 2.0)
-		CGContextSetStrokeColorWithColor(bitmapContext, color.CGColor)
-		CGContextStrokePath(bitmapContext)
-		CGContextRestoreGState(bitmapContext)
-		
-		CGContextTranslateCTM(bitmapContext, 0.0, frame.size.height)
-		CGContextScaleCTM(bitmapContext, 1.0, -1.0)
-		CGContextSetTextMatrix(bitmapContext, CGAffineTransformIdentity)
-		
-		// Number label
-		var attributes:NSDictionary = [
-			NSForegroundColorAttributeName : color,
-			NSFontAttributeName : UIFont.systemFontOfSize(64.0) ]
-		
-		var string:NSAttributedString?
-		var description:String?
-		if (endDate != nil) {
-			let seconds = endDate!.timeIntervalSinceNow
-			if (seconds > 0.0) {
-				let days = seconds / (24 * 60 * 60);
-				let hours = seconds / (60 * 60);
-				let minutes = seconds / 60;
-				var count = seconds
-				description = "seconds"
-				if days >= 2 {
-					count = ceil(days)
-					description = "days"
-				} else if hours >= 2 {
-					count = ceil(hours)
-					description = "hours"
-				} else if minutes >= 2 {
-					count = ceil(minutes)
-					description = "minutes"
-				}
-				string = NSAttributedString(string: UInt(count).description, attributes: attributes as [NSObject : AnyObject])
+		if (countdown!.endDate != nil) {
+			timerLabel.setDate(countdown!.endDate!)
+			timerLabel.start()
+			
+			let calendar = NSCalendar.currentCalendar()
+			let components = NSDateComponents()
+			if (countdown!.durations != nil && countdown!.durations!.count > 1) {
+				// "Next: [next duration]"
+				let nextDurationIndex = (countdown!.durationIndex!+1) % countdown!.durations!.count
+				components.second = Int(countdown!.durations![nextDurationIndex])
+				let nextDate = calendar.dateFromComponents(components)
+				descriptionLabel.setText("Next: \(NSDateFormatter.localizedStringFromDate(nextDate!, dateStyle: .NoStyle, timeStyle: .MediumStyle))")
 			} else {
-				attributes = [
-					NSForegroundColorAttributeName : color,
-					NSFontAttributeName : UIFont.systemFontOfSize(32.0) ]
-				string = NSAttributedString(string: "Paused", attributes: attributes as [NSObject : AnyObject])
+				// "of [total duration]"
+				components.second = Int(duration)
+				let date = calendar.dateFromComponents(components)
+				descriptionLabel.setText("of \(NSDateFormatter.localizedStringFromDate(date!, dateStyle: .NoStyle, timeStyle: .MediumStyle))")
 			}
 		} else {
-			attributes = [
-				NSForegroundColorAttributeName : color,
-				NSFontAttributeName : UIFont.systemFontOfSize(32.0) ]
-			string = NSAttributedString(string: "Paused", attributes: attributes as [NSObject : AnyObject])
+			timerLabel.setDate(NSDate(timeIntervalSinceNow: remaining))
+			timerLabel.stop()
+			descriptionLabel.setHidden(true)
 		}
-		
-		var line:CTLineRef = CTLineCreateWithAttributedString(string as CFAttributedStringRef!)
-		let flush:CGFloat = 0.5 // Centered
-		var offset = CTLineGetPenOffsetForFlush(line, flush, Double(frame.size.width))
-		var bounds = CTLineGetBoundsWithOptions(line, CTLineBoundsOptions(0))
-		var y = ceil((frame.size.height - bounds.size.height) / 2.0) - bounds.origin.y
-		CGContextSetTextPosition(bitmapContext, CGFloat(offset), y)
-		CTLineDraw(line, bitmapContext)
-		
-		if (description != nil) {
-			// Description label
-			attributes = [
-				NSForegroundColorAttributeName : color.colorWithAlphaComponent(0.5),
-				NSFontAttributeName : UIFont.systemFontOfSize(18.0) ]
-			string = NSAttributedString(string: description!, attributes: attributes as [NSObject : AnyObject])
-			line = CTLineCreateWithAttributedString(string as CFAttributedStringRef!)
-			offset = CTLineGetPenOffsetForFlush(line, flush, Double(frame.size.width))
-			bounds = CTLineGetImageBounds(line, bitmapContext)
-			y -= bounds.size.height + 4.0
-			CGContextSetTextPosition(bitmapContext, CGFloat(offset), y)
-			CTLineDraw(line, bitmapContext)
-		}
-
-		image.setImage(UIGraphicsGetImageFromCurrentImageContext())
-		UIGraphicsEndImageContext()
 		
 		if (!paused) {
 			timer?.invalidate()
-			let interval: NSTimeInterval = (endDate != nil && endDate!.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0;
+			let interval = (countdown?.endDate != nil && countdown!.endDate!.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0
 			timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "updateUI", userInfo: nil, repeats: false)
-			timer!.tolerance = interval / 5.0;
+			timer!.tolerance = interval / 2
 		}
     }
 	
+	@IBAction func newMenuAction() {
+		let countdown = Countdown(name: nil, identifier: nil, type: .Timer, style: nil)
+		let options: EditOption = [ EditOption.ShowDoneButton, EditOption.ShowDeleteButton ]
+		presentControllerWithName("EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
+	}
+	
 	@IBAction func tooglePauseAction() {
 		if (paused) {
-			self.resumeMenuAction()
-		} else {
-			self.pauseMenuAction()
-		}
+			self.resumeMenuAction() }
+		else {
+			self.pauseMenuAction() }
 	}
 	
 	@IBAction func pauseMenuAction() {
-		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "pause"]) {
-			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
-			println(replyInfo?["result"])
-			if (self.endDate != nil) {
-				self.remaining = NSDate().timeIntervalSinceDate(self.endDate!)
-			}
-			self.paused = true;
-			self.updateUI()
-		}
+		WCSession.defaultSession().sendMessage(["action" : "pause", "identifier" : countdown!.identifier],
+			replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
+				print(replyInfo["result"])
+				if (self.countdown!.endDate != nil) {
+					self.remaining = NSDate().timeIntervalSinceDate(self.countdown!.endDate!)
+				}
+				self.paused = true
+				self.updateUI()
+			}, errorHandler: nil)
 		
 		clearAllMenuItems()
 		addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
+		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
 	@IBAction func resumeMenuAction() {
-		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "resume"]) {
-			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
-			println(replyInfo?["result"])
-			self.paused = false;
-			self.endDate = NSDate().dateByAddingTimeInterval((self.remaining > 0.0) ? self.remaining : self.duration)
-			self.updateUI()
-		}
+		WCSession.defaultSession().sendMessage(["action" : "resume", "identifier" : countdown!.identifier],
+			replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
+				print(replyInfo["result"])
+				self.paused = false
+				self.countdown!.endDate = NSDate().dateByAddingTimeInterval((self.remaining > 0.0) ? self.remaining : self.duration)
+				self.updateUI()
+			}, errorHandler: nil)
 		
 		clearAllMenuItems()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
+		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
 	@IBAction func resetMenuAction() {
-		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "reset"]) {
-			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
-			println(replyInfo?["result"])
-			self.endDate = NSDate().dateByAddingTimeInterval(self.duration)
-			self.updateUI()
-		}
+		WCSession.defaultSession().sendMessage(["action" : "reset", "identifier" : countdown!.identifier],
+			replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
+				print(replyInfo["result"])
+				self.countdown!.endDate = NSDate().dateByAddingTimeInterval(self.duration)
+				self.updateUI()
+			}, errorHandler: nil)
 		
 		clearAllMenuItems()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
+		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
-	@IBAction func infoMenuAction() {
-		self.presentControllerWithName("TimerDetails", context: self.context);
+	@IBAction func editMenuAction() {
+		let options: EditOption = [ .ShowDoneButton, .ShowDeleteButton ]
+		presentControllerWithName("EditInterface", context: [ "countdown" : countdown!, "options" : options.rawValue ])
+		hasChange = true
 	}
 	
 	@IBAction func deleteMenuAction() {
-		WKInterfaceController.openParentApplication(["identifier" : self.identifier, "action" : "delete"]) {
-			(replyInfo:[NSObject : AnyObject]!, error:NSError!) -> Void in
-			InterfaceController.reload()
-		}
+		WCSession.defaultSession().sendMessage(["action" : "delete", "identifier" : countdown!.identifier],
+			replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
+				InterfaceController.reload()
+			}, errorHandler: nil)
 	}
 	
     override func willActivate() {
         super.willActivate()
 		updateUI()
 		
-		weak var _self_ = self
-		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidUpdateNotification", object: nil, queue: nil) {
-			(notification) -> Void in
-			
-			let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-			var countdowns = userDefaults.arrayForKey("countdowns")! as! [[String : AnyObject]]
-			countdowns = countdowns.filter({ (countdown: [String : AnyObject]) -> Bool in
-				return (countdown["identifier"] as? String == _self_!.identifier)
-			})
-			
-			if (countdowns.first != nil) {
-				let countdown = countdowns.first! as [String : AnyObject]
-				if (countdown["durations"] != nil) {
-					_self_!.setTitle(countdown["name"] as? String)
-					_self_!.colorStyle = ColorStyle.fromInt(countdown["style"] as! Int)
-					_self_!.endDate = countdown["endDate"] as? NSDate
-					let durations = countdown["durations"] as! [NSTimeInterval]
-					let index = countdown["durationIndex"] as! NSNumber
-					_self_!.duration = durations[index.integerValue]
-					_self_!.paused = (_self_!.endDate == nil)
-					_self_!.updateUI()
-				}
+		if (hasChange) {
+			let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))
+			if (data != nil) {
+				WCSession.defaultSession().sendMessage([ "action" : "update", "identifier" : self.countdown!.identifier, "data" : data! ],
+					replyHandler: { (replyInfo: [String : AnyObject]) -> Void in }, errorHandler: nil)
 			}
 		}
 		
-		NSUserDefaults().setObject(identifier, forKey: "selectedIdentifier");
-		let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-		userDefaults.setObject(identifier, forKey: "lastSelectedCountdownIdentifier");
+		NSUserDefaults().setObject(self.countdown?.identifier, forKey: "selectedIdentifier")
+		if (self.countdown != nil) {
+			WCSession.defaultSession().sendMessage([ "action" : "update", "lastSelectedCountdownIdentifier" : self.countdown!.identifier ],
+				replyHandler: { (replyInfo: [String : AnyObject]) -> Void in }, errorHandler: nil)
+		}
     }
 
     override func didDeactivate() {

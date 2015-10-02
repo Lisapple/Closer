@@ -65,9 +65,11 @@
 									[self start];
 							}];
 		
-		UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
-																			   action:@selector(timerDidDragged:)];
+		UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(timerDidDragged:)];
+		pan.maximumNumberOfTouches = 1;
 		pan.delegate = self;
+		for (UIGestureRecognizer * gesture in self.gestureRecognizers)
+			[pan requireGestureRecognizerToFail:gesture];
 		for (UIGestureRecognizer * gesture in self.scrollView.gestureRecognizers)
 			[pan requireGestureRecognizerToFail:gesture];
 		for (UIGestureRecognizer * gesture in self.superview.gestureRecognizers)
@@ -457,6 +459,11 @@
 - (void)timerDidDragged:(UIGestureRecognizer *)gesture
 {
 	if (!self.countdown.isPaused)
+		return ;
+	
+	// Don't start the pan gesture (set set the timer progression by dragging up/down) if the user starts scrolling to right/left
+	int contentOffsetX = ((UIScrollView *)self.superview).contentOffset.x;
+	if (((int)contentOffsetX % (int)self.frame.size.width) > 0)
 		return ;
 
 #define kIndexOffset 100.

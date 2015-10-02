@@ -43,7 +43,7 @@
 	NSDebugLog(@"Local notification received: %@ - %@ (will play %@)", identifier, countdown.name, notification.soundName);
 	
 	if (countdown.type == CountdownTypeCountdown) {
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Countdown finished!", nil)
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
 																		message:notification.alertBody
 																 preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -55,7 +55,7 @@
 		if (countdown.promptState == PromptStateEveryTimers
 			|| (countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) {
 			
-			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Timer finished!", nil)
+			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
 																			message:notification.alertBody
 																	 preferredStyle:UIAlertControllerStyleAlert];
 			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

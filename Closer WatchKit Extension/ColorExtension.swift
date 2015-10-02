@@ -9,34 +9,32 @@
 import Foundation
 import UIKit
 
-enum ColorStyle : UInt {
-	case ColorStyleDay
-	case ColorStyleDawn
-	case ColorStyleOasis
-	case ColorStyleSpring
-	case ColorStyleNight
+enum ColorStyle: UInt {
+	case Day
+	case Dawn
+	case Oasis
+	case Spring
+	case Night
+	case NumberOfStyle
 	
-	static func fromInt(index:Int) -> ColorStyle {
-		return [.ColorStyleNight, .ColorStyleDay, .ColorStyleDawn, .ColorStyleOasis, .ColorStyleSpring][index]
-	}
-	
-	static func fromString(str:String) -> ColorStyle {
+	static func fromString(str: String) -> ColorStyle {
 		switch str {
-			case "day":		return .ColorStyleDay
-			case "dawn":	return .ColorStyleDawn
-			case "oasis":	return .ColorStyleOasis
-			case "spring":	return .ColorStyleSpring
-			default:		return .ColorStyleNight
+			case "day":		return .Day
+			case "dawn":	return .Dawn
+			case "oasis":	return .Oasis
+			case "spring":	return .Spring
+			default:		return .Night
 		}
 	}
 	
-	func toString() -> String {
+	func toString() -> String? {
 		switch self {
-			case .ColorStyleDay:	return "day"
-			case .ColorStyleDawn:	return "dawn"
-			case .ColorStyleOasis:	return "oasis"
-			case .ColorStyleSpring:	return "spring"
-			case .ColorStyleNight:	return "night"
+			case .Day:		return "day"
+			case .Dawn:		return "dawn"
+			case .Oasis:	return "oasis"
+			case .Spring:	return "spring"
+			case .Night:	return "night"
+			default: return nil
 		}
 	}
 }
@@ -44,11 +42,12 @@ enum ColorStyle : UInt {
 extension UIColor {
 	convenience init(colorStyle:ColorStyle) {
 		switch colorStyle {
-			case .ColorStyleDay:	self.init(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0)
-			case .ColorStyleDawn:	self.init(red: 85.0/255.0, green: 175.0/255.0, blue: 255.0/255.0, alpha: 1.0)
-			case .ColorStyleOasis:	self.init(red: 126.0/255.0, green: 211.0/255.0, blue: 33.0/255.0, alpha: 1.0)
-			case .ColorStyleSpring:	self.init(red: 6.0/255.0, green: 20.0/255.0, blue: 158.0/255.0, alpha: 1.0)
-			case .ColorStyleNight:	self.init(white: 1.0, alpha:1.0)
+			case .Day:		self.init(red: 74/255,  green: 74/255,  blue: 74/255,  alpha: 1)
+			case .Dawn:		self.init(red: 85/255,  green: 175/255, blue: 255/255, alpha: 1)
+			case .Oasis:	self.init(red: 126/255, green: 211/255, blue: 33/255,  alpha: 1)
+			case .Spring:	self.init(red: 6/255,   green: 20/255,  blue: 158/255, alpha: 1)
+			case .Night:	self.init(white: 1, alpha:1)
+			default:		self.init(white: 0, alpha:0)
 		}
 	}
 }

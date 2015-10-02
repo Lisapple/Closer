@@ -240,8 +240,8 @@
 
 "Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods." = "Les décomptes permettent d'afficher le temps restant avant une date précise, les minuteurs permettent de mesurer des petites durées.";
 
-"Countdown finished!" = "Décompte fini!";
-"Timer finished!" = "Minuteur fini!";
+"Countdown finished!" = "Décompte fini";
+"Timer finished!" = "Minuteur fini";
 
 "More" = "Plus";
 

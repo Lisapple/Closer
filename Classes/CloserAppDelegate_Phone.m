@@ -27,6 +27,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	if ([WCSession isSupported]) {
+		WCSession * session = [WCSession defaultSession];
+		session.delegate = self;
+		[session activateSession];
+	}
+	
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeSound)
                                                                                         categories:[NSSet set]]];
@@ -79,7 +85,7 @@
 	
 	if (countdown.type == CountdownTypeCountdown) {
 		
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Countdown finished!", nil)
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
 																		message:notification.alertBody
 																 preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -90,7 +96,7 @@
 		/* Show an alert if needed to show an alert (to show an alert at the end of each timer or at the end of the loop of timers) */
 		if (countdown.promptState == PromptStateEveryTimers
 			|| (countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) {
-			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Timer finished!", nil)
+			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
 																			message:notification.alertBody
 																	 preferredStyle:UIAlertControllerStyleAlert];
 			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -144,11 +150,18 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *replyInfo))reply
+- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
 {
-	NSString * identifier = userInfo[@"identifier"];
+	NSString * identifier = message[@"identifier"];
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
-	NSString * action = userInfo[@"action"];
+	NSString * action = message[@"action"];
+	
+#if TARGET_IPHONE_SIMULATOR
+	UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }]];
+	[self.window.rootViewController presentViewController:alert animated:YES completion:NULL];
+#endif
+	
 	if /***/ ([action isEqualToString:@"pause"] && !countdown.isPaused) {
 		[countdown pause];
 	} else if ([action isEqualToString:@"resume"] && countdown.isPaused) {
@@ -157,10 +170,41 @@
 		[countdown reset];
 	} else if ([action isEqualToString:@"delete"]) {
 		[Countdown removeCountdown:countdown];
+	} else if ([action isEqualToString:@"update"]) {
+		NSData * data = message[@"data"];
+		if (data) {
+			NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+			if (dictionary) {
+				if (dictionary[@"name"]) {
+					countdown.name = dictionary[@"name"]; }
+				if (dictionary[@"message"]) {
+					countdown.name = dictionary[@"message"]; }
+				if (dictionary[@"endDate"]) {
+					NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+					formatter.dateStyle = NSDateFormatterMediumStyle;
+					formatter.timeStyle = NSDateFormatterMediumStyle;
+					countdown.endDate = [formatter dateFromString:dictionary[@"endDate"]]; }
+				if (dictionary[@"durations"]) {
+					for (int i = 0; i < countdown.durations.count; ++i) {
+						[countdown removeDurationAtIndex:i];
+					}
+					[countdown addDurations:dictionary[@"durations"]];
+				}
+				if (dictionary[@"durationIndex"]) {
+					countdown.durationIndex = dictionary[@"durationIndex"]; }
+			}
+		} else {
+			NSString * identifier = message[@"lastSelectedCountdownIdentifier"];
+			if (identifier && [Countdown countdownWithIdentifier:identifier] != nil) {
+				NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+				[userDefaults setObject:identifier forKey:kLastSelectedCountdownIdentifierKey];
+			}
+		}
 	} else {
-		NSLog(@"Unknown Apple Watch request with action: \"%@\"", action);
+		replyHandler(@{ @"error" : [NSString stringWithFormat:@"Unknown Apple Watch request with action: \"%@\"", action] });
+		return ;
 	}
-	reply(@{ @"result" : @"OK" });
+	replyHandler(@{ @"result" : @"OK" });
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

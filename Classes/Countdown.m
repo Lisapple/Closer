@@ -153,6 +153,34 @@ static NSMutableArray * _countdowns = nil;
 		Countdown * countdown = _countdowns[MIN(_countdowns.count - 1, index)];
 		[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
 		[sharedDefaults synchronize];
+		
+		if (NSClassFromString(@"WCSession") && [WCSession isSupported]) {
+			NSDictionary * context = @{ @"countdowns" : [includedCountdowns valueForKeyPath:@"JSONDictionary"], @"selectedIdentifier": countdown.identifier };
+			NSError * error = nil;
+			BOOL success = [[WCSession defaultSession] updateApplicationContext:context error:&error];
+			if (!success) {
+				NSLog(@"error: %@", error.localizedDescription);
+			}
+			[[WCSession defaultSession] sendMessage:@{ @"update" : @YES }
+									   replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+										   dispatch_sync(dispatch_get_main_queue(), ^{
+											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply"
+																											   message:replyMessage.description
+																										preferredStyle:UIAlertControllerStyleAlert];
+											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+										   });
+									   }
+									   errorHandler:^(NSError * _Nonnull error) {
+										   dispatch_sync(dispatch_get_main_queue(), ^{
+											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply error"
+																											   message:error.localizedDescription
+																										preferredStyle:UIAlertControllerStyleAlert];
+											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+										   });
+									   }];
+		}
 	}
 }
 
@@ -357,6 +385,31 @@ static NSMutableArray * _countdowns = nil;
 	dictionary[@"type"] = @(self.type);
     dictionary[@"notificationCenter"] = @(self.notificationCenter);
 	
+	return dictionary;
+}
+
+- (NSDictionary *)JSONDictionary
+{
+	NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] initWithCapacity:_countdowns.count];
+	dictionary[@"name"] = self.name;
+	
+	if (self.type == CountdownTypeCountdown) {
+		if (self.message) dictionary[@"message"] = self.message;
+	} else {
+		if (self.durations) dictionary[@"durations"] = self.durations;
+		dictionary[@"durationIndex"] = @(self.durationIndex);
+	}
+	
+	if (self.endDate) {
+		NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+		formatter.dateStyle = NSDateFormatterMediumStyle;
+		formatter.timeStyle = NSDateFormatterMediumStyle;
+		dictionary[@"endDate"] = [formatter stringFromDate:self.endDate];
+	}
+	
+	dictionary[@"identifier"] = self.identifier;
+	dictionary[@"style"] = @(self.style);
+	dictionary[@"type"] = @(self.type);
 	return dictionary;
 }
 

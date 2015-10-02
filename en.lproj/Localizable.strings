@@ -78,10 +78,10 @@
 "SECONDS_ZERO" = "seconds";
 
 /* Others */
-"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Countdown finished!";
+"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Countdown finished";
 "COUNTDOWN_FINISHED_MESSAGE %@" = "The countdown \"%@\" is finished.";
 
-"TIMER_FINISHED_DEFAULT_MESSAGE" = "Timer finished!";
+"TIMER_FINISHED_DEFAULT_MESSAGE" = "Timer finished";
 "TIMER_FINISHED_MESSAGE %@" = "The timer \"%@\" is finished.";
 
 /* Countdown */
@@ -241,8 +241,8 @@
 
 "Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods.";
 
-"Countdown finished!";
-"Timer finished!";
+"Countdown finished!" = "Countdown finished";
+"Timer finished!" = "Timer finished";
 
 "More";
 
