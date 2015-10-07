@@ -29,8 +29,6 @@
 @property (nonatomic, strong) NSMutableArray <PageView *> * pageViews;
 @property (nonatomic, strong) PageView * currentPageWithConfirmation;
 
-@property (nonatomic, assign) BOOL shareActionSheetShowing;
-@property (nonatomic, strong) UIActionSheet * shareActionSheet;
 @property (nonatomic, strong) UIPopoverController * popover, * editPopover;
 
 - (void)showNavigationBar:(NSInteger)navigationBarTag animated:(BOOL)animated;
@@ -69,28 +67,23 @@
 	if (navigationBarTag == kEditNavigationBar) {
 		
 		UIBarButtonItem * editItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-																				   target:self
-																				   action:@selector(editAction:)];
+																				   target:self action:@selector(editAction:)];
 		UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-																					target:self
-																					action:@selector(shareAction:)];
-		[self.navigationItem setLeftBarButtonItems:@[editItem, shareItem]
+																					target:self action:@selector(shareAction:)];
+		[self.navigationItem setLeftBarButtonItems:@[ editItem, shareItem ]
 										  animated:YES];
 		
 		UIBarButtonItem * doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																				   target:self
-																				   action:@selector(done:)];
+																				   target:self action:@selector(done:)];
 		[self.navigationItem setRightBarButtonItem:doneItem animated:YES];
 		
 	} else {
 		UIBarButtonItem * addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-																				  target:self
-																				  action:@selector(new:)];
+																				  target:self action:@selector(new:)];
 		UIBarButtonItem * manageItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", nil)
 																		style:UIBarButtonItemStylePlain
-																	   target:self
-																	   action:@selector(editAll:)];
-		self.navigationItem.leftBarButtonItems = @[addItem, manageItem];
+																	   target:self action:@selector(editAll:)];
+		self.navigationItem.leftBarButtonItems = @[ addItem, manageItem ];
 		
 		CGRect frame = CGRectMake(0., 0., 23., 23.);
 		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
@@ -200,83 +193,66 @@
 
 - (void)networkStatusDidChange:(NSNotification *)notification
 {
-	if (_shareActionSheetShowing) {
-		[_shareActionSheet dismissWithClickedButtonIndex:-1 animated:NO];
-		_shareActionSheetShowing = NO;
-		[self shareAction:nil];
+	if ([self.presentedViewController isKindOfClass:UIAlertController.class]) {
+		[self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
 	}
 }
 
 - (IBAction)shareAction:(id)sender
 {
-	if (!_shareActionSheetShowing) {
-		BOOL isConnected = [NetworkStatus isConnected];
-		_shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil
-														delegate:self
-											   cancelButtonTitle:nil
-										  destructiveButtonTitle:nil
-											   otherButtonTitles:NSLocalizedString(@"Import from Calendar", nil), nil];
-		if (isConnected)
-			[_shareActionSheet addButtonWithTitle:NSLocalizedString(@"Import with Passwords", nil)];
-		
-		[_shareActionSheet addButtonWithTitle:NSLocalizedString(@"Export", nil)];
-		_shareActionSheet.tag = kShareAlertTag;
-		[_shareActionSheet showFromBarButtonItem:(UIBarButtonItem *)sender
-									   animated:NO];
-		_shareActionSheetShowing = YES;
+	UIAlertController * actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import from Calendar", nil) style:UIAlertActionStyleDefault handler:
+							^(UIAlertAction * _Nonnull action) {
+								ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
+								UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromCalendarViewController];
+								navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+								navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+								[self presentViewController:navigationController animated:YES completion:NULL];
+							}]];
+	if ([NetworkStatus isConnected]) {
+		[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import with Passwords", nil) style:UIAlertActionStyleDefault handler:
+								^(UIAlertAction * _Nonnull action) {
+									/* Show an alertView to introduce the import from passwords (if not already done) */
+									NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+									BOOL showsIntroductionMessage = !([userDefaults boolForKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"]);
+									if (showsIntroductionMessage) {
+										
+										NSString * message = NSLocalizedString(@"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE", nil);
+										UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
+																										message:message
+																								 preferredStyle:UIAlertControllerStyleAlert];
+										[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:
+														  ^(UIAlertAction * _Nonnull action) {
+															  ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
+															  UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
+															  navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+															  navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+															  [self presentViewController:navigationController animated:YES completion:NULL]; }]];
+										alert.view.tintColor = [UIColor darkGrayColor];
+										[self presentViewController:alert animated:YES completion:nil];
+										
+										[userDefaults setBool:YES forKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"];
+									} else {
+										ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
+										UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
+										navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+										navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+										[self presentViewController:navigationController animated:YES completion:NULL];
+									}
+								}]];
 	}
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (actionSheet.tag == kShareAlertTag) {// Import action sheet
-		if (buttonIndex == 0) {
-			ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
-			UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromCalendarViewController];
-			navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-			navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-			[self presentViewController:navigationController
-							   animated:YES
-							 completion:NULL];
-		} else if (buttonIndex == 1 && [NetworkStatus isConnected]) { // Export with password (only if connected)
-			
-			/* Show an alertView to introduce the import from passwords (if not already done) */
-			NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-			BOOL showsIntroductionMessage = !([userDefaults boolForKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"]);
-			if (showsIntroductionMessage) {
-				
-				NSString * message = NSLocalizedString(@"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE", nil);
-				UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
-																				message:message
-																		 preferredStyle:UIAlertControllerStyleAlert];
-				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-					[alert dismissViewControllerAnimated:YES completion:^{
-						ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
-						UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-						navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-						navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-						[self presentViewController:navigationController animated:YES completion:NULL];
-					}]; }]];
-				[self presentViewController:alert animated:YES completion:nil];
-				
-				[userDefaults setBool:YES forKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"];
-			} else if (buttonIndex >= 1) {
-				ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
-				UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-				navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-				navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-				[self presentViewController:navigationController
-								   animated:YES
-								 completion:NULL];
-			}
-		}
-	}
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-	if (actionSheet.tag == kShareAlertTag)
-		_shareActionSheetShowing = NO;
+	
+	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export", nil) style:UIAlertActionStyleDefault handler:
+							^(UIAlertAction * _Nonnull action) {
+								ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
+								UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
+								navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+								navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+								[self presentViewController:navigationController animated:YES completion:NULL];
+							}]];
+	actionSheet.view.tintColor = [UIColor defaultTintColor];
+	actionSheet.popoverPresentationController.barButtonItem = (UIBarButtonItem *)sender;
+	[self presentViewController:actionSheet animated:NO completion:NULL];
 }
 
 - (void)showSettingsForPageAtIndex:(NSInteger)index
@@ -337,7 +313,7 @@
 		[self showSettingsForPageAtIndex:[_pageViews indexOfObject:page]];
 }
 
-- (IBAction)moreInfo:(id)sender
+- (IBAction)moreInfo:(UIButton *)sender
 {
 	NSDictionary * infoDictionary = [NSBundle mainBundle].infoDictionary;
 	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © %lu, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"], [NSDate date].year];
@@ -350,6 +326,9 @@
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]]; }]];
 	[actionSheet addAction:[UIAlertAction actionWithTitle:@"appstore.com/lisacintosh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://appstore.com/lisacintosh/"]]; }]];
+	actionSheet.view.tintColor = [UIColor defaultTintColor];
+	actionSheet.popoverPresentationController.sourceView = sender;
+	actionSheet.popoverPresentationController.sourceRect = sender.bounds;
 	[self presentViewController:actionSheet animated:YES completion:nil];
 }
 

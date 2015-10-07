@@ -90,6 +90,7 @@
 	frame.origin.x = ceilf((self.frame.size.width - containerView.frame.size.width) / 2.);
 	frame.origin.y = ceilf((self.frame.size.height - containerView.frame.size.height) / 2.);
 	containerView.frame = frame;
+	[_timerView setNeedsDisplay];
 }
 
 - (void)setCountdown:(Countdown *)aCountdown
@@ -309,6 +310,7 @@
 	if (self.countdown.isPaused) { // If already paused, reset the timer
 		_remainingSeconds = _duration = self.countdown.currentDuration.doubleValue;
 		_timerView.progression = 0.;
+		_offset = -_remainingSeconds;
 	}
 	
 	[self tooglePause];
