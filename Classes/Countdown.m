@@ -15,18 +15,15 @@
 NSString * const CountdownDidSynchronizeNotification = @"CountdownDidSynchronizeNotification";
 NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotification";
 
+@interface Countdown ()
+
+@property (nonatomic, strong) NSMutableArray <NSNumber *> * durations;
+@property (nonatomic, assign) NSTimeInterval remaining;
+@property (nonatomic, assign) BOOL active;
+
+@end
+
 @implementation Countdown
-
-@synthesize name;
-@synthesize endDate;
-@synthesize message;
-@synthesize songID;
-@synthesize style;
-@synthesize type = _type;
-@synthesize promptState = _promptState;
-@synthesize durationIndex = _durationIndex;
-
-@synthesize identifier;
 
 static NSString * _countdownsListPath = nil;
 static NSMutableArray * _propertyList = nil;
@@ -41,14 +38,14 @@ static NSMutableArray * _countdowns = nil;
 		initialized = YES;
 		
 		/* Since Closer uses UIFileSharingEnabled, Document folder is reserved for sharing only, move Countdowns.plist (renamed from Countdown.plist) file to ~/Library/Preferences/ */
-		NSString * preferencesFolderPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject];
+		NSString * preferencesFolderPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject;
 		_countdownsListPath = [[NSString alloc] initWithFormat:@"%@/Preferences/Countdowns.plist", preferencesFolderPath];
 		
 		NSError * error = nil;
 		NSData * data = [NSData dataWithContentsOfFile:_countdownsListPath];
 		if (!data) {// If no Countdowns.plist have been found, look up at ~/Documents/Countdown.plist ...
 			
-			NSString * documentFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+			NSString * documentFolderPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
 			NSString * oldCountdownPath = [NSString stringWithFormat:@"%@/Countdown.plist", documentFolderPath];
 			data = [NSData dataWithContentsOfFile:oldCountdownPath];
 			
@@ -61,7 +58,7 @@ static NSMutableArray * _countdowns = nil;
 			BOOL success = [data writeToFile:_countdownsListPath options:NSDataWritingAtomic error:&error];
 			
 			if (!success) {
-				NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, [error localizedDescription]);
+				NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, error.localizedDescription);
 			}
 			
 			// And then, remove the file at ~/Documents/Countdown.plist to not show it on iTunes Sharing */
@@ -70,7 +67,7 @@ static NSMutableArray * _countdowns = nil;
 				success = [[NSFileManager defaultManager] removeItemAtPath:oldCountdownPath error:&error];
 				
 				if (!success) {
-					NSLog(@"error when removing file to : %@ => [%@]", _countdownsListPath, [error localizedDescription]);
+					NSLog(@"error when removing file to : %@ => [%@]", _countdownsListPath, error.localizedDescription);
 				}
 			}
 		}
@@ -82,7 +79,6 @@ static NSMutableArray * _countdowns = nil;
                                                                     error:&error];
 		if (![_propertyList isKindOfClass:[NSMutableArray class]])
 			[NSException raise:@"CountdownException" format:@"Countdown.plist should be an mutable array based format."];
-		
 		
 		_countdowns = [[NSMutableArray alloc] initWithCapacity:_propertyList.count];
 		for (NSDictionary * dictionary in _propertyList) {
@@ -110,40 +106,81 @@ static NSMutableArray * _countdowns = nil;
 			[aCountdown activate];
 			[_countdowns addObject:aCountdown];
 		}
+		[_countdowns sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"notificationCenter" ascending:NO] ]];
 		
-        [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidSynchronizeNotification
-                                                          object:nil queue:NSOperationQueue.currentQueue
-													  usingBlock:^(NSNotification *note) {
-														  [self updateUserDefaults];
-														  
-														  NSPredicate * predicate = [NSPredicate predicateWithFormat:@"notificationCenter == YES"];
-														  NSArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate];
-														  [[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
-																				 forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
-														  
-														  CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-														  CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidSynchronizeNotification"), NULL, NULL, YES);
-													  }];
-        if (_countdowns.count > 0) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
-        }
+		[NSNotificationCenter.defaultCenter addObserverForName:CountdownDidUpdateNotification
+														object:nil queue:NSOperationQueue.currentQueue
+													usingBlock:^(NSNotification *note) {
+														[self.class updateUserDefaults];
+														CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+														CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
+													}];
+		[NSNotificationCenter.defaultCenter addObserverForName:CountdownDidSynchronizeNotification
+														object:nil queue:NSOperationQueue.currentQueue
+													usingBlock:^(NSNotification *note) {
+														[self updateUserDefaults];
+														
+														NSPredicate * predicate = [NSPredicate predicateWithFormat:@"notificationCenter == YES"];
+														NSArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate];
+														[[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
+																			   forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
+														
+														CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
+														CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidSynchronizeNotification"), NULL, NULL, YES);
+													}];
+		if (_countdowns.count > 0) {
+			[NSNotificationCenter.defaultCenter postNotificationName:CountdownDidSynchronizeNotification object:nil];
+		}
 	}
 }
 
 + (void)updateUserDefaults
 {
 	if ([NSUserDefaults instancesRespondToSelector:@selector(initWithSuiteName:)]) {
-		static NSUserDefaults * widgetDefaults = nil;
-		if (!widgetDefaults)
-			widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
+		static NSUserDefaults * sharedDefaults = nil;
+		if (!sharedDefaults)
+			sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
 		
 		NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
 		[includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
 			return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
 		
-		[widgetDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
+		[sharedDefaults setObject:[includedCountdowns valueForKeyPath:@"countdownToDictionary"]
 						   forKey:@"countdowns"];
-		[widgetDefaults synchronize];
+		
+		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+		NSUInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
+		Countdown * countdown = _countdowns[MIN(_countdowns.count - 1, index)];
+		[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
+		[sharedDefaults synchronize];
+		
+		if (NSClassFromString(@"WCSession") && [WCSession isSupported]) {
+			NSDictionary * context = @{ @"countdowns" : [includedCountdowns valueForKeyPath:@"JSONDictionary"], @"selectedIdentifier": countdown.identifier };
+			NSError * error = nil;
+			BOOL success = [[WCSession defaultSession] updateApplicationContext:context error:&error];
+			if (!success) {
+				NSLog(@"error: %@", error.localizedDescription);
+			}
+			[[WCSession defaultSession] sendMessage:@{ @"update" : @YES }
+									   replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+										   dispatch_sync(dispatch_get_main_queue(), ^{
+											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply"
+																											   message:replyMessage.description
+																										preferredStyle:UIAlertControllerStyleAlert];
+											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+										   });
+									   }
+									   errorHandler:^(NSError * _Nonnull error) {
+										   dispatch_sync(dispatch_get_main_queue(), ^{
+											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply error"
+																											   message:error.localizedDescription
+																										preferredStyle:UIAlertControllerStyleAlert];
+											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+										   });
+									   }];
+		}
 	}
 }
 
@@ -151,12 +188,13 @@ static NSMutableArray * _countdowns = nil;
 {
     [self synchronizeWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
-            UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
-                                                                 message:error.localizedDescription
-                                                                delegate:nil
-                                                       cancelButtonTitle:nil
-                                                       otherButtonTitles:nil, nil];
-            [alertView show];
+			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
+																			message:error.localizedDescription
+																	 preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+			UIViewController * rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+			[rootViewController presentViewController:alert animated:YES completion:nil];
         }
     }];
 }
@@ -246,7 +284,11 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index
 {
+	[countdown activate];
 	[_countdowns insertObject:countdown atIndex:index];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+	[self synchronize];
 }
 
 + (void)addCountdown:(Countdown *)countdown
@@ -330,7 +372,7 @@ static NSMutableArray * _countdowns = nil;
 		if (self.endDate) dictionary[@"endDate"] = self.endDate;
 		if (self.message) dictionary[@"message"] = self.message;
 	} else {
-		if (durations) dictionary[@"durations"] = durations;
+		if (self.durations) dictionary[@"durations"] = self.durations;
 		dictionary[@"durationIndex"] = @(self.durationIndex);
 		
 		if (self.endDate) dictionary[@"endDate"] = self.endDate;
@@ -346,27 +388,53 @@ static NSMutableArray * _countdowns = nil;
 	return dictionary;
 }
 
-- (id)initWithIdentifier:(NSString *)anIdentifier
+- (NSDictionary *)JSONDictionary
+{
+	NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] initWithCapacity:_countdowns.count];
+	dictionary[@"name"] = self.name;
+	
+	if (self.type == CountdownTypeCountdown) {
+		if (self.message) dictionary[@"message"] = self.message;
+	} else {
+		if (self.durations) dictionary[@"durations"] = self.durations;
+		dictionary[@"durationIndex"] = @(self.durationIndex);
+	}
+	
+	if (self.endDate) {
+		NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+		formatter.dateStyle = NSDateFormatterMediumStyle;
+		formatter.timeStyle = NSDateFormatterMediumStyle;
+		dictionary[@"endDate"] = [formatter stringFromDate:self.endDate];
+	}
+	
+	dictionary[@"identifier"] = self.identifier;
+	dictionary[@"style"] = @(self.style);
+	dictionary[@"type"] = @(self.type);
+	return dictionary;
+}
+
+- (instancetype)init
+{
+	return [self initWithIdentifier:nil];
+}
+
+- (instancetype)initWithIdentifier:(NSString *)anIdentifier
 {
 	if ((self = [super init])) {
 		if (!anIdentifier) {
-			CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
-			CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-			anIdentifier = (__bridge NSString *)uuidString;
-			CFRelease(uuidString);
-			CFRelease(uuidRef);
+			anIdentifier = [NSUUID UUID].UUIDString;
 		}
 		
 		/* Don't call self.xxx to not call updateLocalNotification many times */
-		name = NSLocalizedString(@"NO_TITLE_PLACEHOLDER", nil);
-		endDate = nil;
-		message = @"";
-		songID = @"default";
-		style = 0;
+		_name = NSLocalizedString(@"NO_TITLE_PLACEHOLDER", nil);
+		_endDate = nil;
+		_message = @"";
+		_songID = @"default";
+		_style = 0;
 		_type = CountdownTypeCountdown;
         _notificationCenter = YES;
 		
-		identifier = anIdentifier;
+		_identifier = anIdentifier;
 		
 		[self update];
 	}
@@ -374,44 +442,56 @@ static NSMutableArray * _countdowns = nil;
 	return self;
 }
 
+- (BOOL)isActive
+{
+	return _active;
+}
+
 - (void)activate
 {
-	active = YES;
+	_active = YES;
 }
 
 - (void)desactivate
 {
-	active = NO;
+	_active = NO;
 }
 
 - (void)setName:(NSString *)aName
 {
-	if (aName && ![aName isEqualToString:name]) {
-		name = aName;
+	if (aName && ![aName isEqualToString:_name]) {
+		_name = aName;
+		[self update];
 	}
 }
 
 - (void)setMessage:(NSString *)aMessage
 {
-	if (aMessage && ![aMessage isEqualToString:message]) {
-		message = aMessage;
-		
+	if (aMessage && ![aMessage isEqualToString:_message]) {
+		_message = aMessage;
 		[self update];
 	}
 }
 
 - (void)setEndDate:(NSDate *)aDate
 {
-	endDate = aDate;
-	_paused = (endDate == nil);
+	_endDate = aDate;
+	_paused = (_endDate == nil);
 	[self update];
 }
 
 - (void)setSongID:(NSString *)aSongID
 {
-	if (aSongID && ![aSongID isEqualToString:songID]) {
-		songID = aSongID;
-		
+	if (aSongID && ![aSongID isEqualToString:_songID]) {
+		_songID = aSongID;
+		[self update];
+	}
+}
+
+- (void)setStyle:(CountdownStyle)style
+{
+	if (_style != style) {
+		_style = style;
 		[self update];
 	}
 }
@@ -420,7 +500,6 @@ static NSMutableArray * _countdowns = nil;
 {
 	if (_type != newType) {
 		_type = newType;
-		
 		[self update];
 	}
 }
@@ -446,52 +525,52 @@ static NSMutableArray * _countdowns = nil;
 - (NSNumber *)currentDuration
 {
 	/* Return the current duration (at index "duratonIndex" if not out of bounds, else return the first duration if exists, else return "nil" */
-	return (_durationIndex <= ((NSInteger)durations.count - 1)) ? durations[_durationIndex] : ((durations.count > 0) ? durations[0] : nil);
+	return (_durationIndex <= ((NSInteger)_durations.count - 1)) ? _durations[_durationIndex] : ((_durations.count > 0) ? _durations[0] : nil);
 }
 
 - (NSArray *)durations
 {
-	return durations;
+	return _durations;
 }
 
 - (void)addDuration:(NSNumber *)duration
 {
-	if (!durations)
-		durations = [[NSMutableArray alloc] initWithCapacity:5];
+	if (!_durations)
+		_durations = [[NSMutableArray alloc] initWithCapacity:5];
 	
-	[durations addObject:duration];
+	[_durations addObject:duration];
 }
 
 - (void)addDurations:(NSArray *)someDurations
 {
-	if (!durations)
-		durations = [[NSMutableArray alloc] initWithCapacity:5];
+	if (!_durations)
+		_durations = [[NSMutableArray alloc] initWithCapacity:5];
 	
-	[durations addObjectsFromArray:someDurations];
+	[_durations addObjectsFromArray:someDurations];
 }
 
 - (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index
 {
-	durations[index] = duration;
+	_durations[index] = duration;
 }
 
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex
 {
 	if (fromIndex != toIndex) {
-		NSNumber * duration = durations[fromIndex];
-		[durations removeObjectAtIndex:fromIndex];
-		[durations insertObject:duration atIndex:toIndex];
+		NSNumber * duration = _durations[fromIndex];
+		[_durations removeObjectAtIndex:fromIndex];
+		[_durations insertObject:duration atIndex:toIndex];
 	}
 }
 
 - (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2
 {
-	[durations exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+	[_durations exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
 - (void)removeDurationAtIndex:(NSUInteger)index
 {
-	[durations removeObjectAtIndex:index];
+	[_durations removeObjectAtIndex:index];
 }
 
 - (void)resetDurationIndex
@@ -501,42 +580,35 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)resume
 {
+	[self resumeWithOffset:0];
+}
+
+- (void)resumeWithOffset:(NSTimeInterval)offset
+{
 	if (_type == CountdownTypeTimer && _paused) {
-		endDate = [NSDate dateWithTimeIntervalSinceNow:remaining];
-		remaining = 0.;
+		_endDate = [NSDate dateWithTimeIntervalSinceNow:_remaining + offset];
+		_remaining = 0.;
 		_paused = NO;
 		[self updateLocalNotification];
-		
-		[self.class updateUserDefaults];
-		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
 - (void)pause
 {
 	if (_type == CountdownTypeTimer && !_paused) {
-		remaining = endDate.timeIntervalSinceNow;
-		endDate = nil;
+		_remaining = _endDate.timeIntervalSinceNow;
+		_endDate = nil;
 		_paused = YES;
 		[self updateLocalNotification];
-		
-		[self.class updateUserDefaults];
-		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
 - (void)reset
 {
 	if (_type == CountdownTypeTimer) {
-		endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
+		_endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
 		_paused = NO;
 		[self updateLocalNotification];
-		
-		[self.class updateUserDefaults];
-		CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-		CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 	}
 }
 
@@ -544,7 +616,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)descriptionOfDurationAtIndex:(NSInteger)index
 {
-	long seconds = [durations[index] longValue];
+	long seconds = _durations[index].longValue;
 	long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
@@ -569,7 +641,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index
 {
-	long seconds = [durations[index] longValue];
+	long seconds = _durations[index].longValue;
 	long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
@@ -621,9 +693,9 @@ static NSMutableArray * _countdowns = nil;
 - (NSString *)description
 {
 	if (_type == CountdownTypeTimer)
-		return [NSString stringWithFormat:@"<Countdown (Timer): 0x%p; name = %@; durations = %@; songID = %@>", self, name, [durations componentsJoinedByString:@","], songID];
+		return [NSString stringWithFormat:@"<Countdown (Timer): 0x%p; name = %@; durations = %@; songID = %@>", self, _name, [_durations componentsJoinedByString:@","], _songID];
 	else
-		return [NSString stringWithFormat:@"<Countdown: 0x%p; name = %@; endDate = %@; songID = %@>", self, name, endDate, songID];
+		return [NSString stringWithFormat:@"<Countdown: 0x%p; name = %@; endDate = %@; songID = %@>", self, _name, _endDate, _songID];
 }
 
 

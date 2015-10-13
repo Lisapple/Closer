@@ -7,13 +7,13 @@
 //
 
 #import "CloserAppDelegate_Pad.h"
-
 #import "MainViewController_Pad.h"
 
+#import "Countdown+addition.h"
+
 @interface CloserAppDelegate_Pad ()
-{
-    AVAudioPlayer * player;
-}
+
+@property (nonatomic, strong) AVAudioPlayer * player;
 
 @end
 
@@ -28,15 +28,8 @@
     
 	self.viewController = [[MainViewController_Pad alloc] initWithNibName:@"MainViewController_Pad" bundle:nil];
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-	if (TARGET_IS_IOS7_OR_LATER()) {
-		navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:0.1 alpha:1.];
-		navigationController.navigationBar.tintColor = [UIColor whiteColor];
-	} else {
-		navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-		navigationController.navigationBar.translucent = YES;
-	}
-	
-	
+	navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:0.1 alpha:1.];
+	navigationController.navigationBar.tintColor = [UIColor whiteColor];
 	self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
 	
@@ -50,26 +43,27 @@
 	NSDebugLog(@"Local notification received: %@ - %@ (will play %@)", identifier, countdown.name, notification.soundName);
 	
 	if (countdown.type == CountdownTypeCountdown) {
-		
-		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Countdown finished!", nil)
-															 message:notification.alertBody
-															delegate:nil
-												   cancelButtonTitle:NSLocalizedString(@"OK", nil) // @TODO: Add a "Show" button to go to the settings of the countdown
-												   otherButtonTitles:nil];
-		[alertView show];
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
+																		message:notification.alertBody
+																 preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+		[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		
 	} else {
 		/* Show an alert if needed to show an alert (to show an alert at the end of each timer or at the end of the loop of timers) */
 		if (countdown.promptState == PromptStateEveryTimers
 			|| (countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) {
-			UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Timer finished!", nil)
-																 message:notification.alertBody
-																delegate:self
-													   cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-													   otherButtonTitles:NSLocalizedString(@"Continue", nil), nil];
-			NSInteger index = [Countdown indexOfCountdown:countdown];
-			alertView.tag = index;
-			[alertView show];
+			
+			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
+																			message:notification.alertBody
+																	 preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				// Start the next timer
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"TimerDidContinueNotification" object:countdown]; }]];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+			[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		}
 	}
 	
@@ -78,10 +72,10 @@
 		
 		NSURL * fileURL = nil;
 		if ([notification.soundName isEqualToString:UILocalNotificationDefaultSoundName] || [notification.soundName isEqualToString:@"default"]) {
-			NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [[NSBundle mainBundle] bundlePath]];
+			NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [NSBundle mainBundle].bundlePath];
 			fileURL = [NSURL fileURLWithPath:path];
 		} else {
-			NSString * path = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] bundlePath], notification.soundName];
+			NSString * path = [NSString stringWithFormat:@"%@/%@", [NSBundle mainBundle].bundlePath, notification.soundName];
 			fileURL = [NSURL fileURLWithPath:path];
 		}
 		
@@ -90,12 +84,12 @@
 			NSDebugLog(@"Sound played: %@ (%@)", notification.soundName, fileURL);
 #else
 			NSError * error = nil;
-			player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL
+			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL
 															error:&error];
 			if (error)
 				NSLog(@"Error on audio player: %@ for %@", error.localizedDescription, fileURL.path.lastPathComponent);
 			
-			[player play];
+			[_player play];
 #endif
 		}
 	}
@@ -135,6 +129,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+	[Countdown removeInvalidLocalNotifications];
 	[Countdown synchronize];
 }
 

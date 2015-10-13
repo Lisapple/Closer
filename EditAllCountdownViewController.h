@@ -10,12 +10,10 @@
 
 @class SettingsViewController_Phone;
 
-@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UIActionSheetDelegate>
-{
-	IBOutlet UITableView * tableView;
-}
+@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
+@property (nonatomic, assign) IBOutlet UITableView * tableView;
 
 - (IBAction)moreInfo:(id)sender;
 

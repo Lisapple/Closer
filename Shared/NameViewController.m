@@ -10,51 +10,30 @@
 
 @implementation NameViewController
 
-@synthesize cellTextField;
-@synthesize tableView;
-
-@synthesize countdown;
-
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Name", nil);
 	
-	tableView.delegate = self;
-	tableView.dataSource = self;
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
+    _tableView.alwaysBounceVertical = YES;
 	
-    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		tableView.backgroundView = backgroundView;
-	}
-    
-    tableView.alwaysBounceVertical = YES;
-    
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
-	
-	cellTextField.text = countdown.name;
-	cellTextField.delegate = self;
+	_cellTextField.text = _countdown.name;
+	_cellTextField.delegate = self;
 	
 	[super viewDidLoad];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[cellTextField becomeFirstResponder];
+	[_cellTextField becomeFirstResponder];
 	
 	[super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	countdown.name = cellTextField.text;
+	_countdown.name = _cellTextField.text;
 	[Countdown synchronize];
 	
 	[super viewWillDisappear:animated];
@@ -74,7 +53,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    if (countdown.type == CountdownTypeTimer) {
+    if (_countdown.type == CountdownTypeTimer) {
         return NSLocalizedString(@"The name of the timer can help you to identify it.", nil);
     }
 	return NSLocalizedString(@"The name of the countdown can help you to identify it.", nil);
@@ -94,13 +73,13 @@
 {
 	static NSString * cellIdentifier = @"CellID";
 	
-	UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		
-		[cell.contentView addSubview:cellTextField];
+		[cell.contentView addSubview:_cellTextField];
 	}
 	
 	return cell;
@@ -115,12 +94,12 @@
 	return YES;
 }
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-	[tableView reloadData];
-	[cellTextField becomeFirstResponder];
+	[_tableView reloadData];
+	[_cellTextField becomeFirstResponder];
 	
-	[super willAnimateRotationToInterfaceOrientation:orientation duration:duration];
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 @end

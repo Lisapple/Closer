@@ -10,10 +10,13 @@
 
 #import "Countdown.h"
 
-@implementation PageThemeViewController
+@interface PageThemeViewController ()
 
-@synthesize tableView;
-@synthesize countdown;
+@property (nonatomic, strong) UITableViewCell * checkedCell;
+
+@end
+
+@implementation PageThemeViewController
 
 + (UIImage *)imageForStyle:(PageViewStyle)style
 {
@@ -45,23 +48,8 @@
 {
 	self.title = NSLocalizedString(@"Theme", nil);
 	
-	tableView.delegate = self;
-	tableView.dataSource = self;
-	
-    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		tableView.backgroundView = backgroundView;
-	}
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
     
 	[super viewDidLoad];
 }
@@ -87,16 +75,16 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	
 	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	
-	if (countdown.style == indexPath.row) {// Default style == 0
+	if (_countdown.style == indexPath.row) {// Default style == 0
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-		checkedCell = cell;
+		_checkedCell = cell;
 	}
 	
 	cell.textLabel.text = [Countdown styles][indexPath.row];
@@ -112,13 +100,12 @@
 {
 	UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
 	
-	if (cell != checkedCell) {
-		checkedCell.accessoryType = UITableViewCellAccessoryNone;
+	if (cell != _checkedCell) {
+		_checkedCell.accessoryType = UITableViewCellAccessoryNone;
 		
-		checkedCell = cell;
-		checkedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-		
-		countdown.style = indexPath.row;
+		_checkedCell = cell;
+		_checkedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+		_countdown.style = indexPath.row;
 	}
 	
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];

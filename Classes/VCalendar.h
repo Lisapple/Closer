@@ -9,32 +9,21 @@
 #import <UIKit/UIKit.h>
 
 @interface VEvent : NSObject
-{
-	NSDate * startDate;
-	NSTimeInterval duration;
-	NSString * summary, * description;
-	NSString * UUID;
-}
 
 @property (nonatomic, strong) NSDate * startDate;
 @property (nonatomic, assign) NSTimeInterval duration;
-@property (nonatomic, strong) NSString * summary, * description;
-@property (nonatomic, readonly) NSString * UUID;
+@property (nonatomic, strong) NSString * summary, * message;
+@property (nonatomic, copy, readonly) NSString * UUID;
 
 + (VEvent *)eventFromCountdown:(Countdown *)countdown;
 
-- (id)initWithUUID:(NSString *)seed;
+- (instancetype)initWithUUID:(NSString *)seed NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @interface VCalendar : NSObject
-{
-	NSString * version;
-	
-	NSMutableArray * events;
-}
 
-- (id)initWithVersion:(NSString *)versionString;
+- (instancetype)initWithVersion:(NSString *)versionString NS_DESIGNATED_INITIALIZER;
 
 - (void)addEvent:(VEvent *)event;
 - (void)removeEvent:(VEvent *)event;

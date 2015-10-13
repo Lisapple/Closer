@@ -13,24 +13,14 @@
 
 @class PageView;
 
-@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, PageViewDelegate, UIPopoverControllerDelegate>
-{
-	IBOutlet UIView * defaultNavigationBarView, * editNavigationBarView;
-	IBOutlet UIBarButtonItem * doneButton;
-	IBOutlet UIScrollView * scrollView;
-	IBOutlet UIPageControl * pageControl;
-	
-	@private
-	NSInteger currentSettingsPageIndex;
-	NSInteger currentNavigationBarTag;
-	NSMutableArray * pageViews;
-	PageView * currentPageWithConfirmation;
-	
-	BOOL shareActionSheetShowing;
-	UIActionSheet * shareActionSheet;
-	
-	UIPopoverController * popover, * editPopover;
-}
+@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, PageViewDelegate, UIPopoverControllerDelegate>
+
+@property (nonatomic, assign) IBOutlet UIView * defaultNavigationBarView, * editNavigationBarView;
+@property (nonatomic, assign) IBOutlet UIBarButtonItem * doneButton;
+@property (nonatomic, assign) IBOutlet UIScrollView * scrollView;
+@property (nonatomic, assign) IBOutlet UIPageControl * pageControl;
+
+@property (nonatomic, assign) UIInterfaceOrientationMask currentOrientation;
 
 - (IBAction)new:(id)sender;
 - (IBAction)editAll:(id)sender;

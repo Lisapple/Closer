@@ -10,24 +10,14 @@
 
 @implementation UIColor(addition)
 
-+ (UIColor *)colorWithR:(NSInteger)red G:(NSInteger)green B:(NSInteger)blue
-{
-	return [UIColor colorWithRed:(red / 255.) green:(green / 255.) blue:(blue / 255.) alpha:1.];
-}
-
-+ (UIColor *)groupedTableViewBackgroundColor
-{
-    return [UIColor colorWithPatternImage:[UIImage imageNamed:@"grouped_tableview_background"]];
-}
-
 + (UIColor *)defaultTintColor
 {
 	return [UIColor colorWithWhite:0.25 alpha:1.];
 }
 
-+ (UIColor *)doneButtonColor
++ (UIColor *)colorWithR:(NSInteger)red G:(NSInteger)green B:(NSInteger)blue
 {
-	return [UIColor colorWithRed:0.6 green:0.6 blue:1. alpha:1.];
+	return [UIColor colorWithRed:(red / 255.) green:(green / 255.) blue:(blue / 255.) alpha:1.];
 }
 
 + (UIColor *)backgroundColorForPageStyle:(PageViewStyle)style

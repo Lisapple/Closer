@@ -25,48 +25,33 @@
 const NSInteger kDeleteSheetTag = 234;
 const NSInteger kDeleteButtonTag = 345;
 
+@interface SettingsViewController_Phone ()
+
+@property (nonatomic, strong) NSArray <NSString *> * cellTitles;
+@property (nonatomic, assign) BOOL showsDeleteButton;
+
+- (IBAction)done:(id)sender;
+- (IBAction)editAllCountdowns:(id)sender;
+- (IBAction)deleteAction:(id)sender;
+
+- (void)deleteCountdown;
+
+@end
+
 @implementation SettingsViewController_Phone
-
-@synthesize delegate;
-@synthesize tableView;
-@synthesize footerLabel;
-
-@synthesize countdown;
 
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Settings", nil);
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	
-	UIBarButtonItem * doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																					 target:self
-																					 action:@selector(done:)];
-	if (!TARGET_IS_IOS7_OR_LATER())
-        doneButtonItem.tintColor = [UIColor doneButtonColor];
-	
-	self.navigationItem.rightBarButtonItem = doneButtonItem;
-	
-    UIBarButtonItem * editButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", nil)
-																		style:UIBarButtonItemStylePlain
-																	   target:self
-																	   action:@selector(editAllCountdowns:)];
-    self.navigationItem.leftBarButtonItem = editButtonItem;
-	
-	tableView.delegate = self;
-	tableView.dataSource = self;
-	
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        tableView.backgroundView = backgroundView;
-	}
-    
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+																						   target:self action:@selector(done:)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", nil)
+																			 style:UIBarButtonItemStylePlain
+																			target:self action:@selector(editAllCountdowns:)];
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
 	
 	[self reloadData];
 	
@@ -87,35 +72,35 @@ const NSInteger kDeleteButtonTag = 345;
 
 - (void)setCountdown:(Countdown *)aCountdown
 {
-	showsDeleteButton = ([aCountdown.endDate timeIntervalSinceNow] <= 0. || aCountdown.type == CountdownTypeTimer);
+	_showsDeleteButton = (aCountdown.endDate.timeIntervalSinceNow <= 0. || aCountdown.type == CountdownTypeTimer);
 	
-	countdown = aCountdown;
+	_countdown = aCountdown;
 }
 
 - (void)reloadData
 {
-	if (countdown.type == CountdownTypeTimer) {
-		cellTitles = @[NSLocalizedString(@"Name", nil),
-					  NSLocalizedString(@"Durations", nil),
-					  NSLocalizedString(@"Sound", nil),
-					   NSLocalizedString(@"Theme", nil)];
+	if (_countdown.type == CountdownTypeTimer) {
+		_cellTitles = @[ NSLocalizedString(@"Name", nil),
+						 NSLocalizedString(@"Durations", nil),
+						 NSLocalizedString(@"Sound", nil),
+						 NSLocalizedString(@"Theme", nil) ];
 	} else {
-		cellTitles = @[NSLocalizedString(@"Name", nil),
-					  NSLocalizedString(@"Date & Time", nil),
-					  NSLocalizedString(@"Message", nil),
-					  NSLocalizedString(@"Sound", nil),
-					  NSLocalizedString(@"Theme", nil)];
+		_cellTitles = @[ NSLocalizedString(@"Name", nil),
+						 NSLocalizedString(@"Date & Time", nil),
+						 NSLocalizedString(@"Message", nil),
+						 NSLocalizedString(@"Sound", nil),
+						 NSLocalizedString(@"Theme", nil) ];
 	}
 	
-	showsDeleteButton = (countdown.type == CountdownTypeCountdown && [countdown.endDate timeIntervalSinceNow] <= 0.);
+	_showsDeleteButton = (_countdown.type == CountdownTypeCountdown && _countdown.endDate.timeIntervalSinceNow <= 0.);
 	
-	[tableView reloadData];
+	[_tableView reloadData];
 }
 
 - (IBAction)done:(id)sender
 {
-	if ([delegate respondsToSelector:@selector(settingsViewControllerDidFinish:)])
-		[delegate settingsViewControllerDidFinish:self];
+	if ([_delegate respondsToSelector:@selector(settingsViewControllerDidFinish:)])
+		[_delegate settingsViewControllerDidFinish:self];
 	
 #if TARGET_IPHONE_SIMULATOR
 	[Countdown synchronize];
@@ -138,17 +123,14 @@ const NSInteger kDeleteButtonTag = 345;
 
 - (IBAction)deleteAction:(id)sender
 {
-	NSString * title = (countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Do you really want to delete this timer?", nil) : NSLocalizedString(@"Do you really want to delete this countdown?", nil);
-	NSString * destructiveButtonTitle = (countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Delete Timer", nil) : NSLocalizedString(@"Delete Countdown", nil);
-	UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:title
-															  delegate:self
-													 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-												destructiveButtonTitle:destructiveButtonTitle
-													 otherButtonTitles:nil];
+	NSString * title = (_countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Do you really want to delete this timer?", nil) : NSLocalizedString(@"Do you really want to delete this countdown?", nil);
+	NSString * destructiveButtonTitle = (_countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Delete Timer", nil) : NSLocalizedString(@"Delete Countdown", nil);
 	
-	actionSheet.tag = kDeleteSheetTag;
-	actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-	[actionSheet showInView:self.view];
+	UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	[alert addAction:[UIAlertAction actionWithTitle:destructiveButtonTitle style:UIAlertActionStyleDestructive handler:^(UIAlertAction * __nonnull action) {
+		[self deleteCountdown]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
+	[self presentViewController:alert animated:YES completion:NULL];
 }
 
 - (void)deleteCountdown
@@ -167,8 +149,8 @@ const NSInteger kDeleteButtonTag = 345;
 		Countdown * newCountdown = [Countdown countdownAtIndex:index];
 		self.countdown = newCountdown;
 		
-		if ([delegate respondsToSelector:@selector(settingsViewControllerDidFinish:)]) // Returns to PageViewController
-			[delegate settingsViewControllerDidFinish:self];
+		if ([_delegate respondsToSelector:@selector(settingsViewControllerDidFinish:)]) // Returns to PageViewController
+			[_delegate settingsViewControllerDidFinish:self];
 		
 	} else { // If we have deleted the last countdown, show editAllCountdowns: panel
 		[self editAllCountdowns:nil];
@@ -180,7 +162,7 @@ const NSInteger kDeleteButtonTag = 345;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	if (showsDeleteButton)
+	if (_showsDeleteButton)
 		return 3;
 	
 	return 2;
@@ -189,7 +171,7 @@ const NSInteger kDeleteButtonTag = 345;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (section == 1)
-		return cellTitles.count;
+		return _cellTitles.count;
 	
 	return 1;// Return one row for the type cell and the "delete" button
 }
@@ -201,7 +183,7 @@ const NSInteger kDeleteButtonTag = 345;
 	
 	if (indexPath.section == 0) {
 		
-		cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		if (cell == nil) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -213,11 +195,11 @@ const NSInteger kDeleteButtonTag = 345;
 		
 		cell.textLabel.text = NSLocalizedString(@"Type", nil);
 		
-		cell.detailTextLabel.text = (countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Timer", nil) : NSLocalizedString(@"Countdown", nil);
+		cell.detailTextLabel.text = (_countdown.type == CountdownTypeTimer) ? NSLocalizedString(@"Timer", nil) : NSLocalizedString(@"Countdown", nil);
 		
 	} else if (indexPath.section == 1) {
 		
-		cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		if (cell == nil) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -227,25 +209,25 @@ const NSInteger kDeleteButtonTag = 345;
 			cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 		}
 		
-		cell.textLabel.text = cellTitles[indexPath.row];
+		cell.textLabel.text = _cellTitles[indexPath.row];
 		
-		if (countdown.type == CountdownTypeTimer) {
+		if (_countdown.type == CountdownTypeTimer) {
 			
 			switch (indexPath.row) {
 				case 0: { // Name
-					cell.detailTextLabel.text = countdown.name;
+					cell.detailTextLabel.text = _countdown.name;
 				}
 					break;
 				case 1: { // Durations
-					if (countdown.durations.count == 0) {
+					if (_countdown.durations.count == 0) {
 						cell.detailTextLabel.text = @"!";
 						cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
 						cell.detailTextLabel.textColor = [UIColor redColor];
 					} else {
-						if (countdown.durations.count == 1) {
-							cell.detailTextLabel.text = [countdown shortDescriptionOfDurationAtIndex:0];
+						if (_countdown.durations.count == 1) {
+							cell.detailTextLabel.text = [_countdown shortDescriptionOfDurationAtIndex:0];
 						} else {
-							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld timers", nil), (long)countdown.durations.count]; // @TODO: replace "%ld timers" with "%ld durations"
+							cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)_countdown.durations.count];
 						}
 						cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
 						cell.detailTextLabel.textColor = [UIColor darkGrayColor];
@@ -253,12 +235,12 @@ const NSInteger kDeleteButtonTag = 345;
 				}
 					break;
 				case 2: { // Song
-					NSString * songID = countdown.songID;
+					NSString * songID = _countdown.songID;
 					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:songID];
 				}
 					break;
 				case 3: { // Theme
-					NSInteger style = countdown.style;
+					NSInteger style = _countdown.style;
 					cell.detailTextLabel.text = [Countdown styles][style];
 				}
 					break;
@@ -267,13 +249,13 @@ const NSInteger kDeleteButtonTag = 345;
 			
 			switch (indexPath.row) {
 				case 0: { // Name
-					cell.detailTextLabel.text = countdown.name;
+					cell.detailTextLabel.text = _countdown.name;
 				}
 					break;
 				case 1: { // Date & Time
-					NSDate * date = countdown.endDate;
-					if (date && ([date timeIntervalSinceNow] > 0.)) {
-						cell.detailTextLabel.text = [date description];
+					NSDate * date = _countdown.endDate;
+					if (date && (date.timeIntervalSinceNow > 0.)) {
+						cell.detailTextLabel.text = date.description;
 						cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 					} else {
 						cell.detailTextLabel.text = @"!";
@@ -284,27 +266,27 @@ const NSInteger kDeleteButtonTag = 345;
 				}
 					break;
 				case 2: { // Message
-					cell.detailTextLabel.text = (countdown.message)? countdown.message: @"";
+					cell.detailTextLabel.text = (_countdown.message)? _countdown.message: @"";
 				}
 					break;
 				case 3: { // Song
-					NSString * songID = countdown.songID;
+					NSString * songID = _countdown.songID;
 					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:songID];
 				}
 					break;
 				case 4: { // Theme
-					NSInteger style = countdown.style;
+					NSInteger style = _countdown.style;
 					cell.detailTextLabel.text = [Countdown styles][style];
 				}
 					break;
 			}
 		}
 	} else if (indexPath.section >= 2) {
-		if (showsDeleteButton && indexPath.section == 2) {
+		if (_showsDeleteButton && indexPath.section == 2) {
 			
 			static NSString * deleteCellIdentifier = @"DeleteCellID";
 			
-			cell = [tableView dequeueReusableCellWithIdentifier:deleteCellIdentifier];
+			cell = [_tableView dequeueReusableCellWithIdentifier:deleteCellIdentifier];
 			if (cell == nil) {
 				cell = [[DeleteTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:deleteCellIdentifier];
 				cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -315,12 +297,6 @@ const NSInteger kDeleteButtonTag = 345;
 			
 			cell.textLabel.text = NSLocalizedString(@"Delete", nil);
 			cell.textLabel.font = [UIFont systemFontOfSize:20.];
-			
-            if (!TARGET_IS_IOS7_OR_LATER()) {
-                cell.textLabel.shadowColor = [UIColor colorWithRed:0.3 green:0. blue:0. alpha:0.8];
-                cell.textLabel.shadowOffset = CGSizeMake(0., -1.);
-                cell.textLabel.font = [UIFont boldSystemFontOfSize:18.];
-            }
 		}
 	}
 	
@@ -334,35 +310,35 @@ const NSInteger kDeleteButtonTag = 345;
 {
 	if (indexPath.section == 0) {
 		TypeViewController * typeViewController = [[TypeViewController alloc] init];
-		typeViewController.countdown = countdown;
+		typeViewController.countdown = _countdown;
 		[self.navigationController pushViewController:typeViewController animated:YES];
 		
 	} else if (indexPath.section == 1) {
 		
-		if (countdown.type == CountdownTypeTimer) {
+		if (_countdown.type == CountdownTypeTimer) {
 			
 			switch (indexPath.row) {
 				case 0: { // Name
 					NameViewController * nameViewController = [[NameViewController alloc] init];
-					nameViewController.countdown = countdown;
+					nameViewController.countdown = _countdown;
 					[self.navigationController pushViewController:nameViewController animated:YES];
 				}
 					break;
 				case 1: { // Durations
 					DurationsViewController * durationsViewController = [[DurationsViewController alloc] init];
-					durationsViewController.countdown = countdown;
+					durationsViewController.countdown = _countdown;
 					[self.navigationController pushViewController:durationsViewController animated:YES];
 				}
 					break;
 				case 2: { // Song
 					SongPickerViewController * songPickerViewController = [[SongPickerViewController alloc] init];
-					songPickerViewController.countdown = countdown;
+					songPickerViewController.countdown = _countdown;
 					[self.navigationController pushViewController:songPickerViewController animated:YES];
 				}
 					break;
 				case 3: { // Theme
 					PageThemeViewController * pageThemeViewController = [[PageThemeViewController alloc] init];
-					pageThemeViewController.countdown = countdown;
+					pageThemeViewController.countdown = _countdown;
 					[self.navigationController pushViewController:pageThemeViewController animated:YES];
 				}
 					break;
@@ -372,31 +348,31 @@ const NSInteger kDeleteButtonTag = 345;
 			switch (indexPath.row) {
 				case 0: { // Name
 					NameViewController * nameViewController = [[NameViewController alloc] init];
-					nameViewController.countdown = countdown;
+					nameViewController.countdown = _countdown;
 					[self.navigationController pushViewController:nameViewController animated:YES];
 				}
 					break;
 				case 1: { // Date & Time
 					DatePickerViewController * datePickerViewController = [[DatePickerViewController alloc] init];
-					datePickerViewController.countdown = countdown;
+					datePickerViewController.countdown = _countdown;
 					[self.navigationController pushViewController:datePickerViewController animated:YES];
 				}
 					break;
 				case 2: { // Message
 					MessageViewControler * messageViewControler = [[MessageViewControler alloc] init];
-					messageViewControler.countdown = countdown;
+					messageViewControler.countdown = _countdown;
 					[self.navigationController pushViewController:messageViewControler animated:YES];
 				}
 					break;
 				case 3: { // Song
 					SongPickerViewController * songPickerViewController = [[SongPickerViewController alloc] init];
-					songPickerViewController.countdown = countdown;
+					songPickerViewController.countdown = _countdown;
 					[self.navigationController pushViewController:songPickerViewController animated:YES];
 				}
 					break;
 				case 4: { // Theme
 					PageThemeViewController * pageThemeViewController = [[PageThemeViewController alloc] init];
-					pageThemeViewController.countdown = countdown;
+					pageThemeViewController.countdown = _countdown;
 					[self.navigationController pushViewController:pageThemeViewController animated:YES];
 				}
 					break;
@@ -407,24 +383,7 @@ const NSInteger kDeleteButtonTag = 345;
 		[self deleteAction:nil];
 	}
 	
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-#pragma mark -
-#pragma mark UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (actionSheet.tag == kDeleteSheetTag) {
-		switch (buttonIndex)
-		{
-			case 0://Delete Countdown
-				[self deleteCountdown];
-				break;
-			default://Cancel
-				break;
-		}
-	}
+	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

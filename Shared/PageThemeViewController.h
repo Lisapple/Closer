@@ -12,17 +12,8 @@
 @class PageThemeTableViewCell;
 
 @interface PageThemeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-{
-	UITableView * tableView;
-	
-	Countdown * countdown;
-	
-	@private
-	UITableViewCell * checkedCell;
-}
 
 @property (nonatomic, strong) IBOutlet UITableView * tableView;
-
 @property (nonatomic, strong) Countdown * countdown;
 
 @end

@@ -16,10 +16,6 @@
 
 @implementation DurationsViewController
 
-@synthesize tableView = _tableView;
-
-@synthesize countdown = _countdown;
-
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -28,26 +24,9 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        _tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView = backgroundView;
-    }
-    
     _tableView.alwaysBounceVertical = YES;
-	
 	_tableView.allowsSelectionDuringEditing = YES;
 	_tableView.editing = YES;
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 																						   target:self
@@ -159,10 +138,10 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"Never", nil);
 				break;
 			case PromptStateEveryTimers:
-				cell.detailTextLabel.text = NSLocalizedString(@"For every timers", nil); // @TODO: replace "For every timers" with "For every durations"
+				cell.detailTextLabel.text = NSLocalizedString(@"For every duration", nil);
 				break;
 			case PromptStateEnd:
-				cell.detailTextLabel.text = NSLocalizedString(@"When all timers finished", nil); // @TODO: replace "When all timers finished" with "When all durations finished"
+				cell.detailTextLabel.text = NSLocalizedString(@"When all durations finished", nil);
 				break;
 		}
 		
@@ -184,7 +163,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return NSLocalizedString(@"_Remove", nil);
+	return NSLocalizedString(@"Remove", nil);
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

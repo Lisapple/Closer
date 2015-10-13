@@ -8,21 +8,35 @@
 
 #import "MessageViewControler.h"
 
-@implementation MyTextView
-
-@synthesize undoManager = _undoManager;
+@interface MyTextView ()
+{
+	NSUndoManager * _undoManager;
+}
 
 @end
 
+@implementation MyTextView
+
+- (NSUndoManager *)undoManager
+{
+	return _undoManager;
+}
+
+- (void)setUndoManager:(NSUndoManager *)undoManager
+{
+	_undoManager = undoManager;
+}
+
+@end
+
+
+@interface MessageViewControler ()
+{
+	NSUndoManager * _undoManager;
+}
+@end
+
 @implementation MessageViewControler
-
-@synthesize cellTextView;
-
-@synthesize messageCell;
-
-@synthesize countdown;
-
-@synthesize undoManager;
 
 const CGFloat kHeightRowLandscape = 60.;
 const CGFloat kHeightRowPortrait = 120.;
@@ -35,38 +49,24 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Message", nil);
+	self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor]; // Doesn't work into IB (maybe a Xcode 7 bug)
 	
-	UIBarButtonItem * clearButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Clear", nil)
-																	 style:UIBarButtonItemStylePlain
-																	target:self
-																	action:@selector(clear:)];
-	self.navigationItem.rightBarButtonItem = clearButton;
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Clear", nil)
+																			  style:UIBarButtonItemStylePlain
+																			 target:self action:@selector(clear:)];
 	
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		self.tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		self.tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		
-		UIView * backgroundView = [[UIView alloc] init];
-		backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-		self.tableView.backgroundView = backgroundView;
-	}
-    
-	cellTextView.text = countdown.message;
-	cellTextView.delegate = self;
-	cellTextView.scrollEnabled = NO;
+	_cellTextView.text = _countdown.message;
+	_cellTextView.delegate = self;
+	_cellTextView.scrollEnabled = NO;
 	
-	self.navigationItem.rightBarButtonItem.enabled = (countdown.message.length > 0);
+	self.navigationItem.rightBarButtonItem.enabled = (_countdown.message.length > 0);
 	
 	[self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	NSUndoManager * anUndomanager = [[NSUndoManager alloc] init];
-	self.undoManager = anUndomanager;
+	_undoManager = [[NSUndoManager alloc] init];
 	
 	[super viewWillAppear:animated];
 }
@@ -75,38 +75,35 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 {
 	[self update];
 	
-	cellTextView.undoManager = self.undoManager;// Overwrite the cellTextView undo manager with the controller one since [cellTextView becomeFirstResponder] set the default undo manager from cellTextView undo manager (setActionName should not working with this method).
+	_cellTextView.undoManager = _undoManager; // Overwrite the cellTextView undo manager with the controller one since [cellTextView becomeFirstResponder] set the default undo manager from cellTextView undo manager (setActionName should not working with this method).
 	
-	[cellTextView becomeFirstResponder];
+	[_cellTextView becomeFirstResponder];
 	
 	[super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	countdown.message = cellTextView.text;
+	_countdown.message = _cellTextView.text;
 	
-	cellTextView.undoManager = nil;
-	self.undoManager = nil;
+	_cellTextView.undoManager = nil;
+	_undoManager = nil;
 	
 	[super viewWillDisappear:animated];
 }
 
 - (void)setText:(NSString *)textString
 {
-	cellTextView.text = textString;
+	_cellTextView.text = textString;
 }
 
 - (IBAction)clear:(id)sender
 {
-	if (cellTextView.text.length > 0) {
-		[self.undoManager registerUndoWithTarget:self
-										selector:@selector(setText:)
-										  object:cellTextView.text];
+	if (_cellTextView.text.length > 0) {
+		[_undoManager registerUndoWithTarget:self selector:@selector(setText:) object:_cellTextView.text];
+		[_undoManager setActionName:NSLocalizedString(@"UNDO_MESSAGE_ACTION", nil)];
 		
-		[self.undoManager setActionName:NSLocalizedString(@"UNDO_MESSAGE_ACTION", nil)];
-		
-		cellTextView.text = @"";
+		_cellTextView.text = @"";
 		[self update];
 	}
 }
@@ -126,7 +123,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 
 - (CGFloat)rowHeight
 {
-	CGSize size = [cellTextView sizeThatFits:CGSizeMake(cellTextView.frame.size.width, INFINITY)];
+	CGSize size = [_cellTextView sizeThatFits:CGSizeMake(_cellTextView.frame.size.width, INFINITY)];
 	
 	if (size.height < kHeightRowLandscape)
 		return kHeightRowLandscape;
@@ -138,14 +135,14 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 {
 	[self.tableView beginUpdates];
 	{
-		CGRect frame = messageCell.frame;
-		messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, [self rowHeight]);
+		CGRect frame = _messageCell.frame;
+		_messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, [self rowHeight]);
 		self.tableView.rowHeight = [self rowHeight];
 	}
 	[self.tableView endUpdates];
 	
 	/* Update Clear button enable */
-	self.navigationItem.rightBarButtonItem.enabled = (cellTextView.text.length > 0);
+	self.navigationItem.rightBarButtonItem.enabled = (_cellTextView.text.length > 0);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -181,7 +178,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 			
 			cell.clipsToBounds = YES;
 			cell.contentView.autoresizesSubviews = YES;
-			[cell.contentView addSubview:cellTextView];
+			[cell.contentView addSubview:_cellTextView];
 		}
 		
 		self.messageCell = cell;
@@ -205,10 +202,6 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-	/*
-	 self.tableView.contentInset = UIEdgeInsetsZero;
-	 self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-	 */
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

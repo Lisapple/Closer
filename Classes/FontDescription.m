@@ -8,11 +8,6 @@
 
 #import "FontDescription.h"
 
-
 @implementation FontDescription
-
-@synthesize font;
-@synthesize textColor, shadowColor;
-@synthesize shadowOffset;
 
 @end

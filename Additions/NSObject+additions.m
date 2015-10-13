@@ -1,23 +1,38 @@
 //
-//  NSObject+additions.m
-//  Closer
+//  NSObject+addition.m
+//  Elsas Gone
 //
-//  Created by Max on 23/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Max on 7/23/14.
+//  Copyright (c) 2014 Lisacintosh. All rights reserved.
 //
 
 #import "NSObject+additions.h"
 
 @implementation _AnimationBlock
 
+- (instancetype)initWithIdentifier:(NSUInteger)identifier
+{
+	if ((self = [super init])) {
+		_identifier = identifier;
+	}
+	return self;
+}
+
+- (void)cancel
+{
+	_isCancelled = YES;
+	_repeats = NO;
+	_progression = 0.;
+}
+
 @end
 
 @interface _AnimationHelper ()
-{
-	CADisplayLink * _link;
-}
 
+@property (atomic, strong) CADisplayLink * link;
+@property (atomic, assign) NSUInteger nextIdentifier;
 @property (atomic, strong) NSMutableArray * animationBlocks;
+@property (atomic, strong) NSMutableDictionary * identifiers;
 
 @end
 
@@ -29,35 +44,62 @@
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		helper = [[_AnimationHelper alloc] init];
+		helper.slowdownFactor = 1.;
 	});
 	return helper;
 }
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init])) {
-		_link = [[UIScreen mainScreen] displayLinkWithTarget:self
+		self.link = [[UIScreen mainScreen] displayLinkWithTarget:self
 													selector:@selector(updateScreen:)];
-		[_link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-		_link.paused = YES;
-		_animationBlocks = [[NSMutableArray alloc] initWithCapacity:10];
+		[self.link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+		self.link.paused = YES;
+		
+		self.animationBlocks = [[NSMutableArray alloc] initWithCapacity:10];
+		self.identifiers = [[NSMutableDictionary alloc] initWithCapacity:10];
+		self.nextIdentifier = 1; // Keep identifier 0 for error
 	}
 	return self;
 }
 
-- (void)addAnimationWithUpdateBlock:(_AnimationBlockUpdateHandler)updateHandler
-						   duration:(NSTimeInterval)duration
-						 completion:(_AnimationBlockCompletionHandler)completion
+- (const _AnimationBlock *)addAnimationWithUpdateBlock:(_AnimationBlockUpdateHandler)updateHandler
+											  duration:(NSTimeInterval)duration
+											completion:(_AnimationBlockCompletionHandler)completion
+											   repeats:(BOOL)repeats
 {
-	_AnimationBlock * block = [[_AnimationBlock alloc] init];
+	return [self addAnimationWithUpdateBlock:updateHandler duration:duration completion:completion repeats:repeats identifier:0];
+}
+
+- (const _AnimationBlock *)addAnimationWithUpdateBlock:(_AnimationBlockUpdateHandler)updateHandler
+											  duration:(NSTimeInterval)duration
+											completion:(_AnimationBlockCompletionHandler)completion
+											   repeats:(BOOL)repeats
+											identifier:(NSUInteger)identifier
+{
+	NSUInteger newIdentifier = identifier;
+	if (identifier == 0) {
+		while (self.identifiers[@(self.nextIdentifier++)]) { } // Find a free to use ID
+		newIdentifier = self.nextIdentifier;
+	}
+	
+	_AnimationBlock * block = [[_AnimationBlock alloc] initWithIdentifier:newIdentifier];
 	block.updateBlock = updateHandler;
 	block.duration = duration;
 	block.completionBlock = completion;
 	block.progression = 0.;
-	[_animationBlocks addObject:block];
+	block.repeats = repeats;
+	@synchronized(self.animationBlocks) {
+		[self.animationBlocks addObject:block]; }
 	
-	if (_animationBlocks.count > 0)
+	if (self.animationBlocks.count > 0)
 		[self startUpdating];
+	
+	@synchronized(self.identifiers) {
+		self.identifiers[@(newIdentifier)] = block; }
+	
+	return block;
 }
 
 - (void)updateScreen:(CADisplayLink *)sender
@@ -65,22 +107,50 @@
 	static dispatch_queue_t queue;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		queue = dispatch_queue_create("com.lisacintosh.closer.update-screen", DISPATCH_QUEUE_CONCURRENT); });
+		queue = dispatch_queue_create("com.lisacintosh.elsas-gone.update-screen", DISPATCH_QUEUE_CONCURRENT); });
 	
-	for (_AnimationBlock * block in self.animationBlocks.mutableCopy) {
+	for (_AnimationBlock * block in self.animationBlocks.copy) {
 		
 		dispatch_async(queue, ^{
-			block.progression += _link.duration / block.duration;
 			
-			if (block.updateBlock)
-				dispatch_async(queue, ^{ block.updateBlock(MIN(block.progression, 1.)); });
-			
-			if (block.progression >= 1.) {
-				if (block.completionBlock)
-					dispatch_async(queue, ^{ block.completionBlock(); });
+			if (block.isCancelled) {
+				dispatch_async(queue, ^{
+					@synchronized(self.animationBlocks) {
+						[self.animationBlocks removeObjectIdenticalTo:block]; }
+					@synchronized(self.identifiers) {
+						[self.identifiers removeObjectForKey:@(block.identifier)]; }
+				});
 				
-				@synchronized(self.animationBlocks) {
-					[self.animationBlocks removeObjectIdenticalTo:block];
+			} else {
+				block.progression += self.link.duration / (block.duration * _slowdownFactor);
+				
+				if (block.updateBlock)
+					dispatch_async(dispatch_get_main_queue(), ^{ block.updateBlock(MIN(block.progression, 1.)); });
+				//dispatch_async(queue, ^{ block.updateBlock(MIN(block.progression, 1.)); });
+				
+				if (block.progression >= 1.) {
+					if (block.completionBlock)
+						dispatch_async(dispatch_get_main_queue(), ^{ block.completionBlock(); });
+					//dispatch_async(queue, ^{ block.completionBlock(); });
+					
+					if (block.repeats) {
+						block.progression = 0.;
+					} else {
+						dispatch_async(queue, ^{
+							@synchronized(self.animationBlocks) {
+								[self.animationBlocks removeObjectIdenticalTo:block]; }
+							@synchronized(self.identifiers) {
+								[self.identifiers removeObjectForKey:@(block.identifier)]; }
+						});
+						
+						/*
+						 dispatch_async(dispatch_get_main_queue(), ^{
+						 [self.animationBlocks removeObjectIdenticalTo:block];
+						 [self.identifiers removeObjectForKey:@(block.identifier)];
+						 });
+						 */
+					}
+					
 				}
 			}
 		});
@@ -92,18 +162,64 @@
 
 - (void)startUpdating
 {
-	_link.paused = NO;
+	self.link.paused = NO;
 }
 
 - (void)stopUpdating
 {
-	_link.paused = YES;
+	self.link.paused = YES;
+}
+
+- (_AnimationBlock *)animationBlockWithIdentifier:(NSUInteger)identifier
+{
+	return self.identifiers[@(identifier)];
+}
+
+- (void)cancelAnimationBlock:(_AnimationBlock *)block
+{
+	[block cancel];
+}
+
+- (BOOL)cancelAnimationBlockWithIdentifier:(NSUInteger)identifier
+{
+	_AnimationBlock * block = [self animationBlockWithIdentifier:identifier];
+	[self cancelAnimationBlock:block];
+	return (block != nil);
 }
 
 @end
 
 
 @implementation NSObject (addition)
+
++ (float)setSlowdownFactor:(float)factor
+{
+	float oldFactor = [_AnimationHelper defaultHelper].slowdownFactor;
+	if (factor <= 0.) return oldFactor;
+	
+	[_AnimationHelper defaultHelper].slowdownFactor = factor;
+	return oldFactor;
+}
+
++ (BOOL)cancelAnimationWithIdentifier:(NSUInteger)identifier
+{
+	return [[_AnimationHelper defaultHelper] cancelAnimationBlockWithIdentifier:identifier];
+}
+
++ (NSUInteger)animateWithDuration:(NSTimeInterval)duration animations:(void(^)(float progression))block
+{
+	return [self animateWithDuration:duration animations:block completion:NULL];
+}
+
++ (NSUInteger)animateWithDuration:(NSTimeInterval)duration animations:(void(^)(float progression))block completion:(void(^)(void))completion
+{
+	if (duration <= 0.) {
+		if (completion) completion();
+		return 0;
+	}
+	const _AnimationBlock * animationBlock = [[_AnimationHelper defaultHelper] addAnimationWithUpdateBlock:block duration:duration completion:completion repeats:NO];
+	return animationBlock.identifier;
+}
 
 + (void)animationBlock:(void(^)(float progression))block duration:(NSTimeInterval)duration
 {
@@ -112,16 +228,38 @@
 
 + (void)animationBlock:(void(^)(float progression))block duration:(NSTimeInterval)duration completion:(void(^)(void))completion
 {
-	if (duration <= 0.)
-		return ;
-	[[_AnimationHelper defaultHelper] addAnimationWithUpdateBlock:block duration:duration completion:completion];
+	[self animateWithDuration:duration animations:block completion:completion];
 }
 
-+ (void)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay
++ (BOOL)cancelPerformBlockWithIdentifier:(NSUInteger)identifier
 {
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
-	dispatch_after(popTime, dispatch_get_main_queue(), block);
+	return [[_AnimationHelper defaultHelper] cancelAnimationBlockWithIdentifier:identifier];
+}
+
+
++ (NSUInteger)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay
+{
+	return [self performBlock:block afterDelay:delay repeats:NO identifier:0];
+}
+
++ (NSUInteger)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay repeats:(BOOL)repeats
+{
+	return [self performBlock:block afterDelay:delay repeats:repeats identifier:0];
+}
+
++ (NSUInteger)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay identifier:(NSUInteger)identifier
+{
+	return [self performBlock:block afterDelay:delay repeats:NO identifier:identifier];
+}
+
++ (NSUInteger)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay repeats:(BOOL)repeats identifier:(NSUInteger)identifier
+{
+	const _AnimationBlock * animationBlock = [[_AnimationHelper defaultHelper] addAnimationWithUpdateBlock:NULL
+																								  duration:delay
+																								completion:block
+																								   repeats:repeats
+																								identifier:identifier];
+	return animationBlock.identifier;
 }
 
 @end
-

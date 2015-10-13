@@ -13,9 +13,9 @@
 - (NSUInteger)numberOfEventsMatchingPredicate:(NSPredicate *)predicate;
 
 - (NSUInteger)numberOfEventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar;
-- (NSArray *)eventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar;
+- (NSArray <EKEvent *> *)eventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar;
 
 - (NSUInteger)numberOfFutureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
-- (NSArray *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
+- (NSArray  <EKEvent *> *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
 
 @end

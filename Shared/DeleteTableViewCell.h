@@ -8,12 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface _InternalDeleteView : UIView
-
-@property (nonatomic, assign) BOOL selected;
-
-@end
-
 @interface DeleteTableViewCell : UITableViewCell
 
 @end

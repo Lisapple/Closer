@@ -13,22 +13,6 @@
 #import "TimerView.h"
 
 @interface TimerPageView : PageView <UIGestureRecognizerDelegate>
-{
-	IBOutlet TimerView * timerView;
-	
-	IBOutlet UIView * _contentView;
-	
-	IBOutlet UILabel * timeLabel, * descriptionLabel;
-	
-	IBOutlet UIButton * leftButton, * _tintedInfoButton /* For iOS 6, since tint color doesn't work for info button */;
-	IBOutlet UILabel * nameLabel;
-	
-	// Private
-	NSTimeInterval remainingSeconds, duration /* DUration of the current timer */;
-	NSDate * nextEndDate;
-	BOOL isFinished;
-	BOOL _loaded;
-}
 
 @property (nonatomic, strong) IBOutlet TimerView * timerView;
 

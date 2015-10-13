@@ -7,45 +7,54 @@
 //
 
 import WatchKit
-import Foundation
+import WatchConnectivity
 
+class SessionDelegate: NSObject, WCSessionDelegate {
+	
+	func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+		print(message)
+		if (message["update"] is Bool && (message["update"]! as! Bool) == true) {
+			InterfaceController.reload()
+		}
+		replyHandler(["result" : "OK"])
+	}
+}
 
-class InterfaceController: WKInterfaceController {
-
+class InterfaceController: WKInterfaceController, WCSessionDelegate {
+	
+	private static var sessionDelegate: SessionDelegate?
+	private static var once: dispatch_once_t = 0
+	
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
 		
-		InterfaceController.reload()
-		
-		NotificationHelper.sharedInstance().startObservingNotificationName("Darwin_CountdownDidUpdateNotification");
-		
-		NotificationHelper.sharedInstance().startObservingNotificationName("Darwin_CountdownDidSynchronizeNotification");
-		NSNotificationCenter.defaultCenter().addObserverForName("Darwin_CountdownDidSynchronizeNotification", object: nil, queue: nil) {
-			(notification) -> Void in InterfaceController.reload()
+		dispatch_once(&InterfaceController.once) { () -> Void in
+			let session = WCSession.defaultSession()
+			InterfaceController.sessionDelegate = SessionDelegate()
+			session.delegate = InterfaceController.sessionDelegate
+			session.activateSession()
 		}
+		
+		InterfaceController.reload()
     }
 	
 	class func reload() {
-		var names:[String] = []
-		var contexts:[[String : AnyObject]] = []
-		
-		let userDefaults:NSUserDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-		let countdowns = userDefaults.arrayForKey("countdowns")! as [[String : AnyObject]]
-		for countdown in countdowns {
-			if (countdown["type"] as UInt == 1 /* Timer */) {
-				names.append("TimerItem")
-			} else {
-				names.append("CountdownItem")
-			}
-			var context:[String : AnyObject] = countdown as [String : AnyObject]
-			context["style"] = ColorStyle.fromInt(countdown["style"] as Int).toString()
-			contexts.append(context)
+		var names = [String]()
+		var contexts = [Countdown]()
+		for countdown in Countdown.allCountdowns() {
+			names.append((countdown.type == .Timer) ? "TimerItem" : "CountdownItem")
+			contexts.append(countdown)
 		}
-		WKInterfaceController.reloadRootControllersWithNames(names, contexts: contexts)
+		if (contexts.count == 0) { // No countdowns, show error message
+			WKInterfaceController.reloadRootControllersWithNames(["NoCountdowns"], contexts: [])
+		} else {
+			WKInterfaceController.reloadRootControllersWithNames(names, contexts: contexts)
+		}
 	}
 
     override func willActivate() {
         super.willActivate()
+		InterfaceController.reload()
     }
 	
     override func didDeactivate() {

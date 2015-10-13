@@ -22,7 +22,7 @@
 /* SettingsViewController */
 "Settings" = "Réglages";
 "Edit All" = "Tout Modifier";
-"Closer & Closer %@\nCopyright © 2015, Lis@cintosh" = "Closer & Closer %@\nCopyright © 2015, Lis@cintosh";
+"Closer & Closer %@\nCopyright © %lu, Lis@cintosh" = "Closer & Closer %@\nCopyright © 2015, Lis@cintosh";
 "Name" = "Nom";
 "Date & Time" = "Date et Heure";
 "Message" = "Message";
@@ -105,6 +105,10 @@
 "Import from Calendar" = "Importer depuis Calendrier";
 "Export..." = "Exporter...";
 
+"Remove" = "Retirer";
+
+"UNDO_INSERT_COUNTDOWN_ACTION" = "Ajout";
+"UNDO_MOVE_COUNTDOWN_ACTION" = "Déplacement";
 "UNDO_DELETE_COUNTDOWN_ACTION" = "Suppression";
 
 /* ExportViewController */
@@ -183,7 +187,7 @@
 
 "New Timer" = "Nouveau Minuteur";
 "New Timer %i" = "Nouveau Minuteur %i";
-"%ld timers" = "%ld minuteurs";
+"%ld durations" = "%ld durées";
 "no timers" = "aucun minuteur";
 "No Durations" = "Aucun minuteur";
 "no durations" = "aucun durée";
@@ -221,8 +225,8 @@
 "Ask to Continue" = "Demander pour Continuer";
 "Ask" = "Demander";
 "None" = "Aucun";
-"For every timers" = "Pour chaque minuteur";
-"When all timers finished" = "À la fin de tous les minuteurs";
+"For every duration" = "Pour chaque minuteur";
+"When all durations finished" = "À la fin de tous les minuteurs";
 "An alert can be shown to ask you to continue the timer." = "Une alert peut s'afficher pour vous demander de continuer le minuteur";
 
 "Type";
@@ -236,8 +240,8 @@
 
 "Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods." = "Les décomptes permettent d'afficher le temps restant avant une date précise, les minuteurs permettent de mesurer des petites durées.";
 
-"Countdown finished!" = "Décompte fini!";
-"Timer finished!" = "Minuteur fini!";
+"Countdown finished!" = "Décompte fini";
+"Timer finished!" = "Minuteur fini";
 
 "More" = "Plus";
 

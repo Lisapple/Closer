@@ -10,8 +10,8 @@
 
 @interface EditViewController ()
 
-@property (nonatomic, strong) NSArray * allCountdowns;
-@property (nonatomic, strong) NSMutableArray * includedCountdowns, * notIncludedCountdowns;
+@property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
+@property (nonatomic, strong) NSMutableArray <Countdown *> * includedCountdowns, * notIncludedCountdowns;
 
 @end
 
@@ -22,25 +22,11 @@
 	[super viewDidLoad];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	
-	UIBarButtonItem * doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																					 target:self
-																					 action:@selector(done:)];
-	if (!TARGET_IS_IOS7_OR_LATER())
-		doneButtonItem.tintColor = [UIColor doneButtonColor];
-	
-	self.navigationItem.rightBarButtonItem = doneButtonItem;
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+																						   target:self
+																						   action:@selector(done:)];
 	
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-		self.tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        self.tableView.backgroundView = backgroundView;
-    }
-    
 	self.tableView.allowsSelectionDuringEditing = YES;
 	self.tableView.editing = YES;
     [self reloadData];
@@ -92,7 +78,7 @@
 - (void)removeCountdown:(Countdown *)countdown index:(NSInteger)index
 {
 	[[self.undoManager prepareWithInvocationTarget:self] insertCountdown:countdown atIndex:index];
-	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
+	[self.undoManager setActionName:NSLocalizedString(@"UNDO_INSERT_COUNTDOWN_ACTION", nil)];
 	
 	[Countdown removeCountdown:countdown];
 	/* Note: the tableView is automatically reloaded */
@@ -159,7 +145,7 @@
             cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
         }
     } else {
-        cell.detailTextLabel.text = [countdown.endDate description];
+        cell.detailTextLabel.text = countdown.endDate.description;
     }
     
     return cell;

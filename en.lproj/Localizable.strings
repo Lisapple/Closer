@@ -22,7 +22,7 @@
 /* SettingsViewController */
 "Settings";
 "Edit All";
-"Closer & Closer %@\nCopyright © 2015, Lis@cintosh";
+"Closer & Closer %@\nCopyright © %lu, Lis@cintosh";
 "Name";
 "Date & Time";
 "Message";
@@ -78,10 +78,10 @@
 "SECONDS_ZERO" = "seconds";
 
 /* Others */
-"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Countdown finished!";
+"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Countdown finished";
 "COUNTDOWN_FINISHED_MESSAGE %@" = "The countdown \"%@\" is finished.";
 
-"TIMER_FINISHED_DEFAULT_MESSAGE" = "Timer finished!";
+"TIMER_FINISHED_DEFAULT_MESSAGE" = "Timer finished";
 "TIMER_FINISHED_MESSAGE %@" = "The timer \"%@\" is finished.";
 
 /* Countdown */
@@ -104,6 +104,10 @@
 "Import from Calendar";
 "Export...";
 
+"Remove";
+
+"UNDO_INSERT_COUNTDOWN_ACTION" = "Countdown Adding";
+"UNDO_MOVE_COUNTDOWN_ACTION" = "Countdown Moving";
 "UNDO_DELETE_COUNTDOWN_ACTION" = "Countdown Deleting";
 
 /* ExportViewController */
@@ -184,7 +188,7 @@
 
 "New Timer";
 "New Timer %i";
-"%ld timers";
+"%ld durations";
 
 "Duration";
 "Durations";
@@ -218,8 +222,8 @@
 "Ask to Continue";
 "Ask";
 "None";
-"For every timers";
-"When all timers finished";
+"For every duration";
+"When all durations finished";
 "An alert can be shown to ask you to continue the timer.";
 
 "Type";
@@ -237,8 +241,8 @@
 
 "Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods.";
 
-"Countdown finished!";
-"Timer finished!";
+"Countdown finished!" = "Countdown finished";
+"Timer finished!" = "Timer finished";
 
 "More";
 

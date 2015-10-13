@@ -17,11 +17,6 @@
 @class Countdown;
 
 @interface CountdownPageView : PageView
-{
-@private
-	IBOutlet UIView * _contentView;
-	IBOutlet UIButton * _tintedInfoButton /* For iOS 6, since tint color doesn't work for info button */;
-}
 
 @property (nonatomic, strong) IBOutlet CCLabel * daysLabel, * hoursLabel, * minutesLabel, * secondsLabel;
 @property (nonatomic, strong) IBOutlet CCLabel * daysDescriptionLabel, * hoursDescriptionLabel, * minutesDescriptionLabel, * secondsDescriptionLabel;

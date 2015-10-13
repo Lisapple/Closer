@@ -14,30 +14,13 @@
 
 @implementation TypeViewController
 
-@synthesize tableView = _tableView;
-@synthesize countdown = _countdown;
-
 - (void)viewDidLoad
 {
 	self.title = NSLocalizedString(@"Type", nil);
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	
-	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    if (!TARGET_IS_IOS7_OR_LATER()) {
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-        _tableView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        
-        UIView * backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor groupedTableViewBackgroundColor];
-        _tableView.backgroundView = backgroundView;
-    }
 	_tableView.alwaysBounceVertical = YES;
-	
-	if (TARGET_IS_IOS7_OR_LATER())
-		self.view.tintColor = [UIColor blackColor];
 	
     [super viewDidLoad];
 }
@@ -52,8 +35,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	/* Two for "Countdown" and "Timer" */
-	return 2;
+	return 2; // "Countdown" and "Timer"
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -73,13 +55,10 @@
 	
 	switch (indexPath.row) {
 		case 1:
-			cell.textLabel.text = NSLocalizedString(@"Timer", nil);
-			break;
+			cell.textLabel.text = NSLocalizedString(@"Timer", nil); break;
 		default:
-			cell.textLabel.text = NSLocalizedString(@"Countdown", nil);
-			break;
+			cell.textLabel.text = NSLocalizedString(@"Countdown", nil); break;
 	}
-	
 	cell.accessoryType = (_countdown.type == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 	
 	return cell;

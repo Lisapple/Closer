@@ -1,98 +1,421 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="3737"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="8092"/>
     </dependencies>
     <scenes>
         <!--Timer-->
         <scene sceneID="Dv4-Dt-cge">
             <objects>
-                <controller identifier="TimerItem" title="Timer" id="P3y-OZ-n9y" customClass="TimerInterfaceController" customModule="Closer_WatchKit_Extension">
+                <controller identifier="TimerItem" title="Timer" id="P3y-OZ-n9y" customClass="TimerInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
-                        <imageView width="1" height="1" alignment="left" contentMode="center" id="EzX-Gb-enK"/>
-                        <button width="1" alignment="left" title="Pause" id="2Pc-Pw-Pto">
-                            <connections>
-                                <action selector="tooglePauseAction" destination="P3y-OZ-n9y" id="Gia-VR-y49"/>
-                            </connections>
-                        </button>
+                        <separator alignment="left" id="MBC-hE-esC">
+                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </separator>
+                        <group width="1" height="187" alignment="left" layout="vertical" id="FLU-cf-yDY">
+                            <items>
+                                <group width="1" alignment="left" id="7d4-tB-0hC">
+                                    <items>
+                                        <imageView width="74" height="74" alignment="left" id="jxL-n6-dz9"/>
+                                        <separator alignment="left" id="dwV-PI-wdx">
+                                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </separator>
+                                        <timer height="74" alignment="left" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="KUB-aE-1NY">
+                                            <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
+                                        </timer>
+                                    </items>
+                                </group>
+                                <label alignment="left" text="Next label" minimumScaleFactor="0.5" id="Gep-Vz-QQ2">
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                </label>
+                                <separator alignment="left" id="sva-oQ-etF">
+                                    <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </separator>
+                                <button width="1" alignment="left" title="Pause" id="2Pc-Pw-Pto">
+                                    <connections>
+                                        <action selector="tooglePauseAction" destination="P3y-OZ-n9y" id="Gia-VR-y49"/>
+                                    </connections>
+                                </button>
+                                <button width="1" alignment="left" title="Edit" id="HiT-UN-N9j">
+                                    <connections>
+                                        <action selector="editMenuAction" destination="P3y-OZ-n9y" id="5jk-pB-c8S"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
                     </items>
                     <connections>
-                        <outlet property="image" destination="EzX-Gb-enK" id="zIn-8Z-bCu"/>
+                        <outlet property="descriptionLabel" destination="Gep-Vz-QQ2" id="SnY-oc-GBX"/>
+                        <outlet property="imageView" destination="jxL-n6-dz9" id="xlk-bw-ccG"/>
+                        <outlet property="timerLabel" destination="KUB-aE-1NY" id="FYD-cr-Ejy"/>
                         <outlet property="toogleButton" destination="2Pc-Pw-Pto" id="1pi-dv-vXQ"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="278" y="297.5"/>
+            <point key="canvasLocation" x="278" y="315"/>
         </scene>
-        <!--Countdown-->
-        <scene sceneID="JZO-PS-Goh">
+        <!--EditInterface-->
+        <scene sceneID="pQz-uK-uSZ">
             <objects>
-                <controller identifier="CountdownItem" title="Countdown" id="Nfd-Sl-zfc" customClass="CountdownInterfaceController" customModule="Closer_WatchKit_Extension">
+                <controller identifier="EditInterface" hidesWhenLoading="NO" id="wR3-TY-05b" customClass="EditInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
-                        <imageView width="1" height="1" alignment="left" id="OW7-NF-RDE"/>
-                    </items>
-                    <connections>
-                        <outlet property="image" destination="OW7-NF-RDE" id="Byu-0c-5g9"/>
-                    </connections>
-                </controller>
-            </objects>
-            <point key="canvasLocation" x="486" y="298"/>
-        </scene>
-        <!--TimerDetails-->
-        <scene sceneID="3Du-5k-b9n">
-            <objects>
-                <controller identifier="TimerDetails" id="f5c-wY-SYf" customClass="TimerDetailsController" customModule="Closer_WatchKit_Extension">
-                    <items>
-                        <label width="1" alignment="left" text="Name" textAlignment="center" id="Kf4-g4-5ue"/>
-                        <table alignment="left" id="pUv-qO-QhH">
+                        <table alignment="left" id="8sC-hr-EL1">
                             <items>
-                                <tableRow identifier="TimerDurationRow" selectable="NO" id="6PG-mb-FcT" customClass="TimerDetailsRowController" customModule="Closer_WatchKit_Extension">
-                                    <group key="rootItem" width="1" alignment="left" id="jny-re-VAn">
+                                <tableRow identifier="TypeIdentifier" id="L8f-Fj-ooW" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" alignment="left" id="Fow-4c-VAh">
                                         <items>
-                                            <label height="1" alignment="left" text="Duration" id="YoZ-S1-RQ3"/>
+                                            <label height="1" alignment="left" verticalAlignment="center" text="Type" id="PIS-Fw-ocI"/>
+                                            <label height="1" alignment="right" verticalAlignment="center" text="Label" id="j1j-vs-X9L">
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </label>
                                         </items>
                                     </group>
                                     <connections>
-                                        <outlet property="label" destination="YoZ-S1-RQ3" id="tC3-75-zSJ"/>
+                                        <outlet property="detailsLabel" destination="j1j-vs-X9L" id="xK9-n4-Yyo"/>
+                                        <outlet property="titleLabel" destination="PIS-Fw-ocI" id="dL4-61-8JW"/>
+                                    </connections>
+                                </tableRow>
+                                <tableRow identifier="NameIdentifier" id="ZCn-hJ-Jtu" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" alignment="left" id="jyd-zC-b5C">
+                                        <items>
+                                            <label height="1" alignment="left" verticalAlignment="center" text="Name" id="SOJ-bm-NtB"/>
+                                            <label height="1" alignment="right" verticalAlignment="center" text="Label" numberOfLines="2" minimumScaleFactor="0.5" id="OYh-6J-Xoj">
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </label>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="detailsLabel" destination="OYh-6J-Xoj" id="y9N-il-bAu"/>
+                                        <outlet property="titleLabel" destination="SOJ-bm-NtB" id="9Y9-wg-51o"/>
+                                    </connections>
+                                </tableRow>
+                                <tableRow identifier="EndDateIdentifier" id="3sY-mV-zWz" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" height="0.0" alignment="left" layout="vertical" id="q0f-7o-0cb">
+                                        <items>
+                                            <label alignment="left" verticalAlignment="center" text="End date" id="8oZ-kQ-8jI"/>
+                                            <label alignment="left" verticalAlignment="center" text="Label" id="RkA-kn-juQ">
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </label>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="detailsLabel" destination="RkA-kn-juQ" id="cgE-bT-p0J"/>
+                                        <outlet property="titleLabel" destination="8oZ-kQ-8jI" id="oWo-2R-v05"/>
+                                    </connections>
+                                </tableRow>
+                                <tableRow identifier="MessageIdentifier" id="jbQ-am-smm" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" height="0.0" alignment="left" layout="vertical" id="MRJ-qB-O7d">
+                                        <items>
+                                            <label alignment="left" verticalAlignment="center" text="Message" id="5gX-as-2kt"/>
+                                            <label alignment="left" verticalAlignment="center" text="Label" numberOfLines="0" id="dRK-ta-L7q">
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </label>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="detailsLabel" destination="dRK-ta-L7q" id="mg8-SD-Lsx"/>
+                                        <outlet property="titleLabel" destination="5gX-as-2kt" id="s3d-KU-Bc7"/>
+                                    </connections>
+                                </tableRow>
+                                <tableRow identifier="DurationsIdentifier" id="Q79-hg-iSy" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" alignment="left" id="NKQ-aw-teR">
+                                        <items>
+                                            <label height="1" alignment="left" verticalAlignment="center" text="Durations" id="jpI-lb-6Wl"/>
+                                            <label height="1" alignment="right" verticalAlignment="center" text="Label" id="bwI-Te-YQY">
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </label>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="detailsLabel" destination="bwI-Te-YQY" id="YiR-fW-QPC"/>
+                                        <outlet property="titleLabel" destination="jpI-lb-6Wl" id="evG-hS-2Ij"/>
+                                    </connections>
+                                </tableRow>
+                                <tableRow identifier="StyleIdentifier" id="OrL-ev-yhn" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" alignment="left" id="gSf-oC-AQB">
+                                        <items>
+                                            <label height="1" alignment="left" verticalAlignment="center" text="Theme" id="AeQ-u9-PnL"/>
+                                            <label height="1" alignment="right" verticalAlignment="center" text="Label" id="4JT-pf-WGn">
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </label>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="detailsLabel" destination="4JT-pf-WGn" id="Or8-p4-zWG"/>
+                                        <outlet property="titleLabel" destination="AeQ-u9-PnL" id="07Q-Oc-cnf"/>
+                                    </connections>
+                                </tableRow>
+                                <tableRow identifier="DeleteIdentifier" id="MSi-en-pKE">
+                                    <group key="rootItem" width="1" alignment="left" id="GLt-oi-wyK">
+                                        <items>
+                                            <label height="1" alignment="center" verticalAlignment="center" text="Delete" textAlignment="center" id="XN0-b4-OqE">
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </label>
+                                        </items>
+                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </group>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                    <connections>
+                        <outlet property="tableView" destination="8sC-hr-EL1" id="7y7-i7-Lje"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="278" y="631.5"/>
+        </scene>
+        <!--ThemeInterface-->
+        <scene sceneID="TBr-El-Lsg">
+            <objects>
+                <controller identifier="ThemeInterface" hidesWhenLoading="NO" id="BqJ-w4-VLB" customClass="ThemeInterfaceController" customModule="Closer_Watch_Extension">
+                    <items>
+                        <table alignment="left" id="wy0-2f-xE1">
+                            <items>
+                                <tableRow identifier="ThemeIdentifier" id="yXq-fJ-Xum" customClass="ThemeRowController" customModule="Closer_WatchKit_Extension">
+                                    <group key="rootItem" width="1" alignment="left" id="hN8-zp-6Xl">
+                                        <items>
+                                            <imageView width="20" height="20" alignment="left" verticalAlignment="center" image="theme-row-accessory" contentMode="center" id="sZb-jx-LOR">
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </imageView>
+                                            <separator alignment="left" id="hzv-lT-L4j">
+                                                <color key="color" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </separator>
+                                            <label height="1" alignment="left" verticalAlignment="center" text="Label" id="di0-Ej-1H6"/>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="imageView" destination="sZb-jx-LOR" id="qpt-hb-rsv"/>
+                                        <outlet property="titleLabel" destination="di0-Ej-1H6" id="uet-EM-E8Q"/>
                                     </connections>
                                 </tableRow>
                             </items>
                         </table>
                     </items>
                     <connections>
-                        <outlet property="label" destination="Kf4-g4-5ue" id="utO-a5-iAt"/>
-                        <outlet property="table" destination="pUv-qO-QhH" id="odW-zd-2bz"/>
-                    </connections>
-                </controller>
-            </objects>
-            <point key="canvasLocation" x="278" y="557"/>
-        </scene>
-        <!--CountdownDetails-->
-        <scene sceneID="vZt-hP-OmP">
-            <objects>
-                <controller identifier="CountdownDetails" id="doU-Xk-g7G" customClass="CountdownDetailsController" customModule="Closer_WatchKit_Extension">
-                    <items>
-                        <label width="1" alignment="left" text="Name" textAlignment="center" id="4sb-e2-WfW"/>
-                        <separator alignment="left" id="0jg-9Z-IR1">
-                            <color key="color" white="0.10025185032894739" alpha="1" colorSpace="calibratedWhite"/>
-                        </separator>
-                        <label alignment="left" text="Date" id="E40-qH-IxR"/>
-                        <label alignment="left" text="Message" numberOfLines="0" id="ZCf-UI-Mgp"/>
-                    </items>
-                    <connections>
-                        <outlet property="date" destination="E40-qH-IxR" id="eM2-TM-UHe"/>
-                        <outlet property="label" destination="4sb-e2-WfW" id="Brv-ZW-iQX"/>
-                        <outlet property="message" destination="ZCf-UI-Mgp" id="PUD-ya-OZF"/>
+                        <outlet property="tableView" destination="wy0-2f-xE1" id="9Zc-H5-ZOf"/>
                     </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="486" y="557"/>
         </scene>
+        <!--DurationInterface-->
+        <scene sceneID="LCK-X4-0sO">
+            <objects>
+                <controller identifier="DurationInterface" hidesWhenLoading="NO" id="mIN-PD-52M" customClass="DurationInterfaceController" customModule="Closer_Watch_Extension">
+                    <items>
+                        <group width="1" alignment="left" layout="vertical" id="al3-cH-e4j">
+                            <items>
+                                <label alignment="center" text="Duration #" id="asC-UW-ytd"/>
+                                <picker width="1" height="40" alignment="left" focusStyle="stack" id="M7d-QY-NHg">
+                                    <connections>
+                                        <action selector="daysPickerAction:" destination="mIN-PD-52M" id="4dn-ru-9mK"/>
+                                    </connections>
+                                </picker>
+                                <picker width="1" height="40" alignment="left" focusStyle="stack" id="NeS-zF-scp">
+                                    <connections>
+                                        <action selector="hoursPickerAction:" destination="mIN-PD-52M" id="oJh-zx-wf7"/>
+                                    </connections>
+                                </picker>
+                                <picker width="1" height="40" alignment="left" focusStyle="stack" id="yvE-9J-1DK">
+                                    <connections>
+                                        <action selector="minutesPickerAction:" destination="mIN-PD-52M" id="6ox-52-0jA"/>
+                                    </connections>
+                                </picker>
+                                <picker width="1" height="40" alignment="left" focusStyle="stack" id="7Ol-or-oda">
+                                    <connections>
+                                        <action selector="secondsPickerAction:" destination="mIN-PD-52M" id="42a-4q-7oX"/>
+                                    </connections>
+                                </picker>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="daysPicker" destination="M7d-QY-NHg" id="2kP-CI-VNn"/>
+                        <outlet property="hoursPicker" destination="NeS-zF-scp" id="oa4-dO-OgS"/>
+                        <outlet property="label" destination="asC-UW-ytd" id="L5K-lc-xvR"/>
+                        <outlet property="minutesPicker" destination="yvE-9J-1DK" id="MsC-km-oij"/>
+                        <outlet property="secondsPicker" destination="7Ol-or-oda" id="Hcq-Uj-vDN"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="679" y="579.5"/>
+        </scene>
+        <!--Close-->
+        <scene sceneID="YjO-tW-KEw">
+            <objects>
+                <controller identifier="NoDurations" title="Close" hidesWhenLoading="NO" id="cLf-eh-o16">
+                    <items>
+                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="nK7-ZH-oab">
+                            <items>
+                                <label alignment="center" text="No durations" textAlignment="center" id="g0P-VD-Byg"/>
+                                <label alignment="center" text="Open Closer &amp; Closer on your iPhone and add new durations" textAlignment="center" numberOfLines="0" id="n5g-8A-b0C">
+                                    <color key="textColor" white="0.49820106907894735" alpha="1" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                </label>
+                            </items>
+                        </group>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="866" y="557"/>
+        </scene>
+        <!--Countdown-->
+        <scene sceneID="JZO-PS-Goh">
+            <objects>
+                <controller identifier="CountdownItem" title="Countdown" id="Nfd-Sl-zfc" customClass="CountdownInterfaceController" customModule="Closer_Watch_Extension">
+                    <items>
+                        <separator alignment="left" id="FOX-g1-lje">
+                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </separator>
+                        <group width="1" alignment="left" id="F0L-YK-DlW">
+                            <items>
+                                <imageView width="74" height="74" alignment="left" id="8iY-5N-HnJ"/>
+                                <separator alignment="left" id="KE7-E8-zGQ">
+                                    <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </separator>
+                                <timer height="74" alignment="left" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="N6V-Lt-cO0">
+                                    <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
+                                </timer>
+                            </items>
+                        </group>
+                        <label alignment="left" text="End date label" minimumScaleFactor="0.5" id="MQ6-z9-rhs">
+                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                        </label>
+                        <separator alignment="left" id="YJO-c0-j8k">
+                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </separator>
+                        <button width="1" alignment="left" title="Edit" id="Tp5-aA-UPG">
+                            <connections>
+                                <action selector="editMenuAction" destination="Nfd-Sl-zfc" id="fG6-lO-xrL"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="MQ6-z9-rhs" id="aIs-W5-llJ"/>
+                        <outlet property="imageView" destination="8iY-5N-HnJ" id="Pvr-Xh-PrL"/>
+                        <outlet property="timerLabel" destination="N6V-Lt-cO0" id="ZCh-R1-XQt"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="486" y="298"/>
+        </scene>
+        <!--DatePicker-->
+        <scene sceneID="yaT-pO-cKM">
+            <objects>
+                <controller identifier="DatePicker" hidesWhenLoading="NO" id="kGP-69-6gR" customClass="DatePickerInterfaceController" customModule="Closer_Watch_Extension">
+                    <items>
+                        <label alignment="left" text="Time" id="E5r-39-cE2"/>
+                        <group width="1" alignment="left" id="G5p-TS-CLj">
+                            <items>
+                                <picker width="0.28000000000000003" height="40" alignment="center" verticalAlignment="center" focusStyle="stack" id="7r2-l2-uWa">
+                                    <connections>
+                                        <action selector="hoursPickerAction:" destination="kGP-69-6gR" id="Jny-M2-db2"/>
+                                    </connections>
+                                </picker>
+                                <label alignment="center" verticalAlignment="center" text=":" id="z1p-2A-yfm"/>
+                                <picker width="0.28000000000000003" height="40" alignment="center" verticalAlignment="center" focusStyle="stack" id="qxy-WW-R0o">
+                                    <connections>
+                                        <action selector="minutesPickerAction:" destination="kGP-69-6gR" id="Eqv-YE-lV9"/>
+                                    </connections>
+                                </picker>
+                            </items>
+                        </group>
+                        <separator alignment="left" id="m4m-Cg-XXI">
+                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </separator>
+                        <label alignment="left" text="Date" id="dBV-WS-Jnh"/>
+                        <group width="1" alignment="left" id="byN-EX-DDa">
+                            <items>
+                                <picker width="0.28000000000000003" height="40" alignment="left" focusStyle="stack" id="lSY-cC-8Wb">
+                                    <connections>
+                                        <action selector="daysPickerAction:" destination="kGP-69-6gR" id="W5n-1f-a6G"/>
+                                    </connections>
+                                </picker>
+                                <picker width="0.44" height="40" alignment="left" focusStyle="stack" id="PfB-bj-DGk">
+                                    <connections>
+                                        <action selector="monthsPickerAction:" destination="kGP-69-6gR" id="QOt-9Z-W2H"/>
+                                    </connections>
+                                </picker>
+                                <picker width="0.28000000000000003" height="40" alignment="left" focusStyle="stack" id="dQX-xW-Q8F">
+                                    <connections>
+                                        <action selector="yearsPickerAction:" destination="kGP-69-6gR" id="Zbc-Og-rB4"/>
+                                    </connections>
+                                </picker>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="daysPicker" destination="lSY-cC-8Wb" id="XSF-HK-oGV"/>
+                        <outlet property="hoursPicker" destination="7r2-l2-uWa" id="yuU-zu-GVE"/>
+                        <outlet property="minutesPicker" destination="qxy-WW-R0o" id="19A-vr-InJ"/>
+                        <outlet property="monthsPicker" destination="PfB-bj-DGk" id="Efw-xS-UR7"/>
+                        <outlet property="yearsPicker" destination="dQX-xW-Q8F" id="UQz-Lp-Wga"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="679" y="298"/>
+        </scene>
+        <!--NoCountdowns-->
+        <scene sceneID="rTj-X1-LeV">
+            <objects>
+                <controller identifier="NoCountdowns" contentMode="center" id="V3H-ho-KhY" customClass="NoCountdownsInterfaceController" customModule="Closer_Watch_Extension">
+                    <items>
+                        <label width="1" height="20" alignment="left" id="aGW-wR-OI9"/>
+                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="tra-HV-D2x">
+                            <items>
+                                <label width="1" alignment="left" text="No countdowns" textAlignment="center" id="0Ij-W9-e4x"/>
+                                <button width="1" alignment="left" title="New" id="WQK-P9-vnw">
+                                    <connections>
+                                        <action selector="newAction:" destination="V3H-ho-KhY" id="Lyy-90-YdF"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="51" y="557"/>
+        </scene>
+        <!--Glance Interface Controller-->
+        <scene sceneID="5so-X5-HCr">
+            <objects>
+                <glanceController topTemplateType="body1Medium" bottomTemplateType="groupBody1Footer" id="Aqf-9n-ola" customClass="GlanceInterfaceController" customModule="Closer_Watch_Extension">
+                    <items>
+                        <label alignment="left" text="Closer &amp; Closer" id="OR2-bJ-PtH">
+                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        </label>
+                        <label alignment="left" text="Title" minimumScaleFactor="0.5" id="Da9-UV-tEt"/>
+                        <group alignment="left" id="C5u-oM-nrV">
+                            <items>
+                                <imageView width="74" height="74" alignment="left" id="BNc-ff-TdN"/>
+                                <separator alignment="left" id="Ols-dc-1gI">
+                                    <color key="color" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </separator>
+                                <timer height="74" alignment="left" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="Lsa-Rz-BmJ">
+                                    <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
+                                </timer>
+                            </items>
+                        </group>
+                        <label alignment="left" text="End date label" minimumScaleFactor="0.5" id="mET-hT-nv5"/>
+                        <label alignment="left" text="Next label" minimumScaleFactor="0.5" id="c0V-Vx-CDm"/>
+                    </items>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="mET-hT-nv5" id="LEc-w6-WlD"/>
+                        <outlet property="detailsLabel" destination="c0V-Vx-CDm" id="Yaa-NS-N1R"/>
+                        <outlet property="imageView" destination="BNc-ff-TdN" id="8hU-iI-2uC"/>
+                        <outlet property="timerLabel" destination="Lsa-Rz-BmJ" id="sg4-JA-3d0"/>
+                        <outlet property="titleLabel" destination="Da9-UV-tEt" id="K7D-au-PJL"/>
+                    </connections>
+                </glanceController>
+            </objects>
+            <point key="canvasLocation" x="51" y="43"/>
+        </scene>
         <!--Interface Controller-->
         <scene sceneID="Wqd-9I-Pmg">
             <objects>
-                <controller id="6R1-w5-qUn" customClass="InterfaceController" customModule="Closer_WatchKit_Extension"/>
+                <controller id="6R1-w5-qUn" customClass="InterfaceController" customModule="Closer_Watch_Extension"/>
             </objects>
             <point key="canvasLocation" x="51" y="298"/>
         </scene>

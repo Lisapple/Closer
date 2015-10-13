@@ -8,44 +8,37 @@
 
 #import <Foundation/Foundation.h>
 #import <NotificationCenter/NotificationCenter.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 
 extern NSString * const CountdownDidSynchronizeNotification;
 extern NSString * const CountdownDidUpdateNotification;
 
-typedef NS_OPTIONS(NSUInteger, CountdownType) {
+typedef NS_ENUM(NSUInteger, CountdownType) {
 	CountdownTypeCountdown = 0,
 	CountdownTypeTimer
 };
 
-typedef NS_OPTIONS(NSUInteger, PromptState) {
+typedef NS_ENUM(NSUInteger, CountdownStyle) {
+	CountdownStyleNight = 0, // Default
+	CountdownStyleDay,
+	CountdownStyleDawn,
+	CountdownStyleOasis,
+	CountdownStyleSpring,
+};
+
+typedef NS_ENUM(NSUInteger, PromptState) {
 	PromptStateNone = 0,
 	PromptStateEveryTimers,
 	PromptStateEnd
 };
 
 @interface Countdown : NSObject
-{
-	NSString * name;
-	NSDate * endDate;
-	NSString * message;
-	NSString * songID;
-	NSInteger style;
-	CountdownType type;
-	PromptState promptState;
-	NSInteger durationIndex;
-	
-	@private
-	NSString * identifier;
-	NSMutableArray * durations;
-	NSTimeInterval remaining;
-	BOOL active;
-}
 
 @property (nonatomic, strong) NSString * name;
 @property (nonatomic, strong) NSDate * endDate;
 @property (nonatomic, strong) NSString * message;
 @property (nonatomic, strong) NSString * songID;
-@property (nonatomic, assign) NSInteger style;
+@property (nonatomic, assign) CountdownStyle style;
 @property (nonatomic, assign) CountdownType type;
 @property (nonatomic, assign) PromptState promptState;
 @property (nonatomic, assign) NSInteger durationIndex;
@@ -61,7 +54,7 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 
 + (NSInteger)numberOfCountdowns;
 
-+ (NSArray *)allCountdowns;
++ (NSArray <Countdown *> *)allCountdowns;
 
 + (Countdown *)countdownWithIdentifier:(NSString *)identifier;
 
@@ -70,7 +63,7 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 
 + (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
 + (void)addCountdown:(Countdown *)countdown;
-+ (void)addCountdowns:(NSArray *)countdowns;
++ (void)addCountdowns:(NSArray <Countdown *> *)countdowns;
 
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 + (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2;
@@ -84,15 +77,14 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
  * @param none
  * @return an array of NSString with the localized name of all styles
  */
-+ (NSArray *)styles;
++ (NSArray <NSString *> *)styles;
 
 - (instancetype)initWithIdentifier:(NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
-- (instancetype)init UNAVAILABLE_ATTRIBUTE;
 
 #pragma mark Timer methods
 
 - (NSNumber *)currentDuration;
-- (NSArray *)durations;
+- (NSArray <NSNumber *> *)durations;
 - (void)addDuration:(NSNumber *)duration;
 - (void)addDurations:(NSArray *)durations;
 - (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index;
@@ -101,11 +93,13 @@ typedef NS_OPTIONS(NSUInteger, PromptState) {
 - (void)removeDurationAtIndex:(NSUInteger)index;
 - (void)resetDurationIndex;
 - (void)resume;
+- (void)resumeWithOffset:(NSTimeInterval)offset; // End date = remaining + offset
 - (void)pause;
 - (void)reset;
 
 #pragma mark Activation methods
 
+- (BOOL)isActive;
 - (void)activate; /* Make the countdown active to send local notification */
 - (void)desactivate;
 

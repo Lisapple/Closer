@@ -9,9 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface _DeleteButton : UIButton
-{
-	UILabel * _titleLabel;
-}
 
 @end
 
@@ -40,7 +37,7 @@
 
 static const NSTimeInterval kDoubleTapDelay = 0.35;
 
-typedef NS_OPTIONS(NSUInteger, PageViewStyle) {
+typedef NS_ENUM(NSUInteger, PageViewStyle) {
 	PageViewStyleNight = 0, // Default
 	PageViewStyleDay,
 	PageViewStyleDawn,
@@ -50,17 +47,8 @@ typedef NS_OPTIONS(NSUInteger, PageViewStyle) {
 
 /*** @abstract: abstract method used for CountdownPageView and TimerPageView ***/
 @interface PageView : UIView <UIScrollViewDelegate>
-{
-	UIButton * _deleteButton;
-	
-	Countdown * countdown;
-	CGPoint position;
-	
-	CGPoint _startLocation, _offset;
-	BOOL _shouldShowDeleteConfirmation;
-}
 
-@property (nonatomic, assign) BOOL showDeleteConfirmation;
+@property (nonatomic, assign) BOOL showDeleteConfirmation, isViewShown;
 @property (nonatomic, strong) Countdown * countdown;
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, weak) NSObject <PageViewDelegate> * delegate;
@@ -74,5 +62,9 @@ typedef NS_OPTIONS(NSUInteger, PageViewStyle) {
 - (void)update;
 - (void)hideDeleteConfirmation; // Always with an animation
 - (void)hideDeleteConfirmationWithAnimation:(BOOL)animated;
+
+// Subclasses must call these method with super
+- (void)viewWillShow:(BOOL)animated;
+- (void)viewDidHide:(BOOL)animated;
 
 @end

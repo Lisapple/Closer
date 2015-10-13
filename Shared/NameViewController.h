@@ -10,15 +10,9 @@
 
 
 @interface NameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
-{
-	IBOutlet UITextField * cellTextField;
-	IBOutlet UITableView * tableView;
-	
-	Countdown * countdown;
-}
 
-@property (nonatomic, strong) IBOutlet UITextField * cellTextField;
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
+@property (nonatomic, assign) IBOutlet UITextField * cellTextField;
+@property (nonatomic, assign) IBOutlet UITableView * tableView;
 
 @property (nonatomic, strong) Countdown * countdown;
 

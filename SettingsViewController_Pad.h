@@ -10,13 +10,6 @@
 
 @class Countdown;
 @interface SettingsViewController_Pad : UITableViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate>
-{
-	Countdown * countdown;
-	
-	@private
-	NSArray * cellTitles;
-	NSMutableArray * _viewControllers;
-}
 
 @property (nonatomic, strong) Countdown * countdown;
 

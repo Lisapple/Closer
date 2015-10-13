@@ -9,18 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <EventKit/EventKit.h>
 
-@interface ExportViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
-{
-	IBOutlet UITableView * tableView;
-	
-	NSArray * countdowns;
-	NSMutableArray * selectedCountdowns;
-}
+@interface ExportViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) IBOutlet UITableView * tableView;
 
-- (IBAction)export:(id)sender;
-
+- (IBAction)exportAction:(id)sender;
 - (void)updateUI;
 
 @end
