@@ -101,7 +101,7 @@ class TimerInterfaceController: WKInterfaceController {
 	
 	@IBAction func newMenuAction() {
 		let countdown = Countdown(name: nil, identifier: nil, type: .Timer, style: nil)
-		let options: EditOption = [ EditOption.ShowDoneButton, EditOption.ShowDeleteButton ]
+		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
 		presentControllerWithName("EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
 	}
 	
@@ -162,7 +162,7 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	@IBAction func editMenuAction() {
-		let options: EditOption = [ .ShowDoneButton, .ShowDeleteButton ]
+		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
 		presentControllerWithName("EditInterface", context: [ "countdown" : countdown!, "options" : options.rawValue ])
 		hasChange = true
 	}

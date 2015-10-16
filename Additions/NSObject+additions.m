@@ -10,6 +10,12 @@
 
 @implementation _AnimationBlock
 
+- (instancetype)init
+{
+	if ((self = [self initWithIdentifier:0])) { }
+	return self;
+}
+
 - (instancetype)initWithIdentifier:(NSUInteger)identifier
 {
 	if ((self = [super init])) {

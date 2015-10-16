@@ -157,9 +157,11 @@
 	NSString * action = message[@"action"];
 	
 #if TARGET_IPHONE_SIMULATOR
-	UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }]];
-	[self.window.rootViewController presentViewController:alert animated:YES completion:NULL];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }]];
+		[self.window.rootViewController presentViewController:alert animated:YES completion:NULL];
+	});
 #endif
 	
 	if /***/ ([action isEqualToString:@"pause"] && !countdown.isPaused) {
@@ -175,6 +177,10 @@
 		if (data) {
 			NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 			if (dictionary) {
+				if (!countdown) {
+					countdown = [[Countdown alloc] initWithIdentifier:nil];
+					[Countdown addCountdown:countdown];
+				}
 				if (dictionary[@"name"]) {
 					countdown.name = dictionary[@"name"]; }
 				if (dictionary[@"message"]) {

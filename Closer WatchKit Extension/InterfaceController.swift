@@ -12,7 +12,6 @@ import WatchConnectivity
 class SessionDelegate: NSObject, WCSessionDelegate {
 	
 	func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
-		print(message)
 		if (message["update"] is Bool && (message["update"]! as! Bool) == true) {
 			InterfaceController.reload()
 		}

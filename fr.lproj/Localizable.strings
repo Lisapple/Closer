@@ -22,7 +22,7 @@
 /* SettingsViewController */
 "Settings" = "Réglages";
 "Edit All" = "Tout Modifier";
-"Closer & Closer %@\nCopyright © %lu, Lis@cintosh" = "Closer & Closer %@\nCopyright © 2015, Lis@cintosh";
+"Closer & Closer %@\nCopyright © %lu, Lis@cintosh" = "Closer & Closer %@\nCopyright © %lu, Lis@cintosh";
 "Name" = "Nom";
 "Date & Time" = "Date et Heure";
 "Message" = "Message";
@@ -79,10 +79,10 @@
 "SECONDS_ZERO" = "seconde";
 
 /* Others */
-"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Décompte terminé!";
+"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" = "Décompte terminé";
 "COUNTDOWN_FINISHED_MESSAGE %@" = "Le décompte \"%@\" est fini.";
 
-"TIMER_FINISHED_DEFAULT_MESSAGE" = "Minuteur terminé!";
+"TIMER_FINISHED_DEFAULT_MESSAGE" = "Minuteur terminé";
 "TIMER_FINISHED_MESSAGE %@" = "Le minuteur \"%@\" est fini.";
 
 /* Countdown */
@@ -126,7 +126,7 @@
 "All countdowns have been added as event in the calendar app into the calendar named \"%@\"." = "Tous les décomptes ont été ajoutés comme des événements dans l'application Calendrier dans le calendrier nommé \"%@\"";
 
 /* ImportFromCalendarViewController */
-"Choose Events" = "Choississez\nles événements";
+"Choose Events" = "Choisissez\nles événements";
 "Import" = "Importer";
 "No Future Events" = "Pas d'événement futur";
 
@@ -189,8 +189,8 @@
 "New Timer %i" = "Nouveau Minuteur %i";
 "%ld durations" = "%ld durées";
 "no timers" = "aucun minuteur";
-"No Durations" = "Aucun minuteur";
-"no durations" = "aucun durée";
+"No Durations" = "Aucune durée";
+"no durations" = "aucune durée";
 "%d durations" = "%ld durées";
 
 "Duration" = "Durée";
@@ -226,8 +226,8 @@
 "Ask" = "Demander";
 "None" = "Aucun";
 "For every duration" = "Pour chaque minuteur";
-"When all durations finished" = "À la fin de tous les minuteurs";
-"An alert can be shown to ask you to continue the timer." = "Une alert peut s'afficher pour vous demander de continuer le minuteur";
+"When all durations finished" = "À la fin de tous les durées";
+"An alert can be shown to ask you to continue the timer." = "Une alerte peut s'afficher pour vous demander de continuer le minuteur";
 
 "Type";
 "Timer" = "Minuteur";
