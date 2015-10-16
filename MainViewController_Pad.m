@@ -527,7 +527,7 @@
 	int numberOfColumns = 2;
 	
 	CGSize pageSize = CGSizeMake(384., 480.);
-	if (UIInterfaceOrientationIsLandscape(self.currentOrientation))
+	if (self.currentOrientation & UIInterfaceOrientationMaskLandscape)
 		pageSize = CGSizeMake(341., 704.);
 	
 	int i = index % (numberOfRows * numberOfColumns);
@@ -581,7 +581,7 @@
 		NSDebugLog(@"Reloading page at index: %ld", (long)index);
 		
 		CGSize pageSize = CGSizeMake(384., 480.);
-		if (UIInterfaceOrientationIsLandscape(self.currentOrientation))
+		if (self.currentOrientation & UIInterfaceOrientationMaskLandscape)
 			pageSize = CGSizeMake(341., 704.);
 		
 		CGRect rect = CGRectMake(0., 0., pageSize.width, pageSize.height);

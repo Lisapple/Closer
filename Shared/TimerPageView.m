@@ -130,14 +130,14 @@
 	_nameLabel.textColor = textColor;
 }
 
-- (void)setStyle:(PageViewStyle)aStyle
+- (void)setStyle:(CountdownStyle)aStyle
 {
 	super.style = aStyle;
 	
-	_contentView.backgroundColor = [[UIColor backgroundColorForPageStyle:aStyle] colorWithAlphaComponent:0.7];
-	[self setTextColor:[UIColor textColorForPageStyle:aStyle]];
+	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
+	[self setTextColor:[UIColor textColorForStyle:aStyle]];
 	
-	self.infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
+	self.infoButton.tintColor = [UIColor textColorForStyle:aStyle];
 	[self updateLeftButton];
 }
 
@@ -165,7 +165,7 @@
 {
 	_leftButton.imageView.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
 	NSString * name = (self.countdown.isPaused) ? @"reset-button" : @"pause-button";
-	_leftButton.tintColor = [UIColor textColorForPageStyle:self.countdown.style];
+	_leftButton.tintColor = [UIColor textColorForStyle:self.countdown.style];
 	[_leftButton setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
 }
 
@@ -248,15 +248,11 @@
 	
 	if (self.countdown.isPaused) { // Paused
 		[_timerView cancelProgressionAnimation];
-		//NSLog(@"[paused]");
-		
 	} else { // Not paused
 		
 		if (self.countdown.endDate) { // Playing
 			_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
 			if (_remainingSeconds >= 0. && _duration > 1) { // Remaining time
-				
-				//NSLog(@"[playing : remaining time]");
 				
 				[self disableIdleTimerIfNeeded];
 				[self blinkIfNeeded];
@@ -270,8 +266,6 @@
 				
 			} else if (_isFinished) { // Timer finished
 				
-				//NSLog(@"[timer finished]");
-				
 				// Start next duration
 				self.countdown.durationIndex++;
 				_duration = self.countdown.currentDuration.doubleValue;
@@ -283,9 +277,6 @@
 			} else if (self.countdown.promptState == PromptStateEveryTimers ||
 					   (self.countdown.promptState == PromptStateEnd && self.countdown.durationIndex == (self.countdown.durations.count - 1))) { // Finished and waiting the user to continue
 				// Pause the timer and wait for the used to tap on "Continue"
-				
-				//NSLog(@"[waiting the user to continue to next duration]");
-				
 				[self pause];
 				[_timerView cancelProgressionAnimation];
 				_timerView.progression = 0.;
@@ -299,8 +290,6 @@
 			
 		} else { // Waiting for user to continue
 			_timeLabel.text = NSLocalizedString(@"Continue", nil);
-			
-			//NSLog(@"[waiting the user to continue]");
 		}
 	}
 }

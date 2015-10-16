@@ -170,7 +170,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	if (_pages.count) {
 		_pageControl.numberOfPages = _pages.count;
 		PageView * pageView = _pages[_pageControl.currentPage];
-		UIColor * textColor = [UIColor textColorForPageStyle:pageView.style];
+		UIColor * textColor = [UIColor textColorForStyle:pageView.style];
 		_pageControl.currentPageIndicatorTintColor = textColor;
 		_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
 	}
@@ -401,7 +401,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		[pageView hideDeleteConfirmation];
 		
 	} else {
-		UIColor * textColor = [UIColor textColorForPageStyle:pageView.style];
+		UIColor * textColor = [UIColor textColorForStyle:pageView.style];
 		_pageControl.currentPageIndicatorTintColor = textColor;
 		_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
 		
@@ -455,7 +455,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	if (_pages.count) {
 		PageView * pageView = _pages[_pageControl.currentPage];
-		return (pageView.style == PageViewStyleDay || pageView.style == PageViewStyleSpring) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+		return (pageView.style == CountdownStyleDay || pageView.style == CountdownStyleSpring) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 	}
 	return UIStatusBarStyleDefault;
 }

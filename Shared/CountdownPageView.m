@@ -93,12 +93,12 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 	return [NSString stringWithFormat:((addZero && value < 10) ? @"0%ld" : @"%ld"), (long)value];
 }
 
-- (void)setStyle:(PageViewStyle)aStyle
+- (void)setStyle:(CountdownStyle)aStyle
 {
 	super.style = aStyle;
 	
-	_contentView.backgroundColor = [[UIColor backgroundColorForPageStyle:aStyle] colorWithAlphaComponent:0.7];
-	[self setTextColor:[UIColor textColorForPageStyle:aStyle]];
+	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
+	[self setTextColor:[UIColor textColorForStyle:aStyle]];
 }
 
 - (void)setTextColor:(UIColor *)textColor
