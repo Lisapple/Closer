@@ -8,6 +8,8 @@
 
 #import "CloserAppDelegate_Phone.h"
 #import "MainViewController_Phone.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 #import "Countdown.h"
 #import "Countdown+addition.h"
@@ -27,6 +29,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[Fabric with:@[ Crashlytics.class ]];
+	
 	if ([WCSession isSupported]) {
 		WCSession * session = [WCSession defaultSession];
 		session.delegate = self;
@@ -197,7 +201,7 @@
 					[countdown addDurations:dictionary[@"durations"]];
 				}
 				if (dictionary[@"durationIndex"]) {
-					countdown.durationIndex = dictionary[@"durationIndex"]; }
+					countdown.durationIndex = [dictionary[@"durationIndex"] integerValue]; }
 			}
 		} else {
 			NSString * identifier = message[@"lastSelectedCountdownIdentifier"];

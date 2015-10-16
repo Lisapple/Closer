@@ -22,10 +22,6 @@
 	[super viewDidLoad];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																						   target:self
-																						   action:@selector(done:)];
-	
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	self.tableView.allowsSelectionDuringEditing = YES;
 	self.tableView.editing = YES;
@@ -169,7 +165,7 @@
         if (TARGET_IS_IOS8_OR_LATER) {
             countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
         }
-        [self removeCountdown:countdown index:index];
+        [self removeCountdown:countdown index:indexPath.row];
         // @TODO: animated the row deletion
 	}
 }

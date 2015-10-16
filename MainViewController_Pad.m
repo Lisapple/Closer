@@ -747,12 +747,16 @@
 	if (object == _pageControl && [keyPath isEqualToString:@"currentPage"]) {
 		
 		NSUInteger oldPage = [change[NSKeyValueChangeOldKey] integerValue];
-		NSArray <PageView *> * pages = [_pageViews subarrayWithRange:NSMakeRange(MIN(_pageViews.count, oldPage * 4), MIN(_pageViews.count, oldPage + 1 * 4))];
+		NSUInteger location = MIN(_pageViews.count - 1, oldPage * 4);
+		NSUInteger length = MIN(_pageViews.count - 1 - location, 4);
+		NSArray <PageView *> * pages = [_pageViews subarrayWithRange:NSMakeRange(location, length)];
 		for (PageView * pageView in pages) {
 			[pageView viewDidHide:YES]; }
 		
 		NSUInteger currentPage = [change[NSKeyValueChangeNewKey] integerValue];
-		pages = [_pageViews subarrayWithRange:NSMakeRange(MIN(_pageViews.count, currentPage * 4), MIN(_pageViews.count, currentPage + 1 * 4))];
+		location = MIN(_pageViews.count - 1, currentPage * 4);
+		length = MIN(_pageViews.count - 1 - location, 4);
+		pages = [_pageViews subarrayWithRange:NSMakeRange(location, length)];
 		for (PageView * pageView in pages) {
 			[pageView viewWillShow:YES]; }
 	}

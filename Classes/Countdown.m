@@ -149,10 +149,13 @@ static NSMutableArray * _countdowns = nil;
 						   forKey:@"countdowns"];
 		
 		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-		NSUInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
-		Countdown * countdown = _countdowns[MIN(_countdowns.count - 1, index)];
-		[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
-		[sharedDefaults synchronize];
+		NSInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
+		Countdown * countdown = _countdowns.firstObject;
+		if (0 <= index && index < _countdowns.count) {
+			Countdown * countdown = _countdowns[index];
+			[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
+			[sharedDefaults synchronize];
+		}
 		
 		if (NSClassFromString(@"WCSession") && [WCSession isSupported]) {
 			NSDictionary * context = @{ @"countdowns" : [includedCountdowns valueForKeyPath:@"JSONDictionary"], @"selectedIdentifier": countdown.identifier };
