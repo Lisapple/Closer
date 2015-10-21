@@ -30,10 +30,10 @@
 "Theme" = "Thème";
 "No date" = "Aucune Date";
 
-"Do you really want to delete this countdown?" = "Voulez-vous vraiment supprimer ce décompte?";
+"Do you really want to delete this countdown?" = "Voulez-vous vraiment supprimer ce décompte ?";
 "Delete Countdown" = "Supprimer Décompte";
 
-"More information?" = "Plus d'informations?";
+"More information?" = "Plus d'informations ?";
 "Cancel" = "Annuler";
 "Feedback & Support" = "Retour d'expérience";
 "Send me an e-mail" = "M'envoyer un mail";
@@ -86,11 +86,11 @@
 "TIMER_FINISHED_MESSAGE %@" = "Le minuteur \"%@\" est fini.";
 
 /* Countdown */
-"ERROR_ALERT_TITLE" = "Erreur!";
-"READING_ERROR_ALERT_TITLE" = "Erreur de lecture!";
+"ERROR_ALERT_TITLE" = "Erreur !";
+"READING_ERROR_ALERT_TITLE" = "Erreur de lecture !";
 "READING_ERROR_ALERT_MESSAGE" = "Une erreur s'est produite, un fichier doit être corrompu. Vous devriez supprimer l'application et la réinstaller.";
 
-"WRITING_ERROR_ALERT_TITLE" = "Erreur d'écriture!";
+"WRITING_ERROR_ALERT_TITLE" = "Erreur d'écriture !";
 "WRITING_ERROR_ALERT_MESSAGE %@" = "Une erreur s'est produite lorsque l'application a voulu écrire dans un fichier. Vous devriez vérifier l'espace disponible sur votre %@ ou le redémarrer.";
 
 "PAGE_STYLE_NIGHT" = "Nuit";
@@ -122,7 +122,7 @@
 " and one more" = " et un de plus";
 " and %i more" = " et %i de plus";
 "You can retreive the export file as \"%@.%@\" into iTunes Sharing." = "Vous pouvez récupérer le fichier d'export nommé \"%@.%@\" dans iTunes Sharing";
-"Export Succeed!" = "Exports Réussi!";
+"Export Succeed!" = "Exports Réussi !";
 "All countdowns have been added as event in the calendar app into the calendar named \"%@\"." = "Tous les décomptes ont été ajoutés comme des événements dans l'application Calendrier dans le calendrier nommé \"%@\"";
 
 /* ImportFromCalendarViewController */
@@ -144,7 +144,7 @@
 /* ImportFromWebsiteViewController_Pad */
 "Import" = "Importer";
 "Paste" = "Coller";
-"Do you want to use\n %@ and %@\nas passwords to import?" = "Voulez-vous utiliser\n %@ et %@\ncomme mots de passe?";
+"Do you want to use\n %@ and %@\nas passwords to import?" = "Voulez-vous utiliser\n %@ et %@\ncomme mots de passe ?";
 "Import" = "Importer";
 
 "No Countdowns found" = "Aucun décompte trouvé";
@@ -160,19 +160,19 @@
 "Delete some countdowns and retry to import these event." = "Supprimez quelques décomptes et réessayez l'import de ces derniers.";
 
 /* ExportViewController */
-"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?" = "Voulez-vous exporter les décomptes:\nau format iCalendar dans iTunes Sharing,\nvers l'application calendrier de votre %@\nou vers Lisacintosh.com pour les afficher en ligne?";
-"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?" = "Voulez-vous exporter les décomptes:\nau format iCalendar dans iTunes Sharing,\nvers l'application calendrier de votre %@?";
+"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?" = "Voulez-vous exporter les décomptes:\nau format iCalendar dans iTunes Sharing,\nvers l'application calendrier de votre %@\nou vers Lisacintosh.com pour les afficher en ligne ?";
+"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?" = "Voulez-vous exporter les décomptes:\nau format iCalendar dans iTunes Sharing,\nvers l'application calendrier de votre %@ ?";
 "Export to website" = "Exporter vers le site.";
 "No Countdowns" = "Aucun Décompte";
 
 /* ExportToWebsiteViewController */
-"Error!" = "Erreur!";
+"Error!" = "Erreur !";
 "Exported to Website" = "Exporté sur le site";
 "Show on Safari" = "Afficher dans Safari";
 
 /* EditAllCountdownViewController */
 "Import from Calendar" = "Importer depuis le calendrier";
-"Access Denied!" = "Accès refusé!";
+"Access Denied!" = "Accès refusé !";
 "Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings." = "Closer & Closer n'a pas accès aux événements du calendrier. Vérifiez les réglages de confidentialité dans les réglages de votre %@";
 
 "Import with Passwords" = "Importer avec des codes";
@@ -235,7 +235,7 @@
 
 "Export Countdowns..." = "Exporter les Décomptes...";
 
-"Do you really want to delete this timer?" = "Voulez-vous vraiment supprimer ce minuteur?";
+"Do you really want to delete this timer?" = "Voulez-vous vraiment supprimer ce minuteur ?";
 "Delete Timer" = "Supprimer le Minuteur";
 
 "Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods." = "Les décomptes permettent d'afficher le temps restant avant une date précise, les minuteurs permettent de mesurer des petites durées.";
