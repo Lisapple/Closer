@@ -18,6 +18,7 @@ NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotificati
 @interface Countdown ()
 
 @property (nonatomic, strong) NSMutableArray <NSNumber *> * durations;
+@property (nonatomic, strong) NSMutableArray <NSString *> * names;
 @property (nonatomic, assign) NSTimeInterval remaining;
 @property (nonatomic, assign) BOOL active;
 
@@ -91,7 +92,8 @@ static NSMutableArray * _countdowns = nil;
 				aCountdown.message = dictionary[@"message"];
 			} else {
 				NSArray * durations = dictionary[@"durations"];
-				if (durations) [aCountdown addDurations:durations];
+				NSArray * names = dictionary[@"names"];
+				if (durations) [aCountdown addDurations:durations withNames:names];
 				aCountdown.durationIndex = [dictionary[@"durationIndex"] integerValue];
 				aCountdown.promptState = [dictionary[@"prompt"] integerValue];
 			}
@@ -152,12 +154,12 @@ static NSMutableArray * _countdowns = nil;
 		NSInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
 		Countdown * countdown = _countdowns.firstObject;
 		if (0 <= index && index < _countdowns.count) {
-			Countdown * countdown = _countdowns[index];
+			countdown = _countdowns[index];
 			[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
 			[sharedDefaults synchronize];
 		}
 		
-		if (NSClassFromString(@"WCSession") && [WCSession isSupported]) {
+		if (NSClassFromString(@"WCSession") && [WCSession isSupported] && countdown.identifier) {
 			NSDictionary * context = @{ @"countdowns" : [includedCountdowns valueForKeyPath:@"JSONDictionary"], @"selectedIdentifier": countdown.identifier };
 			NSError * error = nil;
 			BOOL success = [[WCSession defaultSession] updateApplicationContext:context error:&error];
@@ -375,7 +377,8 @@ static NSMutableArray * _countdowns = nil;
 		if (self.endDate) dictionary[@"endDate"] = self.endDate;
 		if (self.message) dictionary[@"message"] = self.message;
 	} else {
-		if (self.durations) dictionary[@"durations"] = self.durations;
+		dictionary[@"durations"] = self.durations;
+		dictionary[@"names"] = self.names;
 		dictionary[@"durationIndex"] = @(self.durationIndex);
 		
 		if (self.endDate) dictionary[@"endDate"] = self.endDate;
@@ -399,7 +402,8 @@ static NSMutableArray * _countdowns = nil;
 	if (self.type == CountdownTypeCountdown) {
 		if (self.message) dictionary[@"message"] = self.message;
 	} else {
-		if (self.durations) dictionary[@"durations"] = self.durations;
+		dictionary[@"durations"] = self.durations;
+		dictionary[@"names"] = self.names;
 		dictionary[@"durationIndex"] = @(self.durationIndex);
 	}
 	
@@ -436,6 +440,9 @@ static NSMutableArray * _countdowns = nil;
 		_style = 0;
 		_type = CountdownTypeCountdown;
         _notificationCenter = YES;
+		
+		_durations = [[NSMutableArray alloc] initWithCapacity:5];
+		_names = [[NSMutableArray alloc] initWithCapacity:5];
 		
 		_identifier = anIdentifier;
 		
@@ -536,25 +543,39 @@ static NSMutableArray * _countdowns = nil;
 	return _durations;
 }
 
-- (void)addDuration:(NSNumber *)duration
+- (NSArray *)names
 {
-	if (!_durations)
-		_durations = [[NSMutableArray alloc] initWithCapacity:5];
-	
+	return _names;
+}
+
+- (void)addDuration:(NSNumber * _Nonnull)duration withName:(NSString * _Nullable)name
+{
 	[_durations addObject:duration];
+	name = (name) ?: @"";
+	[_names addObject:name];
 }
 
-- (void)addDurations:(NSArray *)someDurations
+- (void)addDurations:(NSArray * _Nonnull)durations withNames:(NSArray <NSString *> * _Nullable)names
 {
-	if (!_durations)
-		_durations = [[NSMutableArray alloc] initWithCapacity:5];
-	
-	[_durations addObjectsFromArray:someDurations];
+	NSAssert2((names && durations.count == names.count) || !names, @"The number of durations (%lu) must be the same as names (%lu)", durations.count, names.count);
+	[_durations addObjectsFromArray:durations];
+	if (names) {
+		[_names addObjectsFromArray:names];
+	} else {
+		for (int _ = 0; _ < durations.count; ++_) {
+			[_names addObject:@""];
+		}
+	}
 }
 
-- (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index
+- (void)setDuration:(NSNumber * _Nonnull)duration atIndex:(NSInteger)index
 {
 	_durations[index] = duration;
+}
+
+- (void)setDurationName:(NSString * _Nonnull)name atIndex:(NSInteger)index
+{
+	_names[index] = name;
 }
 
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex
@@ -563,17 +584,23 @@ static NSMutableArray * _countdowns = nil;
 		NSNumber * duration = _durations[fromIndex];
 		[_durations removeObjectAtIndex:fromIndex];
 		[_durations insertObject:duration atIndex:toIndex];
+		
+		NSString * name = _names[fromIndex];
+		[_names removeObjectAtIndex:fromIndex];
+		[_names insertObject:name atIndex:toIndex];
 	}
 }
 
 - (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2
 {
 	[_durations exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+	[_names exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
 - (void)removeDurationAtIndex:(NSUInteger)index
 {
 	[_durations removeObjectAtIndex:index];
+	[_names removeObjectAtIndex:index];
 }
 
 - (void)resetDurationIndex

@@ -11,10 +11,11 @@
 #import "DurationPickerTableViewCell.h"
 
 
-@interface DurationPickerViewController ()
+@interface DurationPickerViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) NSArray <NSString *> * cellsTitle;
 @property (nonatomic, strong) NSMutableArray <DurationPickerView *> * durationPickers;
+@property (nonatomic, strong) UITextField * cellTextField;
 
 @end
 
@@ -29,10 +30,31 @@
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	_tableView.alwaysBounceVertical = YES;
-	_tableView.rowHeight = 82.;
+	
+	_cellTextField = [[UITextField alloc] init];
+	_cellTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+	_cellTextField.delegate = self;
+	_cellTextField.placeholder = NSLocalizedString(@"Name", nil);
+	_cellTextField.text = _countdown.names[_durationIndex];
+	_cellTextField.returnKeyType = UIReturnKeyDone;
 	
 	_cellsTitle = @[NSLocalizedString(@"Days", nil), NSLocalizedString(@"Hours", nil), NSLocalizedString(@"Minutes", nil), NSLocalizedString(@"Seconds", nil)];
 	_durationPickers = [[NSMutableArray alloc] initWithCapacity:4];
+	
+	[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
+													  object:nil queue:nil
+												  usingBlock:^(NSNotification * _Nonnull note)
+	 {
+		 CGRect keyboardFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+		 self.tableView.contentInset = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, keyboardFrame.size.height, 0);
+		 self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
+	 }];
+	[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification
+													  object:nil queue:nil
+												  usingBlock:^(NSNotification * _Nonnull note)
+	 {
+		 self.tableView.contentInset = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, 0, 0);
+		 self.tableView.scrollIndicatorInsets = self.tableView.contentInset; }];
 }
 
 #pragma mark -
@@ -40,8 +62,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	/* Four for "Days", "Hours" "Minutes" and "Seconds" */
-	return 4;
+	return 1 /* name field */ + _cellsTitle.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -51,34 +72,62 @@
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString * cellIdentifier = @"DurationCellID";
-	
-	DurationPickerTableViewCell * cell = (DurationPickerTableViewCell *)[_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
-		cell = [[DurationPickerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		DurationPickerView * pickerView = cell.pickerView;
-		pickerView.delegate = self;
-		pickerView.dataSource = self;
+	if (indexPath.section == 0) { // Name field
+		static NSString * nameCellIdentifier = @"NameCellID";
 		
-		if ([_durationPickers containsObject:pickerView])
-			_durationPickers[indexPath.section] = pickerView;
-		else
-			[_durationPickers addObject:pickerView];
+		UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:nameCellIdentifier];
+		if (!cell) {
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nameCellIdentifier];
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
+			
+			[cell.contentView addSubview:_cellTextField];
+			_cellTextField.translatesAutoresizingMaskIntoConstraints = NO;
+			
+			NSMutableArray * constraints = [[NSMutableArray alloc] initWithCapacity:4];
+			NSDictionary * views = @{ @"textField" : _cellTextField };
+			[constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[textField]-|"
+																					 options:NSLayoutFormatAlignAllCenterX
+																					 metrics:nil views:views]];
+			[constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[textField]-|"
+																					 options:NSLayoutFormatAlignAllCenterY
+																					 metrics:nil views:views]];
+			[cell.contentView addConstraints:constraints];
+		}
+		return cell;
 		
-		[pickerView reloadData];
-		
-		long seconds = self.countdown.durations[_durationIndex].longValue;
-		long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
-		long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
-		long minutes = seconds / 60; seconds -= minutes * 60;
-		pickerView.selectedIndex = (indexPath.section == 0) ? days : ((indexPath.section == 1) ? hours : ((indexPath.section == 2) ? minutes : seconds));
+	} else { // Duration picker
+		NSUInteger newSection = indexPath.section - 1;
+		static NSString * cellIdentifier = @"DurationCellID";
+		DurationPickerTableViewCell * cell = (DurationPickerTableViewCell *)[_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		if (!cell) {
+			cell = [[DurationPickerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
+			DurationPickerView * pickerView = cell.pickerView;
+			pickerView.delegate = self;
+			pickerView.dataSource = self;
+			
+			if ([_durationPickers containsObject:pickerView])
+				_durationPickers[newSection] = pickerView;
+			else
+				[_durationPickers addObject:pickerView];
+			
+			[pickerView reloadData];
+			
+			long seconds = self.countdown.durations[_durationIndex].longValue;
+			long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
+			long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
+			long minutes = seconds / 60; seconds -= minutes * 60;
+			pickerView.selectedIndex = ((long []) {days, hours, minutes, seconds})[newSection];
+		}
+		cell.label.text = _cellsTitle[newSection];
+		return cell;
 	}
-	
-	cell.label.text = _cellsTitle[indexPath.section];
-	
-	return cell;
+	return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return (indexPath.section == 0) ? 44. : 82.;
 }
 
 #pragma mark - Table view delegate
@@ -86,6 +135,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - Text field delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	[textField resignFirstResponder];
+	return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+	[self.countdown setDurationName:textField.text atIndex:_durationIndex];
 }
 
 #pragma mark - Duration view delegate

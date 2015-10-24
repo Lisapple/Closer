@@ -10,8 +10,8 @@
 #import <NotificationCenter/NotificationCenter.h>
 #import <WatchConnectivity/WatchConnectivity.h>
 
-extern NSString * const CountdownDidSynchronizeNotification;
-extern NSString * const CountdownDidUpdateNotification;
+extern NSString * _Nonnull const CountdownDidSynchronizeNotification;
+extern NSString * _Nonnull const CountdownDidUpdateNotification;
 
 typedef NS_ENUM(NSUInteger, CountdownType) {
 	CountdownTypeCountdown = 0,
@@ -34,10 +34,10 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 @interface Countdown : NSObject
 
-@property (nonatomic, strong) NSString * name;
-@property (nonatomic, strong) NSDate * endDate;
-@property (nonatomic, strong) NSString * message;
-@property (nonatomic, strong) NSString * songID;
+@property (nonatomic, strong) NSString * _Nullable name;
+@property (nonatomic, strong) NSDate * _Nullable endDate;
+@property (nonatomic, strong) NSString * _Nullable message;
+@property (nonatomic, strong) NSString * _Nullable songID;
 @property (nonatomic, assign) CountdownStyle style;
 @property (nonatomic, assign) CountdownType type;
 @property (nonatomic, assign) PromptState promptState;
@@ -46,29 +46,29 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 @property (nonatomic, assign) BOOL notificationCenter;
 
 // Private
-@property (nonatomic, readonly) NSString * identifier;
+@property (nonatomic, readonly) NSString * _Nonnull identifier;
 
 /* Save any change from propertyList to disk */
 + (void)synchronize; // Calls "synchronizeWithCompletion:" but shows an alert on error
-+ (void)synchronizeWithCompletion:(void (^)(BOOL success, NSError * error))completionHandler;
++ (void)synchronizeWithCompletion:(void (^ _Nullable)(BOOL success, NSError * _Nullable error))completionHandler;
 
 + (NSInteger)numberOfCountdowns;
 
-+ (NSArray <Countdown *> *)allCountdowns;
++ (NSArray <Countdown *> * _Nonnull)allCountdowns;
 
-+ (Countdown *)countdownWithIdentifier:(NSString *)identifier;
++ (Countdown * _Nullable)countdownWithIdentifier:(NSString * _Nonnull)identifier;
 
-+ (Countdown *)countdownAtIndex:(NSInteger)index;
-+ (NSInteger)indexOfCountdown:(Countdown *)countdown;
++ (Countdown * _Nonnull)countdownAtIndex:(NSInteger)index;
++ (NSInteger)indexOfCountdown:(Countdown * _Nonnull)countdown;
 
-+ (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
-+ (void)addCountdown:(Countdown *)countdown;
-+ (void)addCountdowns:(NSArray <Countdown *> *)countdowns;
++ (void)insertCountdown:(Countdown * _Nonnull)countdown atIndex:(NSInteger)index;
++ (void)addCountdown:(Countdown * _Nonnull)countdown;
++ (void)addCountdowns:(NSArray <Countdown *> * _Nonnull)countdowns;
 
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 + (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2;
 
-+ (void)removeCountdown:(Countdown *)countdown;
++ (void)removeCountdown:(Countdown * _Nonnull)countdown;
 + (void)removeCountdownAtIndex:(NSInteger)index;
 
 /**
@@ -77,21 +77,24 @@ typedef NS_ENUM(NSUInteger, PromptState) {
  * @param none
  * @return an array of NSString with the localized name of all styles
  */
-+ (NSArray <NSString *> *)styles;
++ (NSArray <NSString *> * _Nonnull)styles;
 
-- (instancetype)initWithIdentifier:(NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
+- (instancetype _Nonnull)initWithIdentifier:(NSString * _Nullable)anIdentifier NS_DESIGNATED_INITIALIZER;
 
 #pragma mark Timer methods
 
-- (NSNumber *)currentDuration;
-- (NSArray <NSNumber *> *)durations;
-- (void)addDuration:(NSNumber *)duration;
-- (void)addDurations:(NSArray *)durations;
-- (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index;
+- (NSNumber * _Nullable)currentDuration;
+- (NSArray <NSNumber *> * _Nonnull)durations;
+- (NSArray <NSString *> * _Nonnull)names;
+- (void)addDuration:(NSNumber * _Nonnull)duration withName:(NSString * _Nullable)name;
+- (void)addDurations:(NSArray * _Nonnull)durations withNames:(NSArray <NSString *> * _Nullable)names;
+- (void)setDuration:(NSNumber * _Nonnull)duration atIndex:(NSInteger)index;
+- (void)setDurationName:(NSString * _Nonnull)name atIndex:(NSInteger)index;
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 - (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2;
 - (void)removeDurationAtIndex:(NSUInteger)index;
 - (void)resetDurationIndex;
+
 - (void)resume;
 - (void)resumeWithOffset:(NSTimeInterval)offset; // End date = remaining + offset
 - (void)pause;
@@ -105,8 +108,8 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 #pragma mark Localized description methods
 
-- (NSString *)descriptionOfDurationAtIndex:(NSInteger)index;
-- (NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index;
+- (NSString * _Nonnull)descriptionOfDurationAtIndex:(NSInteger)index;
+- (NSString * _Nonnull)shortDescriptionOfDurationAtIndex:(NSInteger)index;
 
 @end
 
@@ -115,6 +118,6 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 + (void)synchronize_async DEPRECATED_ATTRIBUTE;
 
-- (NSMutableDictionary *)_countdownToDictionary;
+- (NSMutableDictionary * _Nonnull)_countdownToDictionary;
 
 @end

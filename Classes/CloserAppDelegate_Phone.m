@@ -29,7 +29,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#if TARGET_IPHONE_SIMULATOR
+#else
 	[Fabric with:@[ Crashlytics.class ]];
+#endif
 	
 	if ([WCSession isSupported]) {
 		WCSession * session = [WCSession defaultSession];
@@ -198,7 +201,7 @@
 					for (int i = 0; i < countdown.durations.count; ++i) {
 						[countdown removeDurationAtIndex:i];
 					}
-					[countdown addDurations:dictionary[@"durations"]];
+					[countdown addDurations:dictionary[@"durations"] withNames:nil]; // @TODO: support durations names on Apple Watch
 				}
 				if (dictionary[@"durationIndex"]) {
 					countdown.durationIndex = [dictionary[@"durationIndex"] integerValue]; }
