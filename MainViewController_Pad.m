@@ -474,9 +474,7 @@
 	const int numberOfColumns = 2;
 	
 	NSInteger numberOfItemsPerPage = 4;
-	CGSize pageSize = CGSizeMake(384., 480.);
 	if (orientationMask & UIInterfaceOrientationMaskLandscape) {
-		pageSize = CGSizeMake(341., 704.);
 		numberOfItemsPerPage = 3;
 	}
 	
@@ -484,6 +482,18 @@
 	int numberOfPage = ceil(numberOfCountdowns / (float)numberOfItemsPerPage);
 	
 	[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+	
+	CGSize screenSize = ([UIScreen mainScreen].bounds.size);
+	if /**/ (orientationMask & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width) {
+		screenSize = CGSizeMake(screenSize.height, screenSize.width);
+	}
+	else if (orientationMask & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width) {
+		screenSize = CGSizeMake(screenSize.height, screenSize.width);
+	}
+	CGSize pageSize = (orientationMask & UIInterfaceOrientationMaskLandscape) ?
+		CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
+		CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
+	
 	int i = 0;
 	for (PageView * pageView in _pageViews) {
 		
@@ -499,7 +509,7 @@
 			int col = index % numberOfRows;
 			int page = i / (numberOfRows * numberOfColumns);
 			
-			int pageOffset = page * _scrollView.frame.size.width;
+			int pageOffset = page * screenSize.width;
 			
 			frame.origin.x = (col * pageSize.width) + frame.origin.x + pageOffset;
 			frame.origin.y = (row * pageSize.height) + frame.origin.y;
@@ -512,10 +522,9 @@
 	[[UIApplication sharedApplication] endIgnoringInteractionEvents];
 	
 	// @TODO: animate when the number of pages change
-	_scrollView.contentSize = CGSizeMake(numberOfPage * _scrollView.frame.size.width, 0.);
+	_scrollView.contentSize = CGSizeMake(numberOfPage * screenSize.width, 0.);
 	
-	CGSize size = _scrollView.frame.size;
-	CGRect rect = CGRectMake(_pageControl.currentPage * size.width, 0., size.width, size.height);
+	CGRect rect = CGRectMake(_pageControl.currentPage * screenSize.width, 0., screenSize.width, screenSize.height);
 	[_scrollView scrollRectToVisible:rect animated:NO];
 	
 	_pageControl.numberOfPages = numberOfPage;
@@ -526,16 +535,23 @@
 	int numberOfRows = 2;
 	int numberOfColumns = 2;
 	
-	CGSize pageSize = CGSizeMake(384., 480.);
-	if (self.currentOrientation & UIInterfaceOrientationMaskLandscape)
-		pageSize = CGSizeMake(341., 704.);
-	
 	int i = index % (numberOfRows * numberOfColumns);
 	int row = i / numberOfRows;
 	int col = i % numberOfRows;
 	NSInteger page = index / (numberOfRows * numberOfColumns);
 	
 	int pageOffset = page * _scrollView.frame.size.width;
+	
+	CGSize screenSize = ([UIScreen mainScreen].bounds.size);
+	if /**/ (self.currentOrientation & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width) {
+		screenSize = CGSizeMake(screenSize.height, screenSize.width);
+	}
+	else if (self.currentOrientation & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width) {
+		screenSize = CGSizeMake(screenSize.height, screenSize.width);
+	}
+	CGSize pageSize = (self.currentOrientation & UIInterfaceOrientationMaskLandscape) ?
+		CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
+		CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
 	
 	CGFloat x = (col * pageSize.width) + pageOffset;
 	CGFloat y = row * pageSize.height;
@@ -580,10 +596,16 @@
 		
 		NSDebugLog(@"Reloading page at index: %ld", (long)index);
 		
-		CGSize pageSize = CGSizeMake(384., 480.);
-		if (self.currentOrientation & UIInterfaceOrientationMaskLandscape)
-			pageSize = CGSizeMake(341., 704.);
-		
+		CGSize screenSize = ([UIScreen mainScreen].bounds.size);
+		if /**/ (self.currentOrientation & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width) {
+			screenSize = CGSizeMake(screenSize.height, screenSize.width);
+		}
+		else if (self.currentOrientation & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width) {
+			screenSize = CGSizeMake(screenSize.height, screenSize.width);
+		}
+		CGSize pageSize = (self.currentOrientation & UIInterfaceOrientationMaskLandscape) ?
+			CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
+			CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
 		CGRect rect = CGRectMake(0., 0., pageSize.width, pageSize.height);
 		
 		PageView * pageView = nil;
@@ -627,12 +649,9 @@
 	self.automaticallyAdjustsScrollViewInsets = NO;
 	
 	_currentSettingsPageIndex = -1;
-	_currentOrientation = (self.view.frame.size.height > self.view.frame.size.width) ? UIInterfaceOrientationMaskPortrait : UIInterfaceOrientationMaskLandscape;
+	_currentOrientation = ([UIScreen mainScreen].bounds.size.height > [UIScreen mainScreen].bounds.size.width) ? UIInterfaceOrientationMaskPortrait : UIInterfaceOrientationMaskLandscape;
 	
 	[self showNavigationBar:kDefaultNavigationBar animated:NO];
-	
-	// landscape: 470 x 280
-	// portrait: 300 x 423
 	
 	NSArray * countdowns = [Countdown allCountdowns];
 	_pageViews = [[NSMutableArray alloc] initWithCapacity:countdowns.count];

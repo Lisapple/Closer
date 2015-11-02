@@ -53,17 +53,27 @@
 								  NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
 								  [self reload];
 							  }
-							  _nameLabel.text = self.countdown.name;
+							  if (self.countdown.currentName.length > 0) {
+								  // [name]\n[current duration name]
+								  NSMutableDictionary * attributes = @{ NSForegroundColorAttributeName : _nameLabel.textColor,
+																		NSFontAttributeName : _nameLabel.font }.mutableCopy;
+								  NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:self.countdown.name
+																											  attributes:attributes];
+								  [string appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+								  attributes[NSForegroundColorAttributeName] = [_nameLabel.textColor colorWithAlphaComponent:0.5];
+								  [string appendAttributedString:[[NSAttributedString alloc] initWithString:self.countdown.currentName
+																								 attributes:attributes]];
+								  _nameLabel.attributedText = string;
+							  } else {
+								  _nameLabel.text = self.countdown.name;
+							  }
 						  }];
 		
 		_continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
 																			 object:nil
 																			  queue:[NSOperationQueue currentQueue]
 																		 usingBlock:^(NSNotification * notification)
-							{
-								if (notification.object == self.countdown && self.countdown.isPaused)
-									[self start];
-							}];
+							{ if (notification.object == self.countdown && self.countdown.isPaused) { [self start]; } }];
 		
 		UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(timerDidDragged:)];
 		pan.maximumNumberOfTouches = 1;
@@ -264,7 +274,7 @@
 				_descriptionLabel.text = [self formattedDescription];
 				_descriptionLabel.hidden = NO;
 				
-			} else if (_isFinished) { // Timer finished
+			} else if (_isFinished || _remainingSeconds <= 0) { // Timer finished // @FIXME: |_remainingSeconds| shoud not be < 0
 				
 				// Start next duration
 				self.countdown.durationIndex++;
@@ -283,9 +293,6 @@
 				_timeLabel.text = NSLocalizedString(@"Continue", nil);
 				_descriptionLabel.hidden = YES;
 				_isFinished = YES;
-			} else if (_remainingSeconds < 0) { // @FIXME: |_remainingSeconds| shoud not be < 0
-				[self.countdown reset];
-				[self update];
 			}
 			
 		} else { // Waiting for user to continue
