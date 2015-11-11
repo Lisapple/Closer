@@ -71,6 +71,11 @@ class TimerInterfaceController: WKInterfaceController {
 			timerLabel.setDate(countdown!.endDate!)
 			timerLabel.start()
 			
+			if (countdown?.currentName != nil) {
+				self.setTitle(countdown!.currentName!) }
+			else {
+				self.setTitle(countdown!.name) }
+			
 			let calendar = NSCalendar.currentCalendar()
 			let components = NSDateComponents()
 			if (countdown!.durations != nil && countdown!.durations!.count > 1) {

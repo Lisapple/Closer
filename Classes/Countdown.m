@@ -159,7 +159,8 @@ static NSMutableArray * _countdowns = nil;
 			[sharedDefaults synchronize];
 		}
 		
-		if (NSClassFromString(@"WCSession") && [WCSession isSupported] && countdown.identifier) {
+		if (NSClassFromString(@"WCSession") && [WCSession isSupported]
+			&& [WCSession defaultSession].isWatchAppInstalled && countdown.identifier) {
 			NSDictionary * context = @{ @"countdowns" : [includedCountdowns valueForKeyPath:@"JSONDictionary"], @"selectedIdentifier": countdown.identifier };
 			NSError * error = nil;
 			BOOL success = [[WCSession defaultSession] updateApplicationContext:context error:&error];
@@ -169,20 +170,24 @@ static NSMutableArray * _countdowns = nil;
 			[[WCSession defaultSession] sendMessage:@{ @"update" : @YES }
 									   replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
 										   dispatch_sync(dispatch_get_main_queue(), ^{
+#if TARGET_IPHONE_SIMULATOR
 											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply"
 																											   message:replyMessage.description
 																										preferredStyle:UIAlertControllerStyleAlert];
 											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
 											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+#endif
 										   });
 									   }
 									   errorHandler:^(NSError * _Nonnull error) {
 										   dispatch_sync(dispatch_get_main_queue(), ^{
+#if TARGET_IPHONE_SIMULATOR
 											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply error"
 																											   message:error.localizedDescription
 																										preferredStyle:UIAlertControllerStyleAlert];
 											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
 											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+#endif
 										   });
 									   }];
 		}
@@ -535,12 +540,17 @@ static NSMutableArray * _countdowns = nil;
 - (NSNumber *)currentDuration
 {
 	/* Return the current duration (at index "duratonIndex" if not out of bounds, else return the first duration if exists, else return "nil" */
-	return (_durationIndex <= ((NSInteger)_durations.count - 1)) ? _durations[_durationIndex] : ((_durations.count > 0) ? _durations[0] : nil);
+	return (_durationIndex <= ((NSInteger)_durations.count - 1)) ? _durations[_durationIndex] : _durations.firstObject;
 }
 
 - (NSArray *)durations
 {
 	return _durations;
+}
+
+- (NSString *)currentName
+{
+	return (_durationIndex <= ((NSInteger)_names.count - 1)) ? _names[_durationIndex] : _names.firstObject;
 }
 
 - (NSArray *)names
