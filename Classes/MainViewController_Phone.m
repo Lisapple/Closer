@@ -395,23 +395,25 @@ const NSTimeInterval kAnimationDelay = 5.;
 	CGFloat offset = _scrollView.contentOffset.x / _scrollView.frame.size.width;
 	NSInteger index = MAX(roundf(offset), 0);
 	_pageControl.currentPage = index;
-	PageView * pageView = _pages[index];
-	if (pageView.showDeleteConfirmation) {
-		_scrollView.scrollEnabled = NO;
-		[pageView hideDeleteConfirmation];
-		
-	} else {
-		UIColor * textColor = [UIColor textColorForStyle:pageView.style];
-		_pageControl.currentPageIndicatorTintColor = textColor;
-		_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
-		
-		if (_scrollView.contentOffset.x < 0.) {
-			[self setBackgroundImageOffset:CGPointMake(-_scrollView.contentOffset.x, 0.)];
+	
+	if (0 <= index && index < _pages.count) {
+		PageView * pageView = _pages[index];
+		if (pageView.showDeleteConfirmation) {
+			_scrollView.scrollEnabled = NO;
+			[pageView hideDeleteConfirmation];
+		} else if (pageView) {
+			UIColor * textColor = [UIColor textColorForStyle:pageView.style];
+			_pageControl.currentPageIndicatorTintColor = textColor;
+			_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
 			
-		} else if (_scrollView.contentOffset.x > (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1))) {
-			[self setBackgroundImageOffset:CGPointMake((_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)) - _scrollView.contentOffset.x, 0.)];
+			if (_scrollView.contentOffset.x < 0.) {
+				[self setBackgroundImageOffset:CGPointMake(-_scrollView.contentOffset.x, 0.)];
+				
+			} else if (_scrollView.contentOffset.x > (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1))) {
+				[self setBackgroundImageOffset:CGPointMake((_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)) - _scrollView.contentOffset.x, 0.)];
+			}
+			[self setNeedsStatusBarAppearanceUpdate];
 		}
-		[self setNeedsStatusBarAppearanceUpdate];
 	}
 }
 
