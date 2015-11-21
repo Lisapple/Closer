@@ -31,7 +31,7 @@
 {
 #if TARGET_IPHONE_SIMULATOR
 #else
-	[Fabric with:@[ Crashlytics.class ]];
+	[Fabric with:@[ CrashlyticsKit ]];
 #endif
 	
 	if ([WCSession isSupported]) {

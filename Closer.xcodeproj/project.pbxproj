@@ -21,10 +21,10 @@
 		50036EE9150A3D0F006BE168 /* ImportFromCalendarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50036EE7150A3D0F006BE168 /* ImportFromCalendarViewController.xib */; };
 		50036EF3150A42DC006BE168 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50036EF2150A42DC006BE168 /* EventKit.framework */; };
 		500ABFF519892B2200217E92 /* CCLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 500ABFF419892B2200217E92 /* CCLabel.m */; };
-		500B0BD71BB6D09C00D3915F /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500B0BD61BB6D00C00D3915F /* Countdown.swift */; settings = {ASSET_TAGS = (); }; };
-		500B0BD91BB7098100D3915F /* ThemeInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500B0BD81BB7098100D3915F /* ThemeInterfaceController.swift */; settings = {ASSET_TAGS = (); }; };
-		500B0BDB1BB70F8700D3915F /* DurationInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500B0BDA1BB70F8700D3915F /* DurationInterfaceController.swift */; settings = {ASSET_TAGS = (); }; };
-		500C03841BB96170002CE3F3 /* DatePickerInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C03831BB96170002CE3F3 /* DatePickerInterfaceController.swift */; settings = {ASSET_TAGS = (); }; };
+		500B0BD71BB6D09C00D3915F /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500B0BD61BB6D00C00D3915F /* Countdown.swift */; };
+		500B0BD91BB7098100D3915F /* ThemeInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500B0BD81BB7098100D3915F /* ThemeInterfaceController.swift */; };
+		500B0BDB1BB70F8700D3915F /* DurationInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500B0BDA1BB70F8700D3915F /* DurationInterfaceController.swift */; };
+		500C03841BB96170002CE3F3 /* DatePickerInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C03831BB96170002CE3F3 /* DatePickerInterfaceController.swift */; };
 		50107E0B1770E39C00184976 /* DurationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50107E091770E39C00184976 /* DurationsViewController.m */; };
 		50107E0C1770E39C00184976 /* DurationsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50107E0A1770E39C00184976 /* DurationsViewController.xib */; };
 		5012B63717B91EAA00F8B228 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
@@ -34,7 +34,7 @@
 		5029FA8A1610CEE5002E2FC0 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */; };
 		502AEA5B15FA44E3009D9764 /* ExportToWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */; };
 		50461BEC1BB8398A00B58E1E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D351AC0AA9000784B98 /* Images.xcassets */; };
-		50495D611BB6B33D0009870F /* EditInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50495D601BB6B33D0009870F /* EditInterfaceController.swift */; settings = {ASSET_TAGS = (); }; };
+		50495D611BB6B33D0009870F /* EditInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50495D601BB6B33D0009870F /* EditInterfaceController.swift */; };
 		504B56471A7D5C9900292475 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
 		504B564D1A7D5C9900292475 /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 504B564C1A7D5C9900292475 /* TodayViewController.m */; };
 		504B564F1A7D5C9900292475 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504B564E1A7D5C9900292475 /* MainInterface.storyboard */; };
@@ -48,7 +48,7 @@
 		5051305616600DE20056CB42 /* NSObject+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5051305516600DE20056CB42 /* NSObject+additions.m */; };
 		505904CB1352351B00959167 /* FontDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 505904CA1352351B00959167 /* FontDescription.m */; };
 		505CC6B81BB80A4C00B3ECAB /* Closer Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 50E00D2B1AC0AA9000784B98 /* Closer Watch App.app */; };
-		505CC6BA1BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */; settings = {ASSET_TAGS = (); }; };
+		505CC6BA1BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */; };
 		505DCD1C15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */; };
 		505DCD1D15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 505DCD1B15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.xib */; };
 		505DCD2315EF8F36005F4B4A /* PasswordLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 505DCD2115EF8F36005F4B4A /* PasswordLabel.m */; };
@@ -60,9 +60,9 @@
 		507AD4D213533D6200011051 /* PageThemeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507AD4D013533D6200011051 /* PageThemeViewController.xib */; };
 		507C345A1A8C0A3600C485C3 /* TimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */; };
 		507F9BE41B38C381002B5CF4 /* Closer Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 50E00D211AC0AA9000784B98 /* Closer Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		508343E21BD1185800754409 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343DF1BD1185800754409 /* Security.framework */; settings = {ASSET_TAGS = (); }; };
-		508343E31BD1185800754409 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343E01BD1185800754409 /* Fabric.framework */; settings = {ASSET_TAGS = (); }; };
-		508343E41BD1185800754409 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343E11BD1185800754409 /* Crashlytics.framework */; settings = {ASSET_TAGS = (); }; };
+		508343E21BD1185800754409 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343DF1BD1185800754409 /* Security.framework */; };
+		508343E31BD1185800754409 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343E01BD1185800754409 /* Fabric.framework */; };
+		508343E41BD1185800754409 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343E11BD1185800754409 /* Crashlytics.framework */; };
 		508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 508578F316BC5F4900A04DAE /* UINavigationController+additions.m */; };
 		508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 508677E31B34BC9E00891644 /* Settings-Watch.bundle */; };
 		508D9C261338E2AC008C04FF /* UIView+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 508D9C251338E2AC008C04FF /* UIView+addition.m */; };
@@ -71,7 +71,7 @@
 		509ED3D8198B0AA800CCC424 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509ED3D6198B0AA800CCC424 /* EditViewController.m */; };
 		509ED3D9198B0AA800CCC424 /* EditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509ED3D7198B0AA800CCC424 /* EditViewController.xib */; };
 		50A2080E12E4E52200D8FCAA /* NSBundle+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A2080D12E4E52200D8FCAA /* NSBundle+addition.m */; };
-		50A28F631BBEAF79006B7097 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A28F621BBEAF79006B7097 /* ComplicationController.swift */; settings = {ASSET_TAGS = (); }; };
+		50A28F631BBEAF79006B7097 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A28F621BBEAF79006B7097 /* ComplicationController.swift */; };
 		50A6E53913291BC9007C0C79 /* MessageViewControler.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A37112E37AD90013605C /* MessageViewControler.m */; };
 		50AF1325176F4D230092E255 /* TypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AF1323176F4D230092E255 /* TypeViewController.m */; };
 		50AF1326176F4D230092E255 /* TypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50AF1324176F4D230092E255 /* TypeViewController.xib */; };
@@ -113,7 +113,7 @@
 		50E00D481AC0AAB700784B98 /* CountdownInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */; };
 		50E00D491AC0AAB700784B98 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D461AC0AAB700784B98 /* ColorExtension.swift */; };
 		50E937B11ABCE0C100E0F6E7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
-		50E954181BA6F21E00FC8CD1 /* UIApplication+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */; settings = {ASSET_TAGS = (); }; };
+		50E954181BA6F21E00FC8CD1 /* UIApplication+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */; };
 		50EC72D316BD4F9D00BB7CA7 /* EKEventStore+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */; };
 		50F3F51219880D1D00817B98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50F3F51119880D1D00817B98 /* Images.xcassets */; };
 		50F918F3149D3C5F003F33B8 /* Countdown.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50F918F5149D3C5F003F33B8 /* Countdown.plist */; };
