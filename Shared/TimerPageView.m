@@ -456,7 +456,7 @@
 
 - (void)timerDidDragged:(UIGestureRecognizer *)gesture
 {
-	if (!self.countdown.isPaused)
+	if (!self.countdown.isPaused || self.countdown.durations == 0)
 		return ;
 	
 	// Don't start the pan gesture (set set the timer progression by dragging up/down) if the user starts scrolling to right/left
