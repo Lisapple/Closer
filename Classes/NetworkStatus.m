@@ -23,7 +23,7 @@ static int _connected = -1;
 		initialized = YES;
 		
 		/* Create a default local address */
-        struct sockaddr_in zeroAddress = { 0, 0, 0, NULL, NULL };
+		struct sockaddr_in zeroAddress = { 0, 0, 0, { 0 }, { 0 } };
 		zeroAddress.sin_len = sizeof(zeroAddress);
 		zeroAddress.sin_family = AF_INET;
 		
@@ -46,7 +46,7 @@ void NetworkReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReach
 	static int oldStatus = -1; // "-1" means no old status
 	
 	BOOL connected = (flags & kSCNetworkReachabilityFlagsReachable) && !(flags & kSCNetworkReachabilityFlagsConnectionRequired);
-	_connected = (int)connected;// Change the "_connected" value before send the notification
+	_connected = (int)connected; // Change the "_connected" value before send the notification
 	
 	NSDebugLog(@"%@", (connected)? @"Connected": @"Not connected");
 	

@@ -17,9 +17,7 @@
 #import "NSDate+addition.h"
 
 @interface EditAllCountdownViewController ()
-{
-    BOOL forceReloadData;
-}
+
 @property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
 @property (nonatomic, strong) NSMutableArray <Countdown *> * includedCountdowns, * notIncludedCountdowns;
 
@@ -59,25 +57,6 @@
 			 withRowAnimation:UITableViewRowAnimationFade];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData)
-												 name:CountdownDidSynchronizeNotification
-											   object:nil]; // @TODO: don't reload on changes
-	[self reloadData];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:CountdownDidSynchronizeNotification
-												  object:nil];
-}
-
 - (IBAction)moreInfo:(id)sender
 {
 	NSDictionary * infoDictionary = [NSBundle mainBundle].infoDictionary;
@@ -95,23 +74,22 @@
 	[self presentViewController:actionSheet animated:YES completion:nil];
 }
 
+- (void)updateData
+{
+	_allCountdowns = [Countdown allCountdowns].copy;
+	_includedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
+	[_includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+		return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
+	
+	_notIncludedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == NO"]].mutableCopy;
+	[_notIncludedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+		return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
+}
+
 - (void)reloadData
 {
-	if (![_allCountdowns isEqualToArray:[Countdown allCountdowns]] || forceReloadData) { // Change to "save" only if we have real change
-		
-        _allCountdowns = [Countdown allCountdowns].copy;
-        _includedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
-        [_includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
-            return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
-        
-        _notIncludedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == NO"]].mutableCopy;
-        [_notIncludedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
-            return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
-        
-		[_tableView reloadData];
-        forceReloadData = NO;
-	}
-	
+	[self updateData];
+	[self.tableView reloadData];
 	self.navigationItem.rightBarButtonItem.enabled = (_allCountdowns.count > 0);
 }
 
@@ -156,10 +134,8 @@
 	} else {
 		Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
 		aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
-		NSIndexPath * indexPath = [NSIndexPath indexPathForRow:(_includedCountdowns.count - 1) inSection:0];
+		NSIndexPath * indexPath = [NSIndexPath indexPathForRow:_includedCountdowns.count inSection:0];
 		[self insertCountdown:aCountDown atIndexPath:indexPath];
-		/* Note: the tableView is automatically reloaded */
-		// @TODO: animated the row insertion
 		
 		[_tableView scrollToRowAtIndexPath:indexPath
 						 atScrollPosition:UITableViewScrollPositionMiddle
@@ -173,24 +149,26 @@
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
 	
 	[Countdown insertCountdown:countdown atIndex:indexPath.row];
-	/* Note: the tableView is automatically reloaded */
-	// @TODO: animated the row insertion
+	[self.tableView beginUpdates];
+	[self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self updateData];
+	[self.tableView endUpdates];
 }
 
 - (void)moveCountdownAtIndex:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
 	NSUInteger sourceIndex = indexPath.section * _includedCountdowns.count + indexPath.row;
 	NSUInteger destinationIndex = toIndexPath.section * _includedCountdowns.count + toIndexPath.row;
-	Countdown * countdown = _allCountdowns[sourceIndex];
+	
+	Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 	countdown.notificationCenter = (toIndexPath.section == 0);
-	forceReloadData = YES;
 	if (sourceIndex != destinationIndex) {
-		[Countdown moveCountdownAtIndex:sourceIndex toIndex:MIN(destinationIndex, _allCountdowns.count - 1)];
+		[Countdown moveCountdownAtIndex:MIN(MAX(0, sourceIndex), _allCountdowns.count - 1)
+								toIndex:MIN(MAX(0, destinationIndex), _allCountdowns.count - 1)];
 		[[self.undoManager prepareWithInvocationTarget:self] moveCountdownAtIndex:toIndexPath toIndexPath:indexPath];
 		[self.undoManager setActionName:NSLocalizedString(@"UNDO_MOVE_COUNTDOWN_ACTION", nil)];
-	} else {
-		[self reloadData];
 	}
+	[self updateData];
 }
 
 - (void)removeCountdown:(Countdown *)countdown indexPath:(NSIndexPath *)indexPath
@@ -199,8 +177,10 @@
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_INSERT_COUNTDOWN_ACTION", nil)];
 	
 	[Countdown removeCountdown:countdown];
-	/* Note: the tableView is automatically reloaded */
-	// @TODO: animated the row insertion
+	[self.tableView beginUpdates];
+	[self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self updateData];
+	[self.tableView endUpdates];
 }
 
 #pragma mark -
@@ -228,9 +208,8 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-	if (section == 3) {
+	if (section == 3) { // Info "i" button on the right
 		UIView * contentView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., self.view.frame.size.width, 44.)];
-		//contentView.backgroundColor = [UIColor clearColor];
 		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
 		button.frame = CGRectMake(self.view.frame.size.width - 15. - 23., 44. - 23., 23., 23.);
 		[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
@@ -323,7 +302,6 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
         Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 		[self removeCountdown:countdown indexPath:indexPath];
-		// @TODO: animated the row deletion
 	}
 }
 
@@ -334,8 +312,13 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {
-	if (proposedDestinationIndexPath.section > 1)
-		return [NSIndexPath indexPathForRow:(_notIncludedCountdowns.count - 1) inSection:1];
+	if (proposedDestinationIndexPath.section > 1) {
+		if (sourceIndexPath.section == 0) {
+			return [NSIndexPath indexPathForRow:_notIncludedCountdowns.count inSection:1];
+		} else {
+			return [NSIndexPath indexPathForRow:(_notIncludedCountdowns.count-1) inSection:1];
+		}
+	}
 	
 	return proposedDestinationIndexPath;
 }

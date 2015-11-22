@@ -8,6 +8,8 @@
 
 #import "CloserAppDelegate_Pad.h"
 #import "MainViewController_Pad.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 #import "Countdown+addition.h"
 
@@ -21,6 +23,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#if TARGET_IPHONE_SIMULATOR
+#else
+	[Fabric with:@[ CrashlyticsKit ]];
+#endif
+	
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeSound)
                                                                                         categories:[NSSet set]]];

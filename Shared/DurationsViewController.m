@@ -79,7 +79,7 @@
 {
 	[_tableView beginUpdates];
 	
-	[_countdown addDuration:@0];
+	[_countdown addDuration:@0 withName:nil];
 	
 	NSIndexPath * indexPath = [NSIndexPath indexPathForRow:(_countdown.durations.count - 1)
 												 inSection:1];
@@ -117,16 +117,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString * cellIdentifier = @"CellID";
-	
-	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
-		cell.selectionStyle = UITableViewCellSelectionStyleGray;
-	}
-	
 	if (indexPath.section == 0) {
+		static NSString * promptCellIdentifier = @"PromptCellID";
+		UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:promptCellIdentifier];
+		if (!cell) {
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:promptCellIdentifier];
+			cell.selectionStyle = UITableViewCellSelectionStyleGray;
+		}
+		
 		cell.textLabel.text = NSLocalizedString(@"Ask", nil);
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		
@@ -144,16 +142,34 @@
 				cell.detailTextLabel.text = NSLocalizedString(@"When all durations finished", nil);
 				break;
 		}
+		return cell;
 		
 	} else {
-		cell.textLabel.text = [_countdown descriptionOfDurationAtIndex:indexPath.row];
-		CGSize size = [cell.textLabel sizeThatFits:CGSizeMake(cell.textLabel.frame.size.width, INFINITY)];
-		if (size.height > cell.textLabel.frame.size.height || size.width > cell.textLabel.frame.size.width)
-			cell.textLabel.text = [_countdown shortDescriptionOfDurationAtIndex:indexPath.row];
-		cell.accessoryType = UITableViewCellAccessoryNone;
+		static NSString * cellIdentifier = @"CellID";
+		UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		if (!cell) {
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+			cell.selectionStyle = UITableViewCellSelectionStyleGray;
+			cell.accessoryType = UITableViewCellAccessoryNone;
+		}
+		
+		NSString * name = _countdown.names[indexPath.row];
+		if (name.length > 0) {
+			cell.textLabel.text = name;
+			cell.detailTextLabel.text = [_countdown descriptionOfDurationAtIndex:indexPath.row];
+			CGSize size = [cell.detailTextLabel sizeThatFits:CGSizeMake(cell.detailTextLabel.frame.size.width, INFINITY)];
+			if (size.height > cell.detailTextLabel.frame.size.height || size.width > cell.detailTextLabel.frame.size.width)
+				cell.detailTextLabel.text = [_countdown shortDescriptionOfDurationAtIndex:indexPath.row];
+		} else {
+			cell.textLabel.text = [_countdown descriptionOfDurationAtIndex:indexPath.row];
+			CGSize size = [cell.textLabel sizeThatFits:CGSizeMake(cell.textLabel.frame.size.width, INFINITY)];
+			if (size.height > cell.textLabel.frame.size.height || size.width > cell.textLabel.frame.size.width)
+				cell.textLabel.text = [_countdown shortDescriptionOfDurationAtIndex:indexPath.row];
+		}
+		return cell;
 	}
 	
-	return cell;
+	return nil;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

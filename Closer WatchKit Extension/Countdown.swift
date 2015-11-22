@@ -47,11 +47,19 @@ class Countdown: NSObject {
 	var endDate: NSDate?
 	var message: String?
 	var durations: [NSTimeInterval]?
+	var names: [String]?
 	var durationIndex: Int?
 	var currentDuration: NSTimeInterval? {
 		get {
 			if (durations != nil && durationIndex != nil) {
 				return durations![durationIndex!] }
+			return nil
+		}
+	}
+	var currentName: String? {
+		get {
+			if (names != nil && durationIndex != nil) {
+				return names![durationIndex!] }
 			return nil
 		}
 	}
@@ -146,6 +154,8 @@ class Countdown: NSObject {
 			self.endDate = formatter.dateFromString(dictionary["endDate"] as! String)
 		}
 		self.message = dictionary["message"] as? String
+		self.durations = dictionary["durations"] as? [NSTimeInterval]
+		self.names = dictionary["names"] as? [String]
 	}
 	
 	init(name: String?, identifier: String?, type: CountdownType?, style: ColorStyle?) {
@@ -174,6 +184,8 @@ class Countdown: NSObject {
 			dictionary["endDate"] = formatter.stringFromDate(endDate!) }
 		if (durations != nil) {
 			dictionary["durations"] = durations }
+		if (names != nil) {
+			dictionary["names"] = names }
 		if (durationIndex != nil) {
 			dictionary["durationIndex"] = durationIndex }
 		return dictionary

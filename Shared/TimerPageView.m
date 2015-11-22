@@ -53,17 +53,27 @@
 								  NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
 								  [self reload];
 							  }
-							  _nameLabel.text = self.countdown.name;
+							  if (self.countdown.currentName.length > 0) {
+								  // [name]\n[current duration name]
+								  NSMutableDictionary * attributes = @{ NSForegroundColorAttributeName : _nameLabel.textColor,
+																		NSFontAttributeName : _nameLabel.font }.mutableCopy;
+								  NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:self.countdown.name
+																											  attributes:attributes];
+								  [string appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+								  attributes[NSForegroundColorAttributeName] = [_nameLabel.textColor colorWithAlphaComponent:0.5];
+								  [string appendAttributedString:[[NSAttributedString alloc] initWithString:self.countdown.currentName
+																								 attributes:attributes]];
+								  _nameLabel.attributedText = string;
+							  } else {
+								  _nameLabel.text = self.countdown.name;
+							  }
 						  }];
 		
 		_continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
 																			 object:nil
 																			  queue:[NSOperationQueue currentQueue]
 																		 usingBlock:^(NSNotification * notification)
-							{
-								if (notification.object == self.countdown && self.countdown.isPaused)
-									[self start];
-							}];
+							{ if (notification.object == self.countdown && self.countdown.isPaused) { [self start]; } }];
 		
 		UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(timerDidDragged:)];
 		pan.maximumNumberOfTouches = 1;
@@ -130,14 +140,14 @@
 	_nameLabel.textColor = textColor;
 }
 
-- (void)setStyle:(PageViewStyle)aStyle
+- (void)setStyle:(CountdownStyle)aStyle
 {
 	super.style = aStyle;
 	
-	_contentView.backgroundColor = [[UIColor backgroundColorForPageStyle:aStyle] colorWithAlphaComponent:0.7];
-	[self setTextColor:[UIColor textColorForPageStyle:aStyle]];
+	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
+	[self setTextColor:[UIColor textColorForStyle:aStyle]];
 	
-	self.infoButton.tintColor = [UIColor textColorForPageStyle:aStyle];
+	self.infoButton.tintColor = [UIColor textColorForStyle:aStyle];
 	[self updateLeftButton];
 }
 
@@ -165,7 +175,7 @@
 {
 	_leftButton.imageView.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
 	NSString * name = (self.countdown.isPaused) ? @"reset-button" : @"pause-button";
-	_leftButton.tintColor = [UIColor textColorForPageStyle:self.countdown.style];
+	_leftButton.tintColor = [UIColor textColorForStyle:self.countdown.style];
 	[_leftButton setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
 }
 
@@ -248,15 +258,11 @@
 	
 	if (self.countdown.isPaused) { // Paused
 		[_timerView cancelProgressionAnimation];
-		//NSLog(@"[paused]");
-		
 	} else { // Not paused
 		
 		if (self.countdown.endDate) { // Playing
 			_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
 			if (_remainingSeconds >= 0. && _duration > 1) { // Remaining time
-				
-				//NSLog(@"[playing : remaining time]");
 				
 				[self disableIdleTimerIfNeeded];
 				[self blinkIfNeeded];
@@ -268,9 +274,7 @@
 				_descriptionLabel.text = [self formattedDescription];
 				_descriptionLabel.hidden = NO;
 				
-			} else if (_isFinished) { // Timer finished
-				
-				//NSLog(@"[timer finished]");
+			} else if (_isFinished || _remainingSeconds <= 0) { // Timer finished // @FIXME: |_remainingSeconds| shoud not be < 0
 				
 				// Start next duration
 				self.countdown.durationIndex++;
@@ -283,24 +287,16 @@
 			} else if (self.countdown.promptState == PromptStateEveryTimers ||
 					   (self.countdown.promptState == PromptStateEnd && self.countdown.durationIndex == (self.countdown.durations.count - 1))) { // Finished and waiting the user to continue
 				// Pause the timer and wait for the used to tap on "Continue"
-				
-				//NSLog(@"[waiting the user to continue to next duration]");
-				
 				[self pause];
 				[_timerView cancelProgressionAnimation];
 				_timerView.progression = 0.;
 				_timeLabel.text = NSLocalizedString(@"Continue", nil);
 				_descriptionLabel.hidden = YES;
 				_isFinished = YES;
-			} else if (_remainingSeconds < 0) { // @FIXME: |_remainingSeconds| shoud not be < 0
-				[self.countdown reset];
-				[self update];
 			}
 			
 		} else { // Waiting for user to continue
 			_timeLabel.text = NSLocalizedString(@"Continue", nil);
-			
-			//NSLog(@"[waiting the user to continue]");
 		}
 	}
 }
@@ -460,7 +456,7 @@
 
 - (void)timerDidDragged:(UIGestureRecognizer *)gesture
 {
-	if (!self.countdown.isPaused)
+	if (!self.countdown.isPaused || self.countdown.durations == 0)
 		return ;
 	
 	// Don't start the pan gesture (set set the timer progression by dragging up/down) if the user starts scrolling to right/left

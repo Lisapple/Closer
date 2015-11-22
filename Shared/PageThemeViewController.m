@@ -18,21 +18,21 @@
 
 @implementation PageThemeViewController
 
-+ (UIImage *)imageForStyle:(PageViewStyle)style
++ (UIImage *)imageForStyle:(CountdownStyle)style
 {
-	const CGFloat width = (style == PageViewStyleDay) ? 21. : 20.;
+	const CGFloat width = (style == CountdownStyleDay) ? 21. : 20.;
 	CGRect frame = CGRectMake(0., 0., width, width);
 	UIView * backgroundView = [[UIView alloc] initWithFrame:frame];
-	backgroundView.backgroundColor = [UIColor backgroundColorForPageStyle:style];
+	backgroundView.backgroundColor = [UIColor backgroundColorForStyle:style];
 	backgroundView.layer.cornerRadius = (width / 2.);
-	if (style == PageViewStyleDay) {
+	if (style == CountdownStyleDay) {
 		backgroundView.layer.borderWidth = 1.;
 		backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
 	}
 	
 	frame = CGRectMake((width / 4.), (width / 4.), (width / 2.), (width / 2.));
 	UIView * textView = [[UIView alloc] initWithFrame:frame];
-	textView.backgroundColor = [UIColor textColorForPageStyle:style];
+	textView.backgroundColor = [UIColor textColorForStyle:style];
 	textView.layer.cornerRadius = (width / 4.);
 	[backgroundView addSubview:textView];
 	

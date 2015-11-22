@@ -58,6 +58,11 @@
 			<integer>60</integer>
 			<integer>30</integer>
 		</array>
+		<key>names</key>
+		<array>
+			<string></string>
+			<string></string>
+		</array>
 		<key>prompt</key>
 		<integer>2</integer>
 		<key>durationIndex</key>

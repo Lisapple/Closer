@@ -15,9 +15,8 @@ struct EditOption : OptionSetType {
 	let rawValue: Int
 	init(rawValue: Int) { self.rawValue = rawValue }
 	
-	static var ShowCancelButton = EditOption(rawValue: 1 << 1)
-	static var ShowDoneButton = EditOption(rawValue: 1 << 2)
-	static var ShowDeleteButton = EditOption(rawValue: 1 << 3)
+	static var ShowAsCreate = EditOption(rawValue: 1 << 1) // For creating countdown, show the done button as "Create", shown as "Save" else
+	static var ShowDeleteButton = EditOption(rawValue: 1 << 2)
 }
 
 class DetailsRowController: NSObject {
@@ -52,14 +51,7 @@ class EditInterfaceController: WKInterfaceController {
 				self.options = EditOption(rawValue: contextDict!["options"] as! Int)
 			}
 		}
-		
-		if (options != nil) {
-			if (options!.contains(.ShowDoneButton)) {
-				setTitle("Done")
-			} else if (options!.contains(.ShowCancelButton)) {
-				setTitle("Cancel")
-			}
-		}
+		setTitle("Cancel")
 	}
 	
 	func reloadData() {
@@ -74,6 +66,11 @@ class EditInterfaceController: WKInterfaceController {
 		rowTypes!.append("StyleIdentifier")
 		if (options != nil && options!.contains(.ShowDeleteButton)) {
 			rowTypes!.append("DeleteIdentifier") }
+		
+		if (options != nil && options!.contains(.ShowAsCreate)) {
+			rowTypes!.append("CreateIdentifier") }
+		else {
+			rowTypes!.append("SaveIdentifier") }
 		
 		self.tableView.setRowTypes(rowTypes!)
 		for index in 0 ..< rowTypes!.count {
@@ -93,7 +90,7 @@ class EditInterfaceController: WKInterfaceController {
 						rowController?.details = "No date"
 						rowController?.detailsLabel.setTextColor(UIColor.redColor()) }
 				case "MessageIdentifier": rowController?.details = countdown?.message
-			case "DurationsIdentifier" : rowController?.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : "None"
+				case "DurationsIdentifier" : rowController?.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : "None"
 				case "StyleIdentifier": rowController?.details = countdown?.style.toString()!.capitalizedString
 				default: break
 			}
@@ -118,6 +115,8 @@ class EditInterfaceController: WKInterfaceController {
 			case "DurationsIdentifier": setDurationsAction()
 			case "StyleIdentifier":		setStyleAction()
 			case "DeleteIdentifier":	deleteAction()
+			case "CreateIdentifier":		saveAction()
+			case "SaveIdentifier":		saveAction()
 			default: break
 		}
 	}
@@ -184,21 +183,21 @@ class EditInterfaceController: WKInterfaceController {
 			WKAlertAction(title: "Cancel", style: .Cancel, handler: { () -> Void in })
 		])
 	}
-
-    override func didDeactivate() {
-		//let userInfo = [String : AnyObject]()
-		//updateUserActivity("com.lisacintosh.closer.update-countdown", userInfo: userInfo, webpageURL: nil)
-		
+	
+	func saveAction() {
 		let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))
-		WCSession.defaultSession().sendMessage(["action" : "update", "identifier" : countdown!.identifier, "data" : data!],
+		var message = ["action" : "update", "data" : data!]
+		if (self.options != nil && !self.options!.contains(.ShowAsCreate)) {
+			message["identifier"] = countdown!.identifier }
+		WCSession.defaultSession().sendMessage(message,
 			replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
 				print(replyInfo)
 			}) { (error: NSError) -> Void in
 				print(error)
 		}
-		
-        // This method is called when watch view controller is no longer visible
+	}
+	
+    override func didDeactivate() {
         super.didDeactivate()
     }
-
 }

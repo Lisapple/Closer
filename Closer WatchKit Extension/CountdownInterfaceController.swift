@@ -61,12 +61,12 @@ class CountdownInterfaceController: WKInterfaceController {
 	
 	@IBAction func newMenuAction() {
 		let countdown = Countdown(name: nil, identifier: nil, type: .Countdown, style: nil)
-		let options: EditOption = [ .ShowDoneButton, .ShowDeleteButton ]
+		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
 		presentControllerWithName("EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
 	}
 	
 	@IBAction func editMenuAction() {
-		let options: EditOption = [ .ShowDoneButton, .ShowDeleteButton ]
+		let options: EditOption = .ShowDeleteButton
 		presentControllerWithName("EditInterface", context: [ "countdown" : countdown!, "options" : options.rawValue ])
 		hasChange = true
 	}

@@ -62,7 +62,7 @@
                     <items>
                         <table alignment="left" id="8sC-hr-EL1">
                             <items>
-                                <tableRow identifier="TypeIdentifier" id="L8f-Fj-ooW" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                <tableRow identifier="TypeIdentifier" id="L8f-Fj-ooW" customClass="DetailsRowController" customModule="Closer_Watch_Extension">
                                     <group key="rootItem" width="1" alignment="left" id="Fow-4c-VAh">
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Type" id="PIS-Fw-ocI"/>
@@ -76,7 +76,7 @@
                                         <outlet property="titleLabel" destination="PIS-Fw-ocI" id="dL4-61-8JW"/>
                                     </connections>
                                 </tableRow>
-                                <tableRow identifier="NameIdentifier" id="ZCn-hJ-Jtu" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                <tableRow identifier="NameIdentifier" id="ZCn-hJ-Jtu" customClass="DetailsRowController" customModule="Closer_Watch_Extension">
                                     <group key="rootItem" width="1" alignment="left" id="jyd-zC-b5C">
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Name" id="SOJ-bm-NtB"/>
@@ -90,7 +90,7 @@
                                         <outlet property="titleLabel" destination="SOJ-bm-NtB" id="9Y9-wg-51o"/>
                                     </connections>
                                 </tableRow>
-                                <tableRow identifier="EndDateIdentifier" id="3sY-mV-zWz" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                <tableRow identifier="EndDateIdentifier" id="3sY-mV-zWz" customClass="DetailsRowController" customModule="Closer_Watch_Extension">
                                     <group key="rootItem" width="1" height="0.0" alignment="left" layout="vertical" id="q0f-7o-0cb">
                                         <items>
                                             <label alignment="left" verticalAlignment="center" text="End date" id="8oZ-kQ-8jI"/>
@@ -104,7 +104,7 @@
                                         <outlet property="titleLabel" destination="8oZ-kQ-8jI" id="oWo-2R-v05"/>
                                     </connections>
                                 </tableRow>
-                                <tableRow identifier="MessageIdentifier" id="jbQ-am-smm" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                <tableRow identifier="MessageIdentifier" id="jbQ-am-smm" customClass="DetailsRowController" customModule="Closer_Watch_Extension">
                                     <group key="rootItem" width="1" height="0.0" alignment="left" layout="vertical" id="MRJ-qB-O7d">
                                         <items>
                                             <label alignment="left" verticalAlignment="center" text="Message" id="5gX-as-2kt"/>
@@ -118,7 +118,7 @@
                                         <outlet property="titleLabel" destination="5gX-as-2kt" id="s3d-KU-Bc7"/>
                                     </connections>
                                 </tableRow>
-                                <tableRow identifier="DurationsIdentifier" id="Q79-hg-iSy" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                <tableRow identifier="DurationsIdentifier" id="Q79-hg-iSy" customClass="DetailsRowController" customModule="Closer_Watch_Extension">
                                     <group key="rootItem" width="1" alignment="left" id="NKQ-aw-teR">
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Durations" id="jpI-lb-6Wl"/>
@@ -132,7 +132,7 @@
                                         <outlet property="titleLabel" destination="jpI-lb-6Wl" id="evG-hS-2Ij"/>
                                     </connections>
                                 </tableRow>
-                                <tableRow identifier="StyleIdentifier" id="OrL-ev-yhn" customClass="DetailsRowController" customModule="Closer_WatchKit_Extension">
+                                <tableRow identifier="StyleIdentifier" id="OrL-ev-yhn" customClass="DetailsRowController" customModule="Closer_Watch_Extension">
                                     <group key="rootItem" width="1" alignment="left" id="gSf-oC-AQB">
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Theme" id="AeQ-u9-PnL"/>
@@ -156,6 +156,24 @@
                                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     </group>
                                 </tableRow>
+                                <tableRow identifier="CreateIdentifier" id="4qA-od-BjV">
+                                    <group key="rootItem" width="1" alignment="left" id="m0n-6e-BfN">
+                                        <items>
+                                            <label alignment="center" verticalAlignment="center" text="Create" id="j8g-ye-Z88">
+                                                <fontDescription key="font" type="system" weight="semibold" pointSize="16"/>
+                                            </label>
+                                        </items>
+                                    </group>
+                                </tableRow>
+                                <tableRow identifier="SaveIdentifier" id="C46-tu-Tlr">
+                                    <group key="rootItem" width="1" alignment="left" id="w7q-OI-SBu">
+                                        <items>
+                                            <label alignment="center" verticalAlignment="center" text="Save" id="NVA-4i-W61">
+                                                <fontDescription key="font" type="system" weight="semibold" pointSize="16"/>
+                                            </label>
+                                        </items>
+                                    </group>
+                                </tableRow>
                             </items>
                         </table>
                     </items>
@@ -164,7 +182,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="278" y="631.5"/>
+            <point key="canvasLocation" x="278" y="673"/>
         </scene>
         <!--ThemeInterface-->
         <scene sceneID="TBr-El-Lsg">
@@ -306,7 +324,9 @@
             <objects>
                 <controller identifier="DatePicker" hidesWhenLoading="NO" id="kGP-69-6gR" customClass="DatePickerInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
-                        <label alignment="left" text="Time" id="E5r-39-cE2"/>
+                        <label alignment="left" text="Time" id="E5r-39-cE2">
+                            <color key="textColor" white="0.50078124999999996" alpha="1" colorSpace="calibratedWhite"/>
+                        </label>
                         <group width="1" alignment="left" id="G5p-TS-CLj">
                             <items>
                                 <picker width="0.28000000000000003" height="40" alignment="center" verticalAlignment="center" focusStyle="stack" id="7r2-l2-uWa">
@@ -325,7 +345,9 @@
                         <separator alignment="left" id="m4m-Cg-XXI">
                             <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         </separator>
-                        <label alignment="left" text="Date" id="dBV-WS-Jnh"/>
+                        <label alignment="left" text="Date" id="dBV-WS-Jnh">
+                            <color key="textColor" white="0.50385237068965516" alpha="1" colorSpace="calibratedWhite"/>
+                        </label>
                         <group width="1" alignment="left" id="byN-EX-DDa">
                             <items>
                                 <picker width="0.28000000000000003" height="40" alignment="left" focusStyle="stack" id="lSY-cC-8Wb">

@@ -37,14 +37,6 @@
 
 static const NSTimeInterval kDoubleTapDelay = 0.35;
 
-typedef NS_ENUM(NSUInteger, PageViewStyle) {
-	PageViewStyleNight = 0, // Default
-	PageViewStyleDay,
-	PageViewStyleDawn,
-	PageViewStyleOasis,
-	PageViewStyleSpring,
-};
-
 /*** @abstract: abstract method used for CountdownPageView and TimerPageView ***/
 @interface PageView : UIView <UIScrollViewDelegate>
 
@@ -55,7 +47,7 @@ typedef NS_ENUM(NSUInteger, PageViewStyle) {
 
 @property (nonatomic, strong) UIScrollView * scrollView; // @FIXME: Private?
 
-@property (nonatomic, assign) PageViewStyle style;
+@property (nonatomic, assign) CountdownStyle style;
 
 @property (nonatomic, strong) IBOutlet UIButton * infoButton;
 

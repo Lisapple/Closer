@@ -71,6 +71,11 @@ class TimerInterfaceController: WKInterfaceController {
 			timerLabel.setDate(countdown!.endDate!)
 			timerLabel.start()
 			
+			if (countdown?.currentName != nil) {
+				self.setTitle(countdown!.currentName!) }
+			else {
+				self.setTitle(countdown!.name) }
+			
 			let calendar = NSCalendar.currentCalendar()
 			let components = NSDateComponents()
 			if (countdown!.durations != nil && countdown!.durations!.count > 1) {
@@ -101,7 +106,7 @@ class TimerInterfaceController: WKInterfaceController {
 	
 	@IBAction func newMenuAction() {
 		let countdown = Countdown(name: nil, identifier: nil, type: .Timer, style: nil)
-		let options: EditOption = [ EditOption.ShowDoneButton, EditOption.ShowDeleteButton ]
+		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
 		presentControllerWithName("EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
 	}
 	
@@ -162,7 +167,7 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	@IBAction func editMenuAction() {
-		let options: EditOption = [ .ShowDoneButton, .ShowDeleteButton ]
+		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
 		presentControllerWithName("EditInterface", context: [ "countdown" : countdown!, "options" : options.rawValue ])
 		hasChange = true
 	}

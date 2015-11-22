@@ -29,8 +29,8 @@ class DatePickerInterfaceController: WKInterfaceController {
 		setTitle("Done")
 		
 		let calendar = NSCalendar.currentCalendar()
-		let comps = calendar.components([.Minute, .Hour, .Day, .Month, .Year], fromDate: self.countdown!.endDate!)
-		hour = comps.hour; minute = comps.hour; day = comps.day; month = comps.month; year = comps.year
+		let comps = calendar.components([.Minute, .Hour, .Day, .Month, .Year], fromDate: (self.countdown!.endDate != nil) ? self.countdown!.endDate! : NSDate())
+		hour = comps.hour; minute = comps.minute + 1; day = comps.day; month = comps.month; year = comps.year
 		
 		// Hour
 		var hoursItems = [WKPickerItem]()

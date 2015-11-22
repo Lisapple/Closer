@@ -77,8 +77,8 @@
 		
 		_scrollView.showsHorizontalScrollIndicator = NO;
 		_scrollView.showsVerticalScrollIndicator = NO;
-		_scrollView.contentSize = CGSizeMake(0., frame.size.height + 60.);
 		_scrollView.alwaysBounceVertical = YES;
+		_scrollView.contentSize = CGSizeMake(0., frame.size.height + 60.);
 		
         UITapGestureRecognizer * gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)];
         gesture.numberOfTapsRequired = 2;
@@ -95,6 +95,7 @@
 	super.frame = frame;
 	
 	_deleteButton.frame = CGRectMake(0., self.frame.size.height, self.frame.size.width, 0.);
+	_scrollView.contentSize = CGSizeMake(0., frame.size.height + 60.);
 }
 
 - (void)update
@@ -172,7 +173,7 @@
 	
 	/**/ if (scrollView.contentOffset.y < 0.)
 		self.scrollView.contentOffset = CGPointZero;
-	else if (scrollView.contentOffset.y > 60.) {
+	else if (scrollView.contentOffset.y >= 60.) {
 		self.scrollView.contentOffset = CGPointMake(0., 60.);
 	}
 	else if (scrollView.contentOffset.y == 0.) {

@@ -7,15 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import "PageView.h"
+#import "Countdown.h"
 
 @interface UIColor(addition)
 
 + (UIColor *)defaultTintColor;
 
-+ (UIColor *)backgroundColorForPageStyle:(PageViewStyle)style;
-+ (UIColor *)textColorForPageStyle:(PageViewStyle)style;
++ (UIColor *)backgroundColorForStyle:(CountdownStyle)style;
++ (UIColor *)textColorForStyle:(CountdownStyle)style;
 
 /*
 - (UIColor *)invertedColor;

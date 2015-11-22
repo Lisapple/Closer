@@ -10,7 +10,7 @@
 		<key>endDate</key>
 		<date>2015-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Bonne année 2016!</string>
+		<string>Bonne année 2016 !</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>
@@ -28,7 +28,7 @@
 		<key>endDate</key>
 		<date>2016-12-31T23:00:00Z</date>
 		<key>message</key>
-		<string>Bonne année 2017!</string>
+		<string>Bonne année 2017 !</string>
 		<key>songID</key>
 		<string>default</string>
 		<key>identifier</key>
@@ -53,6 +53,11 @@
 		<array>
 			<integer>60</integer>
 			<integer>30</integer>
+		</array>
+		<key>names</key>
+		<array>
+			<string></string>
+			<string></string>
 		</array>
 		<key>prompt</key>
 		<integer>2</integer>

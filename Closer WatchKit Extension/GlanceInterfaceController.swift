@@ -64,7 +64,6 @@ class GlanceInterfaceController: WKInterfaceController {
 				}
 			} else {
 				if (endDate != nil) {
-					
 					timerLabel.setDate(endDate!)
 					timerLabel.setTextColor(color)
 					

@@ -18,7 +18,7 @@ class NoCountdownsInterfaceController: WKInterfaceController {
 	
 	@IBAction func newAction(sender: AnyObject) {
 		let countdown = Countdown(name: nil, identifier: nil, type: .Countdown, style: nil)
-		let options: EditOption = [ .ShowDoneButton, .ShowDeleteButton ]
+		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
 		presentControllerWithName("EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
 	}
 }

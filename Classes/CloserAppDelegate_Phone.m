@@ -8,6 +8,8 @@
 
 #import "CloserAppDelegate_Phone.h"
 #import "MainViewController_Phone.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 #import "Countdown.h"
 #import "Countdown+addition.h"
@@ -27,6 +29,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#if TARGET_IPHONE_SIMULATOR
+#else
+	[Fabric with:@[ CrashlyticsKit ]];
+#endif
+	
 	if ([WCSession isSupported]) {
 		WCSession * session = [WCSession defaultSession];
 		session.delegate = self;
@@ -157,9 +164,11 @@
 	NSString * action = message[@"action"];
 	
 #if TARGET_IPHONE_SIMULATOR
-	UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }]];
-	[self.window.rootViewController presentViewController:alert animated:YES completion:NULL];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }]];
+		[self.window.rootViewController presentViewController:alert animated:YES completion:NULL];
+	});
 #endif
 	
 	if /***/ ([action isEqualToString:@"pause"] && !countdown.isPaused) {
@@ -175,6 +184,10 @@
 		if (data) {
 			NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 			if (dictionary) {
+				if (!countdown) {
+					countdown = [[Countdown alloc] initWithIdentifier:nil];
+					[Countdown addCountdown:countdown];
+				}
 				if (dictionary[@"name"]) {
 					countdown.name = dictionary[@"name"]; }
 				if (dictionary[@"message"]) {
@@ -188,10 +201,10 @@
 					for (int i = 0; i < countdown.durations.count; ++i) {
 						[countdown removeDurationAtIndex:i];
 					}
-					[countdown addDurations:dictionary[@"durations"]];
+					[countdown addDurations:dictionary[@"durations"] withNames:nil]; // @TODO: support durations names on Apple Watch
 				}
 				if (dictionary[@"durationIndex"]) {
-					countdown.durationIndex = dictionary[@"durationIndex"]; }
+					countdown.durationIndex = [dictionary[@"durationIndex"] integerValue]; }
 			}
 		} else {
 			NSString * identifier = message[@"lastSelectedCountdownIdentifier"];
