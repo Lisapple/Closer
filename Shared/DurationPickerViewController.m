@@ -190,4 +190,9 @@
 		self.countdown.endDate = nil;
 }
 
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 @end

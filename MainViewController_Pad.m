@@ -717,6 +717,7 @@
 - (void)dealloc
 {
 	[_pageControl removeObserver:self forKeyPath:@"currentPage"];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated

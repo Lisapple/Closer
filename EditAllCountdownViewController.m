@@ -46,15 +46,15 @@
 	
 	[NetworkStatus startObserving];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusDidChange:)
-												 name:kNetworkStatusDidChangeNotification
-											   object:nil];
+												 name:kNetworkStatusDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData)
+												 name:CountdownDidUpdateNotification object:nil];
 }
 
 - (void)networkStatusDidChange:(NSNotification *)notification
 {
-	/* Reload the second section (Import/Export) */
-	[_tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
-			 withRowAnimation:UITableViewRowAnimationFade];
+	/* Reload the whole table view (do not show animations) */
+	[_tableView reloadData];
 }
 
 - (IBAction)moreInfo:(id)sender
@@ -402,6 +402,11 @@
 - (BOOL)canBecomeFirstResponder
 {
 	return YES;// Return YES to receive undo from shake gesture
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
