@@ -8,6 +8,7 @@
 
 #import "Countdown+addition.h"
 #import "NSBundle+addition.h"
+#import "NSDate+addition.h"
 
 @implementation Countdown (LocalNotification)
 
@@ -118,6 +119,7 @@
 
 @end
 
+
 @implementation Countdown (Event)
 
 + (Countdown *)countdownWithEvent:(EKEvent *)event
@@ -127,6 +129,42 @@
 	countdown.endDate = event.startDate;
 	countdown.message = event.notes;
 	return countdown;
+}
+
+@end
+
+
+@implementation Countdown (Spotlight)
+
++ (void)buildingSpolightIndexWithCompletionHandler:(void (^)(NSError * error))completionHandler
+{
+	if (NSClassFromString(@"CSSearchableIndex")) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			NSMutableArray <CSSearchableItem *> * searchableItems = [[NSMutableArray alloc] initWithCapacity:self.allCountdowns.count];
+			for (Countdown * countdown in self.allCountdowns) {
+				if (countdown.type == CountdownTypeCountdown) {
+					CSSearchableItemAttributeSet * attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:(NSString *)kUTTypeItem];
+					attributeSet.title = countdown.name;
+					if (countdown.endDate) {
+						attributeSet.contentDescription = [NSString stringWithFormat:@"%@ - %@", countdown.endDate.naturalDateString, countdown.message];
+					} else {
+						attributeSet.contentDescription = countdown.message;
+					}
+					attributeSet.relatedUniqueIdentifier = countdown.identifier;
+					
+					attributeSet.keywords = @[ countdown.name, countdown.message ];
+					CSSearchableItem * item = [[CSSearchableItem alloc] initWithUniqueIdentifier:countdown.identifier
+																				domainIdentifier:@"countdown"
+																					attributeSet:attributeSet];
+					[searchableItems addObject:item];
+					
+					NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:@"com.lisacintosh.closer.show-countdown"];
+					activity.contentAttributeSet = attributeSet;
+				}
+			}
+			[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:searchableItems completionHandler:completionHandler];
+		});
+	}
 }
 
 @end

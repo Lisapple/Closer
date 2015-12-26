@@ -16,6 +16,8 @@
 
 #import "NSDate+addition.h"
 
+#import <Crashlytics/Crashlytics.h>
+
 @interface EditAllCountdownViewController ()
 
 @property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
@@ -148,6 +150,8 @@
 	[[self.undoManager prepareWithInvocationTarget:self] removeCountdown:countdown indexPath:indexPath];
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
 	
+	CLSLog(@"Insert %@ from indexPath %@", countdown, indexPath);
+	
 	[Countdown insertCountdown:countdown atIndex:indexPath.row];
 	[self.tableView beginUpdates];
 	[self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -175,6 +179,8 @@
 {
 	[[self.undoManager prepareWithInvocationTarget:self] insertCountdown:countdown atIndexPath:indexPath];
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_INSERT_COUNTDOWN_ACTION", nil)];
+	
+	CLSLog(@"Remove %@ (at index %ld) from indexPath %@", countdown, (long)[Countdown indexOfCountdown:countdown], indexPath);
 	
 	[Countdown removeCountdown:countdown];
 	[self.tableView beginUpdates];

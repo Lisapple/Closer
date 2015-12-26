@@ -7,12 +7,12 @@
 //
 
 #import "MainViewController_Phone.h"
-
-#import "Countdown.h"
-
 #import "EditAllCountdownViewController.h"
 
+#import "Countdown.h"
 #import "NetworkStatus.h"
+
+#import <Crashlytics/Crashlytics.h>
 
 @interface MainViewController_Phone ()
 
@@ -120,6 +120,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	NSInteger countdownsCount = [Countdown allCountdowns].count;
 	
 	if (countdownsCount > 0) {
+		CLSLog(@"Reload with %ld countdowns and %ld pages", (long)countdownsCount, (long)pagesCount);
 		if (pagesCount > countdownsCount) {
 			
 			// Compute the range of page to remove

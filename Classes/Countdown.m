@@ -567,7 +567,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)addDurations:(NSArray * _Nonnull)durations withNames:(NSArray <NSString *> * _Nullable)names
 {
-	NSAssert2((names && durations.count == names.count) || !names, @"The number of durations (%lu) must be the same as names (%lu)", durations.count, names.count);
+	NSAssert2((names && durations.count == names.count) || !names, @"The number of durations (%lu) must be the same as names (%lu)",
+			  (long)durations.count, (long)names.count);
 	[_durations addObjectsFromArray:durations];
 	if (names) {
 		[_names addObjectsFromArray:names];
