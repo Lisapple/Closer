@@ -769,16 +769,16 @@
 		NSUInteger oldPage = [change[NSKeyValueChangeOldKey] integerValue];
 		NSUInteger location = MIN(_pageViews.count - 1, oldPage * 4);
 		NSUInteger length = MIN(_pageViews.count - 1 - location, 4);
-		NSArray <PageView *> * pages = [_pageViews subarrayWithRange:NSMakeRange(location, length)];
-		for (PageView * pageView in pages) {
-			[pageView viewDidHide:YES]; }
+		for (NSUInteger i = location; i < MIN(location + length, _pageViews.count); ++i) {
+			[_pageViews[i] viewDidHide:YES];
+		}
 		
 		NSUInteger currentPage = [change[NSKeyValueChangeNewKey] integerValue];
 		location = MIN(_pageViews.count - 1, currentPage * 4);
 		length = MIN(_pageViews.count - 1 - location, 4);
-		pages = [_pageViews subarrayWithRange:NSMakeRange(location, length)];
-		for (PageView * pageView in pages) {
-			[pageView viewWillShow:YES]; }
+		for (NSUInteger i = location; i < MIN(location + length, _pageViews.count); ++i) {
+			[_pageViews[i] viewWillShow:YES];
+		}
 	}
 }
 
