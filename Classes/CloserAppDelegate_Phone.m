@@ -68,6 +68,9 @@
 													  UIView * statusBarView = [_window viewWithTag:4567];
 													  statusBarView.frame = application.statusBarFrame;
 												  }];
+	
+	[Countdown buildingSpolightIndexWithCompletionHandler:nil];
+	
 	return YES;
 }
 
@@ -144,17 +147,38 @@
 	}
 }
 
+- (void)openCountdownWithIdentifier:(NSString *)identifier
+{
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound) {
+		[_mainViewController showPageAtIndex:index animated:NO];
+	}
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+{
+	if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
+		[self openCountdownWithIdentifier:url.fragment];
+	}
+	return YES;
+}
+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
-        Countdown * countdown = [Countdown countdownWithIdentifier:url.fragment];
-        NSInteger index = [Countdown indexOfCountdown:countdown];
-        if (index != NSNotFound) {
-            [_mainViewController showPageAtIndex:index animated:NO];
-        }
+        [self openCountdownWithIdentifier:url.fragment];
     }
-    
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler
+{
+	if (NSClassFromString(@"CSSearchableIndex")) {
+		NSString * identifier = userActivity.userInfo[CSSearchableItemActivityIdentifier];
+		[self openCountdownWithIdentifier:identifier];
+	}
+	return YES;
 }
 
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler

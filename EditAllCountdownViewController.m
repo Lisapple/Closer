@@ -16,6 +16,8 @@
 
 #import "NSDate+addition.h"
 
+#import <Crashlytics/Crashlytics.h>
+
 @interface EditAllCountdownViewController ()
 
 @property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
@@ -46,15 +48,15 @@
 	
 	[NetworkStatus startObserving];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusDidChange:)
-												 name:kNetworkStatusDidChangeNotification
-											   object:nil];
+												 name:kNetworkStatusDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData)
+												 name:CountdownDidUpdateNotification object:nil];
 }
 
 - (void)networkStatusDidChange:(NSNotification *)notification
 {
-	/* Reload the second section (Import/Export) */
-	[_tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
-			 withRowAnimation:UITableViewRowAnimationFade];
+	/* Reload the whole table view (do not show animations) */
+	[_tableView reloadData];
 }
 
 - (IBAction)moreInfo:(id)sender
@@ -148,6 +150,8 @@
 	[[self.undoManager prepareWithInvocationTarget:self] removeCountdown:countdown indexPath:indexPath];
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_DELETE_COUNTDOWN_ACTION", nil)];
 	
+	CLSLog(@"Insert %@ from indexPath %@", countdown, indexPath);
+	
 	[Countdown insertCountdown:countdown atIndex:indexPath.row];
 	[self.tableView beginUpdates];
 	[self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -175,6 +179,8 @@
 {
 	[[self.undoManager prepareWithInvocationTarget:self] insertCountdown:countdown atIndexPath:indexPath];
 	[self.undoManager setActionName:NSLocalizedString(@"UNDO_INSERT_COUNTDOWN_ACTION", nil)];
+	
+	CLSLog(@"Remove %@ (at index %ld) from indexPath %@", countdown, (long)[Countdown indexOfCountdown:countdown], indexPath);
 	
 	[Countdown removeCountdown:countdown];
 	[self.tableView beginUpdates];
@@ -402,6 +408,11 @@
 - (BOOL)canBecomeFirstResponder
 {
 	return YES;// Return YES to receive undo from shake gesture
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

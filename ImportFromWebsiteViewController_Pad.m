@@ -19,7 +19,6 @@
 
 - (IBAction)reshowKeyboardAction:(id)sender;
 
-- (void)updateLayout;
 - (void)updateUI;
 
 @end
@@ -77,7 +76,6 @@
 											 selector:@selector(textFieldDidChange:)
 												 name:UITextFieldTextDidChangeNotification
 											   object:nil];
-	[self updateLayout];
 }
 
 - (IBAction)reshowKeyboardAction:(id)sender
@@ -215,19 +213,6 @@
 	
 	[self.view addSubview:_tableView];
 	[_tableView reloadData];
-}
-
-- (void)updateLayout
-{
-	CGFloat x = (self.view.frame.size.width - _contentView1.frame.size.width) / 2.;
-	CGRect rect = _contentView1.frame;
-	rect.origin.x = x;
-	_contentView1.frame = rect;
-	
-	x = (self.view.frame.size.width - _contentView2.frame.size.width) / 2.;
-	rect = _contentView2.frame;
-	rect.origin.x = x;
-	_contentView2.frame = rect;
 }
 
 - (void)updateUI
@@ -399,6 +384,11 @@
 		
 		[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

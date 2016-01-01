@@ -40,6 +40,8 @@
 	self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
 	
+	[Countdown buildingSpolightIndexWithCompletionHandler:nil];
+	
     return YES;
 }
 
@@ -102,17 +104,38 @@
 	}
 }
 
+- (void)openCountdownWithIdentifier:(NSString *)identifier
+{
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound) {
+		[self.viewController showPageAtIndex:(index % 3) animated:NO];
+	}
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+{
+	if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
+		[self openCountdownWithIdentifier:url.fragment];
+	}
+	return YES;
+}
+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
-        Countdown * countdown = [Countdown countdownWithIdentifier:url.fragment];
-        NSInteger index = [Countdown indexOfCountdown:countdown];
-        if (index != NSNotFound) {
-            [self.viewController showPageAtIndex:(index % 3) animated:NO];
-        }
-    }
-    
-    return YES;
+	if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
+		[self openCountdownWithIdentifier:url.fragment];
+	}
+	return YES;
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler
+{
+	if (NSClassFromString(@"CSSearchableIndex")) {
+		NSString * identifier = userActivity.userInfo[CSSearchableItemActivityIdentifier];
+		[self openCountdownWithIdentifier:identifier];
+	}
+	return YES;
 }
 
 // Even if iPad can be used with AppleWatch implement this method for consistency
