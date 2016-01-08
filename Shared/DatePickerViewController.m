@@ -52,7 +52,11 @@
 	_hasTimeDate = (endDate != nil && (endDate.timeIntervalSinceNow > 0));// If endDate is nil or passed, we don't have a valid date and consider time as invalid
 	
 	if (!endDate || (endDate.timeIntervalSinceNow <= 0)) {
-		self.date = [[NSDate date] dateByAddingTimeInterval:60];// date = now + 1 minute
+		NSDate * now = [NSDate date];
+		NSCalendar * calendar = [NSCalendar currentCalendar];
+		NSDateComponents * comps = [calendar components:NSCalendarUnitMinute fromDate:now];
+		comps.minute = 60 - comps.minute;
+		self.date = [calendar dateByAddingComponents:comps toDate:now options:0]; // date = today, next hour
 	} else {
 		self.date = endDate;
 	}
