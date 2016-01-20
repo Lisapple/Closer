@@ -77,10 +77,15 @@ class Countdown: NSObject {
 		return countdowns
 	}
 	
-	class func countdownWithType(type: GlanceType) -> Countdown? {
+	class func countdownWith(identifier: String) -> Countdown? {
+		return allCountdowns().filter { (countdown: Countdown) -> Bool in
+			return countdown.identifier == identifier }.first
+	}
+	
+	class func countdownWith(glanceType: GlanceType) -> Countdown? {
 		var countdown: Countdown?
 		let countdowns = allCountdowns()
-		if (type == .ClosestCountdown) {
+		if (glanceType == .ClosestCountdown) {
 			// Get all countdowns sorted by endDate
 			var sortedCountdowns = countdowns.filter({ (countdown: Countdown) -> Bool in
 				return (countdown.type == .Countdown) })
@@ -95,7 +100,7 @@ class Countdown: NSObject {
 				countdown = sortedCountdowns.first!
 			}
 		}
-		else if (type == .ClosestCountdown) {
+		else if (glanceType == .ClosestCountdown) {
 			// Get all timers sorted by endDate
 			var sortedTimers = countdowns.filter({ (timer: Countdown) -> Bool in
 				return (timer.type == .Timer) })
@@ -121,7 +126,7 @@ class Countdown: NSObject {
 				}
 			}
 		}
-		if (type == .LastSelectedPage || countdown == nil) {
+		if (glanceType == .LastSelectedPage || countdown == nil) {
 			let identifier = NSUserDefaults().stringForKey("selectedIdentifier")
 			countdown = countdowns.filter({ (countdown: Countdown) -> Bool in
 				return (countdown.identifier == identifier) }).first
@@ -155,6 +160,7 @@ class Countdown: NSObject {
 		}
 		self.message = dictionary["message"] as? String
 		self.durations = dictionary["durations"] as? [NSTimeInterval]
+		self.durationIndex = dictionary["durationIndex"] as? Int
 		self.names = dictionary["names"] as? [String]
 	}
 	
@@ -197,10 +203,9 @@ extension Countdown {
 	func progressionAtDate(date: NSDate?) -> Double {
 		var progression: Double = 0
 		if (self.type == .Timer) { // Timer
-			let index = self.durationIndex!
-			let durations = self.durations!
-			if (durations.count > 0) {
-				let duration = durations[index]
+			let durations = self.durations
+			if (durations != nil && durations!.count > 0 && self.durationIndex != nil) {
+				let duration = durations![self.durationIndex!]
 				let endDate: NSDate? = (self.endDate != nil) ? ((date != nil) ? self.endDate!.dateByAddingTimeInterval(-date!.timeIntervalSinceNow) : self.endDate!) : nil
 				let remaining = (endDate != nil) ? NSDate().timeIntervalSinceDate(endDate!) : 0
 				progression = 1 - ((endDate != nil) ? endDate!.timeIntervalSinceNow : remaining) / duration

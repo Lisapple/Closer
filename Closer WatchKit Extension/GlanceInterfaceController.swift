@@ -27,7 +27,7 @@ class GlanceInterfaceController: WKInterfaceController {
 
 		let userDefaults = NSUserDefaults.standardUserDefaults()
 		let glanceType = GlanceType(string: userDefaults.stringForKey("glance_type"))
-		let countdown = Countdown.countdownWithType(glanceType)
+		let countdown = Countdown.countdownWith(glanceType)
 		if (countdown != nil) {
 			endDate = countdown!.endDate
 			let color = UIColor(colorStyle: countdown!.style)

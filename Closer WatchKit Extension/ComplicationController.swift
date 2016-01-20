@@ -22,7 +22,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 		
 		let userDefaults = NSUserDefaults.standardUserDefaults()
 		let glanceType = GlanceType(string: userDefaults.stringForKey("glance_type"))
-		countdown = Countdown.countdownWithType(glanceType)
+		countdown = Countdown.countdownWith(glanceType)
 	}
 	
 	func getSupportedTimeTravelDirectionsForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTimeTravelDirections) -> Void) {

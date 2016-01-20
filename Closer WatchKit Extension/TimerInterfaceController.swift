@@ -34,8 +34,7 @@ class TimerInterfaceController: WKInterfaceController {
         super.awakeWithContext(context)
 		self.countdown = context! as? Countdown
 		
-		let dictContext:[String : AnyObject] = context as! Dictionary
-		self.setTitle(dictContext["name"] as? String)
+		self.setTitle(self.countdown?.name)
 		if (countdown?.currentDuration != nil) {
 			duration = countdown!.currentDuration!
 		}
@@ -59,13 +58,7 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	func updateUI() {
-		self.animateWithDuration(0.15) { () -> Void in // IDK if animation is working
-			self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 74/2))
-		}
-		if (countdown!.endDate != nil) {
-		} else {
-			timerLabel.setDate(NSDate())
-		}
+		updateProgressionImage()
 		
 		if (countdown!.endDate != nil) {
 			timerLabel.setDate(countdown!.endDate!)
@@ -78,7 +71,7 @@ class TimerInterfaceController: WKInterfaceController {
 			
 			let calendar = NSCalendar.currentCalendar()
 			let components = NSDateComponents()
-			if (countdown!.durations != nil && countdown!.durations!.count > 1) {
+			if (countdown!.durations != nil && countdown!.durations!.count > 1 && countdown!.durationIndex != nil) {
 				// "Next: [next duration]"
 				let nextDurationIndex = (countdown!.durationIndex!+1) % countdown!.durations!.count
 				components.second = Int(countdown!.durations![nextDurationIndex])
@@ -90,19 +83,22 @@ class TimerInterfaceController: WKInterfaceController {
 				let date = calendar.dateFromComponents(components)
 				descriptionLabel.setText("of \(NSDateFormatter.localizedStringFromDate(date!, dateStyle: .NoStyle, timeStyle: .MediumStyle))")
 			}
+			
+			if (timer == nil) {
+				let interval = (countdown!.endDate!.timeIntervalSinceNow > 30 * 60) ? 60.0 : 1.0
+				timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "updateProgressionImage", userInfo: nil, repeats: true)
+				timer!.tolerance = interval / 2
+			}
 		} else {
-			timerLabel.setDate(NSDate(timeIntervalSinceNow: remaining))
 			timerLabel.stop()
 			descriptionLabel.setHidden(true)
 		}
-		
-		if (!paused) {
-			timer?.invalidate()
-			let interval = (countdown?.endDate != nil && countdown!.endDate!.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0
-			timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "updateUI", userInfo: nil, repeats: false)
-			timer!.tolerance = interval / 2
-		}
     }
+	
+	func updateProgressionImage() {
+		print("updateProgressionImage")
+		self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 74/2))
+	}
 	
 	@IBAction func newMenuAction() {
 		let countdown = Countdown(name: nil, identifier: nil, type: .Timer, style: nil)
@@ -131,7 +127,6 @@ class TimerInterfaceController: WKInterfaceController {
 		clearAllMenuItems()
 		addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
@@ -147,7 +142,6 @@ class TimerInterfaceController: WKInterfaceController {
 		clearAllMenuItems()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
@@ -162,7 +156,6 @@ class TimerInterfaceController: WKInterfaceController {
 		clearAllMenuItems()
 		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
 		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
 		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
 	}
 	
@@ -179,9 +172,22 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 	}
 	
+	func didReceive(notification: NSNotification) {
+		let identifier = notification.object as? String
+		if (identifier == self.countdown?.identifier) {
+			if (identifier != nil) {
+				self.countdown = Countdown.countdownWith(identifier!)
+			}
+			updateUI()
+		}
+	}
+	
     override func willActivate() {
         super.willActivate()
 		updateUI()
+		
+		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceive:", name: "CountdownDidUpdateNotification", object: nil)
 		
 		if (hasChange) {
 			let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))
@@ -201,10 +207,14 @@ class TimerInterfaceController: WKInterfaceController {
     override func didDeactivate() {
         super.didDeactivate()
 		NSNotificationCenter.defaultCenter().removeObserver(self)
+		
+		self.timer?.invalidate()
+		self.timer = nil
     }
 	
 	deinit {
 		self.paused = true
 		self.timer?.invalidate()
+		self.timer = nil
 	}
 }

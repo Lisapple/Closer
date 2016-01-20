@@ -78,9 +78,22 @@ class CountdownInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 	}
 	
+	func didReceive(notification: NSNotification) {
+		let identifier = notification.object as? String
+		if (identifier == self.countdown?.identifier) {
+			if (identifier != nil) {
+				self.countdown = Countdown.countdownWith(identifier!)
+			}
+			updateUI()
+		}
+	}
+	
 	override func willActivate() {
 		super.willActivate()
 		updateUI()
+		
+		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceive:", name: "CountdownDidUpdateNotification", object: nil)
 		
 		if (hasChange) {
 			let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))
