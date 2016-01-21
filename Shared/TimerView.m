@@ -15,9 +15,24 @@
 	NSUInteger animationIdentifier;
 	BOOL _cancel, _animating;
 }
+
+@property (nonatomic, strong) UIView * selectedBackgroundView;
+
 @end
 
 @implementation TimerView
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+	if ((self = [super initWithCoder:aDecoder])) {
+		const CGFloat width = MIN(self.frame.size.width, self.frame.size.height);
+		self.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, width)];
+		self.selectedBackgroundView.userInteractionEnabled = NO;
+		self.selectedBackgroundView.alpha = 0.;
+		[self addSubview:self.selectedBackgroundView];
+	}
+	return self;
+}
 
 - (void)setProgression:(CGFloat)progression
 {
@@ -55,13 +70,24 @@
 - (void)setTintColor:(UIColor *)tintColor
 {
 	_tintColor = tintColor;
+	self.selectedBackgroundView.backgroundColor = [tintColor colorWithAlphaComponent:0.333];
 	[self setNeedsDisplay];
 }
 
 - (void)setHighlighted:(BOOL)highlighted
 {
 	super.highlighted = highlighted;
-	[self setNeedsDisplay];
+	
+	if (highlighted) {
+		CGPoint center = CGPointMake(self.frame.size.width / 2., self.frame.size.height / 2.);
+		self.selectedBackgroundView.center = center;
+		self.selectedBackgroundView.layer.cornerRadius = self.selectedBackgroundView.frame.size.height / 2.;
+		[UIView animateWithDuration:0.05 animations:^{
+			self.selectedBackgroundView.alpha = 1.; }];
+	} else {
+		[UIView animateWithDuration:0.05 animations:^{
+			self.selectedBackgroundView.alpha = 0; }];
+	}
 }
 
 - (void)drawRect:(CGRect)rect
@@ -100,12 +126,6 @@
 		CGContextFillPath(context);
 	}
 	CGContextRestoreGState(context);
-	
-	if (self.highlighted) {
-		CGContextAddEllipseInRect(context, innerFrame);
-		CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:1. alpha:0.3].CGColor);
-		CGContextFillPath(context);
-	}
 }
 
 @end

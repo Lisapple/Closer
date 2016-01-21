@@ -51,11 +51,35 @@
 #define kDefaultNavigationBar 1
 #define kEditNavigationBar 2
 
-#define kShareAlertTag 1234
-
 @implementation MainViewController_Pad
 
-#pragma mark - View lifecycle
+- (NSString *)proposedNameForType:(CountdownType)type
+{
+	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
+	NSArray * countdowns = [Countdown allCountdowns];
+	
+	int index = 1;
+	while (1) {
+		
+		BOOL nameIsFree = YES;
+		for (Countdown * countdown in countdowns) {
+			if ([countdown.name isEqualToString:name]) {
+				nameIsFree = NO; break;
+			}
+		}
+		
+		if (nameIsFree)
+			return name;
+		
+		if (type == CountdownTypeTimer)
+			name = [NSString stringWithFormat:NSLocalizedString(@"New Timer %i", nil), index];
+		else
+			name = [NSString stringWithFormat:NSLocalizedString(@"New Countdown %i", nil), index];
+		++index;
+	}
+}
+
+#pragma mark - Actions
 
 - (void)showNavigationBar:(NSInteger)navigationBarTag
 {
@@ -101,33 +125,6 @@
 	}
 	
 	_currentNavigationBarTag = navigationBarTag;
-}
-
-- (NSString *)proposedNameForType:(CountdownType)type
-{
-	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
-	NSArray * countdowns = [Countdown allCountdowns];
-	
-	int index = 1;
-	while (1) {
-		
-		BOOL nameIsFree = YES;
-		for (int i = 0; i < countdowns.count; i++) {
-			Countdown * countdown = (Countdown *)countdowns[i];
-			if ([countdown.name isEqualToString:name]) {
-				nameIsFree = NO;
-				break;
-			}
-		}
-		
-		if (nameIsFree)
-			return name;
-		
-		if (type == CountdownTypeTimer)
-			name = [NSString stringWithFormat:NSLocalizedString(@"New Timer %i", nil), index++];
-		else
-			name = [NSString stringWithFormat:NSLocalizedString(@"New Countdown %i", nil), index++];
-	}
 }
 
 - (IBAction)new:(id)sender
@@ -642,6 +639,8 @@
 	[_pageViews removeObjectAtIndex:index];
 }
 
+#pragma mark - View lifetime
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -666,6 +665,7 @@
 	
 	_scrollView.pagingEnabled = YES;
 	_scrollView.delegate = self;
+	_scrollView.delaysContentTouches = NO;
 	_pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight;// Add flexible height (Unavailable from IB)
 	
 	[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(update)

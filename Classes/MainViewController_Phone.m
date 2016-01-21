@@ -42,6 +42,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_scrollView.alwaysBounceHorizontal = YES;
 	_scrollView.delegate = self;
     _scrollView.clipsToBounds = YES;
+	_scrollView.delaysContentTouches = NO;
 	
 	_pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight; // Add flexible height (Unavailable from IB)
 }

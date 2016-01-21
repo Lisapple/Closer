@@ -34,6 +34,7 @@
 		_contentView.frame = self.bounds;
 		_contentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self.scrollView addSubview:_contentView];
+		self.scrollView.delaysContentTouches = NO;
 		
 		[_timerView addTarget:self
 					   action:@selector(timerDidSelectAction:)
@@ -176,7 +177,8 @@
 	_leftButton.imageView.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
 	NSString * name = (self.countdown.isPaused) ? @"reset-button" : @"pause-button";
 	_leftButton.tintColor = [UIColor textColorForStyle:self.countdown.style];
-	[_leftButton setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
+	[_leftButton setImage:[[UIImage imageNamed:name] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+				 forState:UIControlStateNormal];
 }
 
 - (NSString *)formattedDurationForDuration:(NSTimeInterval)seconds
@@ -373,81 +375,6 @@
 	if ([self.delegate respondsToSelector:@selector(pageViewWillShowSettings:)])
 		[self.delegate pageViewWillShowSettings:self];
 }
-
-/*
-- (IBAction)confirmationChangeAction:(id)sender
-{
-	[self.countdown setDuration:@(_originalDuration)
-						atIndex:self.countdown.durationIndex];
-	
-	_timeLabel.text = NSLocalizedString(@"Resume", nil);
-	_remainingSeconds = _duration = self.countdown.currentDuration.doubleValue;
-	_isFinished = NO;
-	[self reload];
-	[self showConfirmationToolbar:NO];
-}
-
-- (IBAction)resetChangeAction:(id)sender
-{
-	_timeLabel.text = NSLocalizedString(@"Resume", nil);
-	_remainingSeconds = _duration = self.countdown.currentDuration.doubleValue;
-	_isFinished = NO;
-	[self.countdown reset];
-	[self reload];
-	[self showConfirmationToolbar:NO];
-}
-
-- (IBAction)showConfirmationToolbar:(BOOL)show
-{
-	_showingChangeConfirmation = show;
-	
-	static const NSInteger tag = 1234;
-	if (show) {
-		CGRect frame = CGRectMake(0., self.frame.size.height,
-								  self.frame.size.width, 44.);
-		UIToolbar * toolbar = [[UIToolbar alloc] initWithFrame:frame];
-		toolbar.tag = tag;
-        toolbar.tintColor = [UIColor blackColor];
-		
-		NSString * resetTitle = [NSString stringWithFormat:NSLocalizedString(@"Reset to %@", nil),
-								 [self.countdown shortDescriptionOfDurationAtIndex:self.countdown.durationIndex]];
-		toolbar.items = @[ [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																		 target:self action:@selector(confirmationChangeAction:)],
-						   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-																		 target:nil action:NULL],
-						   [[UIBarButtonItem alloc] initWithTitle:resetTitle
-															style:UIBarButtonItemStyleDone
-														   target:self action:@selector(resetChangeAction:)] ];
-		[self addSubview:toolbar];
-		[UIView animateWithDuration:0.15
-						 animations:^{
-							 toolbar.frame = CGRectMake(0., self.frame.size.height - 44.,
-														self.frame.size.width, 44.);
-						 }];
-		
-		if ([self.delegate respondsToSelector:@selector(pageViewWillShowDeleteConfirmation:)]) {
-			[self.delegate pageViewWillShowDeleteConfirmation:self]; // @TODO: Use a type for confirmation (xxxDelete and xxxTimer)
-		}
-		
-	} else { // Hide
-		[UIView animateWithDuration:0.15
-						 animations:^{
-							 [self viewWithTag:tag].frame = CGRectMake(0., self.frame.size.height,
-																	   self.frame.size.width, 44.);
-						 }
-						 completion:^(BOOL finished) { [[self viewWithTag:tag] removeFromSuperview]; }];
-		
-		if ([self.delegate respondsToSelector:@selector(pageViewWillShowDeleteConfirmation:)]) {
-			[self.delegate pageViewDidHideDeleteConfirmation:self]; // @TODO: Use a type for confirmation (xxxDelete and xxxTimer)
-		}
-	}
-	
-	((UIScrollView *)self.superview).scrollEnabled = !(show);
-	self.scrollView.scrollEnabled =  !(show);
-	self.infoButton.hidden = (show);
-	_leftButton.hidden = (show);
-}
-*/
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {

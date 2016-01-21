@@ -75,6 +75,7 @@
 		_scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
 		_scrollView.delegate = self;
 		
+		_scrollView.delaysContentTouches = NO;
 		_scrollView.showsHorizontalScrollIndicator = NO;
 		_scrollView.showsVerticalScrollIndicator = NO;
 		_scrollView.alwaysBounceVertical = YES;
