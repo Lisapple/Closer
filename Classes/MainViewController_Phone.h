@@ -22,6 +22,8 @@
 
 @property (nonatomic, strong) NSMutableArray <PageView *> * pages;
 
+@property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
+
 #pragma mark Current Page Index
 
 - (NSInteger)selectedPageIndex;

@@ -13,24 +13,19 @@
 #endif
 
 #if TARGET_IPHONE_SIMULATOR
-#define NSDebugLog(format, ...)  NSLog(format, ##__VA_ARGS__)
+#  define NSDebugLog(format, ...)  NSLog(@"[DEBUG] " format, ##__VA_ARGS__)
 #else
-#define NSDebugLog(format, ...)
+#  define NSDebugLog(format, ...)
 #endif
 
 #define CLAMP(A, T, B) ( A + (B - A) * T )
-
-CG_INLINE void NSFrameLog(CGRect rect)
-{
-	NSDebugLog(@"{%.1f, %.1f} {%.1f, %.1f}", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
-};
 
 #define kDefaultEventDuration 7200 // The default duration for EKEvent and VEvent = 60 * 60 * 2 seconds = 2 hours
 
 #define TARGET_IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 #if !defined(OrderComparisonResult)
-#define OrderComparisonResult(A, B) ( ((A) < (B))? NSOrderedAscending : (((A) > (B))? NSOrderedDescending : NSOrderedSame) )
+#  define OrderComparisonResult(A, B) ( ((A) < (B))? NSOrderedAscending : (((A) > (B))? NSOrderedDescending : NSOrderedSame) )
 #endif
 
 #define kLastSelectedPageIndex				@"last_selected_page_index"

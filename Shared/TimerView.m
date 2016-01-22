@@ -79,6 +79,8 @@
 	super.highlighted = highlighted;
 	
 	if (highlighted) {
+		const CGFloat width = MIN(self.frame.size.width, self.frame.size.height);
+		self.selectedBackgroundView.frame = CGRectMake(0, 0, width, width);
 		CGPoint center = CGPointMake(self.frame.size.width / 2., self.frame.size.height / 2.);
 		self.selectedBackgroundView.center = center;
 		self.selectedBackgroundView.layer.cornerRadius = self.selectedBackgroundView.frame.size.height / 2.;

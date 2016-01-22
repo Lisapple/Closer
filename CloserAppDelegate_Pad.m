@@ -8,10 +8,10 @@
 
 #import "CloserAppDelegate_Pad.h"
 #import "MainViewController_Pad.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
+#import "DurationsViewController.h"
 
 #import "Countdown+addition.h"
+#import "NSString+addition.h"
 
 @interface CloserAppDelegate_Pad ()
 
@@ -104,36 +104,79 @@
 	}
 }
 
-- (void)openCountdownWithIdentifier:(NSString *)identifier
+- (void)openCountdownWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSInteger index = [Countdown indexOfCountdown:countdown];
 	if (index != NSNotFound) {
-		[self.viewController showPageAtIndex:(index % 3) animated:NO];
+		[self.viewController showPageAtIndex:(index % 3) animated:animated];
 	}
+}
+
+- (void)showCountdownSettingsWithIdentifier:(NSString *)identifier animated:(BOOL)animated
+{
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound) {
+	}
+}
+
+- (void)showAddDurationForCountdownWithIdentifier:(NSString *)identifier
+{
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound) {
+		[self.viewController showSettingsForPageAtIndex:index animated:NO];
+		SettingsViewController_Pad * controller = self.viewController.settingsViewController;
+		DurationsViewController * durationController = (DurationsViewController *)[controller showSettingsType:SettingsTypeDurations animated:NO];
+		[durationController showAddDurationWithAnimation:NO];
+	}
+}
+
+- (BOOL)openDeeplinkURL:(NSURL *)url
+{
+	BOOL animated = ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
+	NSString * identifier = nil;
+#define URL_STRING(X) @"closer:\\/\\/countdown\\/"X
+	// closer://countdown#[identifier]
+	if /**/ ([url.absoluteString matchesWithPattern:URL_STRING(@"#([^\\/]+)$") firstMatch:&identifier]) { // DEPRECATED
+		[self openCountdownWithIdentifier:identifier animated:animated];
+		return YES;
+	}
+	// closer://countdown/[identifier]
+	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)$") firstMatch:&identifier]) {
+		[self openCountdownWithIdentifier:identifier animated:animated];
+		return YES;
+	}
+	// closer://countdown/[identifier]/settings
+	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings$") firstMatch:&identifier]) {
+		[self showCountdownSettingsWithIdentifier:identifier animated:animated];
+		return YES;
+	}
+	// closer://countdown/[identifier]/settings/durations/add
+	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings\\/durations\\/add$") firstMatch:&identifier]) {
+		[self showAddDurationForCountdownWithIdentifier:identifier];
+		return YES;
+	}
+#undef URL_STRING
+	return NO;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
 {
-	if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
-		[self openCountdownWithIdentifier:url.fragment];
-	}
-	return YES;
+	return [self openDeeplinkURL:url];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-	if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
-		[self openCountdownWithIdentifier:url.fragment];
-	}
-	return YES;
+	return [self openDeeplinkURL:url];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler
 {
 	if (NSClassFromString(@"CSSearchableIndex")) {
 		NSString * identifier = userActivity.userInfo[CSSearchableItemActivityIdentifier];
-		[self openCountdownWithIdentifier:identifier];
+		[self openCountdownWithIdentifier:identifier animated:NO];
 	}
 	return YES;
 }

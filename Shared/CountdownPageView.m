@@ -10,6 +10,13 @@
 
 #import "UIView+addition.h"
 
+@interface PageView ()
+
+@property (nonatomic, strong) UIScrollView * scrollView;
+
+@end
+
+
 @interface CountdownPageView ()
 
 @property (nonatomic, assign) IBOutlet UIView * contentView;

@@ -8,7 +8,15 @@
 
 #import "TimerPageView.h"
 
+@interface PageView ()
+
+@property (nonatomic, strong) UIScrollView * scrollView;
+
+@end
+
+
 @interface TimerPageView ()
+
 @property (nonatomic, strong) id updateObserver, continueObserver;
 
 @property (nonatomic, assign) BOOL dragging, showingChangeConfirmation, idleTimerDisabled;
@@ -367,6 +375,11 @@
 {
 	if (!_showingChangeConfirmation)
 		[self tooglePause];
+	
+	if (self.countdown.durations.count == 0) {
+		NSString * URLString = [NSString stringWithFormat:@"closer://countdown/%@/settings/durations/add", self.countdown.identifier];
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLString]];
+	}
 }
 
 - (IBAction)showSettings:(id)sender

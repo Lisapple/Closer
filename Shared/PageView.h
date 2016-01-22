@@ -45,8 +45,6 @@ static const NSTimeInterval kDoubleTapDelay = 0.35;
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, weak) NSObject <PageViewDelegate> * delegate;
 
-@property (nonatomic, strong) UIScrollView * scrollView; // @FIXME: Private?
-
 @property (nonatomic, assign) CountdownStyle style;
 
 @property (nonatomic, strong) IBOutlet UIButton * infoButton;

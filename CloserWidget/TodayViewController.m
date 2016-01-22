@@ -100,7 +100,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSString * identifier = _countdowns[indexPath.row][@"identifier"];
-	NSURL * appURL = [NSURL URLWithString:[NSString stringWithFormat:@"closer://countdown#%@", identifier]];
+	NSURL * appURL = [NSURL URLWithString:[NSString stringWithFormat:@"closer://countdown/%@", identifier]];
 	[self.extensionContext openURL:appURL completionHandler:NULL];
 }
 

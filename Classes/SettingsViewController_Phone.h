@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SettingsViewController.h"
 
 @protocol SettingsViewControllerDelegate;
 
 @class Countdown;
 
-@interface SettingsViewController_Phone : UIViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
+@interface SettingsViewController_Phone : UIViewController
+<UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, SettingsControllerProtocol>
 
 @property (nonatomic, unsafe_unretained) NSObject <SettingsViewControllerDelegate> * delegate;
 @property (nonatomic, strong) IBOutlet UITableView * tableView;

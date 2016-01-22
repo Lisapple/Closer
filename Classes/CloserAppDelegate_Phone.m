@@ -8,6 +8,7 @@
 
 #import "CloserAppDelegate_Phone.h"
 #import "MainViewController_Phone.h"
+#import "DurationsViewController.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
@@ -15,6 +16,7 @@
 #import "Countdown+addition.h"
 
 #import "NSBundle+addition.h"
+#import "NSString+addition.h"
 
 @interface CloserAppDelegate_Phone ()
 
@@ -147,36 +149,80 @@
 	}
 }
 
-- (void)openCountdownWithIdentifier:(NSString *)identifier
+- (void)openCountdownWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSInteger index = [Countdown indexOfCountdown:countdown];
 	if (index != NSNotFound) {
-		[_mainViewController showPageAtIndex:index animated:NO];
+		[_mainViewController showPageAtIndex:index animated:animated];
 	}
+}
+
+- (void)showCountdownSettingsWithIdentifier:(NSString *)identifier animated:(BOOL)animated
+{
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound) {
+		[_mainViewController showSettingsForPageAtIndex:index animated:animated];
+	}
+}
+
+- (void)showAddDurationForCountdownWithIdentifier:(NSString *)identifier
+{
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound) {
+		[_mainViewController showSettingsForPageAtIndex:index animated:YES];
+		SettingsViewController_Phone * controller = _mainViewController.settingsViewController;
+		DurationsViewController * durationController = (DurationsViewController *)[controller showSettingsType:SettingsTypeDurations animated:NO];
+		[durationController showAddDurationWithAnimation:NO];
+	}
+}
+
+- (BOOL)openDeeplinkURL:(NSURL *)url
+{
+	BOOL animated = ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
+	NSString * identifier = nil;
+#define URL_STRING(X) @"closer:\\/\\/countdown\\/"X
+	// closer://countdown#[identifier]
+	if /**/ ([url.absoluteString matchesWithPattern:URL_STRING(@"#([^\\/]+)$") firstMatch:&identifier]) { // DEPRECATED
+		[self openCountdownWithIdentifier:identifier animated:animated];
+		return YES;
+	}
+	// closer://countdown/[identifier]
+	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)$") firstMatch:&identifier]) {
+		[self openCountdownWithIdentifier:identifier animated:animated];
+		return YES;
+	}
+	// closer://countdown/[identifier]/settings
+	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings$") firstMatch:&identifier]) {
+		[self showCountdownSettingsWithIdentifier:identifier animated:animated];
+		return YES;
+	}
+	// closer://countdown/[identifier]/settings/durations/add
+	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings\\/durations\\/add$") firstMatch:&identifier]) {
+		[self showAddDurationForCountdownWithIdentifier:identifier];
+		return YES;
+	}
+#undef URL_STRING
+	return NO;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
 {
-	if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
-		[self openCountdownWithIdentifier:url.fragment];
-	}
-	return YES;
+	return [self openDeeplinkURL:url];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    if ([url.host isEqualToString:@"countdown"]) { // closer://countdown#[identifier]
-        [self openCountdownWithIdentifier:url.fragment];
-    }
-    return YES;
+    return [self openDeeplinkURL:url];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler
 {
 	if (NSClassFromString(@"CSSearchableIndex")) {
 		NSString * identifier = userActivity.userInfo[CSSearchableItemActivityIdentifier];
-		[self openCountdownWithIdentifier:identifier];
+		[self openCountdownWithIdentifier:identifier animated:NO];
 	}
 	return YES;
 }

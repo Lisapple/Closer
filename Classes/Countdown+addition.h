@@ -35,3 +35,24 @@
 + (void)buildingSpolightIndexWithCompletionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler;
 
 @end
+
+
+@interface Countdown (Answers)
+
++ (void)tagInsert;
+
++ (void)tagDelete;
+
++ (void)tagChangeType:(CountdownType)type;
+
++ (void)tagChangeName;
+
++ (void)tagChangeMessage;
+
++ (void)tagEndDate:(nullable NSDate *)date;
+
++ (void)tagChangeDuration;
+
++ (void)tagChangeTheme:(CountdownStyle)style;
+
+@end

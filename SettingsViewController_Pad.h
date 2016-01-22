@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SettingsViewController.h"
 
 @class Countdown;
-@interface SettingsViewController_Pad : UITableViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate>
+@interface SettingsViewController_Pad : UITableViewController
+<UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, SettingsControllerProtocol>
 
 @property (nonatomic, strong) Countdown * countdown;
 

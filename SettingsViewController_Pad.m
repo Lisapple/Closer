@@ -142,8 +142,32 @@
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
+
+- (UIViewController *)showSettingsType:(SettingsType)setting animated:(BOOL)animated
+{
+	Class controllerClass = nil;
+	switch (setting) {
+		case SettingsTypeName:		controllerClass = NameViewController.class; break;
+		case SettingsTypeDateAndTime: controllerClass = DatePickerViewController.class; break;
+		case SettingsTypeMessage:	controllerClass = MessageViewControler.class; break;
+		case SettingsTypeDurations:	controllerClass = DurationsViewController.class; break;
+		case SettingsTypeSong:		controllerClass = SongPickerViewController.class; break;
+		case SettingsTypeTheme:		controllerClass = PageThemeViewController.class; break;
+		default: break;
+	}
+	
+	if (controllerClass) {
+		UIViewController * viewController = (UIViewController *)[[controllerClass alloc] init];
+		NSAssert([viewController isKindOfClass:UIViewController.class], @"%@ must be a view controller", viewController);
+		if ([viewController respondsToSelector:@selector(countdown)]) {
+			[viewController performSelector:@selector(setCountdown:) withObject:_countdown];
+		}
+		[self.navigationController pushViewController:viewController animated:animated];
+		return viewController;
+	}
+	return nil;
+}
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -154,69 +178,24 @@
 		
 	} else if (indexPath.section == 1) {
 		
+		SettingsType settings = SettingsTypeNone;
 		if (_countdown.type == CountdownTypeTimer) {
-			
 			switch (indexPath.row) {
-				case 0: { // Name
-					NameViewController * nameViewController = [[NameViewController alloc] init];
-					nameViewController.countdown = _countdown;
-					[self.navigationController pushViewController:nameViewController animated:YES];
-				}
-					break;
-				case 1: { // Durations
-					DurationsViewController * durationsViewController = [[DurationsViewController alloc] init];
-					durationsViewController.countdown = _countdown;
-					[self.navigationController pushViewController:durationsViewController animated:YES];
-				}
-					break;
-				case 2: { // Song
-					SongPickerViewController * songPickerViewController = [[SongPickerViewController alloc] init];
-					songPickerViewController.countdown = _countdown;
-					[self.navigationController pushViewController:songPickerViewController animated:YES];
-				}
-					break;
-				case 3: { // Theme
-					PageThemeViewController * pageThemeViewController = [[PageThemeViewController alloc] init];
-					pageThemeViewController.countdown = _countdown;
-					[self.navigationController pushViewController:pageThemeViewController animated:YES];
-				}
-					break;
+				case 0: settings = SettingsTypeName; break;
+				case 1: settings = SettingsTypeDurations; break;
+				case 2: settings = SettingsTypeSong; break;
+				case 3: settings = SettingsTypeTheme; break;
 			}
-			
 		} else {
 			switch (indexPath.row) {
-				case 0: { // Name
-					NameViewController * nameViewController = [[NameViewController alloc] init];
-					nameViewController.countdown = _countdown;
-					[self.navigationController pushViewController:nameViewController animated:YES];
-				}
-					break;
-				case 1: { // Date & Time
-					DatePickerViewController * datePickerViewController = [[DatePickerViewController alloc] init];
-					datePickerViewController.countdown = _countdown;
-					[self.navigationController pushViewController:datePickerViewController animated:YES];
-				}
-					break;
-				case 2: { // Message
-					MessageViewControler * messageViewControler = [[MessageViewControler alloc] init];
-					messageViewControler.countdown = _countdown;
-					[self.navigationController pushViewController:messageViewControler animated:YES];
-				}
-					break;
-				case 3: { // Song
-					SongPickerViewController * songPickerViewController = [[SongPickerViewController alloc] init];
-					songPickerViewController.countdown = _countdown;
-					[self.navigationController pushViewController:songPickerViewController animated:YES];
-				}
-					break;
-				case 4: { // Theme
-					PageThemeViewController * pageThemeViewController = [[PageThemeViewController alloc] init];
-					pageThemeViewController.countdown = _countdown;
-					[self.navigationController pushViewController:pageThemeViewController animated:YES];
-				}
-					break;
+				case 0: settings = SettingsTypeName; break;
+				case 1: settings = SettingsTypeDateAndTime; break;
+				case 2: settings = SettingsTypeMessage; break;
+				case 3: settings = SettingsTypeSong; break;
+				case 4: settings = SettingsTypeTheme; break;
 			}
 		}
+		[self showSettingsType:settings animated:YES];
 	}
 	
 	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];

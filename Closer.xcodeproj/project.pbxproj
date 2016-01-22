@@ -68,6 +68,7 @@
 		508D9C261338E2AC008C04FF /* UIView+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 508D9C251338E2AC008C04FF /* UIView+addition.m */; };
 		508F82591A816C4E006BFBB8 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
 		5092AB771509337B005D6B12 /* VCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5092AB761509337B005D6B12 /* VCalendar.m */; };
+		50980E251C513D7800639A27 /* NSString+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50980E241C513D7800639A27 /* NSString+addition.m */; };
 		509ED3D8198B0AA800CCC424 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509ED3D6198B0AA800CCC424 /* EditViewController.m */; };
 		509ED3D9198B0AA800CCC424 /* EditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509ED3D7198B0AA800CCC424 /* EditViewController.xib */; };
 		50A2080E12E4E52200D8FCAA /* NSBundle+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A2080D12E4E52200D8FCAA /* NSBundle+addition.m */; };
@@ -219,6 +220,7 @@
 		5014122E1312B51500D61066 /* CountdownPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountdownPageView.h; sourceTree = "<group>"; };
 		5014122F1312B51500D61066 /* CountdownPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountdownPageView.m; sourceTree = "<group>"; };
 		501412301312B51500D61066 /* CountdownPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountdownPageView.xib; sourceTree = "<group>"; };
+		5028E7DE1C515BCE00A5FF85 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50495D601BB6B33D0009870F /* EditInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditInterfaceController.swift; sourceTree = "<group>"; };
@@ -274,6 +276,8 @@
 		508D9C251338E2AC008C04FF /* UIView+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIView+addition.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5092AB751509337B005D6B12 /* VCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VCalendar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5092AB761509337B005D6B12 /* VCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VCalendar.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		50980E231C513D7800639A27 /* NSString+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+addition.h"; sourceTree = "<group>"; };
+		50980E241C513D7800639A27 /* NSString+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+addition.m"; sourceTree = "<group>"; };
 		509ED3D5198B0AA800CCC424 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
 		509ED3D6198B0AA800CCC424 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
 		509ED3D7198B0AA800CCC424 /* EditViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditViewController.xib; sourceTree = "<group>"; };
@@ -568,6 +572,7 @@
 				50DF431217736AE800AAA6C9 /* TimerPageView.xib */,
 				50CF4F9C17738743004684C9 /* TimerView.h */,
 				50CF4F9D17738743004684C9 /* TimerView.m */,
+				5028E7DE1C515BCE00A5FF85 /* SettingsViewController.h */,
 				50AF1322176F4D230092E255 /* TypeViewController.h */,
 				50AF1323176F4D230092E255 /* TypeViewController.m */,
 				50AF1324176F4D230092E255 /* TypeViewController.xib */,
@@ -632,6 +637,8 @@
 				50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */,
 				50E954161BA6F21E00FC8CD1 /* UIApplication+addition.h */,
 				50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */,
+				50980E231C513D7800639A27 /* NSString+addition.h */,
+				50980E241C513D7800639A27 /* NSString+addition.m */,
 			);
 			path = Additions;
 			sourceTree = "<group>";
@@ -974,6 +981,7 @@
 				50A6E53913291BC9007C0C79 /* MessageViewControler.m in Sources */,
 				50A2080E12E4E52200D8FCAA /* NSBundle+addition.m in Sources */,
 				50B208FC1307F73C00AF2320 /* EditAllCountdownViewController.m in Sources */,
+				50980E251C513D7800639A27 /* NSString+addition.m in Sources */,
 				50B2095B1307FE6300AF2320 /* Countdown.m in Sources */,
 				501412311312B51500D61066 /* CountdownPageView.m in Sources */,
 				509ED3D8198B0AA800CCC424 /* EditViewController.m in Sources */,

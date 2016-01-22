@@ -165,16 +165,10 @@
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
-		
 		cell.textLabel.textAlignment = NSTextAlignmentCenter;
 	}
 	
-	if (cell.isHighlighted) {
-		cell.textLabel.textColor = [UIColor whiteColor];
-		cell.textLabel.shadowColor = [UIColor blackColor];
-		cell.textLabel.shadowOffset = CGSizeMake(2., 2.);
-	} else
-		cell.textLabel.textColor = [UIColor blackColor];
+	cell.textLabel.textColor = (cell.isHighlighted) ? [UIColor whiteColor] : [UIColor blackColor];
 	
 	if (indexPath.row == 0)
 		cell.textLabel.text = [_date naturalDateString];

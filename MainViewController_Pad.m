@@ -8,7 +8,6 @@
 
 #import "MainViewController_Pad.h"
 
-#import "SettingsViewController_Pad.h"
 #import "CountdownPageView.h"
 #import "TimerPageView.h"
 
@@ -252,22 +251,22 @@
 	[self presentViewController:actionSheet animated:NO completion:NULL];
 }
 
-- (void)showSettingsForPageAtIndex:(NSInteger)index
+- (void)showSettingsForPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated
 {
 	/* Close the active settings */
 	[self closeActiveSettings];
 	
-	SettingsViewController_Pad * settingsViewController = [[SettingsViewController_Pad alloc] init];
-	settingsViewController.countdown = [Countdown countdownAtIndex:index];
+	_settingsViewController = [[SettingsViewController_Pad alloc] init];
+	_settingsViewController.countdown = [Countdown countdownAtIndex:pageIndex];
 	
-	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:_settingsViewController];
 	
 	_popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
 	_popover.delegate = self;
 	
-	settingsViewController.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	_settingsViewController.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	
-	PageView * pageView = _pageViews[index];
+	PageView * pageView = _pageViews[pageIndex];
 	CGRect rect = [self.view convertRect:pageView.infoButton.frame fromView:pageView];
 	CGPoint offset = CGPointMake(60., 0.);
 	if ([pageView isKindOfClass:TimerPageView.class])
@@ -278,12 +277,12 @@
 		   permittedArrowDirections:(UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight)
 						   animated:NO];
 	
-	_currentSettingsPageIndex = index;
+	_currentSettingsPageIndex = pageIndex;
 }
 
 - (IBAction)showPopover:(id)sender
 {
-	[self showSettingsForPageAtIndex:1];
+	[self showSettingsForPageAtIndex:1 animated:YES];
 }
 
 - (void)closeActiveSettings
@@ -307,7 +306,7 @@
 	UIButton * button = sender;
 	PageView * page = (PageView *)button.superview.superview;
 	if ([_pageViews indexOfObject:page] != NSNotFound)
-		[self showSettingsForPageAtIndex:[_pageViews indexOfObject:page]];
+		[self showSettingsForPageAtIndex:[_pageViews indexOfObject:page] animated:YES];
 }
 
 - (IBAction)moreInfo:(UIButton *)sender
@@ -331,14 +330,14 @@
 
 - (void)handleTapFrom:(UIGestureRecognizer *)recognizer
 {
-	[self showSettingsForPageAtIndex:[_pageViews indexOfObject:(PageView *)recognizer.view]];
+	[self showSettingsForPageAtIndex:[_pageViews indexOfObject:(PageView *)recognizer.view] animated:YES];
 }
 
 #pragma mark - PageView Delegate
 
 - (void)pageViewWillShowSettings:(PageView *)page
 {
-	[self showSettingsForPageAtIndex:[_pageViews indexOfObject:page]];
+	[self showSettingsForPageAtIndex:[_pageViews indexOfObject:page] animated:YES];
 }
 
 - (BOOL)pageViewShouldShowDeleteConfirmation:(PageView *)page

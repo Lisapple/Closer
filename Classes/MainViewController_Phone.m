@@ -17,7 +17,6 @@
 @interface MainViewController_Phone ()
 
 @property (nonatomic, strong) IBOutlet UIImageView * imageView;
-@property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
 
 @end
 
@@ -94,7 +93,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	CGRect frame = CGRectMake(index * _scrollView.frame.size.width, 0.,
 							  _scrollView.frame.size.width, _scrollView.frame.size.height);
-	
 	PageView * page = nil;
 	if (aCountdown.type == CountdownTypeTimer)
 		page = [[TimerPageView alloc] initWithFrame:frame];
@@ -184,10 +182,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 	int index = 0;
 	for (PageView * page in _pages) {
 		CGFloat y = (_scrollView.frame.size.height - 423.) / 2.; // The height of the background image of the pageView is 423pt
-		CGRect frame = CGRectMake(index * _scrollView.frame.size.width, (int)y, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		page.frame = frame;
-		
-		index++;
+		page.frame = CGRectMake(index * _scrollView.frame.size.width, (int)y, _scrollView.frame.size.width, _scrollView.frame.size.height);
+		++index;
 	}
 	
 	_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * _pages.count, 0.);
@@ -271,11 +267,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	int index = 0;
 	for (PageView * page in _pages) {
-		
 		if (ABS(_pageControl.currentPage - index) <= 1) {// Update only the current page and it left and right neighbours
 			dispatch_async(dispatch_get_main_queue(), ^{ [page update]; });
 		}
-		
 		index++;
 	}
 }
@@ -369,12 +363,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 						 [Countdown removeCountdown:countdown];
 						 
 						 NSInteger count = [Countdown allCountdowns].count;
-						 if (count > 0) {
-							 
-						 } else { // If we have deleted the last countdown, show editAllCountdowns: panel
+						 if (count == 0) { // If we have deleted the last countdown, show editAllCountdowns: panel
 							 EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] init];
 							 UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:editAllCountdownViewController];
-							 
 							 [self presentViewController:navigationController animated:YES completion:NULL];
 						 }
 						 [self setNeedsStatusBarAppearanceUpdate];

@@ -10,6 +10,8 @@
 #import "NSBundle+addition.h"
 #import "NSDate+addition.h"
 
+#import <Crashlytics/Crashlytics.h>
+
 @implementation Countdown (LocalNotification)
 
 + (void)removeInvalidLocalNotifications
@@ -165,6 +167,63 @@
 			[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:searchableItems completionHandler:completionHandler];
 		});
 	}
+}
+
+@end
+
+
+@implementation Countdown (Answers)
+
++ (void)tagInsert
+{
+	[Answers logCustomEventWithName:@"insert-countdown"
+				   customAttributes:nil];
+}
+
++ (void)tagDelete
+{
+	[Answers logCustomEventWithName:@"delete-countdown"
+				   customAttributes:nil];
+}
+
++ (void)tagChangeType:(CountdownType)type
+{
+	[Answers logCustomEventWithName:@"change-countdown-type"
+				   customAttributes:@{ @"new type" : (type == CountdownTypeTimer) ? @"timer" : @"countdown" }];
+}
+
++ (void)tagChangeName
+{
+	[Answers logCustomEventWithName:@"change-countdown-name"
+				   customAttributes:nil];
+}
+
++ (void)tagChangeMessage
+{
+	[Answers logCustomEventWithName:@"change-countdown-message"
+				   customAttributes:nil];
+}
+
++ (void)tagEndDate:(NSDate *)date
+{
+	NSDictionary * attrs = nil;
+	if ([date description]) {
+		attrs = @{ @"end date" : [date description] };
+	}
+	[Answers logCustomEventWithName:@"change-countdown-end-date"
+				   customAttributes:attrs];
+}
+
++ (void)tagChangeDuration
+{
+	[Answers logCustomEventWithName:@"change-countdown-duration"
+				   customAttributes:@{}];
+}
+
++ (void)tagChangeTheme:(CountdownStyle)style
+{
+	[Answers logCustomEventWithName:@"change-countdown-theme"
+				   customAttributes:@{ @"theme" : [Countdown styles][style] }];
 }
 
 @end

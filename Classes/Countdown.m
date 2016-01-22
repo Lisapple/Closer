@@ -294,6 +294,8 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index
 {
+	[Countdown tagInsert];
+	
 	[countdown activate];
 	[_countdowns insertObject:countdown atIndex:index];
 	
@@ -303,6 +305,8 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)addCountdown:(Countdown *)countdown
 {
+	[Countdown tagInsert];
+	
 	[countdown activate];
 	[_countdowns addObject:countdown];
 	
@@ -312,8 +316,10 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)addCountdowns:(NSArray *)countdowns
 {
-	for (Countdown * countdown in countdowns)
+	for (Countdown * countdown in countdowns) {
+		[Countdown tagInsert];
 		[countdown activate];
+	}
 	
 	[_countdowns addObjectsFromArray:countdowns];
 	
@@ -343,6 +349,8 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)removeCountdown:(Countdown *)countdown
 {
+	[Countdown tagDelete];
+	
 	[countdown remove];
 	[countdown desactivate];
 	[_countdowns removeObject:countdown];
@@ -354,12 +362,7 @@ static NSMutableArray * _countdowns = nil;
 + (void)removeCountdownAtIndex:(NSInteger)index
 {
 	Countdown * countdown = _countdowns[index];
-	[countdown remove];
-	[countdown desactivate];
-	[_countdowns removeObjectAtIndex:index];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
-	[self synchronize];
+	[self removeCountdown:countdown];
 }
 
 + (NSArray *)styles
@@ -475,6 +478,8 @@ static NSMutableArray * _countdowns = nil;
 - (void)setName:(NSString *)aName
 {
 	if (aName && ![aName isEqualToString:_name]) {
+		[Countdown tagChangeName];
+		
 		_name = aName;
 		[self update];
 	}
@@ -483,6 +488,8 @@ static NSMutableArray * _countdowns = nil;
 - (void)setMessage:(NSString *)aMessage
 {
 	if (aMessage && ![aMessage isEqualToString:_message]) {
+		[Countdown tagChangeMessage];
+		
 		_message = aMessage;
 		[self update];
 	}
@@ -490,6 +497,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)setEndDate:(NSDate *)aDate
 {
+	[Countdown tagEndDate:aDate];
+	
 	_endDate = aDate;
 	_paused = (_endDate == nil);
 	[self update];
@@ -506,6 +515,8 @@ static NSMutableArray * _countdowns = nil;
 - (void)setStyle:(CountdownStyle)style
 {
 	if (_style != style) {
+		[Countdown tagChangeTheme:style];
+		
 		_style = style;
 		[self update];
 	}
@@ -514,6 +525,8 @@ static NSMutableArray * _countdowns = nil;
 - (void)setType:(CountdownType)newType
 {
 	if (_type != newType) {
+		[Countdown tagChangeType:newType];
+		
 		_type = newType;
 		[self update];
 	}
@@ -560,6 +573,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)addDuration:(NSNumber * _Nonnull)duration withName:(NSString * _Nullable)name
 {
+	[Countdown tagChangeDuration];
+	
 	[_durations addObject:duration];
 	name = (name) ?: @"";
 	[_names addObject:name];
@@ -567,6 +582,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)addDurations:(NSArray * _Nonnull)durations withNames:(NSArray <NSString *> * _Nullable)names
 {
+	[Countdown tagChangeDuration];
+	
 	NSAssert2((names && durations.count == names.count) || !names, @"The number of durations (%lu) must be the same as names (%lu)",
 			  (long)durations.count, (long)names.count);
 	[_durations addObjectsFromArray:durations];
@@ -610,6 +627,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)removeDurationAtIndex:(NSUInteger)index
 {
+	[Countdown tagChangeDuration];
+	
 	[_durations removeObjectAtIndex:index];
 	[_names removeObjectAtIndex:index];
 }

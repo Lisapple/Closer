@@ -50,6 +50,8 @@
 @property (nonatomic, assign) CGPoint startLocation, offset;
 @property (nonatomic, assign) BOOL shouldShowDeleteConfirmation;
 
+@property (nonatomic, strong) UIScrollView * scrollView;
+
 @end
 
 @implementation PageView

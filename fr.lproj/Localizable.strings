@@ -189,6 +189,7 @@
 "New Timer %i" = "Nouveau Minuteur %i";
 "%ld durations" = "%ld durées";
 "no timers" = "aucun minuteur";
+"Add Duration" = "Ajouter une durée";
 "No Durations" = "Aucune durée";
 "no durations" = "aucune durée";
 "%d durations" = "%ld durées";

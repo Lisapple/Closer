@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 @class MainViewController_Pad;
 

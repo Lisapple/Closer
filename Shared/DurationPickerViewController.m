@@ -57,8 +57,21 @@
 		 self.tableView.scrollIndicatorInsets = self.tableView.contentInset; }];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[super viewWillDisappear:animated];
+	
+	NSArray * durationsCopy = _countdown.durations.copy;
+	for (NSNumber * duration in durationsCopy) {
+		if (duration.integerValue == 0) { // Remove empty durations
+			NSInteger index = [_countdown.durations indexOfObject:duration];
+			if (index != NSNotFound)
+				[_countdown removeDurationAtIndex:index];
+		}
+	}
+}
+
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

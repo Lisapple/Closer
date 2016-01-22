@@ -10,10 +10,6 @@
 #import "PromptViewController.h"
 #import "DurationPickerViewController.h"
 
-@interface DurationsViewController ()
-
-@end
-
 @implementation DurationsViewController
 
 - (void)viewDidLoad
@@ -33,19 +29,10 @@
 																						   action:@selector(addAction:)];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     
-	NSArray * durationsCopy = _countdown.durations.copy;
-	for (NSNumber * duration in durationsCopy) {
-		if (duration.integerValue == 0) { // Remove empty durations
-			NSInteger index = [_countdown.durations indexOfObject:duration];
-			if (index != NSNotFound)
-				[_countdown removeDurationAtIndex:index];
-		}
-	}
-	
 	[self reloadData];
 }
 
@@ -54,20 +41,13 @@
 	/* Show a placeholder "No Durations" if the timer has no durations */
 	if (_countdown.durations.count == 0) {
 		CGRect frame = CGRectMake(0., 0., self.tableView.frame.size.width, 40.);
-		UILabel * label = [[UILabel alloc] initWithFrame:frame];
-		label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		label.backgroundColor = [UIColor clearColor];
-		label.lineBreakMode = NSLineBreakByWordWrapping;
-		label.numberOfLines = 0;// Infinite number of line
-		label.textColor = [UIColor darkGrayColor];
-		label.textAlignment = NSTextAlignmentCenter;
-		label.font = [UIFont boldSystemFontOfSize:18.];
-		label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
-		label.shadowOffset = CGSizeMake(0., 1.);
-		
-		label.text = NSLocalizedString(@"No Durations", nil);
-		
-		_tableView.tableFooterView = label;
+		UIButton * button = [[UIButton alloc] initWithFrame:frame];
+		button.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+		[button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+		button.titleLabel.font = [UIFont boldSystemFontOfSize:18.];
+		[button setTitle:NSLocalizedString(@"Add Duration", nil) forState:UIControlStateNormal];
+		[button addTarget:self action:@selector(addAction:) forControlEvents:UIControlEventTouchUpInside];
+		_tableView.tableFooterView = button;
 	} else {
 		_tableView.tableFooterView = nil;
 	}
@@ -77,25 +57,18 @@
 
 - (IBAction)addAction:(id)sender
 {
-	[_tableView beginUpdates];
-	
+	[self showAddDurationWithAnimation:YES];
+}
+
+- (void)showAddDurationWithAnimation:(BOOL)animated
+{
 	[_countdown addDuration:@0 withName:nil];
 	
-	NSIndexPath * indexPath = [NSIndexPath indexPathForRow:(_countdown.durations.count - 1)
-												 inSection:1];
-	[_tableView insertRowsAtIndexPaths:@[indexPath]
-					  withRowAnimation:UITableViewRowAnimationFade];
-	[_tableView endUpdates];
-	
-	[_tableView selectRowAtIndexPath:indexPath
-							animated:YES
-					  scrollPosition:UITableViewScrollPositionMiddle];
-	
-	/* Show the DurationPicker for the created duration */
-	DurationPickerViewController * durationPickerViewController = [[DurationPickerViewController alloc] init];
-	durationPickerViewController.countdown = self.countdown;
-	durationPickerViewController.durationIndex = indexPath.row;
-	[self.navigationController pushViewController:durationPickerViewController animated:YES];
+	NSInteger index = _countdown.durations.count - 1;
+	DurationPickerViewController * controller = [[DurationPickerViewController alloc] init];
+	controller.countdown = self.countdown;
+	controller.durationIndex = index;
+	[self.navigationController pushViewController:controller animated:animated];
 }
 
 #pragma mark -
