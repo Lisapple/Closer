@@ -277,7 +277,6 @@
 				[self disableIdleTimerIfNeeded];
 				[self blinkIfNeeded];
 				
-				[_timerView cancelProgressionAnimation];
 				[_timerView setProgression:(_duration - _remainingSeconds) / (_duration - 1.)
 								  animated:YES];
 				_timeLabel.text = [self formattedDuration];

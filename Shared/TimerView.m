@@ -12,11 +12,11 @@
 
 @interface TimerView ()
 {
-	NSUInteger animationIdentifier;
 	BOOL _cancel, _animating;
 }
 
 @property (nonatomic, strong) UIView * selectedBackgroundView;
+@property (nonatomic, strong) CAShapeLayer * progressLayer;
 
 @end
 
@@ -26,51 +26,63 @@
 {
 	if ((self = [super initWithCoder:aDecoder])) {
 		const CGFloat width = MIN(self.frame.size.width, self.frame.size.height);
-		self.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, width)];
-		self.selectedBackgroundView.userInteractionEnabled = NO;
-		self.selectedBackgroundView.alpha = 0.;
-		[self addSubview:self.selectedBackgroundView];
+		_selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, width)];
+		_selectedBackgroundView.userInteractionEnabled = NO;
+		_selectedBackgroundView.alpha = 0.;
+		[self addSubview:_selectedBackgroundView];
+		
+		_progressLayer = [CAShapeLayer layer];
+		_progressLayer.frame = self.bounds;
+		[_progressLayer setNeedsDisplayOnBoundsChange:YES];
+		_progressLayer.fillColor = NULL;
+		_progressLayer.lineWidth = 4;
+		[self.layer addSublayer:_progressLayer];
+		
+		[self setProgression:0 animated:NO]; // Finish |progressLayer} init (with no progression)
 	}
 	return self;
 }
 
 - (void)setProgression:(CGFloat)progression
 {
-	_progression = progression;
-	[self setNeedsDisplay];
+	[self setProgression:progression animated:NO];
 }
 
-- (void)setProgression:(CGFloat)finalProgression animated:(BOOL)animated
+- (void)setProgression:(CGFloat)progression animated:(BOOL)animated
 {
-	if (animated && finalProgression > _progression) {
-		if (!_animating) {
-			_cancel = NO;
-			_animating = YES;
-			float startProgression = _progression;
-			animationIdentifier = [NSObject animateWithDuration:1.
-							   animations:^(float progression) {
-								   dispatch_async(dispatch_get_main_queue(), ^{
-									   _progression = CLAMP(startProgression, progression, finalProgression);
-									   [self setNeedsDisplay];
-								   });
-							   }
-							   completion:^{ _animating = NO; }];
-		}
-	} else {
-		self.progression = finalProgression;
+	CGMutablePathRef mPath = CGPathCreateMutable();
+	const CGFloat border = 4.;
+	const CGFloat width = MIN(self.frame.size.width, self.frame.size.height);
+	const CGPoint center = CGPointMake(self.frame.size.width / 2., self.frame.size.height / 2.);
+	CGPathAddArc(mPath, NULL, center.x, center.y, (width - border) / 2, -M_PI_2, 2 * M_PI * progression - M_PI_2, 0);
+	_progressLayer.path = mPath;
+	
+	if (animated && progression > 0) {
+		_progressLayer.speed = 1.0;
+		CABasicAnimation * animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+		animation.duration = 1;
+		animation.fromValue = @(_progression / progression);
+		animation.toValue = @1;
+		[_progressLayer addAnimation:animation forKey:@"strokeEnd"];
 	}
+	
+	_progression = progression;
 }
 
 - (void)cancelProgressionAnimation
 {
-	[NSObject cancelAnimationWithIdentifier:animationIdentifier];
-	_animating = NO;
+	if (_progressLayer.speed > 0) {
+		CFTimeInterval pausedTime = [_progressLayer convertTime:CACurrentMediaTime() fromLayer:nil];
+		_progressLayer.speed = 0;
+		_progressLayer.timeOffset = pausedTime;
+	}
 }
 
 - (void)setTintColor:(UIColor *)tintColor
 {
 	_tintColor = tintColor;
 	self.selectedBackgroundView.backgroundColor = [tintColor colorWithAlphaComponent:0.333];
+	self.progressLayer.strokeColor = tintColor.CGColor;
 	[self setNeedsDisplay];
 }
 
@@ -92,42 +104,28 @@
 	}
 }
 
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+	_progressLayer.frame = self.bounds;
+}
+
 - (void)drawRect:(CGRect)rect
 {
-    CGFloat border = 4.;
-    CGFloat length = MIN(rect.size.width, rect.size.height);
-    CGFloat topMargin = ceilf((rect.size.height - length) / 2.);
-    CGFloat leftMargin = ceilf((rect.size.width - length) / 2.);
-	CGRect innerFrame = CGRectMake(leftMargin + border,
-                                   topMargin + border,
-								   length - 2. * border,
-								   length - 2. * border);
+	const CGFloat border = 4.;
+	CGFloat length = MIN(rect.size.width, rect.size.height);
+	CGFloat topMargin = ceilf((rect.size.height - length) / 2.);
+	CGFloat leftMargin = ceilf((rect.size.width - length) / 2.);
 	
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	
-	// Draw the outer ring (with |tintColor|)
-	CGContextSaveGState(context);
-	{
-        
-		CGRect outerFrame = CGRectMake(leftMargin, topMargin, length, length);
-		CGContextAddEllipseInRect(context, outerFrame);
-		CGContextSetFillColorWithColor(context, [_tintColor colorWithAlphaComponent:0.333].CGColor);
-		
-		CGContextAddEllipseInRect(context, innerFrame);
-		CGContextEOClip(context);
-		
-		CGContextFillRect(context, rect);
-		
-		CGPoint center = CGPointMake(rect.size.width / 2., rect.size.height / 2.);
-		CGContextAddArc(context, center.x, center.y, rect.size.width, -M_PI_2, 2 * M_PI * _progression - M_PI_2, 0);
-		CGContextAddLineToPoint(context, center.x, center.y);
-		
-		CGContextClosePath(context);
-		
-		CGContextSetFillColorWithColor(context, _tintColor.CGColor);
-		CGContextFillPath(context);
-	}
-	CGContextRestoreGState(context);
+	CGRect frame = CGRectMake(leftMargin + border/2, topMargin + border/2, length - border, length - border);
+	CGContextAddEllipseInRect(context, frame);
+	
+	[[_tintColor colorWithAlphaComponent:0.333] setStroke];
+	CGContextSetLineWidth(context, border);
+	CGContextStrokePath(context);
 }
 
 @end
