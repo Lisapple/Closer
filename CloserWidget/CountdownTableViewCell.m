@@ -80,10 +80,10 @@
 
 - (void)update
 {
-    NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:[_name stringByAppendingString:@"\t"]
+    NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:[_name stringByAppendingString:@" "]
                                                                                 attributes:@{ NSForegroundColorAttributeName : [UIColor whiteColor] }];
     [string appendAttributedString:[[NSAttributedString alloc] initWithString:self.endDateDescription
-                                                                   attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithWhite:1. alpha:0.2] }]];
+                                                                   attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithWhite:0.75 alpha:1] }]];
     _label.attributedText = string;
     
     double seconds = _endDate.timeIntervalSinceNow;
