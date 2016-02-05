@@ -39,7 +39,7 @@
 
 @interface Countdown (Name)
 
-+ (NSString *)proposedNameForType:(CountdownType)type;
++ (nonnull NSString *)proposedNameForType:(CountdownType)type;
 
 @end
 

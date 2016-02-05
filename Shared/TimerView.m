@@ -56,6 +56,7 @@
 	const CGPoint center = CGPointMake(self.frame.size.width / 2., self.frame.size.height / 2.);
 	CGPathAddArc(mPath, NULL, center.x, center.y, (width - border) / 2, -M_PI_2, 2 * M_PI * progression - M_PI_2, 0);
 	_progressLayer.path = mPath;
+	CGPathRelease(mPath);
 	
 	if (animated && progression > 0) {
 		_progressLayer.speed = 1.0;
