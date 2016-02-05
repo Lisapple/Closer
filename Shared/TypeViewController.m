@@ -25,8 +25,7 @@
     [super viewDidLoad];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -47,34 +46,30 @@
 {
 	static NSString * cellIdentifier = @"CellID";
 	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
+	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	
 	switch (indexPath.row) {
-		case 1:
-			cell.textLabel.text = NSLocalizedString(@"Timer", nil); break;
-		default:
-			cell.textLabel.text = NSLocalizedString(@"Countdown", nil); break;
+		case 1:  cell.textLabel.text = NSLocalizedString(@"Timer", nil); break;
+		default: cell.textLabel.text = NSLocalizedString(@"Countdown", nil); break;
 	}
 	cell.accessoryType = (_countdown.type == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-	
 	return cell;
 }
 
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	_countdown.type = indexPath.row;
 	
 	if (indexPath.row == 0) {
-		[_tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]]
+		[_tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0] ]
 						  withRowAnimation:UITableViewRowAnimationNone];
 	} else {
-		[_tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]]
+		[_tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ]
 						  withRowAnimation:UITableViewRowAnimationNone];
 	}
 	

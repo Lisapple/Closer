@@ -46,10 +46,8 @@
 {
     [super viewDidAppear:animated];
     
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(reloadData)
-												 name:CountdownDidSynchronizeNotification
-											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData)
+												 name:CountdownDidSynchronizeNotification object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -57,8 +55,7 @@
     [super viewDidDisappear:animated];
     
 	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:CountdownDidSynchronizeNotification
-												  object:nil];
+													name:CountdownDidSynchronizeNotification object:nil];
 }
 
 - (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index
@@ -81,8 +78,7 @@
 	// @TODO: animated the row insertion
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -133,16 +129,14 @@
     cell.textLabel.text = countdown.name;
     
     if (countdown.type == CountdownTypeTimer) {
-        if (countdown.durations.count >= 2) {
+        if (countdown.durations.count >= 2)
             cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)countdown.durations.count];
-        } else if (countdown.durations.count == 1) {
+        else if (countdown.durations.count == 1)
             cell.detailTextLabel.text = [countdown descriptionOfDurationAtIndex:0];
-        } else {
+        else
             cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
-        }
-    } else {
+    } else
         cell.detailTextLabel.text = countdown.endDate.description;
-    }
     
     return cell;
 }
@@ -162,9 +156,9 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		
         Countdown * countdown = _allCountdowns[indexPath.row];
-        if (TARGET_IS_IOS8_OR_LATER) {
+        if (TARGET_IS_IOS8_OR_LATER)
             countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-        }
+			
         [self removeCountdown:countdown index:indexPath.row];
         // @TODO: animated the row deletion
 	}
@@ -181,11 +175,10 @@
     NSUInteger destinationIndex = destinationIndexPath.section * (_includedCountdowns.count - 1) + destinationIndexPath.row;
     Countdown * countdown = _allCountdowns[sourceIndex];
     countdown.notificationCenter = (destinationIndexPath.section == 0);
-    if (sourceIndex != destinationIndex) {
+    if (sourceIndex != destinationIndex)
         [Countdown moveCountdownAtIndex:sourceIndex toIndex:destinationIndex];
-    } else {
+    else
         [self reloadData];
-    }
     // @TODO: animated the row movement
 }
 

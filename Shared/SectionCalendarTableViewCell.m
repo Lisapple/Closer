@@ -48,7 +48,6 @@
 	CGContextClosePath(context);
 	CGContextClip(context);
 	
-	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	
 	NSInteger number = (NSInteger)CGColorGetNumberOfComponents(_CGColor);

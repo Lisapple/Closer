@@ -76,19 +76,17 @@
 		
 		_scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
 		_scrollView.delegate = self;
-		
 		_scrollView.delaysContentTouches = NO;
 		_scrollView.showsHorizontalScrollIndicator = NO;
 		_scrollView.showsVerticalScrollIndicator = NO;
 		_scrollView.alwaysBounceVertical = YES;
 		_scrollView.contentSize = CGSizeMake(0., frame.size.height + 60.);
-		
-        UITapGestureRecognizer * gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)];
-        gesture.numberOfTapsRequired = 2;
-        [_scrollView addGestureRecognizer:gesture];
-        
 		_scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self addSubview:_scrollView];
+		
+		UITapGestureRecognizer * gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)];
+		gesture.numberOfTapsRequired = 2;
+		[_scrollView addGestureRecognizer:gesture];
 	}
 	return self;
 }
@@ -176,16 +174,14 @@
 	
 	/**/ if (scrollView.contentOffset.y < 0.)
 		self.scrollView.contentOffset = CGPointZero;
-	else if (scrollView.contentOffset.y >= 60.) {
+	else if (scrollView.contentOffset.y >= 60.)
 		self.scrollView.contentOffset = CGPointMake(0., 60.);
-	}
 	else if (scrollView.contentOffset.y == 0.) {
 		self.showDeleteConfirmation = NO;
 		if ([self.delegate respondsToSelector:@selector(pageViewDidHideDeleteConfirmation:)])
 			[self.delegate pageViewDidHideDeleteConfirmation:self];
 	}
-	else if (!_showDeleteConfirmation)
-	{
+	else if (!_showDeleteConfirmation) {
 		self.showDeleteConfirmation = YES;
 		if ([self.delegate respondsToSelector:@selector(pageViewWillShowDeleteConfirmation:)])
 			[self.delegate pageViewWillShowDeleteConfirmation:self];
@@ -206,10 +202,9 @@
 {
 	CGPoint offset = scrollView.contentOffset;
 	
-	if (offset.y < 30.) {
+	if (offset.y < 30.)
 		[self.scrollView setContentOffset:CGPointZero animated:YES];
-		
-	} else {
+	else {
 		[self.scrollView setContentOffset:CGPointMake(0., 60.) animated:YES];
 		
 		[NSObject performBlock:^{

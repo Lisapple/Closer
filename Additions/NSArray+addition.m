@@ -22,9 +22,9 @@
 		NSObject * component = self[count - 2];
 		NSObject * lastComponent = self.lastObject;
 		[string appendFormat:@"%@%@%@", component.description, endJoin, lastComponent.description];
-	} else if (count == 1) { // If we have only one item, return its description
+		
+	} else if (count == 1) // If we have only one item, return its description
 		return [self.lastObject description];
-	}
 	
 	return (NSString *)string;
 }

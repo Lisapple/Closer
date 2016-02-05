@@ -81,7 +81,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 - (nonnull instancetype)initWithIdentifier:(nullable NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
 
-#pragma mark Timer methods
+// Timer methods
 
 - (nullable NSNumber *)currentDuration;
 - (nonnull NSArray <NSNumber *> *)durations;
@@ -103,13 +103,13 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 - (void)pause;
 - (void)reset;
 
-#pragma mark Activation methods
+// Activation methods
 
 - (BOOL)isActive;
 - (void)activate; /* Make the countdown active to send local notification */
 - (void)desactivate;
 
-#pragma mark Localized description methods
+// Localized description methods
 
 - (nonnull NSString *)descriptionOfDurationAtIndex:(NSInteger)index;
 - (nonnull NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index;

@@ -15,6 +15,7 @@
 #import "NetworkStatus.h"
 
 #import "NSDate+addition.h"
+#import "Countdown+addition.h"
 
 #import <Crashlytics/Crashlytics.h>
 
@@ -109,33 +110,17 @@
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (NSString *)proposedNameForType:(CountdownType)type
-{
-	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
-    NSArray * names = [_allCountdowns valueForKeyPath:@"name"];
-	int index = 1;
-	while (1) {
-        if (![names containsObject:name])
-            return name;
-        
-		if (type == CountdownTypeTimer)
-			name = [NSString stringWithFormat:NSLocalizedString(@"New Timer %i", nil), index++];
-		else
-			name = [NSString stringWithFormat:NSLocalizedString(@"New Countdown %i", nil), index++];
-	}
-}
-
 - (IBAction)add:(id)sender
 {
 	if (_allCountdowns.count > 18) {// The limit of countdown for the pageControl view is 18
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"You must delete at least one countdown to add a new countdown.", nil)
-																		message:nil preferredStyle:UIAlertControllerStyleAlert];
+		NSString * title = NSLocalizedString(@"You must delete at least one countdown to add a new countdown.", nil);
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:NULL]];
 		[self presentViewController:alert animated:YES completion:NULL];
 		
 	} else {
 		Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
-		aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
+		aCountDown.name = [Countdown proposedNameForType:CountdownTypeCountdown];
 		NSIndexPath * indexPath = [NSIndexPath indexPathForRow:_includedCountdowns.count inSection:0];
 		[self insertCountdown:aCountDown atIndexPath:indexPath];
 		
@@ -154,7 +139,7 @@
 	
 	[Countdown insertCountdown:countdown atIndex:indexPath.row];
 	[self.tableView beginUpdates];
-	[self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView insertRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
 	[self updateData];
 	[self.tableView endUpdates];
 }
@@ -184,13 +169,12 @@
 	
 	[Countdown removeCountdown:countdown];
 	[self.tableView beginUpdates];
-	[self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
 	[self updateData];
 	[self.tableView endUpdates];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -217,7 +201,8 @@
 	if (section == 3) { // Info "i" button on the right
 		UIView * contentView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., self.view.frame.size.width, 44.)];
 		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
-		button.frame = CGRectMake(self.view.frame.size.width - 15. - 23., 44. - 23., 23., 23.);
+		const CGFloat kMargin = 23;
+		button.frame = CGRectMake(self.view.frame.size.width - 15. - kMargin, 44. - kMargin, kMargin, kMargin);
 		[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
 		button.tintColor = self.view.window.tintColor;
 		[contentView addSubview:button];
@@ -228,15 +213,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	if /**/ (section == 0)
-		return self.includedCountdowns.count;
-	else if (section == 1)
-		return self.notIncludedCountdowns.count;
-	else if (section == 2) // Import
-		return 1 + ([NetworkStatus isConnected] == YES); // Remove the "Import with Passwords" if no internet connection
-	else if (section == 3) // Export
-		return 1;
-	
+	switch (section) {
+		case 0: return self.includedCountdowns.count;
+		case 1: return self.notIncludedCountdowns.count;
+		case 2 /* Import */: return 1 + ([NetworkStatus isConnected] == YES); // Remove the "Import with Passwords" if no internet connection
+		case 3 /* Export */ : return 1;
+	}
 	return 0;
 }
 
@@ -247,8 +229,7 @@
 	if (indexPath.section <= 1) {
 		static NSString * countdownCellIdentifier = @"countdownCellIdentifier";
 		cell = [_tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
-		
-		if (cell == nil) {
+		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:countdownCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		}
@@ -257,34 +238,30 @@
 		cell.textLabel.text = countdown.name;
 		
 		if (countdown.type == CountdownTypeTimer) {
-			if (countdown.durations.count >= 2) {
+			if /**/ (countdown.durations.count >= 2)
 				cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)countdown.durations.count];
-			} else if (countdown.durations.count == 1) {
+			else if (countdown.durations.count == 1)
 				cell.detailTextLabel.text = [countdown descriptionOfDurationAtIndex:0];
-			} else {
+			else
 				cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
-			}
-		} else {
+		} else
 			cell.detailTextLabel.text = (countdown.endDate).description;
-		}
 		
 	} else {
 		static NSString * shareCellIdentifier = @"shareCellIdentifier";
 		cell = [_tableView dequeueReusableCellWithIdentifier:shareCellIdentifier];
-		if (cell == nil) {
+		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:shareCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 			cell.textLabel.textAlignment = NSTextAlignmentCenter;
 		}
 		if (indexPath.section == 2) { // Import
-			if (indexPath.row == 0) {
+			if (indexPath.row == 0)
 				cell.textLabel.text = NSLocalizedString(@"Import from Calendar", nil);
-			} else { // Shown only if connected to network
+			else // Shown only if connected to network
 				cell.textLabel.text = NSLocalizedString(@"Import with Passwords", nil);
-			}
-		} else { // Export
+		} else // Export
 			cell.textLabel.text = NSLocalizedString(@"Export Countdowns...", nil);
-		}
 	}
 	
 	return cell;
@@ -335,8 +312,7 @@
 		[self moveCountdownAtIndex:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

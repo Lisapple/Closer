@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CCLabel : UILabel
+@interface CCLabel : UILabel <NSCopying>
 
 @property (nonatomic, strong) NSString * animatedText;
 

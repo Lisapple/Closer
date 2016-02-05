@@ -31,7 +31,6 @@
 	self.title = NSLocalizedString(@"Import", nil);
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-	
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 																						  target:self action:@selector(cancel:)];
 	
@@ -43,7 +42,7 @@
 		_regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{4})\\s?\\-\\s?(\\d{4})$" // Match "dddd - dddd" (with or without spaces)
 													 options:0 error:&error];
 		if (error) {
-			NSLog(@"regex error: %@", error.localizedDescription);
+			NSDebugLog(@"regex error: %@", error.localizedDescription);
 		}
 		
 		NSRange range = [_regex rangeOfFirstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
@@ -88,10 +87,10 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Paste Passwords", nil)
 																		message:message
 																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-			[self send]; }]];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import", nil) style:UIAlertActionStyleDefault
+												handler:^(UIAlertAction * action) { [self send]; }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel
+												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
 	} else {
 		// @TODO: show that failure
@@ -115,23 +114,13 @@
 	[_activityIndicator startAnimating];
 	
 	_instructionLabel.hidden = YES;
-	
-	_passwordLabel1.hidden = YES;
-	_passwordLabel2.hidden = YES;
-	_passwordLabel3.hidden = YES;
-	_passwordLabel4.hidden = YES;
+	_passwordLabel1.hidden = _passwordLabel2.hidden = _passwordLabel3.hidden = _passwordLabel4.hidden = YES;
 	
 	NSURL * url = [NSURL URLWithString:@"http://closer.lisacintosh.com/export.php"];
 	NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
-	
-	NSData * data = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", _password1, _password2] dataUsingEncoding:NSUTF8StringEncoding];
-	
-	request.HTTPBody = data;
+	request.HTTPBody = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", _password1, _password2] dataUsingEncoding:NSUTF8StringEncoding];
 	request.HTTPMethod = @"POST";
-	
-	_connection = [[NSURLConnection alloc] initWithRequest:request
-												 delegate:self
-										 startImmediately:YES];
+	_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -139,10 +128,7 @@
 	_selectedCountdowns = [[NSMutableArray alloc] initWithCapacity:3];
 	
 	NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-	
-	NSLocale * locale = [NSLocale currentLocale];
-	formatter.locale = locale;
-	
+	formatter.locale = [NSLocale currentLocale];
 	formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
 	formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
 	
@@ -184,9 +170,8 @@
 	} else {
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Check that:\n%@ and %@\nare two correct passwords.", nil), _password1, _password2];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Countdowns found", nil)
-																		message:message
-																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+																		message:message preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 			[alert dismissViewControllerAnimated:YES completion:nil];
 			[self dismissViewControllerAnimated:YES completion:NULL]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
@@ -228,8 +213,8 @@
 	UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Connection Error", nil)
 																	message:error.localizedDescription
 															 preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-		[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel
+											handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 	[self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -249,18 +234,14 @@
 	if (string.length >= 4) {
 		if ([_instructionLabel.text isEqualToString:NSLocalizedString(@"Enter the First Password", nil)]) {
 			if (!_pushed) {
-				[self performSelector:@selector(push)
-						   withObject:nil
-						   afterDelay:0.5];
+				[self performSelector:@selector(push) withObject:nil afterDelay:0.5];
 				
 				_password1 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extre numbers
 				_pushed = YES;
 			}
 		} else if ([_instructionLabel.text isEqualToString:NSLocalizedString(@"Enter the Second Password", nil)]) {
 			if (!_sent) {
-				[self performSelector:@selector(send)
-						   withObject:nil
-						   afterDelay:0.5];
+				[self performSelector:@selector(send) withObject:nil afterDelay:0.5];
 				
 				_password2 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extre numbers
 				_sent = YES;
@@ -269,8 +250,7 @@
 	}
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -291,22 +271,19 @@
 		cell.detailTextLabel.text = countdown.endDate.description;
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
-		
 		cell.accessoryType = ([_selectedCountdowns containsObject:countdown])? UITableViewCellAccessoryCheckmark: UITableViewCellAccessoryNone;
 		
 	} else {
 		cell.detailTextLabel.text = NSLocalizedString(@"Countdown finished", nil);
 		cell.textLabel.textColor = [UIColor grayColor];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		
 		cell.accessoryType = UITableViewCellAccessoryNone;
 	}
 	
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

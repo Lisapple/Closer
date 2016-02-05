@@ -11,6 +11,7 @@
 #import "Countdown.h"
 
 #import "NSDate+addition.h"
+#import "NSObject+additions.h"
 
 @interface DatePickerViewController ()
 {
@@ -36,8 +37,7 @@
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
-						   animated:NO
-					 scrollPosition:UITableViewScrollPositionNone];
+							animated:NO scrollPosition:UITableViewScrollPositionNone];
 	_tableView.alwaysBounceVertical = NO;
 	_tableView.scrollEnabled = NO;
 	
@@ -49,7 +49,7 @@
 	[super viewWillAppear:animated];
 	
 	NSDate * endDate = _countdown.endDate;
-	_hasTimeDate = (endDate != nil && (endDate.timeIntervalSinceNow > 0));// If endDate is nil or passed, we don't have a valid date and consider time as invalid
+	_hasTimeDate = (endDate != nil && (endDate.timeIntervalSinceNow > 0)); // If endDate is nil or passed, we don't have a valid date and consider time as invalid
 	
 	if (!endDate || (endDate.timeIntervalSinceNow <= 0)) {
 		NSDate * now = [NSDate date];
@@ -57,13 +57,12 @@
 		NSDateComponents * comps = [calendar components:NSCalendarUnitMinute fromDate:now];
 		comps.minute = 60 - comps.minute;
 		self.date = [calendar dateByAddingComponents:comps toDate:now options:0]; // date = today, next hour
-	} else {
+	} else
 		self.date = endDate;
-	}
 	
 	[_datePicker setDate:_date animated:NO];
-	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60];// minimumDate = now + 1 minute
-	_datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:(100. * 365. * 24. * 60. * 60.)];// maximumDate = now + 100 years
+	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60]; // minimumDate = now + 1 minute
+	_datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:(100. * 365. * 24. * 60. * 60.)]; // maximumDate = now + 100 years
 	
 	[self reloadData];
 	
@@ -71,18 +70,18 @@
 	
 	[self updateWithOrientation:[UIApplication sharedApplication].statusBarOrientation];
 	
-	/* Compute the next time change (one minute - the actual number of second) */
+	// Compute the next time change (one minute - the actual number of second)
 	NSCalendar * calendar = [NSCalendar currentCalendar];
 	NSDateComponents * components = [calendar components:NSCalendarUnitSecond fromDate:[NSDate date]];
 	double delayInSeconds = 60. - components.second;
 	
-	/* Start -[DatePickerViewController updatePickerMinimalDate] to set minimum date at the next time change and call it every minutes */
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+	// Start -[DatePickerViewController updatePickerMinimalDate] to set minimum date at the next time change and call it every minutes
+	[NSObject performBlock:^{
 		_updateDatePickerTimer = [NSTimer scheduledTimerWithTimeInterval:60. // Every minutes
-                                                                 target:self selector:@selector(updatePickerMinimalDate)
-                                                               userInfo:nil repeats:YES];
-	});
+																  target:self selector:@selector(updatePickerMinimalDate)
+																userInfo:nil repeats:YES];
+	}
+				afterDelay:delayInSeconds];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -134,16 +133,12 @@
 	[_tableView selectRowAtIndexPath:selectedCellIndexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-	if (UIInterfaceOrientationIsPortrait(orientation))
-		return @" ";
-	else
-		return @"";
+	return (UIInterfaceOrientationIsPortrait(orientation)) ? @" " : @"";
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -159,10 +154,8 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	
 	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
+	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		cell.textLabel.textAlignment = NSTextAlignmentCenter;
@@ -173,9 +166,9 @@
 	if (indexPath.row == 0)
 		cell.textLabel.text = [_date naturalDateString];
 	else {
-		if (_hasTimeDate) {
+		if (_hasTimeDate)
 			cell.textLabel.text = [_date naturalTimeString];
-		} else {
+		else {
 			cell.textLabel.text = @"-:--";
 			cell.textLabel.textColor = [UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.];
 		}
@@ -184,16 +177,15 @@
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	_datePicker.date = _date;
 	
-	if (indexPath.row == 0) {// Days
+	if (indexPath.row == 0) // Days
 		_datePicker.datePickerMode = UIDatePickerModeDate;
-	} else {// Time
+	else {// Time
 		_datePicker.datePickerMode = UIDatePickerModeTime;
 		
 		if (!_hasTimeDate) {

@@ -30,7 +30,7 @@ static NSString * _countdownsListPath = nil;
 static NSMutableArray * _propertyList = nil;
 static NSMutableArray * _countdowns = nil;
 
-#pragma mark - Countdown's Class Methods
+#pragma mark - Class methods
 
 + (void)initialize
 {
@@ -38,19 +38,19 @@ static NSMutableArray * _countdowns = nil;
 	if (!initialized) {
 		initialized = YES;
 		
-		/* Since Closer uses UIFileSharingEnabled, Document folder is reserved for sharing only, move Countdowns.plist (renamed from Countdown.plist) file to ~/Library/Preferences/ */
+		// Since Closer uses UIFileSharingEnabled, Document folder is reserved for sharing only, move Countdowns.plist (renamed from Countdown.plist) file to ~/Library/Preferences/
 		NSString * preferencesFolderPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject;
 		_countdownsListPath = [[NSString alloc] initWithFormat:@"%@/Preferences/Countdowns.plist", preferencesFolderPath];
 		
 		NSError * error = nil;
 		NSData * data = [NSData dataWithContentsOfFile:_countdownsListPath];
-		if (!data) {// If no Countdowns.plist have been found, look up at ~/Documents/Countdown.plist ...
+		if (!data) { // If no Countdowns.plist have been found, look up at ~/Documents/Countdown.plist ...
 			
 			NSString * documentFolderPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
 			NSString * oldCountdownPath = [NSString stringWithFormat:@"%@/Countdown.plist", documentFolderPath];
 			data = [NSData dataWithContentsOfFile:oldCountdownPath];
 			
-			if (!data) {// ...And if no file exist at ~/Documents/Countdown.plist, fetch default plist file from Closer bundle
+			if (!data) { // ...And if no file exist at ~/Documents/Countdown.plist, fetch default plist file from Closer bundle
 				NSString * path = [[NSBundle mainBundle] pathForResource:@"Countdown" ofType:@"plist"];
 				data = [NSData dataWithContentsOfFile:path];
 			}
@@ -114,8 +114,6 @@ static NSMutableArray * _countdowns = nil;
 														object:nil queue:NSOperationQueue.currentQueue
 													usingBlock:^(NSNotification *note) {
 														[self.class updateUserDefaults];
-														CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-														CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidUpdateNotification"), NULL, NULL, YES);
 													}];
 		[NSNotificationCenter.defaultCenter addObserverForName:CountdownDidSynchronizeNotification
 														object:nil queue:NSOperationQueue.currentQueue
@@ -126,13 +124,9 @@ static NSMutableArray * _countdowns = nil;
 														NSArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate];
 														[[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
 																			   forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
-														
-														CFNotificationCenterRef const center = CFNotificationCenterGetDarwinNotifyCenter();
-														CFNotificationCenterPostNotification(center, CFSTR("Darwin_CountdownDidSynchronizeNotification"), NULL, NULL, YES);
 													}];
-		if (_countdowns.count > 0) {
+		if (_countdowns.count > 0)
 			[NSNotificationCenter.defaultCenter postNotificationName:CountdownDidSynchronizeNotification object:nil];
-		}
 	}
 }
 
@@ -201,8 +195,8 @@ static NSMutableArray * _countdowns = nil;
 			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
 																			message:error.localizedDescription
 																	 preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
+													handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 			UIViewController * rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
 			[rootViewController presentViewController:alert animated:YES completion:nil];
         }
@@ -225,10 +219,8 @@ static NSMutableArray * _countdowns = nil;
         }
         
         NSError * error = nil;
-        NSData * data = [NSPropertyListSerialization dataWithPropertyList:_propertyList
-                                                                   format:NSPropertyListBinaryFormat_v1_0
-                                                                  options:0
-                                                                    error:&error];
+		const NSPropertyListFormat format = NSPropertyListBinaryFormat_v1_0;
+        NSData * data = [NSPropertyListSerialization dataWithPropertyList:_propertyList format:format options:0 error:&error];
         if (!data) {
             NSLog(@"Error when serialize property list : %@", error.localizedDescription);
             
@@ -274,9 +266,8 @@ static NSMutableArray * _countdowns = nil;
 + (Countdown *)countdownWithIdentifier:(NSString *)identifier
 {
 	for (Countdown * aCountdown in _countdowns) {
-		if ([aCountdown.identifier isEqualToString:identifier]) {
+		if ([aCountdown.identifier isEqualToString:identifier])
 			return aCountdown;
-		}
 	}
 	
 	return nil;
@@ -374,7 +365,7 @@ static NSMutableArray * _countdowns = nil;
               NSLocalizedString(@"PAGE_STYLE_SPRING", nil) ];
 }
 
-#pragma mark - Countdown's Instance Methods
+#pragma mark - Instance methods
 
 - (NSDictionary *)countdownToDictionary
 {
@@ -542,7 +533,7 @@ static NSMutableArray * _countdowns = nil;
     [self removeLocalNotification];
 }
 
-#pragma mark - Timer Methods
+#pragma mark - Timer
 
 - (void)setDurationIndex:(NSInteger)index
 {
@@ -587,12 +578,10 @@ static NSMutableArray * _countdowns = nil;
 	NSAssert2((names && durations.count == names.count) || !names, @"The number of durations (%lu) must be the same as names (%lu)",
 			  (long)durations.count, (long)names.count);
 	[_durations addObjectsFromArray:durations];
-	if (names) {
+	if (names)
 		[_names addObjectsFromArray:names];
-	} else {
-		for (int _ = 0; _ < durations.count; ++_) {
-			[_names addObject:@""];
-		}
+	else {
+		for (int _ = 0; _ < durations.count; ++_) [_names addObject:@""];
 	}
 }
 
@@ -672,7 +661,7 @@ static NSMutableArray * _countdowns = nil;
 	}
 }
 
-#pragma mark Localized description methods
+#pragma mark - Localized description
 
 - (NSString *)descriptionOfDurationAtIndex:(NSInteger)index
 {
@@ -681,8 +670,7 @@ static NSMutableArray * _countdowns = nil;
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
 	
-	NSInteger count = 0; if (days) count++; if (hours) count++; if (minutes) count++; if (seconds) count++;
-	
+	NSInteger count = (days > 0) + (hours > 0) + (minutes > 0) + (seconds > 0);
 	NSMutableArray * components = [[NSMutableArray alloc] initWithCapacity:4];
 	if (count > 2) {
 		if (days) [components addObject:[NSString stringWithFormat:@"%ld %@ ", days, (days > 1) ? NSLocalizedString(@"days", nil) : NSLocalizedString(@"day", nil)]];
@@ -695,7 +683,6 @@ static NSMutableArray * _countdowns = nil;
 		if (minutes) [components addObject:[NSString stringWithFormat:@"%ld %@", minutes, (minutes > 1) ? NSLocalizedString(@"minutes", nil) : NSLocalizedString(@"minute", nil)]];
 		if (seconds) [components addObject:[NSString stringWithFormat:@"%ld %@", seconds, (seconds > 1) ? NSLocalizedString(@"seconds", nil) : NSLocalizedString(@"second", nil)]];
 	}
-	
 	return [components componentsJoinedByString:@", " withLastJoin:NSLocalizedString(@" and ", nil)]; // "12 minutes and 34 seconds", "12 days, 34 hours, 56 min and 12 sec"
 }
 
@@ -706,7 +693,7 @@ static NSMutableArray * _countdowns = nil;
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
 	
-	NSInteger count = 0; if (days) count++; if (hours) count++; if (minutes) count++; if (seconds) count++;
+	NSInteger count = (days > 0) + (hours > 0) + (minutes > 0) + (seconds > 0);
 	
 	NSMutableArray * components = [[NSMutableArray alloc] initWithCapacity:4];
 	if (count > 2) {
@@ -724,8 +711,7 @@ static NSMutableArray * _countdowns = nil;
 	return [components componentsJoinedByString:@", " withLastJoin:NSLocalizedString(@" and ", nil)]; // "12 min and 34 sec", "12d, 34h, 56m and 12s"
 }
 
-
-#pragma mark - isEqual Methods
+#pragma mark - isEqual methods
 
 - (BOOL)isEqual:(Countdown *)anotherCountdown
 {
@@ -747,7 +733,6 @@ static NSMutableArray * _countdowns = nil;
 			&& (self.type == anotherCountdown.type));
 }
 
-
 #pragma mark - Description
 
 - (NSString *)description
@@ -758,8 +743,7 @@ static NSMutableArray * _countdowns = nil;
 		return [NSString stringWithFormat:@"<Countdown: 0x%p; name = %@; endDate = %@; songID = %@>", self, _name, _endDate, _songID];
 }
 
-
-#pragma mark - Memory Management
+#pragma mark - Memory management
 
 - (void)dealloc
 {

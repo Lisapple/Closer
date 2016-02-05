@@ -55,8 +55,7 @@
 	_daysLabel.hidden = (days == 0);
 	_daysDescriptionLabel.hidden = (days == 0);
 	
-	CGFloat totalHeight = _hoursLabel.frame.size.height + _minutesLabel.frame.size.height
-	+ _secondsLabel.frame.size.height + _nameLabel.frame.size.height;
+	CGFloat totalHeight = _hoursLabel.frame.size.height + _minutesLabel.frame.size.height + _secondsLabel.frame.size.height + _nameLabel.frame.size.height;
 	if (days)
 		totalHeight += _daysLabel.frame.size.height;
 	
@@ -172,9 +171,8 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 	if (days > 0) {
 		_daysLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(days, NO)];
 		_hoursLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(hours, YES)];
-	} else {
+	} else
 		_hoursLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(hours, YES)];
-	}
 	
 	_minutesLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(minutes, YES)];
 	_secondsLabel.animatedText = [NSString stringWithFormat:@"%@", stringFormat(seconds, YES)];
@@ -213,8 +211,7 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 			   _contentView.frame.size.width, _contentView.frame.size.height);
 }
 
-#pragma mark -
-#pragma Description
+#pragma mark - Description
 
 - (NSString *)description
 {

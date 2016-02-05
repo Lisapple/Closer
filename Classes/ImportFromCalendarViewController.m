@@ -144,10 +144,8 @@
 				events = [_eventStore eventsWithStartDate:[NSDate date]
 												 endDate:[[NSCalendar currentCalendar] dateFromComponents:comps]
 												calendar:calendar];
-			} else {
-				/* Get all future events from the current calendar */
+			} else // Get all future events from the current calendar
 				events = [_eventStore futureEventsFromCalendar:calendar includingRecurrent:NO];
-			}
 			
 			if (events.count > 0) {
 				[_calendars addObject:calendar];
@@ -204,7 +202,7 @@
 		} else {
 			Countdown * countdown = [Countdown countdownWithEvent:event];
 			[Countdown addCountdown:countdown];
-			index++;
+			++index;
 		}
 	}
 	
@@ -229,8 +227,8 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Countdown Limit Reached!", nil)
 																		message:message
 																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
+												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
 		
 		[_selectedEvents removeAllObjects];
@@ -249,15 +247,13 @@
 
 - (IBAction)cancel:(id)sender
 {
-	if (self.navigationController.viewControllers.count > 1) {// If the view controller has been pop intot the navigationController (iPhone)
+	if (self.navigationController.viewControllers.count > 1) // If the view controller has been pop intot the navigationController (iPhone)
 		[self.navigationController popViewControllerAnimated:YES];
-	} else {// Else, it has been show as modal
+	else // Else, it has been show as modal
 		[self dismissViewControllerAnimated:YES completion:NULL];
-	}
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -276,14 +272,13 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-	EKCalendar * calendar = _calendars[section];
-	
 	UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 200., 36.)];
-	
+	EKCalendar * calendar = _calendars[section];
 	if (calendar.type == EKCalendarTypeBirthday) {
 		UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(8., 11., 16., 16.)];
 		imageView.image = [UIImage imageNamed:@"birthdays"];
 		[headerView addSubview:imageView];
+		
 	} else {
 		UIView * pinView = [[UIView alloc] initWithFrame:CGRectMake(15., 15., 10., 10.)];
 		pinView.backgroundColor = [UIColor colorWithCGColor:calendar.CGColor];
@@ -303,17 +298,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSArray * events = _calendarsEvents[indexPath.section];
-	
 	static NSString * cellIdentifier = @"CellID";
-	
 	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
+	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	
+	NSArray * events = _calendarsEvents[indexPath.section];
 	EKEvent * event = events[indexPath.row];// Offset the row by one to count the section adding on tableView:numberOfRowsInSection:
 	cell.textLabel.text = event.title;
 	cell.detailTextLabel.text = event.startDate.description;
@@ -326,8 +318,7 @@
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

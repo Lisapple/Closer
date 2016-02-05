@@ -181,7 +181,7 @@
 	return YES;
 }
 
-// Even if iPad can be used with AppleWatch implement this method for consistency
+// Even if iPad can't be used with AppleWatch implement this method for consistency
 - (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *replyInfo))reply
 {
 	NSString * identifier = userInfo[@"identifier"];
@@ -196,7 +196,7 @@
 	} else if ([action isEqualToString:@"delete"]) {
 		[Countdown removeCountdown:countdown];
 	} else {
-		NSLog(@"Unknown Apple Watch request with action: \"%@\"", action);
+		NSDebugLog(@"Unknown Apple Watch request with action: \"%@\"", action);
 	}
 }
 

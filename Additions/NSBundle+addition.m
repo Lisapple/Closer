@@ -13,12 +13,11 @@
 
 - (NSString *)nameForSongWithID:(NSString *)songID
 {
-	if ([songID isEqualToString:@"-1"]) {
+	if ([songID isEqualToString:@"-1"])
 		return nil;
-	} else if ([songID isEqualToString:@"default"]) {
+	else if ([songID isEqualToString:@"default"])
 		return NSLocalizedString(@"Default", nil);
-	} else {
-		
+	else {
 		NSString * path = [[NSBundle mainBundle] pathForResource:@"songs" ofType:@"plist"];
 		NSArray * songs = [[NSArray alloc] initWithContentsOfFile:path];
 		
@@ -29,10 +28,8 @@
 				break;
 			}
 		}
-		
 		return name;
 	}
-	
 	return nil;
 }
 
@@ -48,8 +45,6 @@
 			break;
 		}
 	}
-	
-	
 	return filename;
 }
 

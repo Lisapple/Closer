@@ -31,9 +31,7 @@
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
 	NSString * nibName = (TARGET_IS_IPAD())? @"ExportToWebsiteViewController_Pad" : @"ExportToWebsiteViewController_Phone";
-	if ((self = [super initWithNibName:nibName bundle:[NSBundle mainBundle]])) {
-		
-	}
+	if ((self = [super initWithNibName:nibName bundle:[NSBundle mainBundle]])) { }
 	return self;
 }
 
@@ -45,8 +43,7 @@
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																				 target:self
-																				 action:@selector(done:)];
+																				 target:self action:@selector(done:)];
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	
@@ -84,9 +81,7 @@
 		}
 		
 		NSDictionary * outputDictionary = @{@"group": objects};
-		JSONData = [NSJSONSerialization dataWithJSONObject:outputDictionary
-												   options:0
-													 error:NULL];
+		JSONData = [NSJSONSerialization dataWithJSONObject:outputDictionary options:0 error:NULL];
 		
 	} else if (_countdowns.count == 1) {
 		/* If just one countdown into "_countdowns", create a dictionary with content of the countdown */
@@ -98,9 +93,7 @@
 									   @"style": @(countdown.style),
 									   @"client": [UIDevice currentDevice].model };
 		
-		JSONData = [NSJSONSerialization dataWithJSONObject:attributes
-													 options:0
-													   error:NULL];
+		JSONData = [NSJSONSerialization dataWithJSONObject:attributes options:0 error:NULL];
 		
 	} else {
 		/* The "_countdowns" should not be empty, but, in this case, quit the method */
@@ -175,8 +168,7 @@
 	return nil;
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -187,18 +179,16 @@
 {
 	static NSString * cellID = @"CellID";
 	UITableViewCell * cell = [aTableView dequeueReusableCellWithIdentifier:cellID];
-	
-	if (cell == nil) {
+	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+		cell.textLabel.textAlignment = NSTextAlignmentCenter;
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	cell.textLabel.text = NSLocalizedString(@"Show on Safari", nil);
-	cell.textLabel.textAlignment = NSTextAlignmentCenter;
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

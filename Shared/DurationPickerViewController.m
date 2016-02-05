@@ -168,11 +168,11 @@
 - (NSInteger)numberOfNumbersInDurationPickerView:(DurationPickerView *)durationPickerView
 {
 	NSInteger section = [_durationPickers indexOfObject:durationPickerView];
-	if (section == 0)
-		return 7;
-	else if (section == 1)
-		return 24;
-	
+	switch (section) {
+		case 0: return 7;
+		case 1: return 24;
+		default: break;
+	}
 	return 60;
 }
 
@@ -188,15 +188,17 @@
 	long duration = 0;
 	int pickerIndex = 0;
 	for (DurationPickerView * pickerView in _durationPickers) {
-		if (pickerIndex == 0) duration += pickerView.selectedIndex * 24. * 60 * 60;
-		else if (pickerIndex == 1) duration += pickerView.selectedIndex * 60 * 60;
-		else if (pickerIndex == 2) duration += pickerView.selectedIndex * 60;
-		else if (pickerIndex == 3) duration += pickerView.selectedIndex;
+		switch (pickerIndex) {
+			case 0: duration += pickerView.selectedIndex * 24 * 60 * 60; break;
+			case 1: duration += pickerView.selectedIndex * 60 * 60; break;
+			case 2: duration += pickerView.selectedIndex * 60; break;
+			case 3: duration += pickerView.selectedIndex; break;
+			default: break;
+		}
 		pickerIndex++;
 	}
 	
-	[self.countdown setDuration:@(duration)
-						atIndex:_durationIndex];
+	[self.countdown setDuration:@(duration) atIndex:_durationIndex];
 	
 	/* Stop the timer if we modify the current index used for the timer */
 	if (_durationIndex == self.countdown.durationIndex)

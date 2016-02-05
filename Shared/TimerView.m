@@ -38,7 +38,7 @@
 		_progressLayer.lineWidth = 4;
 		[self.layer addSublayer:_progressLayer];
 		
-		[self setProgression:0 animated:NO]; // Finish |progressLayer} init (with no progression)
+		[self setProgression:0 animated:NO]; // Finish |progressLayer| initialization (with no progression)
 	}
 	return self;
 }
@@ -126,6 +126,18 @@
 	[[_tintColor colorWithAlphaComponent:0.333] setStroke];
 	CGContextSetLineWidth(context, border);
 	CGContextStrokePath(context);
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+	UIView * view = [super hitTest:point withEvent:event];
+	if (view == self) {
+		const CGPoint center = CGPointMake(self.frame.size.width / 2., self.frame.size.height / 2.);
+		CGFloat length = MIN(self.frame.size.width, self.frame.size.height);
+		if (DISTANCE(center, point) > length/2)
+			return self.superview;
+	}
+	return view;
 }
 
 @end

@@ -40,8 +40,7 @@
 	NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
 	_countdowns = [widgetDefaults arrayForKey:@"countdowns"];
 	[_tableView reloadData];
-	self.preferredContentSize = CGSizeMake(_tableView.contentSize.width,
-										   _tableView.rowHeight * _countdowns.count);
+	self.preferredContentSize = CGSizeMake(_tableView.contentSize.width, _tableView.rowHeight * _countdowns.count);
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -64,7 +63,7 @@
 	completionHandler(result);
 }
 
-#pragma mark - TableView Datasource
+#pragma mark - TableView data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -95,7 +94,7 @@
 	}
 }
 
-#pragma mark - TableView Delegate
+#pragma mark - TableView delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

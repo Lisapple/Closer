@@ -39,23 +39,19 @@
 	[super viewWillDisappear:animated];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-	if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-		return @" ";
-	else
-		return @"";
+	return UIInterfaceOrientationIsPortrait(orientation) ? @" " : @"";
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    if (_countdown.type == CountdownTypeTimer) {
+    if (_countdown.type == CountdownTypeTimer)
         return NSLocalizedString(@"The name of the timer can help you to identify it.", nil);
-    }
+		
 	return NSLocalizedString(@"The name of the countdown can help you to identify it.", nil);
 }
 
@@ -72,21 +68,17 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	
 	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
+	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		
 		[cell.contentView addSubview:_cellTextField];
 	}
 	
 	return cell;
 }
 
-#pragma mark -
-#pragma mark UITextFieldDelegate
+#pragma mark - Text field delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {

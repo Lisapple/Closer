@@ -32,3 +32,5 @@
 #define kLastSelectedCountdownIdentifierKey	@"lastSelectedCountdownIdentifier"
 
 #define TARGET_IS_IOS8_OR_LATER   ([UIDevice currentDevice].systemVersion.floatValue >= 8.)
+
+#define DISTANCE(P1, P2) (sqrt((P1.x-P2.x)*(P1.x-P2.x)+(P1.y-P2.y)*(P1.y-P2.y)))

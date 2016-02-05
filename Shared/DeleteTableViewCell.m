@@ -13,11 +13,9 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
-        
 		UIView * deleteView = [[UIView alloc] initWithFrame:self.frame];
 		deleteView.backgroundColor = [UIColor redColor];
 		self.backgroundView = deleteView;
-		
 		self.textLabel.backgroundColor = [UIColor clearColor];
     }
     return self;

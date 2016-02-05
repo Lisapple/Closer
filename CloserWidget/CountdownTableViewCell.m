@@ -92,9 +92,9 @@
 		CGFloat progression = 1. - ((double)log(seconds / (60. * M_E)) - 1.) / 14.;
         frame.size.width = (self.frame.size.width - 8.) * progression;
         frame.origin.y = self.frame.size.height - 1.;
-    } else {
+    } else
         frame.size.width = 0.;
-    }
+	
     _progressionView.frame = frame;
 }
 

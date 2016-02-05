@@ -12,18 +12,9 @@
 
 @dynamic animatedText;
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (instancetype)copyWithZone:(nullable NSZone *)zone
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
-- (CCLabel *)copy
-{
-	CCLabel * label = [[self.class alloc] initWithFrame:self.frame];
+	CCLabel * label = [[self.class allocWithZone:zone] initWithFrame:self.frame];
 	label.backgroundColor = self.backgroundColor;
 	label.text = self.text;
 	label.font = self.font;
@@ -63,9 +54,8 @@
 							options:(UIViewAnimationOptionCurveEaseOut)
 						 animations:^{ self.alpha = 1.; }
 						 completion:NULL];
-	} else {
+	} else
 		self.text = text;
-	}
 }
 
 @end

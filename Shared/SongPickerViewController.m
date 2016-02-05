@@ -36,17 +36,14 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	_countdown.songID = _songID;
-	
-	[_player pause];
-	
-	[Countdown synchronize];
-	
 	[super viewWillDisappear:animated];
+	
+	_countdown.songID = _songID;
+	[Countdown synchronize];
+	[_player pause];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -55,13 +52,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 2;// Return 2 for the "no song" and "default" section and songs list section
+	return 2; // Return 2 for the "no song" and "default" section and songs list section
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (section == 0)
-		return 2;// "no song" and "default"
+		return 2; // "no song" and "default"
 	else
 		return _songs.count;
 }
@@ -69,10 +66,8 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	
 	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	
-	if (cell == nil) {
+	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
@@ -80,13 +75,14 @@
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
 	if (indexPath.section == 0) {
-		if (indexPath.row == 0) {
+		if /**/ (indexPath.row == 0) {
 			if ([_songID isEqualToString:@"-1"]) {
 				cell.accessoryType = UITableViewCellAccessoryCheckmark;
 				_checkedIndexPath = indexPath;
 			}
 			cell.textLabel.text = NSLocalizedString(@"None", nil);
-		} else if (indexPath.row == 1) {
+		}
+		else if (indexPath.row == 1) {
 			if ([_songID isEqualToString:@"default"]) {
 				cell.accessoryType = UITableViewCellAccessoryCheckmark;
 				_checkedIndexPath = indexPath;
@@ -101,12 +97,10 @@
 		}
 		cell.textLabel.text = _songs[indexPath.row][@"Name"];
 	}
-	
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -123,9 +117,9 @@
 		[_player pause];
 		
 		if (indexPath.section == 0) {
-			if (indexPath.row == 0) { // "None"
+			if (indexPath.row == 0) // "None"
 				self.songID = @"-1";
-			} else { // "Default"
+			else { // "Default"
 				
 				// Play the default song (from complete.caf)
 				NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [NSBundle mainBundle].bundlePath];
@@ -149,7 +143,6 @@
 			[_player prepareToPlay];
 			[_player play];
 #endif
-			
 			self.songID = _songs[indexPath.row][@"ID"];
 		}
 	}

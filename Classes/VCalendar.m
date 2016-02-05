@@ -68,9 +68,8 @@
 
 - (void)addEvent:(VEvent *)event
 {
-	if (event && ![_events containsObject:event]) {
+	if (event && ![_events containsObject:event])
 		[_events addObject:event];
-	}
 }
 
 - (void)removeEvent:(VEvent *)event
@@ -120,9 +119,7 @@
 		}
 		[string appendString:@"END:VEVENT\n"];
 	}
-	
 	[string appendString:@"END:VCALENDAR"];
-	
 	
 	NSData * data = [string dataUsingEncoding:NSUTF8StringEncoding];
 	return [data writeToFile:path atomically:flag];

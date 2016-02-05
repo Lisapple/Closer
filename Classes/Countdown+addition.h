@@ -37,6 +37,13 @@
 @end
 
 
+@interface Countdown (Name)
+
++ (NSString *)proposedNameForType:(CountdownType)type;
+
+@end
+
+
 @interface Countdown (Answers)
 
 + (void)tagInsert;

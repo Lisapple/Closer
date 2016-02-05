@@ -31,7 +31,7 @@
 - (IBAction)showPopover:(id)sender;
 - (IBAction)close:(id)sender;
 
-#pragma mark UIPageControl Managment
+// UIPageControl Managment
 - (void)showPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated;
 - (void)showSettingsForPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated;
 - (IBAction)changePage:(id)sender;

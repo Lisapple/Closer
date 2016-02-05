@@ -21,6 +21,7 @@
 
 #import "NSObject+additions.h"
 #import "NSDate+addition.h"
+#import "Countdown+addition.h"
 
 @interface MainViewController_Pad ()
 
@@ -35,11 +36,11 @@
 - (PageView *)createPageWithCountdown:(Countdown *)countdown atIndex:(NSInteger)index animated:(BOOL)animated;
 - (void)deletePageViewAtIndex:(NSInteger)index animated:(NSInteger)animated;
 
-#pragma mark Invalidate Layout
+// Invalidate Layout
 - (void)invalidateLayout;
 - (void)invalidateLayoutWithOrientation:(UIInterfaceOrientationMask)orientation animated:(BOOL)animated;
 
-#pragma mark Update Layout
+// Update Layout
 - (void)updateLayout;
 - (void)updateLayoutWithAnimation:(BOOL)animated;
 - (void)updateLayoutWithOrientation:(UIInterfaceOrientationMask)orientation;
@@ -51,32 +52,6 @@
 #define kEditNavigationBar 2
 
 @implementation MainViewController_Pad
-
-- (NSString *)proposedNameForType:(CountdownType)type
-{
-	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
-	NSArray * countdowns = [Countdown allCountdowns];
-	
-	int index = 1;
-	while (1) {
-		
-		BOOL nameIsFree = YES;
-		for (Countdown * countdown in countdowns) {
-			if ([countdown.name isEqualToString:name]) {
-				nameIsFree = NO; break;
-			}
-		}
-		
-		if (nameIsFree)
-			return name;
-		
-		if (type == CountdownTypeTimer)
-			name = [NSString stringWithFormat:NSLocalizedString(@"New Timer %i", nil), index];
-		else
-			name = [NSString stringWithFormat:NSLocalizedString(@"New Countdown %i", nil), index];
-		++index;
-	}
-}
 
 #pragma mark - Actions
 
@@ -108,9 +83,8 @@
 																	   target:self action:@selector(editAll:)];
 		self.navigationItem.leftBarButtonItems = @[ addItem, manageItem ];
 		
-		CGRect frame = CGRectMake(0., 0., 23., 23.);
 		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
-		button.frame = frame;
+		button.frame = CGRectMake(0., 0., 23., 23.);
 		[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
 		button.tintColor = self.view.window.tintColor;
 		
@@ -130,7 +104,7 @@
 {
 	/* Create the countdown */
 	__block Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
-	aCountDown.name = [self proposedNameForType:CountdownTypeCountdown];
+	aCountDown.name = [Countdown proposedNameForType:CountdownTypeCountdown];
 	
 	int numberOfRows = 2;
 	int numberOfColumns = 2;
@@ -154,7 +128,6 @@
 	}
 	
 	[NSObject performBlock:^{
-		
 		[self createPageWithCountdown:aCountDown
 							  atIndex:_pageViews.count // After the last pageView ("pageViews.count - 1 + 1")
 							 animated:YES];
@@ -189,16 +162,15 @@
 
 - (void)networkStatusDidChange:(NSNotification *)notification
 {
-	if ([self.presentedViewController isKindOfClass:UIAlertController.class]) {
+	if ([self.presentedViewController isKindOfClass:UIAlertController.class])
 		[self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
-	}
 }
 
 - (IBAction)shareAction:(id)sender
 {
 	UIAlertController * actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import from Calendar", nil) style:UIAlertActionStyleDefault handler:
-							^(UIAlertAction * _Nonnull action) {
+							^(UIAlertAction * action) {
 								ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
 								UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromCalendarViewController];
 								navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
@@ -207,7 +179,7 @@
 							}]];
 	if ([NetworkStatus isConnected]) {
 		[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import with Passwords", nil) style:UIAlertActionStyleDefault handler:
-								^(UIAlertAction * _Nonnull action) {
+								^(UIAlertAction * action) {
 									/* Show an alertView to introduce the import from passwords (if not already done) */
 									NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 									BOOL showsIntroductionMessage = !([userDefaults boolForKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"]);
@@ -217,13 +189,12 @@
 										UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
 																										message:message
 																								 preferredStyle:UIAlertControllerStyleAlert];
-										[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:
-														  ^(UIAlertAction * _Nonnull action) {
-															  ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
-															  UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-															  navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-															  navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-															  [self presentViewController:navigationController animated:YES completion:NULL]; }]];
+										[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+											ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
+											UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
+											navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+											navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+											[self presentViewController:navigationController animated:YES completion:NULL]; }]];
 										alert.view.tintColor = [UIColor darkGrayColor];
 										[self presentViewController:alert animated:YES completion:nil];
 										
@@ -239,7 +210,7 @@
 	}
 	
 	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export", nil) style:UIAlertActionStyleDefault handler:
-							^(UIAlertAction * _Nonnull action) {
+							^(UIAlertAction * action) {
 								ImportFromWebsiteViewController_Pad * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Pad alloc] init];
 								UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
 								navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
@@ -260,7 +231,6 @@
 	_settingsViewController.countdown = [Countdown countdownAtIndex:pageIndex];
 	
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:_settingsViewController];
-	
 	_popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
 	_popover.delegate = self;
 	
@@ -314,13 +284,13 @@
 	NSDictionary * infoDictionary = [NSBundle mainBundle].infoDictionary;
 	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © %lu, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"], [NSDate date].year];
 	UIAlertController * actionSheet = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"closer.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"closer.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com"]]; }]];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"support.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"support.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]]; }]];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]]; }]];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"appstore.com/lisacintosh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+	[actionSheet addAction:[UIAlertAction actionWithTitle:@"appstore.com/lisacintosh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://appstore.com/lisacintosh/"]]; }]];
 	actionSheet.view.tintColor = [UIColor defaultTintColor];
 	actionSheet.popoverPresentationController.sourceView = sender;
@@ -333,7 +303,7 @@
 	[self showSettingsForPageAtIndex:[_pageViews indexOfObject:(PageView *)recognizer.view] animated:YES];
 }
 
-#pragma mark - PageView Delegate
+#pragma mark - PageView delegate
 
 - (void)pageViewWillShowSettings:(PageView *)page
 {
@@ -366,7 +336,7 @@
 	[self deleteCountdown:page];
 }
 
-#pragma mark - Delete Management
+#pragma mark - Delete management
 
 - (void)deleteCountdown:(PageView *)pageView
 {
@@ -406,7 +376,7 @@
 		dispatch_async(dispatch_get_main_queue(), ^{ [pageView update]; });
 }
 
-#pragma mark - Invalidate Layout
+#pragma mark - Invalidate layout
 
 - (void)invalidateLayout
 {
@@ -418,7 +388,6 @@
 {
 	NSArray * countdowns = [Countdown allCountdowns];
 	if (countdowns.count > _pageViews.count) {// If we have countdown to add
-		
 		NSInteger count = _pageViews.count;
 		NSArray * newCountdowns = [countdowns subarrayWithRange:NSMakeRange(_pageViews.count, (countdowns.count - _pageViews.count))];
 		for (Countdown * countdown in newCountdowns) {
@@ -427,22 +396,19 @@
 		}
 		
 	} else if (countdowns.count < _pageViews.count) {// If we have countdowns to remove
-		
 		NSRange range = NSMakeRange(countdowns.count, (_pageViews.count - countdowns.count));
 		for (PageView * pageView in [_pageViews objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range]])
 			[self deletePageViewAtIndex:[_pageViews indexOfObject:pageView] animated:YES];
 	}
 	
 	/* Reload remaining PageView*/
-	for (int i = 0; i < countdowns.count; i++) {
+	for (int i = 0; i < countdowns.count; i++)
 		[self reloadPageViewAtIndex:i];
-	}
 	
-	[self updateLayoutWithOrientation:orientation
-							 animated:animated];
+	[self updateLayoutWithOrientation:orientation animated:animated];
 }
 
-#pragma mark - Update Layout
+#pragma mark - Update layout
 
 - (void)updateLayout
 {
@@ -480,12 +446,11 @@
 	[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 	
 	CGSize screenSize = ([UIScreen mainScreen].bounds.size);
-	if /**/ (orientationMask & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width) {
+	if /**/ (orientationMask & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width)
 		screenSize = CGSizeMake(screenSize.height, screenSize.width);
-	}
-	else if (orientationMask & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width) {
+	else if (orientationMask & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width)
 		screenSize = CGSizeMake(screenSize.height, screenSize.width);
-	}
+	
 	CGSize pageSize = (orientationMask & UIInterfaceOrientationMaskLandscape) ?
 		CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
 		CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
@@ -493,25 +458,22 @@
 	int i = 0;
 	for (PageView * pageView in _pageViews) {
 		
-		int index = i % (numberOfRows * numberOfColumns);
+		const int index = i % (numberOfRows * numberOfColumns);
 		CGRect frame = CGRectMake(0., 0., pageSize.width, pageSize.height);
 		
 		if (orientationMask & UIInterfaceOrientationMaskLandscape) {
-			
 			frame.origin.x = (i * pageSize.width) + ceilf(index / 3.);
 			
 		} else {
-			int row = index / numberOfRows;
-			int col = index % numberOfRows;
-			int page = i / (numberOfRows * numberOfColumns);
+			const int row = index / numberOfRows;
+			const int col = index % numberOfRows;
+			const int page = i / (numberOfRows * numberOfColumns);
 			
 			int pageOffset = page * screenSize.width;
-			
 			frame.origin.x = (col * pageSize.width) + frame.origin.x + pageOffset;
 			frame.origin.y = (row * pageSize.height) + frame.origin.y;
 		}
 		pageView.frame = frame;
-		
 		++i;
 	}
 	
@@ -528,23 +490,22 @@
 
 - (PageView *)createPageWithCountdown:(Countdown *)countdown atIndex:(NSInteger)index animated:(BOOL)animated
 {
-	int numberOfRows = 2;
-	int numberOfColumns = 2;
+	const int numberOfRows = 2;
+	const int numberOfColumns = 2;
 	
-	int i = index % (numberOfRows * numberOfColumns);
-	int row = i / numberOfRows;
-	int col = i % numberOfRows;
+	const int i = index % (numberOfRows * numberOfColumns);
+	const int row = i / numberOfRows;
+	const int col = i % numberOfRows;
 	NSInteger page = index / (numberOfRows * numberOfColumns);
 	
 	int pageOffset = page * _scrollView.frame.size.width;
 	
 	CGSize screenSize = ([UIScreen mainScreen].bounds.size);
-	if /**/ (self.currentOrientation & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width) {
+	if /**/ (self.currentOrientation & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width)
 		screenSize = CGSizeMake(screenSize.height, screenSize.width);
-	}
-	else if (self.currentOrientation & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width) {
+	else if (self.currentOrientation & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width)
 		screenSize = CGSizeMake(screenSize.height, screenSize.width);
-	}
+	
 	CGSize pageSize = (self.currentOrientation & UIInterfaceOrientationMaskLandscape) ?
 		CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
 		CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
@@ -574,8 +535,7 @@
 						 animations:^{
 							 view.alpha = 1.;
 							 view.transform = CGAffineTransformIdentity;
-						 }
-						 completion:NULL];
+						 }];
 	}
 	
 	return view;
@@ -593,23 +553,21 @@
 		NSDebugLog(@"Reloading page at index: %ld", (long)index);
 		
 		CGSize screenSize = ([UIScreen mainScreen].bounds.size);
-		if /**/ (self.currentOrientation & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width) {
+		if /**/ (self.currentOrientation & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width)
 			screenSize = CGSizeMake(screenSize.height, screenSize.width);
-		}
-		else if (self.currentOrientation & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width) {
+		else if (self.currentOrientation & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width)
 			screenSize = CGSizeMake(screenSize.height, screenSize.width);
-		}
+		
 		CGSize pageSize = (self.currentOrientation & UIInterfaceOrientationMaskLandscape) ?
 			CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
 			CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
 		CGRect rect = CGRectMake(0., 0., pageSize.width, pageSize.height);
 		
 		PageView * pageView = nil;
-		if (countdown.type == CountdownTypeTimer) {
+		if (countdown.type == CountdownTypeTimer)
 			pageView = [[TimerPageView alloc] initWithFrame:rect];
-		} else {
+		else
 			pageView = [[CountdownPageView alloc] initWithFrame:rect];
-		}
 		
 		pageView.countdown = countdown;
 		pageView.delegate = self;
@@ -617,6 +575,7 @@
 		[_scrollView addSubview:pageView];
 		[_pageViews[index] removeFromSuperview];
 		_pageViews[index] = pageView;
+		
 	} else { // Just refresh the page view
 		_pageViews[index].countdown = countdown;
 	}
@@ -638,7 +597,7 @@
 	[_pageViews removeObjectAtIndex:index];
 }
 
-#pragma mark - View lifetime
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
@@ -655,10 +614,8 @@
 	_pageViews = [[NSMutableArray alloc] initWithCapacity:countdowns.count];
 	
 	int index = 0;
-	for (Countdown * countdown in countdowns) {
-		[self createPageWithCountdown:countdown atIndex:index animated:NO];
-		++index;
-	}
+	for (Countdown * countdown in countdowns)
+		[self createPageWithCountdown:countdown atIndex:index++ animated:NO];
 	
 	[self updateLayoutWithOrientation:self.currentOrientation animated:NO];
 	
@@ -688,10 +645,10 @@
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:@"CountdownDidCreateNewNotification" object:nil queue:nil
 												  usingBlock:^(NSNotification *note) {
-													  /* Invalidate the layout */
+													  // Invalidate the layout
 													  [self invalidateLayout];
 													  
-													  /* Scroll to last page */
+													  // Scroll to last page
 													  CGSize size = _scrollView.frame.size;
 													  CGRect rect = CGRectMake(_pageControl.currentPage * size.width, 0., size.width, size.height);
 													  [_scrollView scrollRectToVisible:rect animated:YES];
@@ -702,7 +659,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusDidChange:)
 												 name:kNetworkStatusDidChangeNotification object:nil];
 	
-	/* Keyboard showing/hidding notifications */
+	// Keyboard showing/hidding notifications
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:)
 												 name:UIKeyboardDidShowNotification object:nil];
 	
@@ -751,7 +708,7 @@
 					 }];
 }
 
-#pragma mark - UIPopoverController delegate
+#pragma mark - Popover controller delegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
@@ -759,25 +716,23 @@
 	_currentSettingsPageIndex = 0;
 }
 
-#pragma mark - UIPageControl Managment
+#pragma mark - Page control managment
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
 	if (object == _pageControl && [keyPath isEqualToString:@"currentPage"]) {
 		
-		NSUInteger oldPage = [change[NSKeyValueChangeOldKey] integerValue];
+		const NSUInteger oldPage = [change[NSKeyValueChangeOldKey] integerValue];
 		NSUInteger location = MIN(_pageViews.count - 1, oldPage * 4);
 		NSUInteger length = MIN(_pageViews.count - 1 - location, 4);
-		for (NSUInteger i = location; i < MIN(location + length, _pageViews.count); ++i) {
+		for (NSUInteger i = location; i < MIN(location + length, _pageViews.count); ++i)
 			[_pageViews[i] viewDidHide:YES];
-		}
 		
-		NSUInteger currentPage = [change[NSKeyValueChangeNewKey] integerValue];
+		const NSUInteger currentPage = [change[NSKeyValueChangeNewKey] integerValue];
 		location = MIN(_pageViews.count - 1, currentPage * 4);
 		length = MIN(_pageViews.count - 1 - location, 4);
-		for (NSUInteger i = location; i < MIN(location + length, _pageViews.count); ++i) {
+		for (NSUInteger i = location; i < MIN(location + length, _pageViews.count); ++i)
 			[_pageViews[i] viewWillShow:YES];
-		}
 	}
 }
 

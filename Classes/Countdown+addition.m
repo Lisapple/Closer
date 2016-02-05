@@ -147,11 +147,11 @@
 				if (countdown.type == CountdownTypeCountdown) {
 					CSSearchableItemAttributeSet * attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:(NSString *)kUTTypeItem];
 					attributeSet.title = countdown.name;
-					if (countdown.endDate) {
+					if (countdown.endDate)
 						attributeSet.contentDescription = [NSString stringWithFormat:@"%@ - %@", countdown.endDate.naturalDateString, countdown.message];
-					} else {
+					else
 						attributeSet.contentDescription = countdown.message;
-					}
+					
 					attributeSet.relatedUniqueIdentifier = countdown.identifier;
 					
 					attributeSet.keywords = @[ countdown.name, countdown.message ];
@@ -166,6 +166,28 @@
 			}
 			[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:searchableItems completionHandler:completionHandler];
 		});
+	}
+}
+
+@end
+
+
+@implementation Countdown (Name)
+
++ (NSString *)proposedNameForType:(CountdownType)type
+{
+	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
+	NSArray * names = [self.class valueForKeyPath:@"name"];
+	int index = 2;
+	while (1) {
+		if (![names containsObject:name])
+			return name;
+		
+		if (type == CountdownTypeTimer)
+			name = [NSString stringWithFormat:NSLocalizedString(@"New Timer %i", nil), index];
+		else
+			name = [NSString stringWithFormat:NSLocalizedString(@"New Countdown %i", nil), index];
+		++index;
 	}
 }
 

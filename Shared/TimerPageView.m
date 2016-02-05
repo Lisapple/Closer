@@ -62,6 +62,7 @@
 								  NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
 								  [self reload];
 							  }
+							  
 							  if (self.countdown.currentName.length > 0) {
 								  // [name]\n[current duration name]
 								  NSMutableDictionary * attributes = @{ NSForegroundColorAttributeName : _nameLabel.textColor,
@@ -73,16 +74,15 @@
 								  [string appendAttributedString:[[NSAttributedString alloc] initWithString:self.countdown.currentName
 																								 attributes:attributes]];
 								  _nameLabel.attributedText = string;
-							  } else {
+							  } else
 								  _nameLabel.text = self.countdown.name;
-							  }
 						  }];
 		
 		_continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
 																			 object:nil
 																			  queue:[NSOperationQueue currentQueue]
 																		 usingBlock:^(NSNotification * notification)
-							{ if (notification.object == self.countdown && self.countdown.isPaused) { [self start]; } }];
+							{ if (notification.object == self.countdown && self.countdown.isPaused) [self start]; }];
 		
 		UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(timerDidDragged:)];
 		pan.maximumNumberOfTouches = 1;
@@ -93,7 +93,7 @@
 			[pan requireGestureRecognizerToFail:gesture];
 		for (UIGestureRecognizer * gesture in self.superview.gestureRecognizers)
 			[pan requireGestureRecognizerToFail:gesture];
-		[self addGestureRecognizer:pan];
+		[self.timerView addGestureRecognizer:pan];
 		
 		_idleTimerDisabled = NO;
     }
@@ -130,8 +130,8 @@
 		[self.countdown reset];
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
 		_descriptionLabel.hidden = YES;
-		
 		[self updateLeftButton];
+		
 	} else if (!self.countdown.endDate) {
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
 		_descriptionLabel.hidden = YES;
@@ -266,9 +266,9 @@
 		return ;
 	}
 	
-	if (self.countdown.isPaused) { // Paused
+	if (self.countdown.isPaused) // Paused
 		[_timerView cancelProgressionAnimation];
-	} else { // Not paused
+	else { // Not paused
 		
 		if (self.countdown.endDate) { // Playing
 			_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
@@ -304,9 +304,8 @@
 				_isFinished = YES;
 			}
 			
-		} else { // Waiting for user to continue
+		} else // Waiting for user to continue
 			_timeLabel.text = NSLocalizedString(@"Continue", nil);
-		}
 	}
 }
 
@@ -323,9 +322,9 @@
 
 - (void)tooglePause
 {
-	if (self.countdown.durations.count == 0) { // Don't allow "start" if no durations
+	if (self.countdown.durations.count == 0) // Don't allow "start" if no durations
 		[self pause];
-	} else {
+	else {
 		if (self.countdown.isPaused) [self start];
 		else [self pause];
 	}
@@ -349,6 +348,7 @@
 		[self.countdown reset];
 		_timerView.progression = 0.;
 		_isFinished = NO;
+		
 	} else {
 		[self.countdown resumeWithOffset:_offset];
 		_offset = 0;
@@ -362,9 +362,9 @@
 {
 	[self updateLeftButton];
 	
-	if (self.countdown.isPaused) {
+	if (self.countdown.isPaused)
 		_timeLabel.text = NSLocalizedString(@"Resume", nil);
-	}
+	
 	_descriptionLabel.hidden = (self.countdown.isPaused);
 	
 	[self update];
@@ -399,8 +399,8 @@
 		return ;
 	
 	// Don't start the pan gesture (set set the timer progression by dragging up/down) if the user starts scrolling to right/left
-	int contentOffsetX = ((UIScrollView *)self.superview).contentOffset.x;
-	if (((int)contentOffsetX % (int)self.frame.size.width) > 0)
+	int contentOffsetX = ceil(((UIScrollView *)self.superview).contentOffset.x);
+	if ((contentOffsetX % (int)self.frame.size.width) != 0)
 		return ;
 
 #define kIndexOffset 100.
@@ -444,9 +444,8 @@
 			_offset = -_duration * progression;
 			[self.countdown reset];
 			[self.countdown pause];
-		} else {
+		} else
 			_offset -= _duration * progression;
-		}
 		
 		[self start];
 	}

@@ -26,8 +26,7 @@
 
 @implementation CloserAppDelegate_Phone
 
-#pragma mark -
-#pragma mark Application lifecycle
+#pragma mark - Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -208,12 +207,12 @@
 	return NO;
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options // iOS 9+
 {
 	return [self openDeeplinkURL:url];
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation // iOS 8
 {
     return [self openDeeplinkURL:url];
 }
@@ -241,7 +240,7 @@
 	});
 #endif
 	
-	if /***/ ([action isEqualToString:@"pause"] && !countdown.isPaused) {
+	if /****/ ([action isEqualToString:@"pause"] && !countdown.isPaused) {
 		[countdown pause];
 	} else if ([action isEqualToString:@"resume"] && countdown.isPaused) {
 		[countdown resume];
@@ -307,15 +306,15 @@
 	[_mainViewController startUpdateTimeLabels];
 }
 
-
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+	[Countdown synchronize];
+	
 	/* Save the last selected page */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setInteger:_mainViewController.selectedPageIndex
 					  forKey:kLastSelectedPageIndex];
-	
-	[Countdown synchronize];
+	[userDefaults synchronize];
 }
 
 @end

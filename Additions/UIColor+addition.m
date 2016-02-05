@@ -24,7 +24,7 @@
 {
 	switch (style) {
 		case CountdownStyleDay:		return [UIColor whiteColor];
-		case CountdownStyleDawn:		return [UIColor colorWithR:74 G:74 B:74];
+		case CountdownStyleDawn:	return [UIColor colorWithR:74 G:74 B:74];
 		case CountdownStyleOasis:	return [UIColor colorWithR:40 G:65 B:164];
 		case CountdownStyleSpring:	return [UIColor colorWithR:126 G:211 B:33];
 		case CountdownStyleNight:
@@ -36,7 +36,7 @@
 {
 	switch (style) {
 		case CountdownStyleDay:		return [UIColor colorWithR:74 G:74 B:74];
-		case CountdownStyleDawn:		return [UIColor colorWithR:85 G:175 B:255];
+		case CountdownStyleDawn:	return [UIColor colorWithR:85 G:175 B:255];
 		case CountdownStyleOasis:	return [UIColor colorWithR:126 G:211 B:33];
 		case CountdownStyleSpring:	return [UIColor colorWithR:6 G:20 B:158];
 		case CountdownStyleNight:

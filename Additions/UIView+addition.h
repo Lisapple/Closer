@@ -11,8 +11,7 @@
 
 @interface UIView (addition)
 
-- (void)setOrigin:(CGPoint)newOrigin;
-- (void)setX:(CGFloat)newX;
-- (void)setY:(CGFloat)newY;
+@property (nonatomic, assign) CGPoint origin;
+@property (nonatomic, assign) CGFloat x, y;
 
 @end

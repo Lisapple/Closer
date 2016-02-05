@@ -54,32 +54,29 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Clear", nil)
 																			  style:UIBarButtonItemStylePlain
 																			 target:self action:@selector(clear:)];
+	self.navigationItem.rightBarButtonItem.enabled = (_countdown.message.length > 0);
 	
 	_cellTextView.text = _countdown.message;
 	_cellTextView.delegate = self;
 	_cellTextView.scrollEnabled = NO;
-	
-	self.navigationItem.rightBarButtonItem.enabled = (_countdown.message.length > 0);
 	
 	[self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	_undoManager = [[NSUndoManager alloc] init];
-	
 	[super viewWillAppear:animated];
+	_undoManager = [[NSUndoManager alloc] init];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+	[super viewDidAppear:animated];
 	[self update];
 	
 	_cellTextView.undoManager = _undoManager; // Overwrite the cellTextView undo manager with the controller one since [cellTextView becomeFirstResponder] set the default undo manager from cellTextView undo manager (setActionName should not working with this method).
 	
 	[_cellTextView becomeFirstResponder];
-	
-	[super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -108,8 +105,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 	}
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (CGFloat)keyboardHeight
 {
@@ -171,8 +167,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 	
 	if (!self.messageCell) {
 		UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
-		if (cell == nil) {
+		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			
@@ -187,8 +182,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 	return self.messageCell;
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
@@ -198,10 +192,6 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 - (void)textViewDidChange:(UITextView *)textView
 {
 	[self update];
-}
-
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

@@ -151,9 +151,8 @@
 	
 	const CGFloat labelWidth = 40., labelHeight = 40.;
 	
-	if (!_labels) {
+	if (!_labels)
 		_labels = [[NSMutableArray alloc] initWithCapacity:_numberOfItems];
-	}
 	
 	[_labels removeAllObjects];
 	
@@ -189,10 +188,8 @@
 - (void)setFrame:(CGRect)frame
 {
 	super.frame = frame;
-	
 	[self updateLayout];
 }
-
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex
 {
@@ -219,7 +216,6 @@
 	}
 }
 
-
 - (void)updateScrolling
 {
 	const CGFloat labelWidth = 40.;
@@ -243,9 +239,8 @@
 	}
 	
 	_selectedIndex = index;
-	if ([self.delegate respondsToSelector:@selector(durationPickerView:didSelectIndex:)]) {
+	if ([self.delegate respondsToSelector:@selector(durationPickerView:didSelectIndex:)])
 		[self.delegate durationPickerView:self didSelectIndex:index];
-	}
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)aScrollView
@@ -255,17 +250,15 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate
 {
-	if (!decelerate) {
+	if (!decelerate)
 		[self updateScrolling];
-	}
 }
 
 - (void)durationScrollView:(_DurationScrollView *)durationScrollView didTouchOnIndex:(NSInteger)index
 {
 	[self selectIndex:index animated:YES];
-	if ([self.delegate respondsToSelector:@selector(durationPickerView:didSelectIndex:)]) {
+	if ([self.delegate respondsToSelector:@selector(durationPickerView:didSelectIndex:)])
 		[self.delegate durationPickerView:self didSelectIndex:index];
-	}
 }
 
 @end

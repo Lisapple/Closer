@@ -24,36 +24,36 @@
 
 @property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
 
-#pragma mark Current Page Index
+// Current Page Index
 
 - (NSInteger)selectedPageIndex;
 
-#pragma mark Add Page
+// Add Page
 
 - (void)addPageWithCountDown:(Countdown *)aCountdown;
 - (void)update;
 - (void)removeAllPages;
 
-#pragma mark Page and Page's Settings Selection
+// Page and Page's Settings Selection
 
 - (void)showPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated;
 - (void)showSettingsForPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated;
 
-#pragma mark Update Time Labels Managment
+// Update Time Labels Managment
 
 - (void)startUpdateTimeLabels;
 - (void)updateTimeLabels;
 - (void)stopUpdateTimeLabels;
 
-#pragma mark Go To Settings
+// Go To Settings
 
 - (IBAction)showSettings:(id)sender;
 
-#pragma mark Show Description Managment
+// Show Description Managment
 
 //- (void)showDescriptions:(BOOL)show animated:(BOOL)animated;
 
-#pragma mark UIPageControl Managment
+// UIPageControl Managment
 
 - (IBAction)changePage:(id)sender;
 

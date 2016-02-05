@@ -25,14 +25,12 @@
 	_tableView.editing = YES;
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-																						   target:self
-																						   action:@selector(addAction:)];
+																						   target:self action:@selector(addAction:)];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
 	[self reloadData];
 }
 
@@ -48,9 +46,8 @@
 		[button setTitle:NSLocalizedString(@"Add Duration", nil) forState:UIControlStateNormal];
 		[button addTarget:self action:@selector(addAction:) forControlEvents:UIControlEventTouchUpInside];
 		_tableView.tableFooterView = button;
-	} else {
+	} else
 		_tableView.tableFooterView = nil;
-	}
 	
 	[_tableView reloadData];
 }
@@ -71,13 +68,11 @@
 	[self.navigationController pushViewController:controller animated:animated];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	/* Two for prompt and durations */
-	return 2;
+	return 2; // Two for prompt and durations
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -96,13 +91,11 @@
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:promptCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
+			cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 		}
-		
 		cell.textLabel.text = NSLocalizedString(@"Ask", nil);
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		
-		cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
-		cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 		
 		switch (_countdown.promptState) {
 			case PromptStateNone:
@@ -171,7 +164,7 @@
 		
 		[_countdown removeDurationAtIndex:indexPath.row];
 		
-		[_tableView deleteRowsAtIndexPaths:@[indexPath]
+		[_tableView deleteRowsAtIndexPaths:@[ indexPath ]
 						  withRowAnimation:UITableViewRowAnimationFade];
 		[_tableView endUpdates];
 		[self reloadData];
@@ -190,7 +183,7 @@
 	[_tableView reloadData];
 }
 
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

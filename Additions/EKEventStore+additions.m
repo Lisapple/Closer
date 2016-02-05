@@ -14,30 +14,25 @@
 {
 	__block NSUInteger count = 0;
 	[self enumerateEventsMatchingPredicate:predicate
-								usingBlock:^(EKEvent *event, BOOL *stop) {
-									count++;
-								}];
+								usingBlock:^(EKEvent *event, BOOL *stop) { ++count; }];
 	return count;
 }
 
 - (NSUInteger)numberOfEventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar
 {
-	NSPredicate * predicate = [self predicateForEventsWithStartDate:startDate
-															endDate:endDate
-														  calendars:@[calendar]];
+	NSPredicate * predicate = [self predicateForEventsWithStartDate:startDate endDate:endDate
+														  calendars:@[ calendar ]];
 	__block NSUInteger count = 0;
 	[self enumerateEventsMatchingPredicate:predicate
-								usingBlock:^(EKEvent *event, BOOL *stop) {
-									count++;
-								}];
+								usingBlock:^(EKEvent *event, BOOL *stop) { ++count; }];
 	return count;
 }
 
 - (NSArray <EKEvent *> *)eventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar
 {
 	NSPredicate * predicate = [self predicateForEventsWithStartDate:startDate
-															endDate:endDate// Fetch all future events that the eventStore could store
-														  calendars:@[calendar]];
+															endDate:endDate // Fetch all future events that the eventStore could store
+														  calendars:@[ calendar ]];
 	NSArray * events = [self eventsMatchingPredicate:predicate];
 	if (!events) {// If "events" is nil, return an empty array
 		return @[];
@@ -49,8 +44,8 @@
 - (NSUInteger)numberOfFutureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent
 {
 	NSPredicate * predicate = [self predicateForEventsWithStartDate:[NSDate date]
-															endDate:[NSDate distantFuture]// Fetch all future events that the eventStore could store
-														  calendars:@[calendar]];
+															endDate:[NSDate distantFuture] // Fetch all future events that the eventStore could store
+														  calendars:@[ calendar ]];
 	
 	__block BOOL hasRecurrenceRulesPropertyExists = ([EKEvent instancesRespondToSelector:@selector(hasRecurrenceRules)]);
 	
@@ -58,9 +53,7 @@
 	[self enumerateEventsMatchingPredicate:predicate
 								usingBlock:^(EKEvent *event, BOOL *stop) {
 									BOOL isRecurrent = (hasRecurrenceRulesPropertyExists)? (event.hasRecurrenceRules) : (/*[event recurrenceRule] != nil*/ NO);
-									if (includeRecurrent
-										|| (!isRecurrent || event.isDetached)) // If the event is not a recurrent item or is detached (different from others reccurent items)
-										count++;
+									count = (includeRecurrent || (!isRecurrent || event.isDetached)); // If the event is not a recurrent item or is detached (different from others reccurent items)
 								}];
 	return count;
 }
@@ -68,8 +61,8 @@
 - (NSArray <EKEvent *> *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent
 {
 	NSPredicate * predicate = [self predicateForEventsWithStartDate:[NSDate date]
-															endDate:[NSDate distantFuture]// Fetch all future events that the eventStore could store
-														  calendars:@[calendar]];
+															endDate:[NSDate distantFuture] // Fetch all future events that the eventStore could store
+														  calendars:@[ calendar ]];
 	
 	BOOL hasRecurrenceRulesPropertyExists = ([EKEvent instancesRespondToSelector:@selector(hasRecurrenceRules)]);
 	
@@ -82,7 +75,7 @@
 										[events addObject:event];
 									}
 								}];
-	return (NSArray *)events;
+	return events;
 }
 
 @end

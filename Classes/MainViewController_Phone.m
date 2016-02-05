@@ -12,11 +12,17 @@
 #import "Countdown.h"
 #import "NetworkStatus.h"
 
+#import "UIView+addition.h"
+
 #import <Crashlytics/Crashlytics.h>
 
 @interface MainViewController_Phone ()
+{
+	BOOL _shouldCreateNewCountdown;
+}
 
 @property (nonatomic, strong) IBOutlet UIImageView * imageView;
+@property (nonatomic, strong) UILabel * createCountdownLabel;
 
 @end
 
@@ -25,8 +31,7 @@
 const NSTimeInterval kAnimationDuration = 0.5;
 const NSTimeInterval kAnimationDelay = 5.;
 
-#pragma mark -
-#pragma mark View Load/Appear/Disappear Managment
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
@@ -44,6 +49,17 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_scrollView.delaysContentTouches = NO;
 	
 	_pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight; // Add flexible height (Unavailable from IB)
+	
+	_createCountdownLabel = [[UILabel alloc] init];
+	_createCountdownLabel.textColor = [UIColor whiteColor];
+	_createCountdownLabel.text = @"+";
+	_createCountdownLabel.font = [UIFont systemFontOfSize:32 weight:UIFontWeightUltraLight];
+	[_createCountdownLabel sizeToFit];
+	
+	_createCountdownLabel.origin = CGPointMake(15, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
+	_createCountdownLabel.alpha = 0;
+	
+	[self.view insertSubview:_createCountdownLabel atIndex:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -75,14 +91,14 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[[NSNotificationCenter defaultCenter] removeObserver:CountdownDidSynchronizeNotification];
 }
 
-#pragma mark - Current Page Index
+#pragma mark - Current page index
 
 - (NSInteger)selectedPageIndex
 {
 	return _pageControl.currentPage;
 }
 
-#pragma mark - Add Page
+#pragma mark - Add page
 
 - (void)addPageWithCountDown:(Countdown *)aCountdown
 {
@@ -124,7 +140,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 			
 			// Compute the range of page to remove
 			NSRange range = NSMakeRange(countdownsCount, pagesCount - countdownsCount);
-			
 			NSIndexSet * indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
 			NSArray * pagesToRemove = [_pages objectsAtIndexes:indexSet];
 			
@@ -151,8 +166,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 		PageView * page = _pages[index];
 		
 		/* If the type of page needs to change, remove the current page and re-create one */
-		if ((countdown.type == CountdownTypeTimer && [page isKindOfClass:[CountdownPageView class]])
-			|| (countdown.type == CountdownTypeCountdown && [page isKindOfClass:[TimerPageView class]])) {
+		if ((countdown.type == CountdownTypeTimer && [page isKindOfClass:CountdownPageView.class]) ||
+			(countdown.type == CountdownTypeCountdown && [page isKindOfClass:TimerPageView.class])) {
 			[self removePageAtIndex:index];
 			[self insertPageWithCountDown:countdown atIndex:index];
 		}
@@ -217,7 +232,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[_pages removeAllObjects];
 }
 
-#pragma mark - Page and Page's Settings Selection
+#pragma mark - Pages and settings selection
 
 - (void)showPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated
 {
@@ -253,7 +268,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	}
 }
 
-#pragma mark - Update Time Labels Managment
+#pragma mark - Update time labels
 
 - (void)startUpdateTimeLabels
 {
@@ -270,7 +285,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		if (ABS(_pageControl.currentPage - index) <= 1) {// Update only the current page and it left and right neighbours
 			dispatch_async(dispatch_get_main_queue(), ^{ [page update]; });
 		}
-		index++;
+		++index;
 	}
 }
 
@@ -280,7 +295,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	self.updateTimeLabelTimer = nil;
 }
 
-#pragma mark - SettingsViewControllerDelegate
+#pragma mark - Settings view controller delegate
 
 - (void)settingsViewControllerDidFinish:(SettingsViewController_Phone *)controller
 {
@@ -288,9 +303,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[self updateContentView];
 	
 	if ([Countdown allCountdowns].count > 0) {
-		
 		NSInteger pageIndex = [Countdown indexOfCountdown:controller.countdown];
-		
 		if (pageIndex == NSNotFound)
 			pageIndex = _pages.count - 1;// Select the last countdown
 		
@@ -300,8 +313,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 		[_pages[pageIndex] viewWillShow:YES];
 		
 		[self startUpdateTimeLabels];
-		
 		[self dismissViewControllerAnimated:YES completion:NULL];
+		
 	} else {
 		EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] init];
 		UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:editAllCountdownViewController];
@@ -309,10 +322,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 		[self dismissViewControllerAnimated:NO completion:NULL];
 		[self presentViewController:navigationController animated:NO completion:NULL];
 	}
-	
 }
 
-#pragma mark - Go To Settings
+#pragma mark - Go to settings
 
 - (void)pageViewWillShowSettings:(PageView *)page
 {
@@ -374,13 +386,20 @@ const NSTimeInterval kAnimationDelay = 5.;
 					 }];
 }
 
-#pragma mark - UIScrollViewDelegate
+#pragma mark - Scroll view delegate
 
 - (void)setBackgroundImageOffset:(CGPoint)point
 {
-	CGRect frame = _imageView.frame;
-	frame.origin = point;
-	_imageView.frame = frame;
+	_imageView.origin = point;
+	
+	CGFloat x = 15;
+	if (point.x < 0) {
+		x = self.view.frame.size.width - _createCountdownLabel.frame.size.width - 15;
+	}
+	_createCountdownLabel.origin = CGPointMake(x, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
+	_createCountdownLabel.alpha = (ABS(point.x) > 40) ? 1 : ((ABS(point.x) - 20) / 40);
+	
+	_shouldCreateNewCountdown = (ABS(point.x) > 40);
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
@@ -390,20 +409,24 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_pageControl.currentPage = index;
 	
 	if (0 <= index && index < _pages.count) {
+		
 		PageView * pageView = _pages[index];
 		if (pageView.showDeleteConfirmation) {
 			_scrollView.scrollEnabled = NO;
 			[pageView hideDeleteConfirmation];
+			
 		} else if (pageView) {
 			UIColor * textColor = [UIColor textColorForStyle:pageView.style];
 			_pageControl.currentPageIndicatorTintColor = textColor;
 			_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
 			
 			if (_scrollView.contentOffset.x < 0.) {
-				[self setBackgroundImageOffset:CGPointMake(-_scrollView.contentOffset.x, 0.)];
+				CGFloat offset = -_scrollView.contentOffset.x;
+				[self setBackgroundImageOffset:CGPointMake(offset, 0.)];
 				
 			} else if (_scrollView.contentOffset.x > (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1))) {
-				[self setBackgroundImageOffset:CGPointMake((_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)) - _scrollView.contentOffset.x, 0.)];
+				CGFloat offset = (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)) - _scrollView.contentOffset.x;
+				[self setBackgroundImageOffset:CGPointMake(offset, 0.)];
 			}
 			[self setNeedsStatusBarAppearanceUpdate];
 		}
@@ -413,12 +436,11 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)aScrollView
 {
 	NSInteger pageIndex = floor(_scrollView.contentOffset.x / _scrollView.frame.size.width);
-	
 	int index = 0;
 	for (PageView * page in _pages) {
 		if (ABS(pageIndex - index) <= 1) // Update only the current page and it left and right neighbours
 			[page update];
-		index++;
+		++index;
 	}
 }
 
@@ -431,6 +453,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 			[aPageView viewDidHide:YES];
 		}
 	}
+	[self setBackgroundImageOffset:CGPointZero];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -443,6 +466,21 @@ const NSTimeInterval kAnimationDelay = 5.;
 				[aPageView viewDidHide:YES];
 			}
 		}
+		[self setBackgroundImageOffset:CGPointZero];
+		
+	} else if (_shouldCreateNewCountdown) {
+		Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
+		countdown.name = NSLocalizedString(@"New Countdown", nil);
+		[Countdown addCountdown:countdown];
+		[self reload];
+		
+		NSInteger index = [Countdown indexOfCountdown:countdown];
+		scrollView.contentOffset = CGPointMake(index * scrollView.frame.size.width, 0);
+		_pageControl.currentPage = index;
+		
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			[self showSettingsForPageAtIndex:index animated:YES];
+		});
 	}
 }
 
@@ -455,7 +493,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	return UIStatusBarStyleDefault;
 }
 
-#pragma mark - UIPageControl Managment
+#pragma mark - Page control managment
 
 - (IBAction)changePage:(id)sender
 {

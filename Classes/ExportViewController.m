@@ -97,15 +97,14 @@
 		title = [NSString  stringWithFormat:NSLocalizedString(@"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?", nil), [UIDevice currentDevice].localizedModel];
 	}
 	
-	UIAlertController * alert = [UIAlertController alertControllerWithTitle:title
-																	message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export as iCalendar", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
-		[self exportiCalFile]; }]];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export to calendar", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
-		[self exportToCalendar]; }]];
+	UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export as iCalendar", nil) style:UIAlertActionStyleDefault
+											handler:^(UIAlertAction * action) { [self exportiCalFile]; }]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export to calendar", nil) style:UIAlertActionStyleDefault
+											handler:^(UIAlertAction * action) { [self exportToCalendar]; }]];
 	if (isConnected) {
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export to website", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * __nonnull action) {
-			[self exportToWebsite]; }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Export to website", nil) style:UIAlertActionStyleDefault
+												handler:^(UIAlertAction * action) { [self exportToWebsite]; }]];
 	}
 	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
 	[self presentViewController:alert animated:YES completion:NULL];
@@ -120,8 +119,7 @@
 	}
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -139,43 +137,35 @@
 	
 	Countdown * countdown = _countdowns[indexPath.row];
 	if (countdown.endDate.timeIntervalSinceNow > 0. || countdown.type == CountdownTypeTimer) { // Disable finished countdowns and timers
-		
 		static NSString * cellIdentifier = @"CellID";
 		cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		
-		if (cell == nil) {
+		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+			cell.textLabel.textColor = [UIColor blackColor];
+			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		}
 		
 		cell.textLabel.text = countdown.name;
-		
-		cell.textLabel.textColor = [UIColor blackColor];
 		cell.detailTextLabel.text = countdown.endDate.description;
-		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		
 	} else {
-		
 		static NSString * finishedCellIdentifier = @"FinishedCellIdentifier";
 		cell = [_tableView dequeueReusableCellWithIdentifier:finishedCellIdentifier];
 		
-		if (cell == nil) {
+		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:finishedCellIdentifier];
+			cell.textLabel.textColor = [UIColor grayColor];
+			cell.detailTextLabel.textColor = [UIColor grayColor];
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
-		
 		cell.textLabel.text = countdown.name;
-		cell.textLabel.textColor = [UIColor grayColor];
-		
 		cell.detailTextLabel.text = NSLocalizedString(@"Countdown finished", nil);
-		cell.detailTextLabel.textColor = [UIColor grayColor];
-		
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
 	
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -187,9 +177,9 @@
 			[_selectedCountdowns removeObject:countdown];
 			cell.accessoryType = UITableViewCellAccessoryNone;
 		} else {
-			if (![_selectedCountdowns containsObject:countdown]) {// Just check, there is probably no way to get duplicates, but in the case of...
+			if (![_selectedCountdowns containsObject:countdown]) // Just check, there is probably no way to get duplicates, but in the case of...
 				[_selectedCountdowns addObject:countdown];
-			}
+			
 			cell.accessoryType = UITableViewCellAccessoryCheckmark;
 		}
 		[self updateUI];
@@ -219,25 +209,22 @@
 			int index = 1;
 			while (1) {// While we don't have an available filename, add "(%i++)" at the end the the filename
 				path = [NSString stringWithFormat:@"%@/%@ (%i).%@", documentFolderPath, filename, index++, extension];// ex: "~/Documents/Countdown 1 and 2 more (2).ics"
-				if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {// Break only when we've got a free filename
+				if (![[NSFileManager defaultManager] fileExistsAtPath:path]) // Break only when we've got a free filename
 					break;
-				}
 			}
-			
 		}
 		
 		VCalendar * calendar = [[VCalendar alloc] initWithVersion:@"2.0"];
-		for (Countdown * countdown in _selectedCountdowns) {
+		for (Countdown * countdown in _selectedCountdowns)
 			[calendar addEvent:[VEvent eventFromCountdown:countdown]];
-		}
+		
 		[calendar writeToFile:path atomically:YES];
 		
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"You can retreive the export file as \"%@.%@\" into iTunes Sharing.", nil), filename, extension];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Export Succeed!", nil)
-																		message:message
-																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+																		message:message preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
+												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
 	}
 }
@@ -254,7 +241,6 @@
 		event.endDate = [countdown.endDate dateByAddingTimeInterval:kDefaultEventDuration];
 		event.title = countdown.name;
 		event.notes = countdown.message;
-		
 		event.calendar = defaultCalendar;
 		
 		NSError * error = nil;
@@ -268,8 +254,7 @@
 	if (success) {
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"All countdowns have been added as event in the calendar app into the calendar named \"%@\".", nil), defaultCalendar.title];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Export Succeed!", nil)
-																		message:message
-																 preferredStyle:UIAlertControllerStyleAlert];
+																		message:message preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];

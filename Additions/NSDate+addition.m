@@ -15,134 +15,98 @@
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"s";
-	
-	NSInteger second = [dateFormatter stringFromDate:self].integerValue;
-	
-	return second;
+	return [dateFormatter stringFromDate:self].integerValue;
 }
 
 - (NSInteger)minute
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"m";
-	
-	NSInteger minute = [dateFormatter stringFromDate:self].integerValue;
-	
-	return minute;
+	return [dateFormatter stringFromDate:self].integerValue;
 }
 
 - (NSString *)minuteString
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"mm";
-	
-	NSString * minute = [dateFormatter stringFromDate:self];
-	
-	return minute;
+	return [dateFormatter stringFromDate:self];
 }
 
 - (NSInteger)hour
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"H";
-	
-	NSInteger hour = [dateFormatter stringFromDate:self].integerValue;
-	
-	return hour;
+	return [dateFormatter stringFromDate:self].integerValue;
 }
 
 - (NSInteger)day
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"dd";
-	
-	NSInteger day = [dateFormatter stringFromDate:self].integerValue;
-	
-	return day;
+	return [dateFormatter stringFromDate:self].integerValue;
 }
 
 - (NSInteger)month
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"MM";
-	
-	NSInteger month = [dateFormatter stringFromDate:self].integerValue;
-	
-	return month;
+	return [dateFormatter stringFromDate:self].integerValue;
 }
 
 - (NSInteger)year
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"yyyy";
-	
-	NSInteger year = [dateFormatter stringFromDate:self].integerValue;
-	
-	return year;
+	return [dateFormatter stringFromDate:self].integerValue;
 }
 
 - (NSString *)naturalTimeString
 {
-	/* Returns the more natural time format string. ex: 7h55 */
+	// Returns the more natural time format string. ex: 7h55
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	
 	NSLocale * locale = [NSLocale currentLocale];
 	dateFormatter.locale = locale;
 	dateFormatter.timeStyle = NSDateFormatterShortStyle;
 	
-	NSString * dateString = [dateFormatter stringFromDate:self];
-	
-	return dateString;
+	return [dateFormatter stringFromDate:self];
 }
 
 - (NSString *)naturalDateString
 {
-	/* Returns the more natural date format string. e.g.: Mardi 7 Mars */
+	// Returns the more natural date format string. e.g.: Mardi 7 Mars
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	
 	NSLocale * locale = [NSLocale currentLocale];
 	dateFormatter.locale = locale;
 	dateFormatter.dateStyle = NSDateFormatterShortStyle;
-	
 	dateFormatter.dateFormat = @"EEEE d MMMM yyyy";
 	
-	NSString * dateString = [dateFormatter stringFromDate:self];
-	
-	return dateString.capitalizedString;
+	return [dateFormatter stringFromDate:self].capitalizedString;
 }
 
 - (NSString *)rfc5545Format
 {
-	/* Returns a date at date-time format (yyyy MM dd 'T' HH mm ss 'Z') */
+	// Returns a date at date-time format (yyyy MM dd 'T' HH mm ss 'Z')
 	
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	
-	NSLocale * locale = [NSLocale currentLocale];
-	dateFormatter.locale = locale;
-	
+	dateFormatter.locale = [NSLocale currentLocale];
 	dateFormatter.dateFormat = @"yyyyMMdd'T'HHmmss'Z'";
 	dateFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];// Set to GMT time zone
 	
-	NSString * dateString = [dateFormatter stringFromDate:self];
-	
-	return dateString;
+	return [dateFormatter stringFromDate:self];
 }
 
 - (NSString *)SQLDateTime
 {
-	/* Returns a date at date-time format (YYYY-MM-dd HH:mm:ss) */
+	// Returns a date at date-time format (YYYY-MM-dd HH:mm:ss)
 	
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	
-	NSLocale * locale = [NSLocale currentLocale];
-	dateFormatter.locale = locale;
-	
+	dateFormatter.locale = [NSLocale currentLocale];
 	dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
 	dateFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];// Set to GMT time zone
 	
-	NSString * dateString = [dateFormatter stringFromDate:self];
-	
-	return dateString;
+	return [dateFormatter stringFromDate:self];
 }
 
 - (NSString *)description

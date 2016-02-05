@@ -70,9 +70,8 @@
 		if (_countdown.type == CountdownTypeTimer) {
 			
 			switch (indexPath.row) {
-				case 0: { // Name
+				case 0: // Name
 					cell.detailTextLabel.text = _countdown.name;
-				}
 					break;
 				case 1: { // Durations
 					if (_countdown.durations.count == 0) {
@@ -90,23 +89,18 @@
 					}
 				}
 					break;
-				case 2: { // Song
-					NSString * songID = _countdown.songID;
-					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:songID];
-				}
+				case 2: // Song
+					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:_countdown.songID];
 					break;
-				case 3: { // Theme
-					NSInteger style = _countdown.style;
-					cell.detailTextLabel.text = [Countdown styles][style];
-				}
-					break;
+				case 3: // Theme
+					cell.detailTextLabel.text = [Countdown styles][_countdown.style];
+				default: break;
 			}
 		} else {
 			
 			switch (indexPath.row) {
-				case 0: { // Name
+				case 0: // Name
 					cell.detailTextLabel.text = _countdown.name;
-				}
 					break;
 				case 1: { // Date & Time
 					NSDate * date = _countdown.endDate;
@@ -117,24 +111,18 @@
 						cell.detailTextLabel.text = @"!";
 						cell.detailTextLabel.textColor = [UIColor redColor];
 					}
-                    
                     cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
 				}
 					break;
-				case 2: { // Message
+				case 2: // Message
 					cell.detailTextLabel.text = (_countdown.message)? _countdown.message: @"";
-				}
 					break;
-				case 3: { // Song
-					NSString * songID = _countdown.songID;
-					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:songID];
-				}
+				case 3: // Song
+					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:_countdown.songID];
 					break;
-				case 4: { // Theme
-					NSInteger style = _countdown.style;
-					cell.detailTextLabel.text = [Countdown styles][style];
-				}
-					break;
+				case 4: // Theme
+					cell.detailTextLabel.text = [Countdown styles][_countdown.style];
+				default: break;
 			}
 		}
 	}
@@ -211,8 +199,7 @@
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	self.navigationController.delegate = self;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																				 target:self
-																				 action:@selector(close:)];
+																				 target:self action:@selector(close:)];
 	_viewControllers = [[NSMutableArray alloc] initWithCapacity:2];
 	[_viewControllers addObject:self];
     
@@ -231,7 +218,7 @@
 						 NSLocalizedString(@"Date & Time", nil),
 						 NSLocalizedString(@"Message", nil),
 						 NSLocalizedString(@"Sound", nil),
-						 NSLocalizedString(@"Theme", nil)];
+						 NSLocalizedString(@"Theme", nil) ];
 	}
 	
 	[self.tableView reloadData];
@@ -239,9 +226,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[self reloadData];
-	
 	[super viewWillAppear:animated];
+	[self reloadData];
 }
 
 - (IBAction)close:(id)sender

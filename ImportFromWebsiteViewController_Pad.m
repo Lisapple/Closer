@@ -31,18 +31,12 @@
 	
 	self.title = NSLocalizedString(@"Import", nil);
 	self.navigationController.navigationBar.tintColor = [UIColor colorWithWhite:0.25 alpha:1.];
-	
-	UIBarButtonItem * cancelButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-																					   target:self
-																					   action:@selector(cancel:)];
-	
-	self.navigationItem.leftBarButtonItem = cancelButtonItem;
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+																						  target:self action:@selector(cancel:)];
 	
 	/* Add a gesture for the main view to re-show the keyboard */
-	UITapGestureRecognizer * gestureRecogninizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-																						   action:@selector(reshowKeyboardAction:)];
+	UITapGestureRecognizer * gestureRecogninizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reshowKeyboardAction:)];
 	[self.view addGestureRecognizer:gestureRecogninizer];
-	
 	
 	UIPasteboard * pasteBoard = [UIPasteboard generalPasteboard];
 	NSString * string = pasteBoard.string;
@@ -105,14 +99,12 @@
 		
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Do you want to use\n %@ and %@\nas passwords to import?", nil), password1, password2];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Paste Passwords", nil)
-																		message:message
-																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-			[self send]; }]];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+																		message:message preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import", nil) style:UIAlertActionStyleDefault
+												handler:^(UIAlertAction * action) { [self send]; }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel
+												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
-		
 	} else {
 		// @TODO: show that failure
 	}
@@ -126,7 +118,6 @@
 	[_hiddenTextField2 resignFirstResponder];
 	
 	_contentView1.hidden = _contentView2.hidden = YES;
-	
 	_password1Label1.hidden = _password1Label2.hidden = _password1Label2.hidden = _password1Label2.hidden = YES;
 	_password2Label1.hidden = _password2Label2.hidden = _password2Label2.hidden = _password2Label2.hidden = YES;
 	
@@ -134,15 +125,9 @@
 	
 	NSURL * url = [NSURL URLWithString:@"http://closer.lisacintosh.com/export.php"];
 	NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
-	
-	NSData * data = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", _password1, _password2] dataUsingEncoding:NSUTF8StringEncoding];
-	
-	request.HTTPBody = data;
+	request.HTTPBody = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", _password1, _password2] dataUsingEncoding:NSUTF8StringEncoding];
 	request.HTTPMethod = @"POST";
-	
-	_connection = [[NSURLConnection alloc] initWithRequest:request
-												 delegate:self
-										 startImmediately:YES];
+	_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -150,10 +135,7 @@
 	_selectedCountdowns = [[NSMutableArray alloc] initWithCapacity:3];
 	
 	NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-	
-	NSLocale * locale = [NSLocale currentLocale];
-	formatter.locale = locale;
-	
+	formatter.locale = [NSLocale currentLocale];
 	formatter.dateFormat = @"YYYY-MM-dd HH:mm:ss";
 	formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
 	
@@ -170,11 +152,10 @@
 			countdown.name = attributes[@"name"];
 			countdown.message = attributes[@"message"];
 			countdown.style = [attributes[@"style"] integerValue];
+			[countdowns addObject:countdown];
 			
 			if (countdown.endDate.timeIntervalSinceNow > 0)
 				[_selectedCountdowns addObject:countdown];
-			
-			[countdowns addObject:countdown];
 		}
 		
 		_countdowns = (NSArray *)countdowns;
@@ -197,7 +178,7 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Countdowns found", nil)
 																		message:message
 																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 			[alert dismissViewControllerAnimated:YES completion:nil];
 			[self dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
@@ -240,7 +221,7 @@
 	UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Connection Error", nil)
 																	message:error.localizedDescription
 															 preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 		[alert dismissViewControllerAnimated:YES completion:nil];
 		[self dismissViewControllerAnimated:YES completion:nil]; }]];
 	[self presentViewController:alert animated:YES completion:nil];
@@ -248,7 +229,6 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)aConnection
 {
-	//_activityIndicator.hidden = YES;
 	[_activityIndicator stopAnimating];
 }
 
@@ -280,7 +260,6 @@
 		_password1Label4.text = (string.length >= 4)? [string substringWithRange:NSMakeRange(3, 1)] : @"";
 		
 		if (string.length >= 4) {
-			
 			_password1 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extra numbers
 			
 			_hiddenTextField2.text = @" ";// Add an space caracter to catch the "delete" button pressing
@@ -294,8 +273,8 @@
 			[_hiddenTextField1 becomeFirstResponder];// Switch to the first field (before changing the second field content, to not catch the notification)
 			_hiddenTextField2.text = @" ";// Make sure that we have always the space caracter
 			_password2Label1.text = _password2Label2.text = _password2Label3.text = _password2Label4.text = @"";// Clean up labels
-		} else {
 			
+		} else {
 			NSString * string = [_hiddenTextField2.text substringFromIndex:1];// Trim the first extra space caracter (if exists)
 			_password2Label1.text = (string.length >= 1)? [string substringWithRange:NSMakeRange(0, 1)] : @"";
 			_password2Label2.text = (string.length >= 2)? [string substringWithRange:NSMakeRange(1, 1)] : @"";
@@ -303,17 +282,14 @@
 			_password2Label4.text = (string.length >= 4)? [string substringWithRange:NSMakeRange(3, 1)] : @"";
 			
 			if (string.length >= 4) {// If the password field (without the first space caracter) contains 4 numbers (or more)
-				
 				_password2 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extra numbers
-				
 				[self send];
 			}
 		}
 	}
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -348,8 +324,7 @@
 	return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
