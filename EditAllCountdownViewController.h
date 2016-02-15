@@ -10,7 +10,7 @@
 
 @class SettingsViewController_Phone;
 
-@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIViewControllerPreviewingDelegate>
 
 @property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
 @property (nonatomic, assign) IBOutlet UITableView * tableView;

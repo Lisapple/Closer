@@ -88,5 +88,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>ADD_COUNTDOWN_SHORTCUT_TITLE</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.lisacintosh.closer.create.countdown</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>ADD_TIMER_SHORTCUT_TITLE</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.lisacintosh.closer.create.timer</string>
+		</dict>
+	</array>
 </dict>
 </plist>

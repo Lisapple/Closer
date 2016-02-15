@@ -24,6 +24,10 @@
 
 @property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
 
+// Select page
+
+- (void)selectPageWithCountdown:(Countdown *)countdown animated:(BOOL)animated;
+
 // Current Page Index
 
 - (NSInteger)selectedPageIndex;

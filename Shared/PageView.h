@@ -37,7 +37,9 @@
 
 static const NSTimeInterval kDoubleTapDelay = 0.35;
 
-/*** @abstract: abstract method used for CountdownPageView and TimerPageView ***/
+/**
+ @abstract: abstract method used for CountdownPageView and TimerPageView
+ */
 @interface PageView : UIView <UIScrollViewDelegate>
 
 @property (nonatomic, assign) BOOL showDeleteConfirmation, isViewShown;
@@ -45,7 +47,7 @@ static const NSTimeInterval kDoubleTapDelay = 0.35;
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, weak) NSObject <PageViewDelegate> * delegate;
 
-@property (nonatomic, assign) CountdownStyle style;
+@property (nonatomic, assign) CountdownStyle style; // ??? Must be set only by countdown?
 
 @property (nonatomic, strong) IBOutlet UIButton * infoButton;
 

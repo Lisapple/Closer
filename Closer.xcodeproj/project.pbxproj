@@ -113,6 +113,9 @@
 		50E00D471AC0AAB700784B98 /* TimerInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D441AC0AAB700784B98 /* TimerInterfaceController.swift */; };
 		50E00D481AC0AAB700784B98 /* CountdownInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */; };
 		50E00D491AC0AAB700784B98 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D461AC0AAB700784B98 /* ColorExtension.swift */; };
+		50E1400D1C6F73F50058DDE6 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E1400C1C6F73F50058DDE6 /* PageViewController.m */; };
+		50E140111C6F79480058DDE6 /* Closer-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50E140101C6F79480058DDE6 /* Closer-Info.plist */; };
+		50E140121C6F79820058DDE6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50E140141C6F79820058DDE6 /* InfoPlist.strings */; };
 		50E937B11ABCE0C100E0F6E7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
 		50E954181BA6F21E00FC8CD1 /* UIApplication+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */; };
 		50EC72D316BD4F9D00BB7CA7 /* EKEventStore+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 50EC72D216BD4F9D00BB7CA7 /* EKEventStore+additions.m */; };
@@ -123,6 +126,7 @@
 		50FF483A131E711B0094645C /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FF4838131E711B0094645C /* NameViewController.m */; };
 		50FF483B131E711B0094645C /* NameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50FF4839131E711B0094645C /* NameViewController.xib */; };
 		50FF49D6131E996D0094645C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50FF49D5131E996D0094645C /* AVFoundation.framework */; };
+		8FF1CDCBC47C86D1A6C8D51A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B15A9A864C8E4C7865A8DB /* libPods.a */; };
 		9C00BDE919D2DA9B00E93271 /* Launch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C00BDE819D2DA9B00E93271 /* Launch.xib */; };
 /* End PBXBuildFile section */
 
@@ -350,6 +354,11 @@
 		50E00D441AC0AAB700784B98 /* TimerInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerInterfaceController.swift; sourceTree = "<group>"; };
 		50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownInterfaceController.swift; sourceTree = "<group>"; };
 		50E00D461AC0AAB700784B98 /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		50E1400B1C6F73F50058DDE6 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
+		50E1400C1C6F73F50058DDE6 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
+		50E140101C6F79480058DDE6 /* Closer-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Closer-Info.plist"; sourceTree = "<group>"; };
+		50E140131C6F79820058DDE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		50E140151C6F79850058DDE6 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		50E954161BA6F21E00FC8CD1 /* UIApplication+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+addition.h"; sourceTree = "<group>"; };
 		50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+addition.m"; sourceTree = "<group>"; };
 		50EC72D116BD4F9D00BB7CA7 /* EKEventStore+additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EKEventStore+additions.h"; sourceTree = "<group>"; };
@@ -465,9 +474,10 @@
 				50F918F5149D3C5F003F33B8 /* Countdown.plist */,
 				50F918F9149D3C7E003F33B8 /* songs.plist */,
 				50F918FD149D3C87003F33B8 /* Localizable.strings */,
-				8D1107310486CEB800E47090 /* Closer-Info.plist */,
+				50E140101C6F79480058DDE6 /* Closer-Info.plist */,
 				50C5A32512E352590013605C /* Songs */,
 				9C00BDE819D2DA9B00E93271 /* Launch.xib */,
+				50E140141C6F79820058DDE6 /* InfoPlist.strings */,
 				508677E31B34BC9E00891644 /* Settings-Watch.bundle */,
 			);
 			name = Resources;
@@ -564,6 +574,8 @@
 			children = (
 				50DF430C17736AB900AAA6C9 /* PageView.h */,
 				50DF430D17736AB900AAA6C9 /* PageView.m */,
+				50E1400B1C6F73F50058DDE6 /* PageViewController.h */,
+				50E1400C1C6F73F50058DDE6 /* PageViewController.m */,
 				5014122E1312B51500D61066 /* CountdownPageView.h */,
 				5014122F1312B51500D61066 /* CountdownPageView.m */,
 				501412301312B51500D61066 /* CountdownPageView.xib */,
@@ -890,6 +902,7 @@
 				50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */,
 				50C5A26812E3496C0013605C /* SongPickerViewController.xib in Resources */,
 				50C5A32712E352590013605C /* Songs in Resources */,
+				50E140111C6F79480058DDE6 /* Closer-Info.plist in Resources */,
 				50C5A37412E37AD90013605C /* MessageViewControler.xib in Resources */,
 				50F3F51219880D1D00817B98 /* Images.xcassets in Resources */,
 				508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */,
@@ -915,6 +928,7 @@
 				50107E0C1770E39C00184976 /* DurationsViewController.xib in Resources */,
 				50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */,
 				50D5B5D017847C8000140DDB /* PromptViewController.xib in Resources */,
+				50E140121C6F79820058DDE6 /* InfoPlist.strings in Resources */,
 				50D5B5D51784800F00140DDB /* DurationPickerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -995,6 +1009,7 @@
 				50DA0DB1150B84DE00E32165 /* Countdown+addition.m in Sources */,
 				50DA0DB5150B8D1700E32165 /* ExportViewController.m in Sources */,
 				505DCD1C15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m in Sources */,
+				50E1400D1C6F73F50058DDE6 /* PageViewController.m in Sources */,
 				505DCD2315EF8F36005F4B4A /* PasswordLabel.m in Sources */,
 				502AEA5B15FA44E3009D9764 /* ExportToWebsiteViewController.m in Sources */,
 				50CEFB5E15FCF27F0044AED0 /* NetworkStatus.m in Sources */,
@@ -1104,6 +1119,15 @@
 				50E00D331AC0AA9000784B98 /* Base */,
 			);
 			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+		50E140141C6F79820058DDE6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50E140131C6F79820058DDE6 /* Base */,
+				50E140151C6F79850058DDE6 /* fr */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 		50F918F5149D3C5F003F33B8 /* Countdown.plist */ = {

@@ -11,6 +11,10 @@
 #import "ImportFromCalendarViewController.h"
 #import "ImportFromWebsiteViewController_Phone.h"
 #import "ExportViewController.h"
+#import "PageViewController.h"
+
+#import "CloserAppDelegate_Phone.h"
+#import "MainViewController_Phone.h"
 
 #import "NetworkStatus.h"
 
@@ -46,6 +50,8 @@
 	_tableView.allowsSelectionDuringEditing = YES;
 	_tableView.editing = YES;
 	[self reloadData];
+	
+	[self registerForPreviewingWithDelegate:self sourceView:self.tableView];
 	
 	[NetworkStatus startObserving];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusDidChange:)
@@ -379,6 +385,44 @@
 	}
 		
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - Previewing with 3D Touch
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
+{
+	NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:location];
+	if (indexPath) {
+		Countdown * countdown = nil;
+		if /**/ (indexPath.section == 0) {
+			countdown = _includedCountdowns[indexPath.row];
+		}
+		else if (indexPath.section == 1) {
+			countdown = _notIncludedCountdowns[indexPath.row];
+		}
+		if (countdown) {
+			return [[PageViewController alloc] initWithCountdown:countdown];
+		}
+	}
+	
+	return nil;
+}
+
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit
+{
+	if ([viewControllerToCommit isKindOfClass:PageViewController.class]) {
+		
+		// Dismiss EditAll controller and settings
+		[self dismissViewControllerAnimated:NO completion:nil];
+		CloserAppDelegate_Phone * appDelegate = (CloserAppDelegate_Phone *)[UIApplication sharedApplication].delegate;
+		
+		// Select countdown with pressed one
+		Countdown * countdown = [(PageViewController *)viewControllerToCommit countdown];
+		[appDelegate.mainViewController selectPageWithCountdown:countdown animated:NO];
+		
+		// Dismiss settings
+		[appDelegate.mainViewController dismissViewControllerAnimated:NO completion:nil];
+	}
 }
 
 - (BOOL)canBecomeFirstResponder

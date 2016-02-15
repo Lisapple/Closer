@@ -217,6 +217,30 @@
     return [self openDeeplinkURL:url];
 }
 
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded))completionHandler
+{
+	Countdown * countdown = nil;
+	if /**/ ([shortcutItem.type isEqualToString:@"com.lisacintosh.closer.create.countdown"]) {
+		countdown = [[Countdown alloc] initWithIdentifier:nil];
+		countdown.name = NSLocalizedString(@"New Countdown", nil);
+	}
+	else if ([shortcutItem.type isEqualToString:@"com.lisacintosh.closer.create.timer"]) {
+		countdown = [[Countdown alloc] initWithIdentifier:nil];
+		countdown.type = CountdownTypeTimer;
+		countdown.name = NSLocalizedString(@"New Timer", nil);
+	}
+	
+	if (countdown) {
+		[Countdown addCountdown:countdown];
+		NSInteger index = [Countdown indexOfCountdown:countdown];
+		[_mainViewController showPageAtIndex:index animated:NO];
+		[_mainViewController showSettingsForPageAtIndex:index animated:NO];
+		completionHandler(YES);
+	} else {
+		completionHandler(NO);
+	}
+}
+
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler
 {
 	if (NSClassFromString(@"CSSearchableIndex")) {

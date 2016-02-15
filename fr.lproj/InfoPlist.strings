@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  Closer
+
+  Created by Max on 13/02/16.
+
+*/
+
+ADD_COUNTDOWN_SHORTCUT_TITLE = "Nouveau Décompte";
+ADD_TIMER_SHORTCUT_TITLE = "Nouveau Minuteur";

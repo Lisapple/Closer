@@ -91,6 +91,16 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[[NSNotificationCenter defaultCenter] removeObserver:CountdownDidSynchronizeNotification];
 }
 
+#pragma mark - Select page
+
+- (void)selectPageWithCountdown:(Countdown *)countdown animated:(BOOL)animated
+{
+	NSUInteger index = [[_pages valueForKey:NSStringFromSelector(@selector(countdown))] indexOfObject:countdown];
+	if (index != NSNotFound) {
+		[self showPageAtIndex:index animated:animated];
+	}
+}
+
 #pragma mark - Current page index
 
 - (NSInteger)selectedPageIndex

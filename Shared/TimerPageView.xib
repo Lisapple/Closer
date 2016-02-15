@@ -79,7 +79,7 @@
                                 <action selector="pauseButtonAction:" destination="-1" eventType="touchUpInside" id="20"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15">
                             <rect key="frame" x="270" y="343" width="22" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="22" id="7XM-bZ-aB9"/>
