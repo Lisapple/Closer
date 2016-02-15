@@ -114,7 +114,6 @@
 		50E00D481AC0AAB700784B98 /* CountdownInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D451AC0AAB700784B98 /* CountdownInterfaceController.swift */; };
 		50E00D491AC0AAB700784B98 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E00D461AC0AAB700784B98 /* ColorExtension.swift */; };
 		50E1400D1C6F73F50058DDE6 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E1400C1C6F73F50058DDE6 /* PageViewController.m */; };
-		50E140111C6F79480058DDE6 /* Closer-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50E140101C6F79480058DDE6 /* Closer-Info.plist */; };
 		50E140121C6F79820058DDE6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50E140141C6F79820058DDE6 /* InfoPlist.strings */; };
 		50E937B11ABCE0C100E0F6E7 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 504B56461A7D5C9900292475 /* NotificationCenter.framework */; };
 		50E954181BA6F21E00FC8CD1 /* UIApplication+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E954171BA6F21E00FC8CD1 /* UIApplication+addition.m */; };
@@ -126,7 +125,6 @@
 		50FF483A131E711B0094645C /* NameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FF4838131E711B0094645C /* NameViewController.m */; };
 		50FF483B131E711B0094645C /* NameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50FF4839131E711B0094645C /* NameViewController.xib */; };
 		50FF49D6131E996D0094645C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50FF49D5131E996D0094645C /* AVFoundation.framework */; };
-		8FF1CDCBC47C86D1A6C8D51A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B15A9A864C8E4C7865A8DB /* libPods.a */; };
 		9C00BDE919D2DA9B00E93271 /* Launch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C00BDE819D2DA9B00E93271 /* Launch.xib */; };
 /* End PBXBuildFile section */
 
@@ -374,7 +372,6 @@
 		50FF4838131E711B0094645C /* NameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = NameViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50FF4839131E711B0094645C /* NameViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NameViewController.xib; sourceTree = "<group>"; };
 		50FF49D5131E996D0094645C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		8D1107310486CEB800E47090 /* Closer-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Closer-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		9C00BDE819D2DA9B00E93271 /* Launch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Launch.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -902,7 +899,6 @@
 				50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */,
 				50C5A26812E3496C0013605C /* SongPickerViewController.xib in Resources */,
 				50C5A32712E352590013605C /* Songs in Resources */,
-				50E140111C6F79480058DDE6 /* Closer-Info.plist in Resources */,
 				50C5A37412E37AD90013605C /* MessageViewControler.xib in Resources */,
 				50F3F51219880D1D00817B98 /* Images.xcassets in Resources */,
 				508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */,
