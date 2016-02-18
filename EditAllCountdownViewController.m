@@ -51,13 +51,21 @@
 	_tableView.editing = YES;
 	[self reloadData];
 	
-	[self registerForPreviewingWithDelegate:self sourceView:self.tableView];
+	if ([self respondsToSelector:@selector(registerForPreviewingWithDelegate:sourceView:)]) {
+		[self registerForPreviewingWithDelegate:self sourceView:self.tableView];
+	}
 	
 	[NetworkStatus startObserving];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusDidChange:)
 												 name:kNetworkStatusDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData)
 												 name:CountdownDidUpdateNotification object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	[self reloadData];
 }
 
 - (void)networkStatusDidChange:(NSNotification *)notification

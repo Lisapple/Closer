@@ -177,7 +177,7 @@
 + (NSString *)proposedNameForType:(CountdownType)type
 {
 	NSString * name = (type == CountdownTypeTimer) ? NSLocalizedString(@"New Timer", nil) : NSLocalizedString(@"New Countdown", nil);
-	NSArray * names = [self.class valueForKeyPath:@"name"];
+	const NSArray * names = [[Countdown allCountdowns] valueForKeyPath:@"name"];
 	int index = 2;
 	while (1) {
 		if (![names containsObject:name])
