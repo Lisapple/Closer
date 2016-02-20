@@ -35,8 +35,9 @@
 	_cellTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
 	_cellTextField.delegate = self;
 	_cellTextField.placeholder = NSLocalizedString(@"Name", nil);
-	_cellTextField.text = _countdown.names[_durationIndex];
 	_cellTextField.returnKeyType = UIReturnKeyDone;
+	if (_durationIndex < _countdown.names.count)
+		_cellTextField.text = _countdown.names[_durationIndex];
 	
 	_cellsTitle = @[NSLocalizedString(@"Days", nil), NSLocalizedString(@"Hours", nil), NSLocalizedString(@"Minutes", nil), NSLocalizedString(@"Seconds", nil)];
 	_durationPickers = [[NSMutableArray alloc] initWithCapacity:4];

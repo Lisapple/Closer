@@ -119,7 +119,7 @@
 			cell.accessoryType = UITableViewCellAccessoryNone;
 		}
 		
-		NSString * name = _countdown.names[indexPath.row];
+		NSString * name = (indexPath.row < _countdown.names.count) ? _countdown.names[indexPath.row] : nil;
 		if (name.length > 0) {
 			cell.textLabel.text = name;
 			cell.detailTextLabel.text = [_countdown descriptionOfDurationAtIndex:indexPath.row];
