@@ -36,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2350</string>
+	<string>2351</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -68,6 +68,25 @@
 	<string>MainWindow-iPhone</string>
 	<key>NSMainNibFile~ipad</key>
 	<string>MainWindow-iPad</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>ADD_COUNTDOWN_SHORTCUT_TITLE</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.lisacintosh.closer.create.countdown</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>ADD_TIMER_SHORTCUT_TITLE</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.lisacintosh.closer.create.timer</string>
+		</dict>
+	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -87,25 +106,6 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIApplicationShortcutItems</key>
-	<array>
-		<dict>
-			<key>UIApplicationShortcutItemIconType</key>
-			<string>UIApplicationShortcutIconTypeAdd</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>ADD_COUNTDOWN_SHORTCUT_TITLE</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.lisacintosh.closer.create.countdown</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconType</key>
-			<string>UIApplicationShortcutIconTypeAdd</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>ADD_TIMER_SHORTCUT_TITLE</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.lisacintosh.closer.create.timer</string>
-		</dict>
 	</array>
 </dict>
 </plist>
