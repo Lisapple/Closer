@@ -88,14 +88,14 @@ static NSMutableArray * _countdowns = nil;
 			Countdown * aCountdown = [[Countdown alloc] initWithIdentifier:identifier];
 			
 			CountdownType type = [dictionary[@"type"] integerValue];
-			if (type == CountdownTypeCountdown) {
-				aCountdown.message = dictionary[@"message"];
-			} else {
+			if (type == CountdownTypeTimer) {
 				NSArray * durations = dictionary[@"durations"];
 				NSArray * names = dictionary[@"names"];
 				if (durations) [aCountdown addDurations:durations withNames:names];
 				aCountdown.durationIndex = [dictionary[@"durationIndex"] integerValue];
 				aCountdown.promptState = [dictionary[@"prompt"] integerValue];
+			} else { // Countdown
+				aCountdown.message = dictionary[@"message"];
 			}
 			
 			aCountdown.name = dictionary[@"name"];
@@ -562,7 +562,7 @@ static NSMutableArray * _countdowns = nil;
 	return _names;
 }
 
-- (void)addDuration:(NSNumber * _Nonnull)duration withName:(NSString * _Nullable)name
+- (void)addDuration:(NSNumber *)duration withName:(NSString *)name
 {
 	[Countdown tagChangeDuration];
 	
@@ -571,7 +571,7 @@ static NSMutableArray * _countdowns = nil;
 	[_names addObject:name];
 }
 
-- (void)addDurations:(NSArray * _Nonnull)durations withNames:(NSArray <NSString *> * _Nullable)names
+- (void)addDurations:(NSArray <NSNumber *> *)durations withNames:(NSArray <NSString *> *)names
 {
 	[Countdown tagChangeDuration];
 	

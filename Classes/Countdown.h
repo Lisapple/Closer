@@ -90,7 +90,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 - (nonnull NSArray <NSString *> *)names; // The number of items must be exactly the same that |durations|, with empty string by default
 
 - (void)addDuration:(nonnull NSNumber *)duration withName:(nullable NSString *)name;
-- (void)addDurations:(nonnull NSArray *)durations withNames:(nullable NSArray <NSString *> *)names;
+- (void)addDurations:(nonnull NSArray <NSNumber *> *)durations withNames:(nullable NSArray <NSString *> *)names;
 - (void)setDuration:(nonnull NSNumber *)duration atIndex:(NSInteger)index;
 - (void)setDurationName:(nonnull NSString *)name atIndex:(NSInteger)index;
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
