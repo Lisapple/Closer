@@ -12,6 +12,7 @@
 #import "ImportFromWebsiteViewController_Phone.h"
 #import "ExportViewController.h"
 #import "PageViewController.h"
+#import "AboutViewController.h"
 
 #import "CloserAppDelegate_Phone.h"
 #import "MainViewController_Phone.h"
@@ -76,19 +77,10 @@
 
 - (IBAction)moreInfo:(id)sender
 {
-	NSDictionary * infoDictionary = [NSBundle mainBundle].infoDictionary;
-	NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer %@\nCopyright © %lu, Lis@cintosh", nil), infoDictionary[@"CFBundleShortVersionString"], [NSDate date].year];
-	UIAlertController * actionSheet = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"closer.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://closer.lisacintosh.com"]]; }]];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"support.lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://support.lisacintosh.com/closer/"]]; }]];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"lisacintosh.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lisacintosh.com/"]]; }]];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:@"appstore.com/lisacintosh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://appstore.com/lisacintosh/"]]; }]];
-	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
-	[self presentViewController:actionSheet animated:YES completion:nil];
+	NSString * name = [NSBundle mainBundle].infoDictionary[@"UIMainStoryboardFile"];
+	AboutViewController * controller = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateViewControllerWithIdentifier:@"AboutController"];
+	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+	[self presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)updateData

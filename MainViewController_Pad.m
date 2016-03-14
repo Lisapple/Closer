@@ -75,6 +75,8 @@
 																				   target:self action:@selector(done:)];
 		[self.navigationItem setRightBarButtonItem:doneItem animated:YES];
 		
+		self.navigationItem.titleView = nil;
+		
 	} else {
 		UIBarButtonItem * addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 																				  target:self action:@selector(new:)];
@@ -92,8 +94,6 @@
 		spaceItem.width = 90.;
 		self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:button], spaceItem];
 		
-		_pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
-		_pageControl.pageIndicatorTintColor = [UIColor colorWithWhite:1. alpha:0.3];
 		self.navigationItem.titleView = _pageControl;
 	}
 	
@@ -451,9 +451,10 @@
 	else if (orientationMask & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width)
 		screenSize = CGSizeMake(screenSize.height, screenSize.width);
 	
+	const CGFloat topMargin = 20 + self.topLayoutGuide.length + self.navigationController.navigationBar.frame.size.height;
 	CGSize pageSize = (orientationMask & UIInterfaceOrientationMaskLandscape) ?
-		CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
-		CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
+		CGSizeMake(screenSize.width / 3., screenSize.height - topMargin) :
+		CGSizeMake(screenSize.width / 2., (screenSize.height - topMargin) / 2.);
 	
 	int i = 0;
 	for (PageView * pageView in _pageViews) {
@@ -622,7 +623,12 @@
 	_scrollView.pagingEnabled = YES;
 	_scrollView.delegate = self;
 	_scrollView.delaysContentTouches = NO;
+	
+	self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
 	_pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight;// Add flexible height (Unavailable from IB)
+	_pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+	_pageControl.pageIndicatorTintColor = [UIColor colorWithWhite:1. alpha:0.3];
+	self.navigationItem.titleView = _pageControl;
 	
 	[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(update)
 								   userInfo:nil repeats:YES];

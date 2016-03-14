@@ -141,63 +141,66 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)reload
 {
-	NSInteger pagesCount = self.pages.count;
-	NSInteger countdownsCount = [Countdown allCountdowns].count;
-	
-	if (countdownsCount > 0) {
-		CLSLog(@"Reload with %ld countdowns and %ld pages", (long)countdownsCount, (long)pagesCount);
-		if (pagesCount > countdownsCount) {
-			
-			// Compute the range of page to remove
-			NSRange range = NSMakeRange(countdownsCount, pagesCount - countdownsCount);
-			NSIndexSet * indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
-			NSArray * pagesToRemove = [_pages objectsAtIndexes:indexSet];
-			
-			// Remove pages from superview
-			for (PageView * page in pagesToRemove)
-				[page removeFromSuperview];
-			
-			// Remove pages on array
-			[_pages removeObjectsInRange:range];
-			
-		} else if (pagesCount < countdownsCount) {
-			
-			for (int i = 0; i < (countdownsCount - pagesCount); i++) {
-				// Just add page on pages array
-				Countdown * countdown = [Countdown countdownAtIndex:i];
-				[self addPageWithCountDown:countdown];
+	@synchronized(self) {
+		
+		NSInteger pagesCount = self.pages.count;
+		NSInteger countdownsCount = [Countdown allCountdowns].count;
+		
+		if (countdownsCount > 0) {
+			CLSLog(@"Reload with %ld countdowns and %ld pages", (long)countdownsCount, (long)pagesCount);
+			if (pagesCount > countdownsCount) {
+				
+				// Compute the range of page to remove
+				NSRange range = NSMakeRange(countdownsCount, pagesCount - countdownsCount);
+				NSIndexSet * indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
+				NSArray * pagesToRemove = [_pages objectsAtIndexes:indexSet];
+				
+				// Remove pages from superview
+				for (PageView * page in pagesToRemove)
+					[page removeFromSuperview];
+				
+				// Remove pages on array
+				[_pages removeObjectsInRange:range];
+				
+			} else if (pagesCount < countdownsCount) {
+				
+				for (NSUInteger index = pagesCount; index < countdownsCount; ++index) {
+					// Just add page on pages array
+					Countdown * countdown = [Countdown countdownAtIndex:index];
+					[self insertPageWithCountDown:countdown atIndex:index];
+				}
 			}
 		}
-	}
-	
-	// Reload pages
-	int index = 0;
-	for (Countdown * countdown in [Countdown allCountdowns]) {
-		PageView * page = _pages[index];
 		
-		/* If the type of page needs to change, remove the current page and re-create one */
-		if ((countdown.type == CountdownTypeTimer && [page isKindOfClass:CountdownPageView.class]) ||
-			(countdown.type == CountdownTypeCountdown && [page isKindOfClass:TimerPageView.class])) {
-			[self removePageAtIndex:index];
-			[self insertPageWithCountDown:countdown atIndex:index];
+		// Reload pages
+		int index = 0;
+		for (Countdown * countdown in [Countdown allCountdowns].copy) {
+			PageView * page = _pages[index];
+			
+			/* If the type of page needs to change, remove the current page and re-create one */
+			if ((countdown.type == CountdownTypeTimer && [page isKindOfClass:CountdownPageView.class]) ||
+				(countdown.type == CountdownTypeCountdown && [page isKindOfClass:TimerPageView.class])) {
+				[self removePageAtIndex:index];
+				[self insertPageWithCountDown:countdown atIndex:index];
+			}
+			
+			page.frame = CGRectMake(index * _scrollView.frame.size.width, 0.,
+									_scrollView.frame.size.width, _scrollView.frame.size.height);
+			page.countdown = countdown;
+			index++;
 		}
 		
-		page.frame = CGRectMake(index * _scrollView.frame.size.width, 0.,
-								_scrollView.frame.size.width, _scrollView.frame.size.height);
-		page.countdown = countdown;
-		index++;
-	}
-	
-	_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * _pages.count, 0.);
-	CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * _pageControl.currentPage, 0.);
-	[_scrollView setContentOffset:contentOffset animated:NO];
-	
-	if (_pages.count) {
-		_pageControl.numberOfPages = _pages.count;
-		PageView * pageView = _pages[_pageControl.currentPage];
-		UIColor * textColor = [UIColor textColorForStyle:pageView.style];
-		_pageControl.currentPageIndicatorTintColor = textColor;
-		_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
+		_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * _pages.count, 0.);
+		CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * _pageControl.currentPage, 0.);
+		[_scrollView setContentOffset:contentOffset animated:NO];
+		
+		if (_pages.count) {
+			_pageControl.numberOfPages = _pages.count;
+			PageView * pageView = _pages[_pageControl.currentPage];
+			UIColor * textColor = [UIColor textColorForStyle:pageView.style];
+			_pageControl.currentPageIndicatorTintColor = textColor;
+			_pageControl.pageIndicatorTintColor = [textColor colorWithAlphaComponent:0.5];
+		}
 	}
 }
 

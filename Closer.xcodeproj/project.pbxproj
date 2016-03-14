@@ -12,8 +12,6 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		280E754D0DD40C5E005A515E /* SettingsViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 280E754A0DD40C5E005A515E /* SettingsViewController_Phone.xib */; };
-		280E754E0DD40C5E005A515E /* MainViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 280E754B0DD40C5E005A515E /* MainViewController_Phone.xib */; };
-		280E754F0DD40C5E005A515E /* MainWindow-iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 280E754C0DD40C5E005A515E /* MainWindow-iPhone.xib */; };
 		288765590DF743DE002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765580DF743DE002DB57D /* CoreGraphics.framework */; };
 		289233AE0DB2D0DB0083E9F9 /* MainViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233A90DB2D0DB0083E9F9 /* MainViewController_Phone.m */; };
 		289233B00DB2D0DB0083E9F9 /* SettingsViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AD0DB2D0DB0083E9F9 /* SettingsViewController_Phone.m */; };
@@ -30,8 +28,8 @@
 		5012B63717B91EAA00F8B228 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
 		501412311312B51500D61066 /* CountdownPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5014122F1312B51500D61066 /* CountdownPageView.m */; };
 		501412321312B51500D61066 /* CountdownPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501412301312B51500D61066 /* CountdownPageView.xib */; };
+		5016A9DE1C96EB3E00971A7C /* Main~pad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5016A9DD1C96EB3E00971A7C /* Main~pad.storyboard */; };
 		502405CF1A901FEF00F8C935 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50F918FD149D3C87003F33B8 /* Localizable.strings */; };
-		5029FA8A1610CEE5002E2FC0 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */; };
 		502AEA5B15FA44E3009D9764 /* ExportToWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */; };
 		50461BEC1BB8398A00B58E1E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E00D351AC0AA9000784B98 /* Images.xcassets */; };
 		50495D611BB6B33D0009870F /* EditInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50495D601BB6B33D0009870F /* EditInterfaceController.swift */; };
@@ -47,6 +45,7 @@
 		504FD343164D350E00D54381 /* SettingsViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 504FD341164D350E00D54381 /* SettingsViewController_Pad.xib */; };
 		5051305616600DE20056CB42 /* NSObject+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5051305516600DE20056CB42 /* NSObject+additions.m */; };
 		505904CB1352351B00959167 /* FontDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 505904CA1352351B00959167 /* FontDescription.m */; };
+		505C188D1C88C4D700C8FC98 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 505C188B1C88C4D700C8FC98 /* AboutViewController.m */; };
 		505CC6B81BB80A4C00B3ECAB /* Closer Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 50E00D2B1AC0AA9000784B98 /* Closer Watch App.app */; };
 		505CC6BA1BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */; };
 		505DCD1C15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */; };
@@ -97,6 +96,7 @@
 		50CEFB5E15FCF27F0044AED0 /* NetworkStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CEFB5D15FCF27F0044AED0 /* NetworkStatus.m */; };
 		50CEFB6015FCF3FB0044AED0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50CEFB5F15FCF3FB0044AED0 /* SystemConfiguration.framework */; };
 		50CF4F9E17738743004684C9 /* TimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CF4F9D17738743004684C9 /* TimerView.m */; };
+		50D15B911C88C66900B2E49B /* Main~phone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50D15B901C88C66900B2E49B /* Main~phone.storyboard */; };
 		50D5B5CF17847C8000140DDB /* PromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D5B5CD17847C8000140DDB /* PromptViewController.m */; };
 		50D5B5D017847C8000140DDB /* PromptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D5B5CE17847C8000140DDB /* PromptViewController.xib */; };
 		50D5B5D41784800F00140DDB /* DurationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D5B5D21784800E00140DDB /* DurationPickerViewController.m */; };
@@ -195,8 +195,6 @@
 		1D6058910D05DD3D006BFB54 /* Closer & Closer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Closer & Closer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		280E754A0DD40C5E005A515E /* SettingsViewController_Phone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsViewController_Phone.xib; sourceTree = "<group>"; };
-		280E754B0DD40C5E005A515E /* MainViewController_Phone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewController_Phone.xib; sourceTree = "<group>"; };
-		280E754C0DD40C5E005A515E /* MainWindow-iPhone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPhone.xib"; path = "../MainWindow-iPhone.xib"; sourceTree = "<group>"; };
 		288765580DF743DE002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		289233A80DB2D0DB0083E9F9 /* MainViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController_Phone.h; path = Classes/MainViewController_Phone.h; sourceTree = "<group>"; };
 		289233A90DB2D0DB0083E9F9 /* MainViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MainViewController_Phone.m; path = Classes/MainViewController_Phone.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -222,8 +220,8 @@
 		5014122E1312B51500D61066 /* CountdownPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountdownPageView.h; sourceTree = "<group>"; };
 		5014122F1312B51500D61066 /* CountdownPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountdownPageView.m; sourceTree = "<group>"; };
 		501412301312B51500D61066 /* CountdownPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountdownPageView.xib; sourceTree = "<group>"; };
+		5016A9DD1C96EB3E00971A7C /* Main~pad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main~pad.storyboard"; sourceTree = "<group>"; };
 		5028E7DE1C515BCE00A5FF85 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50495D601BB6B33D0009870F /* EditInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditInterfaceController.swift; sourceTree = "<group>"; };
 		504B56451A7D5C9900292475 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -249,6 +247,8 @@
 		505904C91352351B00959167 /* FontDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FontDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505904CA1352351B00959167 /* FontDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FontDescription.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		505B2AA01AC0D28000B6F84A /* Closer WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Closer WatchKit Extension.entitlements"; sourceTree = "<group>"; };
+		505C188A1C88C4D700C8FC98 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		505C188B1C88C4D700C8FC98 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoCountdownsInterfaceController.swift; sourceTree = "<group>"; };
 		505DCD1915EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -326,6 +326,7 @@
 		50CEFB5F15FCF3FB0044AED0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		50CF4F9C17738743004684C9 /* TimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerView.h; sourceTree = "<group>"; };
 		50CF4F9D17738743004684C9 /* TimerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerView.m; sourceTree = "<group>"; };
+		50D15B901C88C66900B2E49B /* Main~phone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main~phone.storyboard"; sourceTree = "<group>"; };
 		50D5B5CC17847C8000140DDB /* PromptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PromptViewController.h; sourceTree = "<group>"; };
 		50D5B5CD17847C8000140DDB /* PromptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PromptViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50D5B5CE17847C8000140DDB /* PromptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PromptViewController.xib; sourceTree = "<group>"; };
@@ -418,7 +419,7 @@
 			children = (
 				1D3623240D0F684500981E51 /* CloserAppDelegate_Phone.h */,
 				1D3623250D0F684500981E51 /* CloserAppDelegate_Phone.m */,
-				280E754C0DD40C5E005A515E /* MainWindow-iPhone.xib */,
+				50D15B901C88C66900B2E49B /* Main~phone.storyboard */,
 			);
 			name = "Application Delegate";
 			path = Classes;
@@ -552,13 +553,14 @@
 				080E96DDFE201D6D7F000001 /* Application Delegate */,
 				289233A80DB2D0DB0083E9F9 /* MainViewController_Phone.h */,
 				289233A90DB2D0DB0083E9F9 /* MainViewController_Phone.m */,
-				280E754B0DD40C5E005A515E /* MainViewController_Phone.xib */,
 				289233AC0DB2D0DB0083E9F9 /* SettingsViewController_Phone.h */,
 				289233AD0DB2D0DB0083E9F9 /* SettingsViewController_Phone.m */,
 				280E754A0DD40C5E005A515E /* SettingsViewController_Phone.xib */,
 				50B208F91307F73C00AF2320 /* EditAllCountdownViewController.h */,
 				50B208FA1307F73C00AF2320 /* EditAllCountdownViewController.m */,
 				50B208FB1307F73C00AF2320 /* EditAllCountdownViewController.xib */,
+				505C188A1C88C4D700C8FC98 /* AboutViewController.h */,
+				505C188B1C88C4D700C8FC98 /* AboutViewController.m */,
 				505DCD1915EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.h */,
 				505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */,
 				505DCD1B15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.xib */,
@@ -657,7 +659,7 @@
 			children = (
 				504FD334164D2F3200D54381 /* CloserAppDelegate_Pad.h */,
 				504FD336164D2F3200D54381 /* CloserAppDelegate_Pad.m */,
-				5029FA891610CEE5002E2FC0 /* MainWindow-iPad.xib */,
+				5016A9DD1C96EB3E00971A7C /* Main~pad.storyboard */,
 			);
 			name = "Application Delegate";
 			sourceTree = "<group>";
@@ -894,8 +896,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				280E754D0DD40C5E005A515E /* SettingsViewController_Phone.xib in Resources */,
-				280E754E0DD40C5E005A515E /* MainViewController_Phone.xib in Resources */,
-				280E754F0DD40C5E005A515E /* MainWindow-iPhone.xib in Resources */,
+				50D15B911C88C66900B2E49B /* Main~phone.storyboard in Resources */,
 				50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */,
 				50C5A26812E3496C0013605C /* SongPickerViewController.xib in Resources */,
 				50C5A32712E352590013605C /* Songs in Resources */,
@@ -914,7 +915,7 @@
 				50DA0DB6150B8D1700E32165 /* ExportViewController.xib in Resources */,
 				505DCD1D15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.xib in Resources */,
 				507A116317133D6C004909D0 /* ExportToWebsiteViewController_Phone.xib in Resources */,
-				5029FA8A1610CEE5002E2FC0 /* MainWindow-iPad.xib in Resources */,
+				5016A9DE1C96EB3E00971A7C /* Main~pad.storyboard in Resources */,
 				504FD33D164D2F8200D54381 /* MainViewController_Pad.xib in Resources */,
 				9C00BDE919D2DA9B00E93271 /* Launch.xib in Resources */,
 				504FD343164D350E00D54381 /* SettingsViewController_Pad.xib in Resources */,
@@ -1014,6 +1015,7 @@
 				504FD342164D350E00D54381 /* SettingsViewController_Pad.m in Sources */,
 				507717CA164D57DF0042D50B /* ImportFromWebsiteViewController_Pad.m in Sources */,
 				5051305616600DE20056CB42 /* NSObject+additions.m in Sources */,
+				505C188D1C88C4D700C8FC98 /* AboutViewController.m in Sources */,
 				508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */,
 				50EC72D316BD4F9D00BB7CA7 /* EKEventStore+additions.m in Sources */,
 				50AF1325176F4D230092E255 /* TypeViewController.m in Sources */,

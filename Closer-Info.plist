@@ -64,10 +64,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSMainNibFile</key>
-	<string>MainWindow-iPhone</string>
-	<key>NSMainNibFile~ipad</key>
-	<string>MainWindow-iPad</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
@@ -91,6 +87,10 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main~phone</string>
+	<key>UIMainStoryboardFile~ipad</key>
+	<string>Main~pad</string>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarHidden</key>

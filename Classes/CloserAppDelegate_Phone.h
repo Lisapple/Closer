@@ -11,10 +11,10 @@
 
 @class MainViewController_Phone;
 
-@interface CloserAppDelegate_Phone : NSObject <UIApplicationDelegate, WCSessionDelegate>
+@interface CloserAppDelegate_Phone : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 
-@property (nonatomic, strong) IBOutlet UIWindow *window;
-@property (nonatomic, strong) IBOutlet MainViewController_Phone *mainViewController;
+@property (nonatomic, strong) IBOutlet UIWindow * window;
+@property (nonatomic, strong) MainViewController_Phone * mainViewController;
 
 @end
 

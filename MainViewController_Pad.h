@@ -17,7 +17,7 @@
 @property (nonatomic, assign) IBOutlet UIView * defaultNavigationBarView, * editNavigationBarView;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem * doneButton;
 @property (nonatomic, assign) IBOutlet UIScrollView * scrollView;
-@property (nonatomic, assign) IBOutlet UIPageControl * pageControl;
+@property (nonatomic, strong) UIPageControl * pageControl;
 
 @property (nonatomic, assign) UIInterfaceOrientationMask currentOrientation;
 

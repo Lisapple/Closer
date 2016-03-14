@@ -42,17 +42,18 @@
 	}
 	
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeSound)
-                                                                                        categories:[NSSet set]]];
+		UIUserNotificationType type = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
     }
     
 	application.applicationSupportsShakeToEdit = YES; // Enabled shake to undo
 	application.statusBarStyle = UIStatusBarStyleDefault;
 	application.statusBarHidden = YES;
 	
-	_window.tintColor = [UIColor darkGrayColor];
-	_window.rootViewController = _mainViewController;
-	[_window makeKeyAndVisible];
+	self.window.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1];
+	self.window.tintColor = [UIColor darkGrayColor];
+	
+	self.mainViewController = (MainViewController_Phone *)self.window.rootViewController;
 	
 	/* Retreive the last selected page index and selected it */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
@@ -66,7 +67,7 @@
 													  object:nil queue:NSOperationQueue.currentQueue
 												  usingBlock:^(NSNotification *note) {
 													  /* Update the frame of the white view under the status bar */
-													  UIView * statusBarView = [_window viewWithTag:4567];
+													  UIView * statusBarView = [self.window viewWithTag:4567];
 													  statusBarView.frame = application.statusBarFrame;
 												  }];
 	

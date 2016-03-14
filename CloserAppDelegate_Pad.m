@@ -29,16 +29,15 @@
 #endif
 	
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeSound)
-                                                                                        categories:[NSSet set]]];
+		UIUserNotificationType type = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
     }
-    
-	self.viewController = [[MainViewController_Pad alloc] initWithNibName:@"MainViewController_Pad" bundle:nil];
-	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+	
+	UINavigationController * navigationController = (UINavigationController *)self.window.rootViewController;
+	self.viewController = (MainViewController_Pad *)navigationController.topViewController;
+	
 	navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:0.1 alpha:1.];
 	navigationController.navigationBar.tintColor = [UIColor whiteColor];
-	self.window.rootViewController = navigationController;
-    [self.window makeKeyAndVisible];
 	
 	[Countdown buildingSpolightIndexWithCompletionHandler:nil];
 	

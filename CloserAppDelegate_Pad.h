@@ -13,7 +13,7 @@
 
 @class MainViewController_Pad;
 
-@interface CloserAppDelegate_Pad : NSObject <UIApplicationDelegate>
+@interface CloserAppDelegate_Pad : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (strong, nonatomic) IBOutlet MainViewController_Pad * viewController;

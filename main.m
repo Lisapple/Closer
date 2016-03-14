@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 #import "CloserAppDelegate_Phone.h"
+#import "CloserAppDelegate_Pad.h"
 
 int main(int argc, char *argv[]) {
 	
 	@autoreleasepool {
-	    return UIApplicationMain(argc, argv, nil, nil);
+		Class class = TARGET_IS_IPAD() ? CloserAppDelegate_Pad.class : CloserAppDelegate_Phone.class;
+	    return UIApplicationMain(argc, argv, nil, NSStringFromClass(class));
 	}
 }
