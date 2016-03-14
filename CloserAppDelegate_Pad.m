@@ -33,6 +33,9 @@
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
     }
 	
+	self.window.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1];
+	self.window.tintColor = [UIColor darkGrayColor];
+	
 	UINavigationController * navigationController = (UINavigationController *)self.window.rootViewController;
 	self.viewController = (MainViewController_Pad *)navigationController.topViewController;
 	
@@ -54,7 +57,7 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
 																		message:notification.alertBody
 																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		
@@ -66,10 +69,10 @@
 			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
 																			message:notification.alertBody
 																	 preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 				// Start the next timer
 				[[NSNotificationCenter defaultCenter] postNotificationName:@"TimerDidContinueNotification" object:countdown]; }]];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
 			[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		}
@@ -138,22 +141,22 @@
 	NSString * identifier = nil;
 #define URL_STRING(X) @"closer:\\/\\/countdown\\/"X
 	// closer://countdown#[identifier]
-	if /**/ ([url.absoluteString matchesWithPattern:URL_STRING(@"#([^\\/]+)$") firstMatch:&identifier]) { // DEPRECATED
+	if /**/ ([url.absoluteString isMatchingWithPattern:URL_STRING(@"#([^\\/]+)$") firstMatch:&identifier]) { // DEPRECATED
 		[self openCountdownWithIdentifier:identifier animated:animated];
 		return YES;
 	}
 	// closer://countdown/[identifier]
-	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)$") firstMatch:&identifier]) {
+	else if ([url.absoluteString isMatchingWithPattern:URL_STRING(@"([^\\/]+)$") firstMatch:&identifier]) {
 		[self openCountdownWithIdentifier:identifier animated:animated];
 		return YES;
 	}
 	// closer://countdown/[identifier]/settings
-	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings$") firstMatch:&identifier]) {
+	else if ([url.absoluteString isMatchingWithPattern:URL_STRING(@"([^\\/]+)\\/settings$") firstMatch:&identifier]) {
 		[self showCountdownSettingsWithIdentifier:identifier animated:animated];
 		return YES;
 	}
 	// closer://countdown/[identifier]/settings/durations/add
-	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings\\/durations\\/add$") firstMatch:&identifier]) {
+	else if ([url.absoluteString isMatchingWithPattern:URL_STRING(@"([^\\/]+)\\/settings\\/durations\\/add$") firstMatch:&identifier]) {
 		[self showAddDurationForCountdownWithIdentifier:identifier];
 		return YES;
 	}

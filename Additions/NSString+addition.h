@@ -10,7 +10,7 @@
 
 @interface NSString (addition)
 
-- (BOOL)matchesWithPattern:(nonnull NSString *)pattern;
-- (BOOL)matchesWithPattern:(nonnull NSString *)pattern firstMatch:(NSString * _Nullable * _Nullable)pValue;
+- (BOOL)isMatchingWithPattern:(nonnull NSString *)pattern;
+- (BOOL)isMatchingWithPattern:(nonnull NSString *)pattern firstMatch:(NSString * _Nullable * _Nullable)pValue;
 
 @end

@@ -10,12 +10,12 @@
 
 @implementation NSString (addition)
 
-- (BOOL)matchesWithPattern:(NSString *)pattern
+- (BOOL)isMatchingWithPattern:(nonnull NSString *)pattern
 {
-	return [self matchesWithPattern:pattern firstMatch:nil];
+	return [self isMatchingWithPattern:pattern firstMatch:nil];
 }
 
-- (BOOL)matchesWithPattern:(NSString *)pattern firstMatch:(NSString **)pValue
+- (BOOL)isMatchingWithPattern:(nonnull NSString *)pattern firstMatch:(NSString * _Nullable * _Nullable)pValue
 {
 	NSError * error = nil;
 	NSRegularExpression * regex = [NSRegularExpression regularExpressionWithPattern:pattern

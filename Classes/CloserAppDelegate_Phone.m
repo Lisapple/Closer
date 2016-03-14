@@ -185,22 +185,22 @@
 	NSString * identifier = nil;
 #define URL_STRING(X) @"closer:\\/\\/countdown\\/"X
 	// closer://countdown#[identifier]
-	if /**/ ([url.absoluteString matchesWithPattern:URL_STRING(@"#([^\\/]+)$") firstMatch:&identifier]) { // DEPRECATED
+	if /**/ ([url.absoluteString isMatchingWithPattern:URL_STRING(@"#([^\\/]+)$") firstMatch:&identifier]) { // DEPRECATED
 		[self openCountdownWithIdentifier:identifier animated:animated];
 		return YES;
 	}
 	// closer://countdown/[identifier]
-	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)$") firstMatch:&identifier]) {
+	else if ([url.absoluteString isMatchingWithPattern:URL_STRING(@"([^\\/]+)$") firstMatch:&identifier]) {
 		[self openCountdownWithIdentifier:identifier animated:animated];
 		return YES;
 	}
 	// closer://countdown/[identifier]/settings
-	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings$") firstMatch:&identifier]) {
+	else if ([url.absoluteString isMatchingWithPattern:URL_STRING(@"([^\\/]+)\\/settings$") firstMatch:&identifier]) {
 		[self showCountdownSettingsWithIdentifier:identifier animated:animated];
 		return YES;
 	}
 	// closer://countdown/[identifier]/settings/durations/add
-	else if ([url.absoluteString matchesWithPattern:URL_STRING(@"([^\\/]+)\\/settings\\/durations\\/add$") firstMatch:&identifier]) {
+	else if ([url.absoluteString isMatchingWithPattern:URL_STRING(@"([^\\/]+)\\/settings\\/durations\\/add$") firstMatch:&identifier]) {
 		[self showAddDurationForCountdownWithIdentifier:identifier];
 		return YES;
 	}

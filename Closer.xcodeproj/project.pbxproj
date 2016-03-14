@@ -202,12 +202,12 @@
 		289233AD0DB2D0DB0083E9F9 /* SettingsViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SettingsViewController_Phone.m; path = Classes/SettingsViewController_Phone.m; sourceTree = "<group>"; wrapsLines = 1; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		32CA4F630368D1EE00C91783 /* Closer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Closer_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50036EE5150A3D0F006BE168 /* ImportFromCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ImportFromCalendarViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		50036EE6150A3D0F006BE168 /* ImportFromCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImportFromCalendarViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50036EE7150A3D0F006BE168 /* ImportFromCalendarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportFromCalendarViewController.xib; sourceTree = "<group>"; };
+		50036EE5150A3D0F006BE168 /* ImportFromCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ImportFromCalendarViewController.h; path = ../Classes/ImportFromCalendarViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		50036EE6150A3D0F006BE168 /* ImportFromCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ImportFromCalendarViewController.m; path = ../Classes/ImportFromCalendarViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		50036EE7150A3D0F006BE168 /* ImportFromCalendarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportFromCalendarViewController.xib; path = ../Classes/ImportFromCalendarViewController.xib; sourceTree = "<group>"; };
 		50036EF2150A42DC006BE168 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
-		500ABFF319892B2200217E92 /* CCLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLabel.h; sourceTree = "<group>"; };
-		500ABFF419892B2200217E92 /* CCLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLabel.m; sourceTree = "<group>"; };
+		500ABFF319892B2200217E92 /* CCLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCLabel.h; path = ../Shared/CCLabel.h; sourceTree = "<group>"; };
+		500ABFF419892B2200217E92 /* CCLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCLabel.m; path = ../Shared/CCLabel.m; sourceTree = "<group>"; };
 		500B0BD61BB6D00C00D3915F /* Countdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
 		500B0BD81BB7098100D3915F /* ThemeInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeInterfaceController.swift; sourceTree = "<group>"; };
 		500B0BDA1BB70F8700D3915F /* DurationInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DurationInterfaceController.swift; sourceTree = "<group>"; };
@@ -222,7 +222,7 @@
 		501412301312B51500D61066 /* CountdownPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountdownPageView.xib; sourceTree = "<group>"; };
 		5016A9DD1C96EB3E00971A7C /* Main~pad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main~pad.storyboard"; sourceTree = "<group>"; };
 		5028E7DE1C515BCE00A5FF85 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ExportToWebsiteViewController.m; path = ../Classes/ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50495D601BB6B33D0009870F /* EditInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditInterfaceController.swift; sourceTree = "<group>"; };
 		504B56451A7D5C9900292475 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		504B56461A7D5C9900292475 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
@@ -253,8 +253,8 @@
 		505DCD1915EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		505DCD1B15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImportFromWebsiteViewController_Phone.xib; sourceTree = "<group>"; };
-		505DCD2015EF8F36005F4B4A /* PasswordLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PasswordLabel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		505DCD2115EF8F36005F4B4A /* PasswordLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PasswordLabel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		505DCD2015EF8F36005F4B4A /* PasswordLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PasswordLabel.h; path = ../Shared/PasswordLabel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		505DCD2115EF8F36005F4B4A /* PasswordLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PasswordLabel.m; path = ../Shared/PasswordLabel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		507717C7164D57DF0042D50B /* ImportFromWebsiteViewController_Pad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportFromWebsiteViewController_Pad.h; sourceTree = "<group>"; };
 		507717C8164D57DF0042D50B /* ImportFromWebsiteViewController_Pad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportFromWebsiteViewController_Pad.m; sourceTree = "<group>"; };
 		507A116017133D3E004909D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ImportFromWebsiteViewController_Pad.xib; sourceTree = "<group>"; };
@@ -299,8 +299,8 @@
 		50B2A084150AD6B000F4BAC5 /* SectionCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SectionCalendarTableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50B2A085150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SectionCalendarTableViewCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50BBE3CE1B1528A700577858 /* GlanceInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlanceInterfaceController.swift; sourceTree = "<group>"; };
-		50BEE0CF1786F8730086F2B9 /* DurationPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DurationPickerView.m; sourceTree = "<group>"; };
-		50BEE0D01786F8730086F2B9 /* DurationPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DurationPickerView.h; sourceTree = "<group>"; };
+		50BEE0CF1786F8730086F2B9 /* DurationPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DurationPickerView.m; path = ../Shared/DurationPickerView.m; sourceTree = "<group>"; };
+		50BEE0D01786F8730086F2B9 /* DurationPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationPickerView.h; path = ../Shared/DurationPickerView.h; sourceTree = "<group>"; };
 		50BEE0D61786F8EF0086F2B9 /* DurationPickerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DurationPickerTableViewCell.h; sourceTree = "<group>"; };
 		50BEE0D71786F8EF0086F2B9 /* DurationPickerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DurationPickerTableViewCell.m; sourceTree = "<group>"; };
 		50C025941BBAFC07008E4818 /* Closer WatchKit App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Closer WatchKit App.entitlements"; sourceTree = "<group>"; };
@@ -320,7 +320,7 @@
 		50C5A37012E37AD90013605C /* MessageViewControler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewControler.h; sourceTree = "<group>"; };
 		50C5A37112E37AD90013605C /* MessageViewControler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MessageViewControler.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50C5A37212E37AD90013605C /* MessageViewControler.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageViewControler.xib; sourceTree = "<group>"; };
-		50CEFB5B15FCD1AE0044AED0 /* ExportToWebsiteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ExportToWebsiteViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		50CEFB5B15FCD1AE0044AED0 /* ExportToWebsiteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ExportToWebsiteViewController.h; path = ../Classes/ExportToWebsiteViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50CEFB5C15FCF27F0044AED0 /* NetworkStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = NetworkStatus.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50CEFB5D15FCF27F0044AED0 /* NetworkStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = NetworkStatus.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50CEFB5F15FCF3FB0044AED0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -335,9 +335,9 @@
 		50D5B5D31784800F00140DDB /* DurationPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DurationPickerViewController.xib; sourceTree = "<group>"; };
 		50DA0DAF150B84DE00E32165 /* Countdown+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "Countdown+addition.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50DA0DB0150B84DE00E32165 /* Countdown+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "Countdown+addition.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50DA0DB2150B8D1700E32165 /* ExportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ExportViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		50DA0DB3150B8D1700E32165 /* ExportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ExportViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50DA0DB4150B8D1700E32165 /* ExportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExportViewController.xib; sourceTree = "<group>"; };
+		50DA0DB2150B8D1700E32165 /* ExportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ExportViewController.h; path = ../Classes/ExportViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		50DA0DB3150B8D1700E32165 /* ExportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ExportViewController.m; path = ../Classes/ExportViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		50DA0DB4150B8D1700E32165 /* ExportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ExportViewController.xib; path = ../Classes/ExportViewController.xib; sourceTree = "<group>"; };
 		50DF430C17736AB900AAA6C9 /* PageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageView.h; sourceTree = "<group>"; };
 		50DF430D17736AB900AAA6C9 /* PageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageView.m; sourceTree = "<group>"; };
 		50DF430F17736AD000AAA6C9 /* TimerPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerPageView.h; sourceTree = "<group>"; };
@@ -617,12 +617,14 @@
 				50B2A085150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m */,
 				50BEE0D61786F8EF0086F2B9 /* DurationPickerTableViewCell.h */,
 				50BEE0D71786F8EF0086F2B9 /* DurationPickerTableViewCell.m */,
-				50BEE0D01786F8730086F2B9 /* DurationPickerView.h */,
-				50BEE0CF1786F8730086F2B9 /* DurationPickerView.m */,
-				505DCD2015EF8F36005F4B4A /* PasswordLabel.h */,
-				505DCD2115EF8F36005F4B4A /* PasswordLabel.m */,
-				500ABFF319892B2200217E92 /* CCLabel.h */,
-				500ABFF419892B2200217E92 /* CCLabel.m */,
+				50036EE5150A3D0F006BE168 /* ImportFromCalendarViewController.h */,
+				50036EE6150A3D0F006BE168 /* ImportFromCalendarViewController.m */,
+				50036EE7150A3D0F006BE168 /* ImportFromCalendarViewController.xib */,
+				50DA0DB2150B8D1700E32165 /* ExportViewController.h */,
+				50DA0DB3150B8D1700E32165 /* ExportViewController.m */,
+				50DA0DB4150B8D1700E32165 /* ExportViewController.xib */,
+				50CEFB5B15FCD1AE0044AED0 /* ExportToWebsiteViewController.h */,
+				502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -677,14 +679,12 @@
 				5092AB761509337B005D6B12 /* VCalendar.m */,
 				50CEFB5C15FCF27F0044AED0 /* NetworkStatus.h */,
 				50CEFB5D15FCF27F0044AED0 /* NetworkStatus.m */,
-				50036EE5150A3D0F006BE168 /* ImportFromCalendarViewController.h */,
-				50036EE6150A3D0F006BE168 /* ImportFromCalendarViewController.m */,
-				50036EE7150A3D0F006BE168 /* ImportFromCalendarViewController.xib */,
-				50DA0DB2150B8D1700E32165 /* ExportViewController.h */,
-				50DA0DB3150B8D1700E32165 /* ExportViewController.m */,
-				50DA0DB4150B8D1700E32165 /* ExportViewController.xib */,
-				50CEFB5B15FCD1AE0044AED0 /* ExportToWebsiteViewController.h */,
-				502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */,
+				50BEE0D01786F8730086F2B9 /* DurationPickerView.h */,
+				50BEE0CF1786F8730086F2B9 /* DurationPickerView.m */,
+				505DCD2015EF8F36005F4B4A /* PasswordLabel.h */,
+				505DCD2115EF8F36005F4B4A /* PasswordLabel.m */,
+				500ABFF319892B2200217E92 /* CCLabel.h */,
+				500ABFF419892B2200217E92 /* CCLabel.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
