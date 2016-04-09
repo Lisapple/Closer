@@ -82,7 +82,8 @@
 		TimerTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"TimerCellID" forIndexPath:indexPath];
 		cell.name = countdown[@"name"];
 		NSInteger index = [countdown[@"durationIndex"] integerValue];
-		cell.duration = [countdown[@"durations"][index] integerValue];
+		NSArray * durations = countdown[@"durations"];
+		cell.duration = (durations.count > index) ? [countdown[@"durations"][index] integerValue] : 0;
 		cell.remaining = [countdown[@"endDate"] timeIntervalSinceNow];
 		return cell;
 	}

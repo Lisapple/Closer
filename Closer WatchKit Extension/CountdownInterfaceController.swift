@@ -26,8 +26,8 @@ class CountdownInterfaceController: WKInterfaceController {
 		self.setTitle(countdown?.name)
 		
 		updateUI()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: "newMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: #selector(newMenuAction))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: #selector(deleteMenuAction))
 		
 		if (countdown?.identifier == NSUserDefaults().stringForKey("selectedIdentifier")) {
 			self.becomeCurrentPage()
@@ -54,7 +54,7 @@ class CountdownInterfaceController: WKInterfaceController {
 		
 		if (countdown?.endDate != nil) {
 			let interval = (countdown!.endDate!.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0;
-			timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "updateUI", userInfo: nil, repeats: false)
+			timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
 			timer!.tolerance = interval / 2;
 		}
 	}
@@ -93,7 +93,7 @@ class CountdownInterfaceController: WKInterfaceController {
 		updateUI()
 		
 		NSNotificationCenter.defaultCenter().removeObserver(self)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceive:", name: "CountdownDidUpdateNotification", object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceive(_:)), name: "CountdownDidUpdateNotification", object: nil)
 		
 		if (hasChange) {
 			let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))

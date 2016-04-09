@@ -42,15 +42,14 @@ class TimerInterfaceController: WKInterfaceController {
 		
 		updateUI()
 		
-		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: "newMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: #selector(newMenuAction))
 		if (paused) {
-			addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction") }
+			addMenuItemWithImageNamed("resume-button", title: "Resume", action: #selector(resumeMenuAction)) }
 		else {
-			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction") }
+			addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: #selector(pauseMenuAction)) }
 		
-		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		//addMenuItemWithItemIcon(WKMenuItemIcon.Info, title: "Info", action: "infoMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: #selector(resetMenuAction))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: #selector(deleteMenuAction))
 		
 		if (countdown?.identifier == NSUserDefaults().stringForKey("selectedIdentifier")) {
 			self.becomeCurrentPage()
@@ -86,7 +85,7 @@ class TimerInterfaceController: WKInterfaceController {
 			
 			if (timer == nil) {
 				let interval = (countdown!.endDate!.timeIntervalSinceNow > 30 * 60) ? 60.0 : 1.0
-				timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "updateProgressionImage", userInfo: nil, repeats: true)
+				timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: #selector(updateProgressionImage), userInfo: nil, repeats: true)
 				timer!.tolerance = interval / 2
 			}
 		} else {
@@ -125,9 +124,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItemWithImageNamed("resume-button", title: "Resume", action: "resumeMenuAction")
-		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
+		addMenuItemWithImageNamed("resume-button", title: "Resume", action: #selector(resumeMenuAction))
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: #selector(resetMenuAction))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func resumeMenuAction() {
@@ -140,9 +139,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
-		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: #selector(pauseMenuAction))
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: #selector(resetMenuAction))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func resetMenuAction() {
@@ -154,9 +153,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: "pauseMenuAction")
-		addMenuItemWithImageNamed("reset-button", title: "Reset", action: "resetMenuAction")
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: "deleteMenuAction")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Pause, title: "Pause", action: #selector(pauseMenuAction))
+		addMenuItemWithImageNamed("reset-button", title: "Reset", action: #selector(resetMenuAction))
+		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func editMenuAction() {
@@ -187,7 +186,7 @@ class TimerInterfaceController: WKInterfaceController {
 		updateUI()
 		
 		NSNotificationCenter.defaultCenter().removeObserver(self)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceive:", name: "CountdownDidUpdateNotification", object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceive(_:)), name: "CountdownDidUpdateNotification", object: nil)
 		
 		if (hasChange) {
 			let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))

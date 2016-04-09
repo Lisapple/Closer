@@ -13,7 +13,7 @@ class NoCountdownsInterfaceController: WKInterfaceController {
 	override func awakeWithContext(context: AnyObject?) {
 		super.awakeWithContext(context)
 		
-		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: "newAction:")
+		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: #selector(newAction(_:)))
 	}
 	
 	@IBAction func newAction(sender: AnyObject) {

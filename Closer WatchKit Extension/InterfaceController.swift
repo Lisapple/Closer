@@ -62,7 +62,7 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
 				} else {
 					break
 				}
-				++index
+				index += 1
 			}
 		}
 		return (index != newCountdowns.count)
