@@ -41,15 +41,10 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 																						  target:self
 																						  action:@selector(cancel:)];
-	
 	_selectedEvents = [[NSMutableArray alloc] initWithCapacity:10];
-	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
 	_tableView.contentInset = UIEdgeInsetsMake(20., 0., 0., 0.);
-	[_tableView reloadData];
 	
-	/* Show the spinning wheel */
+	// Show the spinning wheel
 	_activityIndicatorView.hidden = NO;
 	
 	/*
@@ -272,21 +267,23 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+	CGFloat x = 15.;
 	UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 200., 36.)];
 	EKCalendar * calendar = _calendars[section];
 	if (calendar.type == EKCalendarTypeBirthday) {
-		UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(8., 11., 16., 16.)];
+		UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(x, 11., 16., 16.)];
 		imageView.image = [UIImage imageNamed:@"birthdays"];
 		[headerView addSubview:imageView];
-		
+		x += imageView.frame.size.width;
 	} else {
-		UIView * pinView = [[UIView alloc] initWithFrame:CGRectMake(15., 15., 10., 10.)];
+		UIView * pinView = [[UIView alloc] initWithFrame:CGRectMake(x, 15., 10., 10.)];
 		pinView.backgroundColor = [UIColor colorWithCGColor:calendar.CGColor];
 		pinView.layer.cornerRadius = 5.;
 		[headerView addSubview:pinView];
+		x += pinView.frame.size.width;
 	}
 	
-	UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(30., 10., 160., 20.)];
+	UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(x + 8., 10., 160., 20.)];
 	label.backgroundColor = [UIColor clearColor];
 	label.text = calendar.title.uppercaseString;
 	label.textColor = [UIColor grayColor];
@@ -344,6 +341,5 @@
 {
 	[_tableView reloadData];
 }
-
 
 @end
