@@ -715,7 +715,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (BOOL)isEqual:(Countdown *)anotherCountdown
 {
-	return [self isEqualToCountdown:anotherCountdown];
+	return [super isEqual:anotherCountdown];
 }
 
 - (BOOL)isEqualTo:(Countdown *)anotherCountdown
@@ -737,10 +737,17 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)description
 {
+	NSMutableString * string = [[NSMutableString alloc] initWithCapacity:100];
 	if (_type == CountdownTypeTimer)
-		return [NSString stringWithFormat:@"<Countdown (Timer): 0x%p; name = %@; durations = %@; songID = %@>", self, _name, [_durations componentsJoinedByString:@","], _songID];
+		[string appendFormat:@"<Countdown (Timer): 0x%p; name = %@; durations = %@", self, _name, [_durations componentsJoinedByString:@","]];
 	else
-		return [NSString stringWithFormat:@"<Countdown: 0x%p; name = %@; endDate = %@; songID = %@>", self, _name, _endDate, _songID];
+		[string appendFormat:@"<Countdown: 0x%p; name = %@; endDate = %@", self, _name, _endDate];
+	[string appendFormat:@"; songID = %@", _songID];
+	
+	if (self.notificationCenter)
+		[string appendString:@"; in notification center"];
+	
+	return [string stringByAppendingString:@">"];
 }
 
 #pragma mark - Memory management
