@@ -41,8 +41,8 @@ class Countdown: NSObject {
 		get { return _identifier }
 	}
 	private var _identifier: String
-	var type = CountdownType(rawValue: 0)!
-	var style = ColorStyle(rawValue: 0)!
+	var type: CountdownType = .Countdown
+	var style: ColorStyle = .Day
 	var name: String
 	var endDate: NSDate?
 	var message: String?
@@ -169,9 +169,7 @@ class Countdown: NSObject {
 		if (identifier != nil) {
 			_identifier = identifier!
 		} else {
-			let maximumIdentifier = Countdown.allCountdowns().maxElement({ (countdown1: Countdown, countdown2: Countdown) -> Bool in
-				return (Int(countdown1.identifier) < Int(countdown2.identifier)) })?.identifier
-			_identifier = (maximumIdentifier != nil) ? String(Int(maximumIdentifier!)! + 1) : String(1)
+			_identifier = NSUUID().UUIDString
 		}
 		super.init()
 		
