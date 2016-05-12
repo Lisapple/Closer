@@ -36,29 +36,29 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 		var template: CLKComplicationTemplate?
 		
 		switch complication.family {
-		case .CircularSmall:
-			let aTemplate = CLKComplicationTemplateCircularSmallRingText()
-			aTemplate.ringStyle = .Closed
-			aTemplate.fillFraction = progression
-			aTemplate.textProvider = textProvider
-			template = aTemplate
-			break
-		case .ModularSmall:
-			let aTemplate = CLKComplicationTemplateModularSmallRingText()
-			aTemplate.ringStyle = .Closed
-			aTemplate.fillFraction = progression
-			aTemplate.textProvider = textProvider
-			template = aTemplate
-			break
-		case .ModularLarge: break // @TODO: Support it
-		case .UtilitarianSmall:
-			let aTemplate = CLKComplicationTemplateUtilitarianSmallRingText()
-			aTemplate.ringStyle = .Closed
-			aTemplate.fillFraction = progression
-			aTemplate.textProvider = textProvider
-			template = aTemplate
-			break
-		case .UtilitarianLarge: break // Not supported now
+			case .CircularSmall:
+				let aTemplate = CLKComplicationTemplateCircularSmallRingText()
+				aTemplate.ringStyle = .Closed
+				aTemplate.fillFraction = progression
+				aTemplate.textProvider = textProvider
+				template = aTemplate
+				break
+			case .ModularSmall:
+				let aTemplate = CLKComplicationTemplateModularSmallRingText()
+				aTemplate.ringStyle = .Closed
+				aTemplate.fillFraction = progression
+				aTemplate.textProvider = textProvider
+				template = aTemplate
+				break
+			case .ModularLarge: break // @TODO: Support it
+			case .UtilitarianSmall:
+				let aTemplate = CLKComplicationTemplateUtilitarianSmallRingText()
+				aTemplate.ringStyle = .Closed
+				aTemplate.fillFraction = progression
+				aTemplate.textProvider = textProvider
+				template = aTemplate
+				break
+			case .UtilitarianLarge: break // Not supported now
 		}
 		return template
 	}
@@ -83,7 +83,6 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 	}
 	
 	func getTimelineEntriesForComplication(complication: CLKComplication, beforeDate date: NSDate, limit: Int, withHandler handler: ([CLKComplicationTimelineEntry]?) -> Void) {
-		print("beforeDate: ", date, limit)
 		handler(nil)
 	}
 	

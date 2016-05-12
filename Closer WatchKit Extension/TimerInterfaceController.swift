@@ -95,7 +95,6 @@ class TimerInterfaceController: WKInterfaceController {
     }
 	
 	func updateProgressionImage() {
-		print("updateProgressionImage")
 		self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 74/2))
 	}
 	

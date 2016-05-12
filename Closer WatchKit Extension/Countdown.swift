@@ -22,12 +22,12 @@ enum GlanceType: UInt {
 	init(string: String?) {
 		if (string != nil) {
 			switch string! {
-			case "closest_countdown":
-				self.init(rawValue: GlanceType.ClosestCountdown.rawValue)!
-			case "closest_timer":
-				self.init(rawValue: GlanceType.ClosestTimer.rawValue)!
-			default:
-				self.init(rawValue: GlanceType.LastSelectedPage.rawValue)!
+				case "closest_countdown":
+					self.init(rawValue: GlanceType.ClosestCountdown.rawValue)!
+				case "closest_timer":
+					self.init(rawValue: GlanceType.ClosestTimer.rawValue)!
+				default:
+					self.init(rawValue: GlanceType.LastSelectedPage.rawValue)!
 			}
 		} else {
 			self.init(rawValue: GlanceType.LastSelectedPage.rawValue)!
