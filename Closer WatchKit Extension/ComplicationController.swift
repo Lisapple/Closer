@@ -20,7 +20,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 		session.delegate = self
 		session.activateSession()
 		
-		let userDefaults = NSUserDefaults.standardUserDefaults()
+		let userDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
 		let glanceType = GlanceType(string: userDefaults.stringForKey("glance_type"))
 		countdown = Countdown.countdownWith(glanceType)
 	}

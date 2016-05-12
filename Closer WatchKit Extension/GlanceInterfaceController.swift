@@ -8,9 +8,9 @@
 
 import WatchKit
 import Foundation
+import WatchConnectivity
 
-
-class GlanceInterfaceController: WKInterfaceController {
+class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 	
 	@IBOutlet var titleLabel: WKInterfaceLabel!
 	@IBOutlet var imageView: WKInterfaceImage!
@@ -19,13 +19,21 @@ class GlanceInterfaceController: WKInterfaceController {
 	@IBOutlet var detailsLabel: WKInterfaceLabel!
 	var endDate: NSDate?
 	
+	override init() {
+		super.init()
+		
+		let session = WCSession.defaultSession()
+		session.delegate = self
+		session.activateSession()
+	}
+	
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
 	}
 	
 	func update () {
 
-		let userDefaults = NSUserDefaults.standardUserDefaults()
+		let userDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
 		let glanceType = GlanceType(string: userDefaults.stringForKey("glance_type"))
 		let countdown = Countdown.countdownWith(glanceType)
 		if (countdown != nil) {
@@ -45,6 +53,8 @@ class GlanceInterfaceController: WKInterfaceController {
 						timerLabel.setDate(NSDate(timeIntervalSinceNow: duration))
 					}
 					timerLabel.setTextColor(color)
+					
+					imageView.setImage(countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 74/2))
 					
 					// "of [total duration]"
 					let components = NSDateComponents()
@@ -66,6 +76,8 @@ class GlanceInterfaceController: WKInterfaceController {
 				if (endDate != nil) {
 					timerLabel.setDate(endDate!)
 					timerLabel.setTextColor(color)
+					
+					imageView.setImage(countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 14))
 					
 					let formatter = NSDateFormatter()
 					formatter.dateStyle = .MediumStyle

@@ -222,6 +222,8 @@
 		501412301312B51500D61066 /* CountdownPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountdownPageView.xib; sourceTree = "<group>"; };
 		5016A9DD1C96EB3E00971A7C /* Main~pad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main~pad.storyboard"; sourceTree = "<group>"; };
 		5028E7DE1C515BCE00A5FF85 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		502950841CE48F7800143F4E /* Closer Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Closer Watch App.entitlements"; path = "../Closer Watch App.entitlements"; sourceTree = "<group>"; };
+		502950851CE490A500143F4E /* Closer Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Closer Watch Extension.entitlements"; path = "../Closer Watch Extension.entitlements"; sourceTree = "<group>"; };
 		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ExportToWebsiteViewController.m; path = ../Classes/ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50495D601BB6B33D0009870F /* EditInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditInterfaceController.swift; sourceTree = "<group>"; };
 		504B56451A7D5C9900292475 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -246,7 +248,6 @@
 		5051305516600DE20056CB42 /* NSObject+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+additions.m"; sourceTree = "<group>"; };
 		505904C91352351B00959167 /* FontDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FontDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505904CA1352351B00959167 /* FontDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FontDescription.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		505B2AA01AC0D28000B6F84A /* Closer WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Closer WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		505C188A1C88C4D700C8FC98 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		505C188B1C88C4D700C8FC98 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoCountdownsInterfaceController.swift; sourceTree = "<group>"; };
@@ -303,7 +304,6 @@
 		50BEE0D01786F8730086F2B9 /* DurationPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationPickerView.h; path = ../Shared/DurationPickerView.h; sourceTree = "<group>"; };
 		50BEE0D61786F8EF0086F2B9 /* DurationPickerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DurationPickerTableViewCell.h; sourceTree = "<group>"; };
 		50BEE0D71786F8EF0086F2B9 /* DurationPickerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DurationPickerTableViewCell.m; sourceTree = "<group>"; };
-		50C025941BBAFC07008E4818 /* Closer WatchKit App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Closer WatchKit App.entitlements"; sourceTree = "<group>"; };
 		50C025951BBB036F008E4818 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
 		50C5A11312E32E4E0013605C /* UIColor+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+addition.h"; sourceTree = "<group>"; };
 		50C5A11412E32E4E0013605C /* UIColor+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+addition.m"; sourceTree = "<group>"; };
@@ -692,7 +692,7 @@
 		50E00D221AC0AA9000784B98 /* Closer WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
-				505B2AA01AC0D28000B6F84A /* Closer WatchKit Extension.entitlements */,
+				502950851CE490A500143F4E /* Closer Watch Extension.entitlements */,
 				500B0BD61BB6D00C00D3915F /* Countdown.swift */,
 				50E00D251AC0AA9000784B98 /* InterfaceController.swift */,
 				505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */,
@@ -721,7 +721,7 @@
 		50E00D2F1AC0AA9000784B98 /* Closer WatchKit App */ = {
 			isa = PBXGroup;
 			children = (
-				50C025941BBAFC07008E4818 /* Closer WatchKit App.entitlements */,
+				502950841CE48F7800143F4E /* Closer Watch App.entitlements */,
 				50E00D321AC0AA9000784B98 /* Interface.storyboard */,
 				50E00D351AC0AA9000784B98 /* Images.xcassets */,
 				50E00D301AC0AA9000784B98 /* Supporting Files */,
@@ -850,7 +850,7 @@
 						DevelopmentTeam = 79MVQZ8SAR;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -1335,6 +1335,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "Closer Watch Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1383,6 +1384,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "Closer Watch Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
