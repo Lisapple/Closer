@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="8092"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="10032"/>
     </dependencies>
     <scenes>
         <!--Timer-->
@@ -21,7 +21,7 @@
                                         <separator alignment="left" id="dwV-PI-wdx">
                                             <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </separator>
-                                        <timer height="74" alignment="left" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="KUB-aE-1NY">
+                                        <timer alignment="left" verticalAlignment="center" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="KUB-aE-1NY">
                                             <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
                                         </timer>
                                     </items>
@@ -293,7 +293,7 @@
                                 <separator alignment="left" id="KE7-E8-zGQ">
                                     <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </separator>
-                                <timer height="74" alignment="left" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="N6V-Lt-cO0">
+                                <timer alignment="left" verticalAlignment="center" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="N6V-Lt-cO0">
                                     <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
                                 </timer>
                             </items>
@@ -415,7 +415,7 @@
                                 <separator alignment="left" id="Ols-dc-1gI">
                                     <color key="color" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </separator>
-                                <timer height="74" alignment="left" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="Lsa-Rz-BmJ">
+                                <timer alignment="left" verticalAlignment="center" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="Lsa-Rz-BmJ">
                                     <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
                                 </timer>
                             </items>
