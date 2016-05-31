@@ -83,30 +83,9 @@ static NSMutableArray * _countdowns = nil;
 		
 		_countdowns = [[NSMutableArray alloc] initWithCapacity:_propertyList.count];
 		for (NSDictionary * dictionary in _propertyList) {
-			
-			NSString * identifier = dictionary[@"identifier"];
-			Countdown * aCountdown = [[Countdown alloc] initWithIdentifier:identifier];
-			
-			CountdownType type = [dictionary[@"type"] integerValue];
-			if (type == CountdownTypeTimer) {
-				NSArray * durations = dictionary[@"durations"];
-				NSArray * names = dictionary[@"names"];
-				if (durations) [aCountdown addDurations:durations withNames:names];
-				aCountdown.durationIndex = [dictionary[@"durationIndex"] integerValue];
-				aCountdown.promptState = [dictionary[@"prompt"] integerValue];
-			} else { // Countdown
-				aCountdown.message = dictionary[@"message"];
-			}
-			
-			aCountdown.name = dictionary[@"name"];
-			aCountdown.endDate = dictionary[@"endDate"];
-			aCountdown.songID = dictionary[@"songID"];
-			aCountdown.style = [dictionary[@"style"] integerValue];
-			aCountdown.type = type;
-            aCountdown.notificationCenter = (dictionary[@"notificationCenter"]) ? [dictionary[@"notificationCenter"] boolValue] : YES;
-			
-			[aCountdown activate];
-			[_countdowns addObject:aCountdown];
+			Countdown * countdown = [[Countdown alloc] initWithDictionary:dictionary];
+			[countdown activate];
+			[_countdowns addObject:countdown];
 		}
 		[_countdowns sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"notificationCenter" ascending:NO] ]];
 		
@@ -427,9 +406,7 @@ static NSMutableArray * _countdowns = nil;
 - (instancetype)initWithIdentifier:(NSString *)anIdentifier
 {
 	if ((self = [super init])) {
-		if (!anIdentifier) {
-			anIdentifier = [NSUUID UUID].UUIDString;
-		}
+		_identifier = anIdentifier ?: [NSUUID UUID].UUIDString;
 		
 		/* Don't call self.xxx to not call updateLocalNotification many times */
 		_name = NSLocalizedString(@"NO_TITLE_PLACEHOLDER", nil);
@@ -443,11 +420,41 @@ static NSMutableArray * _countdowns = nil;
 		_durations = [[NSMutableArray alloc] initWithCapacity:5];
 		_names = [[NSMutableArray alloc] initWithCapacity:5];
 		
-		_identifier = anIdentifier;
-		
 		[self update];
 	}
 	
+	return self;
+}
+
+- (instancetype)initWithDictionary:(nonnull NSDictionary<NSString *, id> *)dictionary
+{
+	NSString * identifier = dictionary[@"identifier"];
+	if ((self = [self initWithIdentifier:identifier])) {
+		
+		CountdownType type = [dictionary[@"type"] integerValue];
+		if (type == CountdownTypeTimer) {
+			_durations = dictionary[@"durations"];
+			_names = dictionary[@"names"];
+			if (_names.count < _durations.count) {
+				for (NSUInteger _ = _names.count; _ <= _durations.count; ++_) { [_names addObject:@""]; }
+			}
+			NSAssert(_names.count == _durations.count, @"durations count must be equal to names count");
+			
+			_durationIndex = [dictionary[@"durationIndex"] integerValue];
+			_promptState = [dictionary[@"prompt"] integerValue];
+		} else { // Countdown
+			_message = dictionary[@"message"];
+		}
+		
+		_name = dictionary[@"name"];
+		_endDate = dictionary[@"endDate"];
+		_songID = dictionary[@"songID"];
+		_style = [dictionary[@"style"] integerValue];
+		_type = type;
+		_notificationCenter = (dictionary[@"notificationCenter"]) ? [dictionary[@"notificationCenter"] boolValue] : YES;
+		
+		[self update];
+	}
 	return self;
 }
 
@@ -575,7 +582,7 @@ static NSMutableArray * _countdowns = nil;
 {
 	[Countdown tagChangeDuration];
 	
-	NSAssert2((names && durations.count == names.count) || !names, @"The number of durations (%lu) must be the same as names (%lu)",
+	NSAssert2((names && durations.count == names.count) || !names, @"The number of durations (%lu) must be the same as names (%lu), if names set",
 			  (long)durations.count, (long)names.count);
 	[_durations addObjectsFromArray:durations];
 	if (names)
@@ -619,7 +626,8 @@ static NSMutableArray * _countdowns = nil;
 	[Countdown tagChangeDuration];
 	
 	[_durations removeObjectAtIndex:index];
-	[_names removeObjectAtIndex:index];
+	if (index < _names.count) // If the case where the duration has no name (even an empty one), don't try to delete the name
+		[_names removeObjectAtIndex:index];
 }
 
 - (void)resetDurationIndex
