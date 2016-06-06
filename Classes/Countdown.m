@@ -495,11 +495,15 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)setEndDate:(NSDate *)aDate
 {
-	[Countdown tagEndDate:aDate];
-	
-	_endDate = aDate;
-	_paused = (_endDate == nil);
-	[self update];
+	if (![_endDate isEqualToDate:aDate]) {
+		if (aDate && _endDate) {
+			[Countdown tagEndDate:aDate];
+		}
+		
+		_endDate = aDate;
+		_paused = (_endDate == nil);
+		[self update];
+	}
 }
 
 - (void)setSongID:(NSString *)aSongID

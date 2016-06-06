@@ -229,8 +229,8 @@
 + (void)tagEndDate:(NSDate *)date
 {
 	NSDictionary * attrs = nil;
-	if ([date description]) {
-		attrs = @{ @"end date" : [date description] };
+	if (date.description) {
+		attrs = @{ @"end date" : date.description };
 	}
 	[Answers logCustomEventWithName:@"change-countdown-end-date"
 				   customAttributes:attrs];
@@ -239,7 +239,7 @@
 + (void)tagChangeDuration
 {
 	[Answers logCustomEventWithName:@"change-countdown-duration"
-				   customAttributes:@{}];
+				   customAttributes:@{ }];
 }
 
 + (void)tagChangeTheme:(CountdownStyle)style

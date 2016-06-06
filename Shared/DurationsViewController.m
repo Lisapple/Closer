@@ -34,7 +34,7 @@
 	[self reloadData];
 }
 
-- (void)reloadData
+- (void)updateUI
 {
 	/* Show a placeholder "No Durations" if the timer has no durations */
 	if (_countdown.durations.count == 0) {
@@ -48,7 +48,11 @@
 		_tableView.tableFooterView = button;
 	} else
 		_tableView.tableFooterView = nil;
-	
+}
+
+- (void)reloadData
+{
+	[self updateUI];
 	[_tableView reloadData];
 }
 
@@ -167,7 +171,7 @@
 		[_tableView deleteRowsAtIndexPaths:@[ indexPath ]
 						  withRowAnimation:UITableViewRowAnimationFade];
 		[_tableView endUpdates];
-		[self reloadData];
+		[self updateUI];
 	}
 }
 
@@ -180,7 +184,7 @@
 - (void)tableView:(UITableView *)aTableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
 	[_countdown moveDurationAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
-	[_tableView reloadData];
+	[self updateUI];
 }
 
 #pragma mark - Table view delegate
