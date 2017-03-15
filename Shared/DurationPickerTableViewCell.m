@@ -20,7 +20,7 @@
 		_label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_label.backgroundColor = [UIColor clearColor];
 		_label.textAlignment = NSTextAlignmentCenter;
-		_label.font = [UIFont boldSystemFontOfSize:17.];
+		_label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		[self.contentView addSubview:_label];
 		
 		rect = CGRectMake(0., 40., self.frame.size.width, 42);

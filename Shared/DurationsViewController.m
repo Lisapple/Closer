@@ -12,6 +12,11 @@
 
 @implementation DurationsViewController
 
+- (BOOL)canBecomeFirstResponder
+{
+	return YES; // For duration pop-up menu
+}
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -32,6 +37,19 @@
 {
 	[super viewWillAppear:animated];
 	[self reloadData];
+	
+	[[NSNotificationCenter defaultCenter] addObserverForName:UIMenuControllerWillHideMenuNotification
+													  object:nil queue:nil
+												  usingBlock:^(NSNotification * note) {
+													  [_tableView deselectRowAtIndexPath:_tableView.indexPathForSelectedRow animated:NO];
+												  }];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[super viewWillDisappear:animated];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerWillHideMenuNotification object:nil];
 }
 
 - (void)updateUI
@@ -42,7 +60,7 @@
 		UIButton * button = [[UIButton alloc] initWithFrame:frame];
 		button.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-		button.titleLabel.font = [UIFont boldSystemFontOfSize:18.];
+		button.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		[button setTitle:NSLocalizedString(@"Add Duration", nil) forState:UIControlStateNormal];
 		[button addTarget:self action:@selector(addAction:) forControlEvents:UIControlEventTouchUpInside];
 		_tableView.tableFooterView = button;
@@ -96,7 +114,7 @@
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:promptCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:17.];
+			cell.detailTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 			cell.detailTextLabel.textColor = [UIColor darkGrayColor];
 		}
 		cell.textLabel.text = NSLocalizedString(@"Ask", nil);
@@ -187,11 +205,45 @@
 	[self updateUI];
 }
 
+- (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		UIMenuController * menu = [UIMenuController sharedMenuController];
+		menu.menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Duplicate", nil)
+													   action:@selector(duplicateDurationAction:)] ];
+		UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+		[menu setTargetRect:CGRectMake(CGRectGetMidX(cell.bounds), 0, 1, 1) inView:cell];
+		[menu setMenuVisible:YES animated:YES];
+	});
+	return NO;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender { return NO; }
+- (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender { }
+
+- (void)duplicateDurationAction:(id)sender
+{
+	[_tableView beginUpdates];
+	{
+		NSIndexPath * indexPath = _tableView.indexPathForSelectedRow;
+		NSNumber * duration = _countdown.durations[indexPath.row];
+		NSString * name = _countdown.names[indexPath.row];
+		[_countdown addDuration:duration withName:name];
+		[_tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_countdown.durations.count-1 inSection:indexPath.section] ]
+						  withRowAnimation:UITableViewRowAnimationTop];
+	}
+	[_tableView endUpdates];
+	[self updateUI];
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section ==  0) {
+	if ([UIMenuController sharedMenuController].isMenuVisible)
+		return ;
+	
+	if (indexPath.section == 0) {
 		PromptViewController * promptViewController = [[PromptViewController alloc] init];
 		promptViewController.countdown = self.countdown;
 		[self.navigationController pushViewController:promptViewController animated:YES];

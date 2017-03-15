@@ -50,6 +50,9 @@
 //"Date & Time"; // Already defined on SettingsViewController
 "UNDO_DATE_ACTION" = "Date Change";
 
+/* DurationsViewController */
+"Duplicate";
+
 /* SongPickerViewController */
 "Sound";
 "None";

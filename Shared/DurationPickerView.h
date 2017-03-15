@@ -15,7 +15,7 @@
 @protocol _DurationScrollViewDelegate <NSObject>
 
 @optional
-- (void)durationScrollView:(_DurationScrollView *)durationScrollView didTouchOnIndex:(NSInteger)index;
+- (void)durationScrollView:(_DurationScrollView *)durationScrollView didSelectIndex:(NSInteger)index;
 
 @end
 
