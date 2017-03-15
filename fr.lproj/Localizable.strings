@@ -251,5 +251,11 @@
 "Include in notification center" = "Inclure dans les notifications";
 "Do not include" = "Ne pas inclure";
 
-"À Propos";
-"Closer & Closer is an open-source projet, under MIT license." = "Closer & Closer est un projet open-source, sous license MIT.";
+"a-propos.title" = "À Propos de Closer & Closer";
+"a-propos.license.description" = "%@ est un projet open-source, sous license %@.";
+
+"a-propos.license.mit" = "MIT";
+"a-propos.license.gnu3.0" = "GNU General Public 3.0";
+"a-propos.license.apache" = "Apache";
+"a-propos.license.apache2.0" = "Apache 2.0";
+"a-propos.license.public-domain" = "du domain publique";

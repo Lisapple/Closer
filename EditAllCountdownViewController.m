@@ -12,7 +12,7 @@
 #import "ImportFromWebsiteViewController_Phone.h"
 #import "ExportViewController.h"
 #import "PageViewController.h"
-#import "AboutViewController.h"
+#import "AProposViewController.h"
 
 #import "CloserAppDelegate_Phone.h"
 #import "MainViewController_Phone.h"
@@ -71,14 +71,6 @@
 {
 	/* Reload the whole table view (do not show animations) */
 	[_tableView reloadData];
-}
-
-- (IBAction)moreInfo:(id)sender
-{
-	NSString * name = [NSBundle mainBundle].infoDictionary[@"UIMainStoryboardFile"];
-	AboutViewController * controller = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateViewControllerWithIdentifier:@"AboutController"];
-	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-	[self presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)updateData
@@ -182,7 +174,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 4; // "Include in notification center", "Do not include", Import and Export
+	return 5; // "Include in notification center", "Do not include", Import, Export and About
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -195,33 +187,14 @@
 	return nil;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-	return (section == 3) ? 44. : 0.;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-	if (section == 3) { // Info "i" button on the right
-		UIView * contentView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., self.view.frame.size.width, 44.)];
-		UIButton * button = [UIButton buttonWithType:UIButtonTypeInfoLight];
-		const CGFloat kMargin = 23;
-		button.frame = CGRectMake(self.view.frame.size.width - 15. - kMargin, 44. - kMargin, kMargin, kMargin);
-		[button addTarget:self action:@selector(moreInfo:) forControlEvents:UIControlEventTouchUpInside];
-		button.tintColor = self.view.window.tintColor;
-		[contentView addSubview:button];
-		return contentView;
-	}
-	return nil;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	switch (section) {
 		case 0: return self.includedCountdowns.count;
 		case 1: return self.notIncludedCountdowns.count;
 		case 2 /* Import */: return 1 + ([NetworkStatus isConnected] == YES); // Remove the "Import with Passwords" if no internet connection
-		case 3 /* Export */ : return 1;
+		case 3 /* Export */: return 1;
+		case 4 /* About */:  return 1;
 	}
 	return 0;
 }
@@ -377,9 +350,22 @@
 				}
 				default: break;
 			}
-	} else { // Export
+			default: break;
+		}
+	} else if (indexPath.section == 3) { // Export
 		ExportViewController * exportViewController = [[ExportViewController alloc] init];
 		[self.navigationController pushViewController:exportViewController animated:YES];
+	} else {
+		AProposViewController * controller = [[AProposViewController alloc] initWithLicenseType:ApplicationLicenseTypeMIT];
+		controller.author = @"Lis@cintosh";
+		[controller setURLsStrings:@[ @"http://closer.lisacintosh.com",
+									  @"appstore.com/lisacintosh",
+									  @"http://support.lisacintosh.com/closer",
+									  @"http://lisacintosh.com"]];
+		controller.repositoryURL = [NSURL URLWithString:@"https://github.com/lisapple/closer"];
+		
+		UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+		[self presentViewController:navigationController animated:YES completion:nil];
 	}
 		
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];

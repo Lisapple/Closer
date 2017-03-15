@@ -15,8 +15,6 @@
 @property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
 @property (nonatomic, assign) IBOutlet UITableView * tableView;
 
-- (IBAction)moreInfo:(id)sender;
-
 - (void)reloadData;
 
 @end

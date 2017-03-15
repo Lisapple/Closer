@@ -252,5 +252,11 @@
 "Include in notification center";
 "Do not include";
 
-"About";
-"Closer & Closer is an open-source projet, under MIT license.";
+"a-propos.title" = "About Closer & Closer";
+"a-propos.license.description" = "%@ is an open-source projet, under %@ license.";
+
+"a-propos.license.mit" = "MIT";
+"a-propos.license.gnu3.0" = "GNU General Public 3.0";
+"a-propos.license.apache" = "Apache";
+"a-propos.license.apache2.0" = "Apache 2.0";
+"a-propos.license.public-domain" = "public domain";

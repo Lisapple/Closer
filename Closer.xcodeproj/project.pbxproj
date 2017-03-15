@@ -45,7 +45,6 @@
 		504FD343164D350E00D54381 /* SettingsViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 504FD341164D350E00D54381 /* SettingsViewController_Pad.xib */; };
 		5051305616600DE20056CB42 /* NSObject+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5051305516600DE20056CB42 /* NSObject+additions.m */; };
 		505904CB1352351B00959167 /* FontDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 505904CA1352351B00959167 /* FontDescription.m */; };
-		505C188D1C88C4D700C8FC98 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 505C188B1C88C4D700C8FC98 /* AboutViewController.m */; };
 		505CC6B81BB80A4C00B3ECAB /* Closer Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 50E00D2B1AC0AA9000784B98 /* Closer Watch App.app */; };
 		505CC6BA1BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */; };
 		505DCD1C15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */; };
@@ -225,6 +224,8 @@
 		502950841CE48F7800143F4E /* Closer Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Closer Watch App.entitlements"; path = "../Closer Watch App.entitlements"; sourceTree = "<group>"; };
 		502950851CE490A500143F4E /* Closer Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Closer Watch Extension.entitlements"; path = "../Closer Watch Extension.entitlements"; sourceTree = "<group>"; };
 		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ExportToWebsiteViewController.m; path = ../Classes/ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		504357031E4B51C3004F522E /* AProposViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AProposViewController.h; path = "Carthage/Checkouts/a-propos/Classes/AProposViewController.h"; sourceTree = "<group>"; };
+		504357041E4B51C3004F522E /* AProposViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AProposViewController.m; path = "Carthage/Checkouts/a-propos/Classes/AProposViewController.m"; sourceTree = "<group>"; };
 		50495D601BB6B33D0009870F /* EditInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditInterfaceController.swift; sourceTree = "<group>"; };
 		504B56451A7D5C9900292475 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		504B56461A7D5C9900292475 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
@@ -248,8 +249,6 @@
 		5051305516600DE20056CB42 /* NSObject+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+additions.m"; sourceTree = "<group>"; };
 		505904C91352351B00959167 /* FontDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FontDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505904CA1352351B00959167 /* FontDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FontDescription.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		505C188A1C88C4D700C8FC98 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
-		505C188B1C88C4D700C8FC98 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoCountdownsInterfaceController.swift; sourceTree = "<group>"; };
 		505DCD1915EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ImportFromWebsiteViewController_Phone.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -522,6 +521,15 @@
 			name = iPad;
 			sourceTree = "<group>";
 		};
+		504357021E4B51B5004F522E /* A Propos */ = {
+			isa = PBXGroup;
+			children = (
+				504357031E4B51C3004F522E /* AProposViewController.h */,
+				504357041E4B51C3004F522E /* AProposViewController.m */,
+			);
+			name = "A Propos";
+			sourceTree = "<group>";
+		};
 		504B56481A7D5C9900292475 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
@@ -559,8 +567,6 @@
 				50B208F91307F73C00AF2320 /* EditAllCountdownViewController.h */,
 				50B208FA1307F73C00AF2320 /* EditAllCountdownViewController.m */,
 				50B208FB1307F73C00AF2320 /* EditAllCountdownViewController.xib */,
-				505C188A1C88C4D700C8FC98 /* AboutViewController.h */,
-				505C188B1C88C4D700C8FC98 /* AboutViewController.m */,
 				505DCD1915EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.h */,
 				505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */,
 				505DCD1B15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.xib */,
@@ -1008,6 +1014,7 @@
 				505DCD1C15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m in Sources */,
 				50E1400D1C6F73F50058DDE6 /* PageViewController.m in Sources */,
 				505DCD2315EF8F36005F4B4A /* PasswordLabel.m in Sources */,
+				504357051E4B51C3004F522E /* AProposViewController.m in Sources */,
 				502AEA5B15FA44E3009D9764 /* ExportToWebsiteViewController.m in Sources */,
 				50CEFB5E15FCF27F0044AED0 /* NetworkStatus.m in Sources */,
 				504FD338164D2F3200D54381 /* CloserAppDelegate_Pad.m in Sources */,
@@ -1015,7 +1022,6 @@
 				504FD342164D350E00D54381 /* SettingsViewController_Pad.m in Sources */,
 				507717CA164D57DF0042D50B /* ImportFromWebsiteViewController_Pad.m in Sources */,
 				5051305616600DE20056CB42 /* NSObject+additions.m in Sources */,
-				505C188D1C88C4D700C8FC98 /* AboutViewController.m in Sources */,
 				508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */,
 				50EC72D316BD4F9D00BB7CA7 /* EKEventStore+additions.m in Sources */,
 				50AF1325176F4D230092E255 /* TypeViewController.m in Sources */,
