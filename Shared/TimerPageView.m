@@ -9,6 +9,8 @@
 #import "TimerPageView.h"
 #import "UIView+addition.h"
 
+NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
+
 @interface PageView ()
 
 - (void)handleDoubleTap;
@@ -16,18 +18,26 @@
 @end
 
 @interface TimerPageView ()
+@property (nonatomic, assign) IBOutlet UIView * contentView;
+@property (nonatomic, strong) IBOutlet TimerView * timerView;
 
-@property (nonatomic, strong) id updateObserver, continueObserver;
+@property (nonatomic, strong) IBOutlet CCLabel * timeLabel;
+@property (nonatomic, strong) IBOutlet UILabel * descriptionLabel;
+@property (nonatomic, strong) IBOutlet UIImageView * backgroundImageView;
 
 @property (nonatomic, assign) BOOL dragging, idleTimerDisabled;
 @property (nonatomic, assign) CGPoint startLocation, totalOffset;
-//@property (nonatomic, assign) NSTimeInterval originalDuration, delta;
 
-@property (nonatomic, assign) IBOutlet UIView * contentView;
+@property (nonatomic, assign) NSTimeInterval remainingSeconds;
+/// Duration of the current timer
+@property (nonatomic, assign) NSTimeInterval duration;
+/// adjustement offset when modifying current timer progression (by scrolling)
+@property (nonatomic, assign) NSTimeInterval offset;
 
-@property (nonatomic, assign) NSTimeInterval remainingSeconds, duration /* Duration of the current timer */, offset /* adjustement offset when modifying current timer progression (by scrolling) */;
 @property (nonatomic, strong) NSDate * nextEndDate;
 @property (nonatomic, assign) BOOL isWaiting, loaded;
+
+- (IBAction)pauseButtonAction:(id)sender;
 
 @end
 
@@ -47,30 +57,28 @@
 		[_timerView addTarget:self action:@selector(timerDidSelectAction:)
 			 forControlEvents:UIControlEventTouchUpInside];
 		
-		_updateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification
-																			object:nil queue:nil
-																		usingBlock:^(NSNotification * notification)
-						   {
-							   /* If the current timer's endDate change, reset the timer */
-							   if (self.countdown.currentDuration.doubleValue != _duration && !self.countdown.isPaused) {
-								   _duration = self.countdown.currentDuration.doubleValue;
-								   _remainingSeconds = _duration;
-								   _timerView.progression = 0.;
-								   [self.countdown reset];
-								   NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
-								   [self reload];
-							   }
-						   }];
+		[[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification
+														  object:nil queue:nil
+													  usingBlock:^(NSNotification * notification) {
+														  // If the current timer's endDate change, reset the timer
+														  if (self.countdown.currentDuration.doubleValue != _duration && !self.countdown.isPaused) {
+															  _duration = self.countdown.currentDuration.doubleValue;
+															  _remainingSeconds = _duration;
+															  _timerView.progression = 0.;
+															  [self.countdown reset];
+															  NSDebugLog(@"End date changed for \"%@\"", self.countdown.name);
+															  [self reload];
+														  }
+													  }];
 		
-		_continueObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"TimerDidContinueNotification"
-																			  object:nil queue:nil
-																		  usingBlock:^(NSNotification * notification)
-							 {
-								 if (notification.object == self.countdown && self.countdown.isPaused) {
-									 self.isWaiting = NO;
-									 [self start];
-								 }
-							 }];
+		[[NSNotificationCenter defaultCenter] addObserverForName:TimerDidContinueNotification
+														  object:nil queue:nil
+													  usingBlock:^(NSNotification * notification) {
+														  if (notification.object == self.countdown && self.countdown.isPaused) {
+															  self.isWaiting = NO;
+															  [self start];
+														  }
+													  }];
 		
 		UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(timerDidDragged:)];
 		pan.maximumNumberOfTouches = 1;
@@ -133,8 +141,6 @@
 
 - (void)setStyle:(CountdownStyle)aStyle
 {
-	super.style = aStyle;
-	
 	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
 	[self setTextColor:[UIColor textColorForStyle:aStyle]];
 }
@@ -430,8 +436,7 @@
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:_updateObserver];
-	[[NSNotificationCenter defaultCenter] removeObserver:_continueObserver];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

@@ -36,12 +36,12 @@
 
 - (void)viewWillShow:(BOOL)animated
 {
-	_isViewShown = YES;
+	_visible = YES;
 }
 
 - (void)viewDidHide:(BOOL)animated
 {
-	_isViewShown = NO;
+	_visible = NO;
 }
 
 - (void)handleDoubleTap

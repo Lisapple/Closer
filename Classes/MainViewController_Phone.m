@@ -534,7 +534,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 	CGFloat progression = (offset.x / _scrollView.frame.size.width) - index;
 	PageView * leftPageView = _pages[MAX(0, index)];
 	PageView * rightPageView = _pages[MIN(index+1, _pages.count-1)];
-	const CountdownStyle * styles = (const CountdownStyle[]){ leftPageView.style, rightPageView.style };
+	const CountdownStyle * styles = (const CountdownStyle[]){
+		leftPageView.countdown.style, rightPageView.countdown.style };
 	UIColor * tintColor = [UIColor textColorForStyles:styles indexValue:progression];
 	
 	_pageControl.currentPageIndicatorTintColor = tintColor;
@@ -605,9 +606,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
 	PageView * pageView = _pages[_currentPageIndex];
-	if (!pageView.isViewShown) [pageView viewWillShow:YES];
+	if (!pageView.isVisible) [pageView viewWillShow:YES];
 	for (PageView * aPageView in _pages) {
-		if (aPageView != pageView && aPageView.isViewShown)
+		if (aPageView != pageView && aPageView.isVisible)
 			[aPageView viewDidHide:YES];
 	}
 	[self showPageControl:NO animated:YES];
@@ -618,9 +619,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	if (!decelerate) {
 		PageView * pageView = _pages[_currentPageIndex];
-		if (!pageView.isViewShown) [pageView viewWillShow:YES];
+		if (!pageView.isVisible) [pageView viewWillShow:YES];
 		for (PageView * aPageView in _pages) {
-			if (aPageView != pageView && aPageView.isViewShown)
+			if (aPageView != pageView && aPageView.isVisible)
 				[aPageView viewDidHide:YES];
 		}
 		[self setBackgroundImageOffset:CGPointZero];
@@ -655,7 +656,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	if (_pages.count) {
 		PageView * pageView = _pages[_currentPageIndex];
-		return CountdownStyleHasDarkContent(pageView.style) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+		return CountdownStyleHasDarkContent(pageView.countdown.style) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 	}
 	return UIStatusBarStyleDefault;
 }

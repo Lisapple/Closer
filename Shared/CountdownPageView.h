@@ -15,11 +15,4 @@
 
 @interface CountdownPageView : PageView
 
-@property (nonatomic, strong) IBOutlet CCLabel * daysLabel, * hoursLabel, * minutesLabel, * secondsLabel;
-@property (nonatomic, strong) IBOutlet CCLabel * daysDescriptionLabel, * hoursDescriptionLabel, * minutesDescriptionLabel, * secondsDescriptionLabel;
-
-@property (nonatomic, strong) IBOutlet UILabel * nameLabel;
-
-@property (nonatomic, strong) NSString * backgroundImageName;
-
 @end

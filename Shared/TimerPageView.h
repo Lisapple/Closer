@@ -11,15 +11,9 @@
 #import "TimerView.h"
 #import "CCLabel.h"
 
+extern NSString * const TimerDidContinueNotification;
+
 @interface TimerPageView : PageView <UIGestureRecognizerDelegate>
-
-@property (nonatomic, strong) IBOutlet TimerView * timerView;
-
-@property (nonatomic, strong) IBOutlet CCLabel * timeLabel;
-@property (nonatomic, strong) IBOutlet UILabel * descriptionLabel;
-@property (nonatomic, strong) IBOutlet UIImageView * backgroundImageView;
-
-- (IBAction)pauseButtonAction:(id)sender;
 
 - (void)tooglePause;
 - (void)reset;

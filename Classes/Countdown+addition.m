@@ -28,13 +28,11 @@
 
 - (UILocalNotification *)localNotification
 {
-	NSArray * allLocalNotifications = [UIApplication sharedApplication].scheduledLocalNotifications;
-	for (UILocalNotification * localNotif in allLocalNotifications) {
-		
-		NSString * anIdentifier = localNotif.userInfo[@"identifier"];
-		if ([anIdentifier isEqualToString:self.identifier]) {
-			return localNotif; // Return the localNotification
-		}
+	NSArray <UILocalNotification *> * notifications = [UIApplication sharedApplication].scheduledLocalNotifications;
+	for (UILocalNotification * notification in notifications) {
+		NSString * anIdentifier = notification.userInfo[@"identifier"];
+		if ([anIdentifier isEqualToString:self.identifier])
+			return notification;
 	}
 	
 	return nil;
@@ -43,12 +41,11 @@
 - (UILocalNotification *)createLocalNotification
 {
 	NSDebugLog(@"Create new local notification for countdown : %@ => %@", self.name, self.endDate.localizedDescription);
-	UILocalNotification * localNotif = [[UILocalNotification alloc] init];
 	
-	localNotif.timeZone = [NSTimeZone localTimeZone];
-	localNotif.userInfo = @{ @"identifier": self.identifier };
-	
-	return localNotif;
+	UILocalNotification * notification = [[UILocalNotification alloc] init];
+	notification.timeZone = [NSTimeZone localTimeZone];
+	notification.userInfo = @{ @"identifier": self.identifier };
+	return notification;
 }
 
 - (void)updateLocalNotification
@@ -57,14 +54,13 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (self.endDate && self.endDate.timeIntervalSinceNow > 0.) {
 				
-				UILocalNotification * localNotif = [self localNotification];
-				if (localNotif) {
+				UILocalNotification * notification = [self localNotification];
+				if (notification)
 					[self removeLocalNotification];
-				} else {
-					localNotif = [self createLocalNotification];
-				}
+				else
+					notification = [self createLocalNotification];
 				
-				localNotif.fireDate = self.endDate;
+				notification.fireDate = self.endDate;
 				
 				NSString * messageString = self.message;
 				if (!self.message || [self.message isEqualToString:@""]) {// If no message, show the default message
@@ -78,31 +74,31 @@
 						else messageString = NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil);
 					}
 				}
-				localNotif.alertBody = messageString;
+				notification.alertBody = messageString;
 				
-				localNotif.repeatInterval = 0;
-				localNotif.hasAction = YES;
+				notification.repeatInterval = 0;
+				notification.hasAction = YES;
 				
-				if ([self.songID isEqualToString:@"-1"]) {// Don't play any sound ("-1" means "none")
+				if ([self.songID isEqualToString:@"-1"]) { // Don't play any sound ("-1" means "none")
 					
-				} else if ([self.songID isEqualToString:@"default"]) {// Play default sound
-					localNotif.soundName = UILocalNotificationDefaultSoundName;
+				} else if ([self.songID isEqualToString:@"default"]) { // Play default sound
+					notification.soundName = UILocalNotificationDefaultSoundName;
 					
-				} else {// Play other sound from Songs folder
+				} else { // Play other sound from Songs folder
 					NSString * songPath = [NSString stringWithFormat:@"Songs/%@", [[NSBundle mainBundle] filenameForSongWithID:self.songID]];
-					localNotif.soundName = songPath;
+					notification.soundName = songPath;
 				}
 				
 				/* localNotif.userInfo => don't change userInfo, it alrealdy contains identifier */
 				
-				NSDebugLog(@"Update local notification: (%@ %@)", localNotif.fireDate, localNotif.alertBody);
+				NSDebugLog(@"Update local notification: (%@ %@)", notification.fireDate, notification.alertBody);
 				
-				[[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
+				[[UIApplication sharedApplication] scheduleLocalNotification:notification];
 			} else {
 				[self removeLocalNotification];
 			}
 			
-			/* Send a notification from the countdown/timer */
+			// Send a notification from the countdown/timer
 			[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidUpdateNotification
 																object:self];
 		});
@@ -111,9 +107,9 @@
 
 - (void)removeLocalNotification
 {
-	UILocalNotification * localNotif = [self localNotification];
-	if (localNotif) {
-		[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
+	UILocalNotification * notification = [self localNotification];
+	if (notification) {
+		[[UIApplication sharedApplication] cancelLocalNotification:notification];
 		NSDebugLog(@"Cancel local notification for countdown : %@ => %@", self.name, self.endDate.localizedDescription);
 	}
 }
@@ -214,9 +210,8 @@
 	NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:self.name
 																				attributes:attributes];
 	
-	NSDictionary * detailsAttrs = @{ NSForegroundColorAttributeName : [textColor colorWithAlphaComponent:0.5],
-									 NSParagraphStyleAttributeName : paragraphStyle,
-									 NSFontAttributeName : font };
+	NSMutableDictionary * detailsAttrs = attributes.mutableCopy;
+	detailsAttrs[NSForegroundColorAttributeName] = [textColor colorWithAlphaComponent:0.5];
 	
 	NSInteger nextIndex = (self.durationIndex ?: 0) + 1;
 	if (self.promptState == PromptStateNone)

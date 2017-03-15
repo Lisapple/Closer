@@ -9,6 +9,7 @@
 #import "CloserAppDelegate_Pad.h"
 #import "MainViewController_Pad.h"
 #import "DurationsViewController.h"
+#import "TimerPageView.h"
 
 #import "Countdown+addition.h"
 #import "NSString+addition.h"
@@ -71,7 +72,7 @@
 																	 preferredStyle:UIAlertControllerStyleAlert];
 			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 				// Start the next timer
-				[[NSNotificationCenter defaultCenter] postNotificationName:@"TimerDidContinueNotification" object:countdown]; }]];
+				[[NSNotificationCenter defaultCenter] postNotificationName:TimerDidContinueNotification object:countdown]; }]];
 			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
 			[self.window.rootViewController presentViewController:alert animated:YES completion:nil];

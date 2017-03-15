@@ -22,6 +22,9 @@
 @property (nonatomic, assign) BOOL idleTimerDisabled;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint * verticallyCenterConstraint;
 
+@property (nonatomic, strong) IBOutlet CCLabel * daysLabel, * hoursLabel, * minutesLabel, * secondsLabel;
+@property (nonatomic, strong) IBOutlet CCLabel * daysDescriptionLabel, * hoursDescriptionLabel, * minutesDescriptionLabel, * secondsDescriptionLabel;
+
 @end
 
 @implementation CountdownPageView
@@ -66,8 +69,6 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 
 - (void)setStyle:(CountdownStyle)aStyle
 {
-	super.style = aStyle;
-	
 	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
 	[self setTextColor:[UIColor textColorForStyle:aStyle]];
 }
@@ -76,7 +77,6 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 {
 	_daysLabel.textColor = _hoursLabel.textColor = _minutesLabel.textColor = _secondsLabel.textColor = textColor;
 	_daysDescriptionLabel.textColor = _hoursDescriptionLabel.textColor = _minutesDescriptionLabel.textColor = _secondsDescriptionLabel.textColor = textColor;
-	_nameLabel.textColor = textColor;
 }
 
 - (void)setCountdown:(Countdown *)aCountdown
@@ -87,7 +87,6 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 	if (oldCountdown != nil)
 		[self update];
 	
-	_nameLabel.text = self.countdown.name;
 	self.style = self.countdown.style;
 }
 
@@ -152,23 +151,6 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 		NSLocalizedString((seconds == 1) ? @"SECOND_ONE" : @"SECONDS_ZERO", nil) animated:animated];
 	
 	_contentView.hidden = NO;
-}
-
-- (CGPoint)position
-{
-	return _contentView.frame.origin;
-}
-
-- (void)setPosition:(CGPoint)aPosition
-{
-	self.position = aPosition;
-	
-	CGRect rect = _contentView.frame;
-	self.frame = CGRectMake(self.position.x, self.position.y, rect.size.width, rect.size.height);
-	
-	NSDebugLog(@"{%.1f, %.1f} {%.1f, %.1f}",
-			   _contentView.frame.origin.x, _contentView.frame.origin.y,
-			   _contentView.frame.size.width, _contentView.frame.size.height);
 }
 
 #pragma mark - Description
