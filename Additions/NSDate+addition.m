@@ -59,6 +59,13 @@
 	return [dateFormatter stringFromDate:self].integerValue;
 }
 
+- (NSInteger)daysFromNow
+{
+	NSCalendar * calendar = [NSCalendar currentCalendar];
+	NSDateComponents * components = [calendar components:NSCalendarUnitDay fromDate:[NSDate date] toDate:self options:0];
+	return components.day;
+}
+
 - (NSString *)naturalTimeString
 {
 	// Returns the more natural time format string. ex: 7h55
@@ -79,8 +86,7 @@
 	NSLocale * locale = [NSLocale currentLocale];
 	dateFormatter.locale = locale;
 	dateFormatter.dateStyle = NSDateFormatterShortStyle;
-	dateFormatter.dateFormat = @"EEEE d MMMM yyyy";
-	
+	dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"EEEEdMMMMyyyy" options:0 locale:nil];
 	return [dateFormatter stringFromDate:self].capitalizedString;
 }
 
@@ -108,7 +114,7 @@
 	return [dateFormatter stringFromDate:self];
 }
 
-- (NSString *)description
+- (NSString *)localizedDescription
 {
 	if (self.timeIntervalSinceNow < 0)
 		return nil;

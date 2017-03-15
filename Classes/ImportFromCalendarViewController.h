@@ -8,10 +8,7 @@
 
 @import EventKit;
 
-@interface ImportFromCalendarViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
-@property (nonatomic, strong) IBOutlet UIActivityIndicatorView * activityIndicatorView;
+@interface ImportFromCalendarViewController : UITableViewController <UISearchResultsUpdating>
 
 - (IBAction)import:(id)sender;
 

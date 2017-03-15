@@ -232,13 +232,24 @@
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 			cell.textLabel.textAlignment = NSTextAlignmentCenter;
 		}
+		cell.textLabel.textColor = nil;
 		if (indexPath.section == 2) { // Import
-			if (indexPath.row == 0)
+			if (indexPath.row == 0) {
 				cell.textLabel.text = NSLocalizedString(@"Import from Calendar", nil);
+				
+				EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+				BOOL granted = (status == EKAuthorizationStatusAuthorized || status == EKAuthorizationStatusNotDetermined);
+				if (!granted) {
+					cell.textLabel.textColor = [UIColor grayColor];
+				}
+			}
 			else // Shown only if connected to network
 				cell.textLabel.text = NSLocalizedString(@"Import with Passwords", nil);
-		} else // Export
+		} else if (indexPath.section == 3) { // Export
 			cell.textLabel.text = NSLocalizedString(@"Export Countdowns...", nil);
+		} else { // About
+			cell.textLabel.text = NSLocalizedString(@"About...", nil);
+		}
 	}
 	
 	return cell;
@@ -293,62 +304,63 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section <= 1) {
-        Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-        _settingsViewController.countdown = countdown;
-        [Countdown synchronize];
-        [aTableView deselectRowAtIndexPath:indexPath animated:YES];
-        [self dismissViewControllerAnimated:YES completion:NULL];
-        
-    } else if (indexPath.section == 2) { // Import
-			switch (indexPath.row) { // Import From Calendar
-				case 0: {
-					BOOL granted = YES;
-					if ([EKEventStore instancesRespondToSelector:@selector(requestAccessToEntityType:completion:)]) {
-						EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
-						granted = (status == EKAuthorizationStatusAuthorized || status == EKAuthorizationStatusNotDetermined);
-					}
+	if (indexPath.section <= 1) {
+		Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
+		_settingsViewController.countdown = countdown;
+		[Countdown synchronize];
+		[aTableView deselectRowAtIndexPath:indexPath animated:YES];
+		[self dismissViewControllerAnimated:YES completion:NULL];
+		
+	} else if (indexPath.section == 2) { // Import
+		switch (indexPath.row) { // Import From Calendar
+			case 0: {
+				EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+				BOOL granted = (status == EKAuthorizationStatusAuthorized || status == EKAuthorizationStatusNotDetermined);
+				if (granted) {
+					ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] initWithStyle:UITableViewStyleGrouped];
+					[self.navigationController pushViewController:importFromCalendarViewController animated:YES];
+				} else {
+					NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
+					UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Access Denied!", nil)
+																					message:message
+																			 preferredStyle:UIAlertControllerStyleAlert];
+					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+						[alert dismissViewControllerAnimated:YES completion:nil];
+					}]];
+					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+						NSURL * settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+						[[UIApplication sharedApplication] openURL:settingsURL];
+					}]];
 					
-					if (granted) {
-						ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
-						[self.navigationController pushViewController:importFromCalendarViewController animated:YES];
-					} else {
-						NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
-						UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Access Denied!", nil)
-																						message:message
-																				 preferredStyle:UIAlertControllerStyleAlert];
-						[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-							[alert dismissViewControllerAnimated:YES completion:nil]; }]];
-						[self presentViewController:alert animated:YES completion:nil];
-					}
+					[self presentViewController:alert animated:YES completion:nil];
 				}
-					break;
-				case 1: { // Import with Passwords
-					/* Show an alertView to introduce the import from passwords (if not already done) */
-					NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-					BOOL showsIntroductionMessage = !([userDefaults boolForKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"]);
-					if (showsIntroductionMessage) {
-						NSString * message = NSLocalizedString(@"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE", nil);
-						UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
-																						message:message
-																				 preferredStyle:UIAlertControllerStyleAlert];
-						[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-							[alert dismissViewControllerAnimated:YES completion:^{
-								ImportFromWebsiteViewController_Phone * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Phone alloc] init];
-								UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-								[self presentViewController:navigationController animated:YES completion:NULL];
-							}]; }]];
-						[self presentViewController:alert animated:YES completion:nil];
-						
-						[userDefaults setBool:YES forKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"];
-					} else {
-						ImportFromWebsiteViewController_Phone * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Phone alloc] init];
-						UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
-						[self presentViewController:navigationController animated:YES completion:NULL];
-					}
-					break;
+			}
+				break;
+			case 1: { // Import with Passwords
+				// Show an alertView to introduce the import from passwords (if not already done)
+				NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+				BOOL showsIntroductionMessage = !([userDefaults boolForKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"]);
+				if (showsIntroductionMessage) {
+					NSString * message = NSLocalizedString(@"IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE", nil);
+					UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
+																					message:message
+																			 preferredStyle:UIAlertControllerStyleAlert];
+					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+						dispatch_async(dispatch_get_main_queue(), ^{
+							ImportFromWebsiteViewController_Phone * controller = [[ImportFromWebsiteViewController_Phone alloc] init];
+							UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+							[self presentViewController:navigationController animated:YES completion:NULL];
+						});
+					}]];
+					[self presentViewController:alert animated:YES completion:nil];
+					
+					[userDefaults setBool:YES forKey:@"ImportWithPasswordsIntroductionMessageAlreadyShown"];
+				} else {
+					ImportFromWebsiteViewController_Phone * importFromWebsiteViewController = [[ImportFromWebsiteViewController_Phone alloc] init];
+					UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromWebsiteViewController];
+					[self presentViewController:navigationController animated:YES completion:NULL];
 				}
-				default: break;
+				break;
 			}
 			default: break;
 		}

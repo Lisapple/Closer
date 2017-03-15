@@ -169,7 +169,7 @@
 /* EditAllCountdownViewController */
 "Import from Calendar";
 "Access Denied!";
-"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.";
+"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings." = "Closer & Closer have not access to events from calendar. Please allow calendar access from iOS settings.";
 
 "Import with Passwords";
 "IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE" = "You need to have two valid passwords from closer.lisacintosh.com to import countdowns.\nYou can export your countdowns online from \"Export... > Export to website\".";

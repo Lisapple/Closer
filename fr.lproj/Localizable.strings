@@ -173,7 +173,7 @@
 /* EditAllCountdownViewController */
 "Import from Calendar" = "Importer depuis le calendrier";
 "Access Denied!" = "Accès refusé !";
-"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings." = "Closer & Closer n'a pas accès aux événements du calendrier. Vérifiez les réglages de confidentialité dans les réglages de votre %@";
+"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings." = "Closer & Closer n'a pas accès aux événements du calendrier. Vous devez en autoriser l'accès depuis les réglages iOS.";
 
 "Import with Passwords" = "Importer avec des codes";
 "IMPORT_WITH_PASSWORDS_INTRODUCTION_MESSAGE" = "Vous avez besoin de deux mots de passe de closer.lisacintosh.com pour importer ces décomptes.\nVous pouvez exporter vos décomptes en ligne depuis \"Exporter... > Exporter vers le site\".";

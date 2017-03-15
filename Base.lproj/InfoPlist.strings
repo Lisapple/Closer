@@ -8,3 +8,5 @@
 
 ADD_COUNTDOWN_SHORTCUT_TITLE = "New Countdown";
 ADD_TIMER_SHORTCUT_TITLE = "New Timer";
+
+"NSCalendarsUsageDescription" = "Allowing calendars access to be able to import event from it.";

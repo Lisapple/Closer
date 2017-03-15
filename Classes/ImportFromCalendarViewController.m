@@ -12,13 +12,27 @@
 
 #import "Countdown+addition.h"
 #import "EKEventStore+additions.h"
+#import "NSDate+addition.h"
+
+@interface ImportResultsController : UITableViewController
+
+@end
+
+@implementation ImportResultsController
+
+@end
+
 
 @interface ImportFromCalendarViewController ()
 
+@property (nonatomic, strong) ImportResultsController * resultsController;
+@property (nonatomic, strong) UISearchController * searchController;
+@property (nonatomic, strong) UIActivityIndicatorView * activityIndicatorView;
 @property (nonatomic, strong) UITableViewCell * checkedCell;
 
 @property (nonatomic, strong) NSMutableArray <EKCalendar *> * calendars;
 @property (nonatomic, strong) NSMutableArray <NSArray <EKEvent *> *> * calendarsEvents;
+@property (nonatomic, strong) NSMutableArray <NSArray <EKEvent *> *> * filteredCalendarsEvents;
 @property (nonatomic, strong) NSMutableArray <EKEvent *> * selectedEvents;
 @property (nonatomic, strong) EKEventStore * eventStore;
 @property (nonatomic, assign) NSInteger numberOfEvents;
@@ -40,41 +54,42 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 																						  target:self action:@selector(cancel:)];
 	_selectedEvents = [[NSMutableArray alloc] initWithCapacity:10];
-	_tableView.contentInset = UIEdgeInsetsMake(20., 0., 0., 0.);
 	
-	// Show the spinning wheel
+	_resultsController = [[ImportResultsController alloc] initWithStyle:UITableViewStyleGrouped];
+	_resultsController.tableView.delegate = self;
+	_resultsController.tableView.dataSource = self;
+	self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultsController];
+	self.searchController.searchResultsUpdater = self;
+	self.searchController.dimsBackgroundDuringPresentation = NO;
+	[self.searchController.searchBar sizeToFit];
+	self.tableView.tableHeaderView = self.searchController.searchBar;
+	self.definesPresentationContext = YES;
+	
+	_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectZero];
+	_activityIndicatorView.translatesAutoresizingMaskIntoConstraints = NO;
 	_activityIndicatorView.hidden = NO;
+	[self.tableView addSubview:_activityIndicatorView];
+	[self.tableView addConstraints:@[ [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
+																	  toItem:_activityIndicatorView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
+									  [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual
+																	  toItem:_activityIndicatorView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]]];
 	
-	/*
-	 When eventStore is released, all events and calendars disapear, we loose all references
-	 so eventStore is stored as ivar and manage memory manually.
-	 Note: reference to event are created from the evenStore himself, they don't change until the event change.
+	/* When eventStore is released, all events and calendars disapear, we loose all references
+	 *   so eventStore is stored as ivar and manage memory manually.
+	 * Note: reference to event are created from the evenStore himself, they don't change until the event change.
 	 */
 	_eventStore = [[EKEventStore alloc] init];
 	[_eventStore requestAccessToEntityType:EKEntityTypeEvent
 								completion:^(BOOL granted, NSError *error)
 	 {
 		 dispatch_async(dispatch_get_main_queue(), ^{
-			 
-			 /* Hide the spinning wheel */
-			 _activityIndicatorView.hidden = YES;
-			 
-			 NSDebugLog(@"Granted: %@", (granted) ? @"Yes" : @"No");
-			 
 			 if (granted) {
 				 [self reload];
-				 
 			 } else if (!granted) {
-				 NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Closer & Closer have not access to events from calendar. Check privacy settings for calendar from your %@ settings.", nil), [UIDevice currentDevice].localizedModel];
-				 UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Access Denied!", nil)
-																				 message:message
-																		  preferredStyle:UIAlertControllerStyleAlert];
-				 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-					 [alert dismissViewControllerAnimated:YES completion:nil]; }]];
-				 [self presentViewController:alert animated:YES completion:nil];
-				 
+				 [self dismissViewControllerAnimated:true completion:nil];
 			 } else if (error) {
-				 /* Show an alert with the error */
+				 _activityIndicatorView.hidden = YES;
+				 // Show an alert with the error
 				 UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
 																				 message:error.localizedDescription
 																		  preferredStyle:UIAlertControllerStyleAlert];
@@ -94,6 +109,9 @@
 												 name:EKEventStoreChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:)
 												 name:UIDeviceOrientationDidChangeNotification object:nil];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		self.tableView.contentOffset = CGPointMake(0, -20.); // Hide search bar
+	});
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -107,61 +125,66 @@
 - (void)reload
 {
 	static BOOL reloading = NO;
-	if (!reloading) {
-		reloading = YES;
-		
-		[_eventStore refreshSourcesIfNecessary];
-		
-		NSArray * allCalendars = [_eventStore calendarsForEntityType:EKEntityTypeEvent];
-		NSInteger count = allCalendars.count;
-		
-		/* Order calendars depending of the number of events */
-		NSArray * sortedCalendars = [allCalendars sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-			NSUInteger count1 = [_eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj1 includingRecurrent:NO];
-			NSUInteger count2 = [_eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj2 includingRecurrent:NO];
-			return -OrderComparisonResult(count1, count2);// Add "minus" to reverser order (descending)
-		}];
-		
-		_calendars = [[NSMutableArray alloc] initWithCapacity:count];
-		_calendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
-		
-		NSMutableArray * allCalendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
-		
-		_numberOfEvents = 0;
-		for (EKCalendar * calendar in sortedCalendars) {
-			NSArray * events = nil;
-			if (calendar.type == EKCalendarTypeBirthday) {
-				NSDateComponents * comps = [[NSCalendar currentCalendar] components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear)
-																		  fromDate:[NSDate date]];
-				comps.year = (comps.year + 1);
-				events = [_eventStore eventsWithStartDate:[NSDate date]
-												 endDate:[[NSCalendar currentCalendar] dateFromComponents:comps]
-												calendar:calendar];
-			} else // Get all future events from the current calendar
-				events = [_eventStore futureEventsFromCalendar:calendar includingRecurrent:NO];
+	dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+		if (!reloading) {
+			reloading = YES;
 			
-			if (events.count > 0) {
-				[_calendars addObject:calendar];
-				[allCalendarsEvents addObjectsFromArray:events];
+			[_eventStore refreshSourcesIfNecessary];
+			
+			NSArray * allCalendars = [_eventStore calendarsForEntityType:EKEntityTypeEvent];
+			NSInteger count = allCalendars.count;
+			
+			// Order calendars depending of the number of events
+			NSArray * sortedCalendars = [allCalendars sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+				NSUInteger count1 = [_eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj1 includingRecurrent:NO];
+				NSUInteger count2 = [_eventStore numberOfFutureEventsFromCalendar:(EKCalendar *)obj2 includingRecurrent:NO];
+				return -OrderComparisonResult(count1, count2); // Descending order
+			}];
+			
+			_calendars = [[NSMutableArray alloc] initWithCapacity:count];
+			_calendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
+			
+			NSMutableArray * allCalendarsEvents = [[NSMutableArray alloc] initWithCapacity:count];
+			
+			_numberOfEvents = 0;
+			for (EKCalendar * calendar in sortedCalendars) {
+				NSArray * events = nil;
+				if (calendar.type == EKCalendarTypeBirthday) {
+					NSDateComponents * comps = [[NSCalendar currentCalendar] components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear)
+																			   fromDate:[NSDate date]];
+					comps.year = (comps.year + 1);
+					events = [_eventStore eventsWithStartDate:[NSDate date]
+													  endDate:[[NSCalendar currentCalendar] dateFromComponents:comps]
+													 calendar:calendar];
+				} else // Get all future events from the current calendar
+					events = [_eventStore futureEventsFromCalendar:calendar includingRecurrent:NO];
 				
-				if (events) {
-					[_calendarsEvents addObject:events];
-					_numberOfEvents += events.count;
+				if (events.count > 0) {
+					[_calendars addObject:calendar];
+					[allCalendarsEvents addObjectsFromArray:events];
+					
+					if (events) {
+						[_calendarsEvents addObject:events];
+						_numberOfEvents += events.count;
+					}
 				}
 			}
+			_filteredCalendarsEvents = _calendarsEvents.copy;
+			
+			NSArray * selectedEventsCopy = _selectedEvents.copy;
+			for (EKEvent * event in selectedEventsCopy) {
+				if (![allCalendarsEvents containsObject:event])
+					[_selectedEvents removeObject:event];
+			}
+			
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self updateUI];
+				[self.tableView reloadData];
+				_activityIndicatorView.hidden = YES;
+				reloading = NO;
+			});
 		}
-		
-		NSArray * selectedEventsCopy = _selectedEvents.copy;
-		for (EKEvent * event in selectedEventsCopy) {
-			if (![allCalendarsEvents containsObject:event])
-				[_selectedEvents removeObject:event];
-		}
-		
-		[self updateUI];
-		[_tableView reloadData];
-		
-		reloading = NO;
-	}
+	});
 }
 
 - (void)updateUI
@@ -178,7 +201,7 @@
 		label.numberOfLines = 0; // Infinite number of line
 		label.textAlignment = NSTextAlignmentCenter;
 		label.textColor = [UIColor blackColor];
-		label.font = [UIFont systemFontOfSize:17.];
+		label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 		label.text = NSLocalizedString(@"No Future Events", nil);
 		self.tableView.tableHeaderView = label;
 	}
@@ -227,11 +250,11 @@
 		[self.tableView reloadData];
 		[self updateUI];
 	} else {
-		if (self.navigationController.viewControllers.count > 1) {// If the view controller has been pop intot the navigationController (iPhone)
+		if (self.navigationController.viewControllers.count > 1) { // iPhone
 			[self.navigationController popViewControllerAnimated:YES];
-		} else {// Else, it has been show as modal
+		} else { // Modal presentation (iPad)
 			[self dismissViewControllerAnimated:YES completion:NULL];
-			/* Send a notification to reload countdowns on main page */
+			// Send a notification to reload countdowns on main page
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"CountdownDidCreateNewNotification" object:nil];
 		}
 	}
@@ -239,9 +262,9 @@
 
 - (IBAction)cancel:(id)sender
 {
-	if (self.navigationController.viewControllers.count > 1) // If the view controller has been pop intot the navigationController (iPhone)
+	if (self.navigationController.viewControllers.count > 1) // iPhone
 		[self.navigationController popViewControllerAnimated:YES];
-	else // Else, it has been show as modal
+	else // Modal presentation (iPad)
 		[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -254,7 +277,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return (_calendarsEvents[section]).count;
+	return _filteredCalendarsEvents[section].count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -264,6 +287,9 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+	if (_filteredCalendarsEvents[section].count == 0)
+		return nil;
+	
 	CGFloat x = 15.;
 	UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 200., 36.)];
 	EKCalendar * calendar = _calendars[section];
@@ -284,7 +310,7 @@
 	label.backgroundColor = [UIColor clearColor];
 	label.text = calendar.title.uppercaseString;
 	label.textColor = [UIColor grayColor];
-	label.font = [UIFont systemFontOfSize:14.];
+	label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
 	[headerView addSubview:label];
 	
 	return headerView;
@@ -299,16 +325,15 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 	
-	NSArray * events = _calendarsEvents[indexPath.section];
-	EKEvent * event = events[indexPath.row];// Offset the row by one to count the section adding on tableView:numberOfRowsInSection:
+	NSArray * events = _filteredCalendarsEvents[indexPath.section];
+	EKEvent * event = events[indexPath.row];
 	cell.textLabel.text = event.title;
-	cell.detailTextLabel.text = event.startDate.description;
-	
-	cell.accessoryType = UITableViewCellAccessoryNone;
-	if ([_selectedEvents containsObject:event]) {
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	}
-	
+	unsigned long days = event.startDate.daysFromNow;
+	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ %ld %@",
+								 event.startDate.localizedDescription,
+								 NSLocalizedString(@"IMPORT_CALENDAR_IN_DAYS", nil), days,
+								 NSLocalizedString((days > 1) ? @"DAYS_MANY" : @"DAY_ONE", nil)];
+	cell.accessoryType = ([_selectedEvents containsObject:event]) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 	return cell;
 }
 
@@ -316,15 +341,14 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	EKEvent * event = _calendarsEvents[indexPath.section][indexPath.row];
+	EKEvent * event = _filteredCalendarsEvents[indexPath.section][indexPath.row];
 	
 	UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
 	if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
 		[_selectedEvents removeObject:event];
 		cell.accessoryType = UITableViewCellAccessoryNone;
-		
 	} else {
-		if (![_selectedEvents containsObject:event]) // Just check, ther is probably no way to get duplicates, but in the case of...
+		if (![_selectedEvents containsObject:event])
 			[_selectedEvents addObject:event];
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	}
@@ -332,6 +356,23 @@
 	[self updateUI];
 	
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - Search results updating
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+	if (searchController.active && searchController.searchBar.text.length > 0) {
+		_filteredCalendarsEvents = [[NSMutableArray alloc] initWithCapacity:_calendarsEvents.count];
+		for (NSArray<EKEvent *> * events in _calendarsEvents) {
+			NSPredicate * predicate = [NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", searchController.searchBar.text];
+			[_filteredCalendarsEvents addObject:[events filteredArrayUsingPredicate:predicate]];
+		}
+		[_resultsController.tableView reloadData];
+	} else {
+		_filteredCalendarsEvents = _calendarsEvents.copy;
+		[self.tableView reloadData];
+	}
 }
 
 - (void)deviceOrientationDidChange:(NSNotification *)aNotification

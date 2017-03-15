@@ -64,6 +64,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Allowing calendars access to be able to import event from it.</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
