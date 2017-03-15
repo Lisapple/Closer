@@ -7,6 +7,7 @@
 //
 
 #import "TimerPageView.h"
+#import "UIView+addition.h"
 
 @interface PageView ()
 
@@ -35,8 +36,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    if ((self = [super initWithFrame:frame])) {
-		UINib * nib = [UINib nibWithNibName:@"TimerPageView" bundle:[NSBundle mainBundle]];
+	if ((self = [super initWithFrame:frame])) {
+		UINib * nib = [UINib nibWithNibName:@"TimerPageView" bundle:nil];
 		[nib instantiateWithOwner:self options:nil];
 		
 		_contentView.frame = self.bounds;
@@ -96,8 +97,8 @@
 		[self.timerView addGestureRecognizer:pan];
 		
 		_idleTimerDisabled = NO;
-    }
-    return self;
+	}
+	return self;
 }
 
 - (void)layoutSubviews

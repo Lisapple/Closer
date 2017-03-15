@@ -7,7 +7,10 @@
 //
 
 #import "TimerTableViewCell.h"
+#import "Utilities.h"
+
 #import "NSArray+addition.h"
+#import "NSMutableAttributedString+addition.h"
 
 @interface TimerTableViewCell ()
 
@@ -43,41 +46,41 @@
 
 - (void)setName:(NSString *)name
 {
-    _name = name;
-    [self update];
+	_name = name;
+	[self update];
 }
 
 - (void)setDuration:(NSInteger)duration
 {
-    _duration = duration;
-    [self update];
+	_duration = duration;
+	[self update];
 }
 
 - (void)setRemaining:(NSInteger)remaining
 {
-    _remaining = remaining;
-    [self update];
+	_remaining = remaining;
+	[self update];
 }
 
 - (NSString *)formattedDuration
 {
-    double seconds = _remaining;
-    if (seconds <= 0)
-        return NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil);
-    
-    double days = seconds / (24. * 60. * 60.);
-    if (floor(days) >= 2.)
-        return [NSString stringWithFormat:@"%d %@", (int)ceil(days), (days > 1) ? NSLocalizedString(@"days", nil) : NSLocalizedString(@"day", nil)];
-    
-    double hours = seconds / (60. * 60.);
-    if (floor(hours) >= 2.)
-        return [NSString stringWithFormat:@"%d %@", (int)ceil(hours), (hours > 1) ? NSLocalizedString(@"hours", nil) : NSLocalizedString(@"hour", nil)];
-    
-    double minutes = seconds / 60.;
-    if (floor(minutes) >= 2.)
-        return [NSString stringWithFormat:@"%d %@", (int)ceil(minutes), NSLocalizedString(@"min", nil)];
-    
-    return [NSString stringWithFormat:@"%d %@", (int)ceil(seconds), NSLocalizedString(@"sec", nil)];
+	double seconds = _remaining;
+	if (seconds <= 0)
+		return NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil);
+	
+	double days = seconds / (24. * 60. * 60.);
+	if (floor(days) >= 2.)
+		return [NSString stringWithFormat:@"%d %@", (int)ceil(days), (days > 1) ? NSLocalizedString(@"days", nil) : NSLocalizedString(@"day", nil)];
+	
+	double hours = seconds / (60. * 60.);
+	if (floor(hours) >= 2.)
+		return [NSString stringWithFormat:@"%d %@", (int)ceil(hours), (hours > 1) ? NSLocalizedString(@"hours", nil) : NSLocalizedString(@"hour", nil)];
+	
+	double minutes = seconds / 60.;
+	if (floor(minutes) >= 2.)
+		return [NSString stringWithFormat:@"%d %@", (int)ceil(minutes), NSLocalizedString(@"min", nil)];
+	
+	return [NSString stringWithFormat:@"%d %@", (int)ceil(seconds), NSLocalizedString(@"sec", nil)];
 }
 
 - (void)update

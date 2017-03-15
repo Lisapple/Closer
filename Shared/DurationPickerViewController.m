@@ -44,7 +44,7 @@
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
 													  object:nil queue:nil
-												  usingBlock:^(NSNotification * _Nonnull note)
+												  usingBlock:^(NSNotification * note)
 	 {
 		 CGRect keyboardFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 		 self.tableView.contentInset = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, keyboardFrame.size.height, 0);
@@ -52,7 +52,7 @@
 	 }];
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification
 													  object:nil queue:nil
-												  usingBlock:^(NSNotification * _Nonnull note)
+												  usingBlock:^(NSNotification * note)
 	 {
 		 self.tableView.contentInset = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, 0, 0);
 		 self.tableView.scrollIndicatorInsets = self.tableView.contentInset; }];
@@ -67,7 +67,7 @@
 		if (duration.integerValue == 0) { // Remove empty durations
 			NSInteger index = [_countdown.durations indexOfObject:duration];
 			if (index != NSNotFound)
-				[_countdown removeDurationAtIndex:index];
+				[_countdown removeDurationAtIndex:index];// @FIXME: This may crashes "*** -[__NSArrayM removeObjectAtIndex:]: index 0 beyond bounds for empty array"
 		}
 	}
 }

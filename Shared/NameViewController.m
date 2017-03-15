@@ -16,7 +16,7 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    _tableView.alwaysBounceVertical = YES;
+	_tableView.alwaysBounceVertical = YES;
 	
 	_cellTextField.text = _countdown.name;
 	_cellTextField.delegate = self;
@@ -49,9 +49,9 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    if (_countdown.type == CountdownTypeTimer)
-        return NSLocalizedString(@"The name of the timer can help you to identify it.", nil);
-		
+	if (_countdown.type == CountdownTypeTimer)
+		return NSLocalizedString(@"The name of the timer can help you to identify it.", nil);
+	
 	return NSLocalizedString(@"The name of the countdown can help you to identify it.", nil);
 }
 

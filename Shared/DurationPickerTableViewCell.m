@@ -12,8 +12,8 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
-        // Initialization code
+	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
+		// Initialization code
 		
 		CGRect rect = CGRectMake(0., 10., self.frame.size.width, 20.);
 		_label = [[UILabel alloc] initWithFrame:rect];
@@ -27,15 +27,15 @@
 		_pickerView = [[DurationPickerView alloc] initWithFrame:rect];
 		_pickerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		[self.contentView addSubview:_pickerView];
-    }
-    return self;
+	}
+	return self;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+	[super setSelected:selected animated:animated];
+	
+	// Configure the view for the selected state
 }
 
 @end

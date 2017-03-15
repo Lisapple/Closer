@@ -7,7 +7,7 @@
 //
 
 #import "ImportFromWebsiteViewController_Phone.h"
-#import "Countdown.h"
+#import "NSDate+addition.h"
 
 @interface ImportFromWebsiteViewController_Phone ()
 
@@ -26,7 +26,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Import", nil);
 	

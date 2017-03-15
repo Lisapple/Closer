@@ -74,9 +74,9 @@ static NSMutableArray * _countdowns = nil;
 		
 		NSPropertyListFormat format = NSPropertyListXMLFormat_v1_0;
 		_propertyList = [NSPropertyListSerialization propertyListWithData:data
-                                                                  options:NSPropertyListMutableContainersAndLeaves
-                                                                   format:&format
-                                                                    error:&error];
+																  options:NSPropertyListMutableContainersAndLeaves
+																   format:&format
+																	error:&error];
 		if (![_propertyList isKindOfClass:[NSMutableArray class]])
 			[NSException raise:@"CountdownException" format:@"Countdown.plist should be an mutable array based format."];
 		
@@ -177,58 +177,57 @@ static NSMutableArray * _countdowns = nil;
 													handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 			UIViewController * rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
 			[rootViewController presentViewController:alert animated:YES completion:nil];
-        }
-    }];
+		}
+	}];
 }
 
 + (void)synchronize_async
 {
-    [self synchronizeWithCompletion:NULL];
+	[self synchronizeWithCompletion:NULL];
 }
 
 + (void)synchronizeWithCompletion:(void (^)(BOOL success, NSError * error))completionHandler
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        @synchronized(_countdowns) {
-            [_propertyList removeAllObjects];
-            [_countdowns enumerateObjectsUsingBlock:^(Countdown *countdown, NSUInteger idx, BOOL *stop) {
-                [_propertyList addObject:[countdown countdownToDictionary]]; }];
-        }
-        
-        NSError * error = nil;
+	dispatch_async(dispatch_get_main_queue(), ^{
+		
+		@synchronized(_countdowns) {
+			[_propertyList removeAllObjects];
+			[_countdowns enumerateObjectsUsingBlock:^(Countdown *countdown, NSUInteger idx, BOOL *stop) {
+				[_propertyList addObject:[countdown countdownToDictionary]]; }];
+		}
+		
+		NSError * error = nil;
 		const NSPropertyListFormat format = NSPropertyListBinaryFormat_v1_0;
-        NSData * data = [NSPropertyListSerialization dataWithPropertyList:_propertyList format:format options:0 error:&error];
-        if (!data) {
-            NSLog(@"Error when serialize property list : %@", error.localizedDescription);
-            
-            if (completionHandler) {
-                NSError * error = [NSError errorWithDomain:@"CountdownErrorDomain"
-                                                      code:1
-                                                  userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"READING_ERROR_ALERT_MESSAGE", nil) }];
-                completionHandler(NO, error);
-            }
-            return;
-        }
-        
-        error = nil;
-        BOOL succeed = [data writeToFile:_countdownsListPath options:NSDataWritingAtomic error:&error]; // Write data atomically
-        if (!succeed) {
-            NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, error.localizedDescription);
-            
-            if (completionHandler) {
-                NSError * error = [NSError errorWithDomain:@"CountdownErrorDomain"
-                                                      code:2
-                                                  userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"WRITING_ERROR_ALERT_TITLE", nil) }];
-                completionHandler(NO, error);
-            }
-            return;
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
-        if (completionHandler)
-            completionHandler(YES, nil);
-    });
+		NSData * data = [NSPropertyListSerialization dataWithPropertyList:_propertyList format:format options:0 error:&error];
+		if (!data) {
+			NSLog(@"Error when serialize property list : %@", error.localizedDescription);
+			
+			if (completionHandler) {
+				NSError * error = [NSError errorWithDomain:@"CountdownErrorDomain"
+													  code:1
+												  userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"READING_ERROR_ALERT_MESSAGE", nil) }];
+				completionHandler(NO, error);
+			}
+			return;
+		}
+		
+		error = nil;
+		BOOL succeed = [data writeToFile:_countdownsListPath options:NSDataWritingAtomic error:&error]; // Write data atomically
+		if (!succeed) {
+			NSLog(@"error on writing file to : %@ => [%@]", _countdownsListPath, error.localizedDescription);
+			
+			if (completionHandler) {
+				NSError * error = [NSError errorWithDomain:@"CountdownErrorDomain" code:2
+												  userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"WRITING_ERROR_ALERT_TITLE", nil) }];
+				completionHandler(NO, error);
+			}
+			return;
+		}
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+		if (completionHandler)
+			completionHandler(YES, nil);
+	});
 }
 
 + (NSInteger)numberOfCountdowns
@@ -336,11 +335,11 @@ static NSMutableArray * _countdowns = nil;
 
 + (NSArray *)styles
 {
-    return @[ NSLocalizedString(@"PAGE_STYLE_NIGHT", nil),
-              NSLocalizedString(@"PAGE_STYLE_DAY", nil),
-              NSLocalizedString(@"PAGE_STYLE_DAWN", nil),
-              NSLocalizedString(@"PAGE_STYLE_OASIS", nil),
-              NSLocalizedString(@"PAGE_STYLE_SPRING", nil) ];
+	return @[ NSLocalizedString(@"PAGE_STYLE_NIGHT", nil),
+			  NSLocalizedString(@"PAGE_STYLE_DAY", nil),
+			  NSLocalizedString(@"PAGE_STYLE_DAWN", nil),
+			  NSLocalizedString(@"PAGE_STYLE_OASIS", nil),
+			  NSLocalizedString(@"PAGE_STYLE_SPRING", nil) ];
 }
 
 #pragma mark - Instance methods
@@ -366,7 +365,7 @@ static NSMutableArray * _countdowns = nil;
 	dictionary[@"identifier"] = self.identifier;
 	dictionary[@"style"] = @(self.style);
 	dictionary[@"type"] = @(self.type);
-    dictionary[@"notificationCenter"] = @(self.notificationCenter);
+	dictionary[@"notificationCenter"] = @(self.notificationCenter);
 	
 	return dictionary;
 }
@@ -414,7 +413,7 @@ static NSMutableArray * _countdowns = nil;
 		_songID = @"default";
 		_style = 0;
 		_type = CountdownTypeCountdown;
-        _notificationCenter = YES;
+		_notificationCenter = YES;
 		
 		_durations = [[NSMutableArray alloc] initWithCapacity:5];
 		_names = [[NSMutableArray alloc] initWithCapacity:5];
@@ -495,9 +494,8 @@ static NSMutableArray * _countdowns = nil;
 - (void)setEndDate:(NSDate *)aDate
 {
 	if (![_endDate isEqualToDate:aDate]) {
-		if (aDate && _endDate) {
+		if (aDate && _endDate)
 			[Countdown tagEndDate:aDate];
-		}
 		
 		_endDate = aDate;
 		_paused = (_endDate == nil);
@@ -535,12 +533,12 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)update
 {
-    [self updateLocalNotification];
+	[self updateLocalNotification];
 }
 
 - (void)remove
 {
-    [self removeLocalNotification];
+	[self removeLocalNotification];
 }
 
 #pragma mark - Timer
@@ -705,9 +703,8 @@ static NSMutableArray * _countdowns = nil;
 	long minutes = seconds / 60; seconds -= minutes * 60;
 	
 	NSInteger count = (days > 0) + (hours > 0) + (minutes > 0) + (seconds > 0);
-	
-	NSMutableArray * components = [[NSMutableArray alloc] initWithCapacity:4];
-	if (count > 2) {
+	NSMutableArray * components = [[NSMutableArray alloc] initWithCapacity:count];
+	if (count >= 3) {
 		if (days) [components addObject:[NSString stringWithFormat:@"%ld%@", days, NSLocalizedString(@"d", nil)]];
 		if (hours) [components addObject:[NSString stringWithFormat:@"%ld%@", hours, NSLocalizedString(@"h", nil)]];
 		if (minutes) [components addObject:[NSString stringWithFormat:@"%ld%@", minutes, NSLocalizedString(@"m", nil)]];
@@ -718,7 +715,6 @@ static NSMutableArray * _countdowns = nil;
 		if (minutes) [components addObject:[NSString stringWithFormat:@"%ld %@ ", minutes, NSLocalizedString(@"min", nil)]];
 		if (seconds) [components addObject:[NSString stringWithFormat:@"%ld %@ ", seconds, NSLocalizedString(@"sec", nil)]];
 	}
-	
 	return [components componentsJoinedByString:@", " withLastJoin:NSLocalizedString(@" and ", nil)]; // "12 min and 34 sec", "12d, 34h, 56m and 12s"
 }
 
@@ -765,8 +761,8 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)dealloc
 {
-    // Remove the notification
-    [self remove];
+	// Remove the notification
+	[self remove];
 }
 
 @end

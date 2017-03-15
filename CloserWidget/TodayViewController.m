@@ -22,19 +22,19 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.rowHeight = 37.;
-    _tableView.separatorInset = UIEdgeInsetsZero;
+	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	_tableView.rowHeight = 37.;
+	_tableView.separatorInset = UIEdgeInsetsZero;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.
-                                              target:_tableView selector:@selector(reloadData)
-                                            userInfo:nil repeats:YES];
+	[super viewWillAppear:animated];
+	_timer = [NSTimer scheduledTimerWithTimeInterval:1.
+											  target:_tableView selector:@selector(reloadData)
+											userInfo:nil repeats:YES];
 	
 	NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
 	_countdowns = [widgetDefaults arrayForKey:@"countdowns"];
@@ -44,9 +44,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    [_timer invalidate];
-    _timer = nil;
+	[super viewWillDisappear:animated];
+	[_timer invalidate];
+	_timer = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,12 +66,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _countdowns.count;
+	return _countdowns.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

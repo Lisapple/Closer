@@ -49,11 +49,11 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    if ((self = [super initWithFrame:frame])) {
+	if ((self = [super initWithFrame:frame])) {
 		self.showsHorizontalScrollIndicator = NO;
 		self.alwaysBounceHorizontal = YES;
 	}
-    return self;
+	return self;
 }
 
 - (BOOL)isOpaque
@@ -105,16 +105,16 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    if ((self = [super initWithFrame:frame])) {
-        [self initialize];
+	if ((self = [super initWithFrame:frame])) {
+		[self initialize];
 	}
-    return self;
+	return self;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
 	if ((self = [super initWithCoder:aDecoder])) {
-        [self initialize];
+		[self initialize];
 	}
 	return self;
 }

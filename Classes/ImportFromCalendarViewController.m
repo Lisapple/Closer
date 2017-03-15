@@ -36,11 +36,9 @@
 	self.title = NSLocalizedString(@"Choose Events", nil);
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
 																			  style:UIBarButtonItemStyleDone
-																			 target:self
-																			 action:@selector(import:)];
+																			 target:self action:@selector(import:)];
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-																						  target:self
-																						  action:@selector(cancel:)];
+																						  target:self action:@selector(cancel:)];
 	_selectedEvents = [[NSMutableArray alloc] initWithCapacity:10];
 	_tableView.contentInset = UIEdgeInsetsMake(20., 0., 0., 0.);
 	
@@ -54,7 +52,7 @@
 	 */
 	_eventStore = [[EKEventStore alloc] init];
 	[_eventStore requestAccessToEntityType:EKEntityTypeEvent
-							   completion:^(BOOL granted, NSError *error)
+								completion:^(BOOL granted, NSError *error)
 	 {
 		 dispatch_async(dispatch_get_main_queue(), ^{
 			 
@@ -80,7 +78,7 @@
 				 UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
 																				 message:error.localizedDescription
 																		  preferredStyle:UIAlertControllerStyleAlert];
-				 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 					 [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 				 [self presentViewController:alert animated:YES completion:nil];
 			 }
@@ -170,14 +168,14 @@
 {
 	self.navigationItem.rightBarButtonItem.enabled = (_selectedEvents.count > 0);
 	
-	/* Show "No Future Events" if no future events (for all calendars) */
+	// Show "No Future Events" if no future events (for all calendars)
 	if (_numberOfEvents == 0) {
 		CGRect frame = CGRectMake(0., 0., self.tableView.frame.size.width, self.tableView.frame.size.height - 84.);
 		UILabel * label = [[UILabel alloc] initWithFrame:frame];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		label.backgroundColor = [UIColor clearColor];
 		label.lineBreakMode = NSLineBreakByCharWrapping;
-		label.numberOfLines = 0;// Infinite number of line
+		label.numberOfLines = 0; // Infinite number of line
 		label.textAlignment = NSTextAlignmentCenter;
 		label.textColor = [UIColor blackColor];
 		label.font = [UIFont systemFontOfSize:17.];
@@ -191,7 +189,7 @@
 	BOOL limitReached = NO;
 	NSInteger index = 0;
 	for (EKEvent * event in _selectedEvents) {
-		if ([Countdown allCountdowns].count > 18) {// If we reach the limit (18 for all countdowns), show an alertView and stop importing
+		if ([Countdown allCountdowns].count > 18) { // If we reach the limit (18 for all countdowns), show an alertView and stop importing
 			limitReached = YES;
 			break;
 		} else {
@@ -202,13 +200,12 @@
 	}
 	
 	if (limitReached) {
-		EKEvent * event = _selectedEvents[index];// Get the first event that is not imported (event at index "index")
-		NSInteger remainingCount = _selectedEvents.count - index - 1;// Number of event that remaining excluding "event"
+		EKEvent * event = _selectedEvents[index]; // Get the first event that is not imported (event at index "index")
+		NSInteger remainingCount = _selectedEvents.count - index - 1; // Number of event that remaining excluding "event"
 		
 		NSString * andMoreString = NSLocalizedString(@"and one more", nil);
-		if (remainingCount > 1) {
+		if (remainingCount > 1)
 			andMoreString = [NSString stringWithFormat:NSLocalizedString(@"and %i more", nil), remainingCount];
-		}
 		
 		NSString * message = nil;
 		if (remainingCount == 0) {
@@ -227,7 +224,7 @@
 		[self presentViewController:alert animated:YES completion:nil];
 		
 		[_selectedEvents removeAllObjects];
-		[_tableView reloadData];
+		[self.tableView reloadData];
 		[self updateUI];
 	} else {
 		if (self.navigationController.viewControllers.count > 1) {// If the view controller has been pop intot the navigationController (iPhone)
@@ -296,7 +293,7 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -339,7 +336,7 @@
 
 - (void)deviceOrientationDidChange:(NSNotification *)aNotification
 {
-	[_tableView reloadData];
+	[self.tableView reloadData];
 }
 
 @end

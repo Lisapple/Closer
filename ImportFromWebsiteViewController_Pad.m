@@ -7,6 +7,7 @@
 //
 
 #import "ImportFromWebsiteViewController_Pad.h"
+#import "NSDate+addition.h"
 
 @interface ImportFromWebsiteViewController_Pad ()
 
@@ -74,9 +75,9 @@
 
 - (IBAction)reshowKeyboardAction:(id)sender
 {
-	/* If the keyboard if not shown */
+	// If the keyboard if not shown
 	if (!_hiddenTextField1.isFirstResponder && !_hiddenTextField2.isFirstResponder) {
-		/* If the first password field is not full, make it as first responder; else make "_hiddenTextField2" is first responder */
+		// If the first password field is not full, make it as first responder; else make "_hiddenTextField2" is first responder
 		(_password1.length < 4)? [_hiddenTextField1 becomeFirstResponder] : [_hiddenTextField2 becomeFirstResponder];
 	}
 }
@@ -307,7 +308,7 @@
 	cell.textLabel.text = countdown.name;
 	
 	if (countdown.endDate.timeIntervalSinceNow > 0) {
-		cell.detailTextLabel.text = countdown.endDate.description;
+		cell.detailTextLabel.text = countdown.endDate.localizedDescription;
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		

@@ -51,8 +51,8 @@ void NetworkReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReach
 	NSDebugLog(@"%@", (connected)? @"Connected": @"Not connected");
 	
 	if (oldStatus != (int)connected) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:NetworkStatusDidChangeNotification
-                                                            object:@(connected)];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NetworkStatusDidChangeNotification
+															object:@(connected)];
 		oldStatus = (int)connected;
 	}
 }

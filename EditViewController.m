@@ -7,6 +7,7 @@
 //
 
 #import "EditViewController.h"
+#import "NSDate+addition.h"
 
 @interface EditViewController ()
 
@@ -22,10 +23,10 @@
 	[super viewDidLoad];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	self.tableView.allowsSelectionDuringEditing = YES;
 	self.tableView.editing = YES;
-    [self reloadData];
+	[self reloadData];
 }
 
 - (void)reloadData
@@ -44,16 +45,16 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-    
+	[super viewDidAppear:animated];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData)
 												 name:CountdownDidSynchronizeNotification object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
-    
+	[super viewDidDisappear:animated];
+	
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:CountdownDidSynchronizeNotification object:nil];
 }

@@ -7,7 +7,10 @@
 //
 
 #import "CountdownTableViewCell.h"
+#import "Utilities.h"
+
 #import "NSArray+addition.h"
+#import "NSMutableAttributedString+addition.h"
 
 @interface CountdownTableViewCell ()
 
@@ -43,14 +46,14 @@
 
 - (void)setName:(NSString *)name
 {
-    _name = name;
-    [self update];
+	_name = name;
+	[self update];
 }
 
 - (void)setEndDate:(NSDate *)endDate
 {
-    _endDate = endDate;
-    [self update];
+	_endDate = endDate;
+	[self update];
 }
 
 - (NSString *)endDateDescription

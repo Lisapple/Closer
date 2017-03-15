@@ -28,10 +28,10 @@
 	[Fabric with:@[ CrashlyticsKit ]];
 #endif
 	
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+	if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
 		UIUserNotificationType type = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
-    }
+		[application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
+	}
 	
 	self.window.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1];
 	self.window.tintColor = [UIColor darkGrayColor];
@@ -44,7 +44,7 @@
 	
 	[Countdown buildingSpolightIndexWithCompletionHandler:nil];
 	
-    return YES;
+	return YES;
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification

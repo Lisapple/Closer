@@ -6,9 +6,9 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import "SettingsViewController_Phone.h"
 @import Crashlytics;
 
+#import "SettingsViewController.h"
 #import "CountdownPageView.h"
 #import "TimerPageView.h"
 
@@ -51,7 +51,7 @@
 - (void)updateTimeLabels;
 - (void)stopUpdateTimeLabels;
 
-// Go To Settings
+// Actions
 
 - (IBAction)showSettings:(id)sender;
 

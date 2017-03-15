@@ -13,7 +13,6 @@
 
 #import "UIView+addition.h"
 
-#import <Crashlytics/Crashlytics.h>
 
 @interface MainViewController_Phone ()
 {
@@ -32,11 +31,17 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 #pragma mark - View lifecycle
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+	if ((self = [super initWithCoder:aDecoder])) {
+		self.pages = [[NSMutableArray alloc] initWithCapacity:3];
+	}
+	return self;
+}
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	
-	self.pages = [[NSMutableArray alloc] initWithCapacity:3];
 	
 	_imageView.image = [UIImage imageNamed:@"Background"];
 	
@@ -44,7 +49,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.alwaysBounceHorizontal = YES;
 	_scrollView.delegate = self;
-    _scrollView.clipsToBounds = YES;
+	_scrollView.clipsToBounds = YES;
 	_scrollView.delaysContentTouches = NO;
 	
 	_pageControl.autoresizingMask |= UIViewAutoresizingFlexibleHeight; // Add flexible height (Unavailable from IB)
@@ -57,7 +62,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 	
 	_createCountdownLabel.origin = CGPointMake(15, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
 	_createCountdownLabel.alpha = 0;
-	
 	[self.view insertSubview:_createCountdownLabel atIndex:0];
 }
 
@@ -405,9 +409,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_imageView.origin = point;
 	
 	CGFloat x = 15;
-	if (point.x < 0) {
+	if (point.x < 0)
 		x = self.view.frame.size.width - _createCountdownLabel.frame.size.width - 15;
-	}
+	
 	_createCountdownLabel.origin = CGPointMake(x, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
 	_createCountdownLabel.alpha = (ABS(point.x) > 40) ? 1 : ((ABS(point.x) - 20) / 40);
 	

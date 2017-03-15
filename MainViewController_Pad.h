@@ -10,8 +10,8 @@
 @import QuartzCore;
 @import Crashlytics;
 
-#import "SettingsViewController_Pad.h"
-#import "PageView.h"
+#import "SettingsViewController.h"
+#import "PageViewContainer.h"
 
 @interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, PageViewDelegate, UIPopoverControllerDelegate>
 

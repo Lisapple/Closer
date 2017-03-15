@@ -24,7 +24,7 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    _tableView.alwaysBounceVertical = YES;
+	_tableView.alwaysBounceVertical = YES;
 	
 	_cellsTitle = @[NSLocalizedString(@"Never", nil), NSLocalizedString(@"At the end of each timer", nil), NSLocalizedString(@"When all timers are finished", nil)];
 }

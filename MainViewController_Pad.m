@@ -10,6 +10,7 @@
 
 #import "CountdownPageView.h"
 #import "TimerPageView.h"
+#import "PageViewContainer.h"
 
 #import "ImportFromCalendarViewController.h"
 #import "ImportFromWebsiteViewController_Pad.h"
@@ -444,7 +445,7 @@
 	
 	[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 	
-	CGSize screenSize = ([UIScreen mainScreen].bounds.size);
+	CGSize screenSize = [UIScreen mainScreen].bounds.size;
 	if /**/ (orientationMask & UIInterfaceOrientationMaskLandscape && screenSize.height > screenSize.width)
 		screenSize = CGSizeMake(screenSize.height, screenSize.width);
 	else if (orientationMask & UIInterfaceOrientationMaskPortrait && screenSize.height < screenSize.width)
@@ -490,12 +491,12 @@
 
 - (PageView *)createPageWithCountdown:(Countdown *)countdown atIndex:(NSInteger)index animated:(BOOL)animated
 {
-	const int numberOfRows = 2;
-	const int numberOfColumns = 2;
+	const NSInteger numberOfRows = 2;
+	const NSInteger numberOfColumns = 2;
 	
-	const int i = index % (numberOfRows * numberOfColumns);
-	const int row = i / numberOfRows;
-	const int col = i % numberOfRows;
+	const NSInteger i = index % (numberOfRows * numberOfColumns);
+	const NSInteger row = i / numberOfRows;
+	const NSInteger col = i % numberOfRows;
 	NSInteger page = index / (numberOfRows * numberOfColumns);
 	
 	int pageOffset = page * _scrollView.frame.size.width;
@@ -671,14 +672,6 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
 												 name:UIKeyboardWillHideNotification object:nil];
 	[self setNeedsStatusBarAppearanceUpdate];
-	
-	[_pageControl addObserver:self forKeyPath:@"currentPage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:nil];
-}
-
-- (void)dealloc
-{
-	[_pageControl removeObserver:self forKeyPath:@"currentPage"];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -781,6 +774,11 @@
 	
 	_currentOrientation = (size.height > size.width) ? UIInterfaceOrientationMaskPortrait : UIInterfaceOrientationMaskLandscape;
 	[self updateLayout];
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

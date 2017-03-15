@@ -20,7 +20,7 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    _tableView.alwaysBounceVertical = YES;
+	_tableView.alwaysBounceVertical = YES;
 	_tableView.allowsSelectionDuringEditing = YES;
 	_tableView.editing = YES;
 	
@@ -30,7 +30,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+	[super viewWillAppear:animated];
 	[self reloadData];
 }
 

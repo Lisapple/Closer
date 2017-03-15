@@ -12,7 +12,6 @@
 {
 	NSUndoManager * _undoManager;
 }
-
 @end
 
 @implementation MyTextView
@@ -38,11 +37,11 @@
 
 @implementation MessageViewControler
 
-const CGFloat kHeightRowLandscape = 60.;
-const CGFloat kHeightRowPortrait = 120.;
-
-const CGFloat kKeyboardHeightPortrait = 216.;
-const CGFloat kKeyboardHeightLandscape = 162.;
+- (instancetype)init
+{
+	if ((self = [super initWithStyle:UITableViewStyleGrouped])) { }
+	return self;
+}
 
 - (void)viewDidLoad
 {
@@ -201,7 +200,7 @@ const CGFloat kKeyboardHeightLandscape = 162.;
 
 - (BOOL)canBecomeFirstResponder
 {
-	return YES;// Return YES to receive shake to undo gesture
+	return YES; // Return YES to receive shake to undo gesture
 }
 
 @end

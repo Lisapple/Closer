@@ -8,8 +8,6 @@
 
 #import "DatePickerViewController.h"
 
-#import "Countdown.h"
-
 #import "NSDate+addition.h"
 #import "NSObject+additions.h"
 
@@ -185,11 +183,11 @@
 	
 	if (indexPath.row == 0) // Days
 		_datePicker.datePickerMode = UIDatePickerModeDate;
-	else {// Time
+	else { // Time
 		_datePicker.datePickerMode = UIDatePickerModeTime;
 		
 		if (!_hasTimeDate) {
-			[self datePickerDidChange:nil];// Force datePickerDidChange: call when datePicker set minimum date automatly (when date is earlier than datePicker minium date per example)
+			[self datePickerDidChange:nil];// Force datePickerDidChange: call when datePicker set minimum date automatically (when date is earlier than datePicker minium date per example)
 			_hasTimeDate = YES;
 		}
 	}

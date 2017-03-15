@@ -12,6 +12,8 @@
 #import "VCalendar.h"
 #import "NetworkStatus.h"
 
+#import "NSDate+addition.h"
+
 @interface ExportViewController ()
 
 @property (nonatomic, strong) NSArray <Countdown *> * countdowns;
@@ -53,7 +55,7 @@
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	[_tableView reloadData];
 	
-    [super viewDidLoad];
+	[super viewDidLoad];
 }
 
 - (void)updateUI
@@ -90,9 +92,9 @@
 	
 	NSString * title = nil;
 	if (isConnected) {
-		title = [NSString  stringWithFormat:NSLocalizedString(@"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?", nil), [UIDevice currentDevice].localizedModel];
+		title = [NSString stringWithFormat:NSLocalizedString(@"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?", nil), [UIDevice currentDevice].localizedModel];
 	} else {
-		title = [NSString  stringWithFormat:NSLocalizedString(@"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?", nil), [UIDevice currentDevice].localizedModel];
+		title = [NSString stringWithFormat:NSLocalizedString(@"Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing or\nto the calendar app to your %@?", nil), [UIDevice currentDevice].localizedModel];
 	}
 	
 	UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -144,7 +146,7 @@
 		}
 		
 		cell.textLabel.text = countdown.name;
-		cell.detailTextLabel.text = countdown.endDate.description;
+		cell.detailTextLabel.text = countdown.endDate.localizedDescription;
 		
 	} else {
 		static NSString * finishedCellIdentifier = @"FinishedCellIdentifier";
@@ -187,7 +189,7 @@
 
 - (void)exportiCalFile
 {
-	if (_selectedCountdowns.count  > 0) {// Create export file only when we've got one or many selected countdowns
+	if (_selectedCountdowns.count > 0) {// Create export file only when we've got one or many selected countdowns
 		
 		NSString * name = _selectedCountdowns.firstObject.name;
 		NSString * filename = [NSString stringWithFormat:NSLocalizedString(@"Export %@", nil), name];

@@ -22,8 +22,6 @@
 #import "NSDate+addition.h"
 #import "Countdown+addition.h"
 
-#import <Crashlytics/Crashlytics.h>
-
 @interface EditAllCountdownViewController ()
 
 @property (nonatomic, strong) NSArray <Countdown *> * allCountdowns;
@@ -47,7 +45,7 @@
 																						  target:self action:@selector(add:)];
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    _tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	_tableView.allowsSelectionDuringEditing = YES;
 	_tableView.editing = YES;
 	[self reloadData];
@@ -427,7 +425,7 @@
 
 - (BOOL)canBecomeFirstResponder
 {
-	return YES;// Return YES to receive undo from shake gesture
+	return YES; // Return YES to receive undo from shake gesture
 }
 
 - (void)dealloc

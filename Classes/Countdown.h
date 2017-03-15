@@ -45,7 +45,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 @property (nonatomic, assign) BOOL notificationCenter;
 
 // Private
-@property (nonatomic, readonly) NSString * _Nonnull identifier;
+@property (nonatomic, readonly, nonnull) NSString * identifier;
 
 /* Save any change from propertyList to disk */
 + (void)synchronize; // Calls "synchronizeWithCompletion:" but shows an alert on error

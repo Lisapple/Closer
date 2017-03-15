@@ -93,10 +93,7 @@
 
 NSString * stringFormat(NSUInteger value, BOOL addZero)
 {
-	if (value <= 0)
-		return (addZero)? @"00" : @"0";
-	
-	return [NSString stringWithFormat:((addZero && value < 10) ? @"0%ld" : @"%ld"), (long)value];
+	return [NSString stringWithFormat:(addZero) ? @"%02ld" : @"%ld", (long)value];
 }
 
 - (void)setStyle:(CountdownStyle)aStyle
