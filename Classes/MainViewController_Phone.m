@@ -313,7 +313,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 #pragma mark - Settings view controller delegate
 
-- (void)settingsViewControllerDidFinish:(SettingsViewController_Phone *)controller
+- (void)settingsViewControllerDidFinish:(SettingsViewController *)controller
 {
 	[self reload];
 	[self updateContentView];

@@ -24,7 +24,7 @@
 
 @property (nonatomic, strong) NSMutableArray <PageView *> * pages;
 
-@property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
+@property (nonatomic, strong) SettingsViewController * settingsViewController;
 
 // Select page
 

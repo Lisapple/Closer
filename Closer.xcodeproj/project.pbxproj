@@ -11,10 +11,11 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		280E754D0DD40C5E005A515E /* SettingsViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 280E754A0DD40C5E005A515E /* SettingsViewController_Phone.xib */; };
 		288765590DF743DE002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765580DF743DE002DB57D /* CoreGraphics.framework */; };
 		289233AE0DB2D0DB0083E9F9 /* MainViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233A90DB2D0DB0083E9F9 /* MainViewController_Phone.m */; };
-		289233B00DB2D0DB0083E9F9 /* SettingsViewController_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AD0DB2D0DB0083E9F9 /* SettingsViewController_Phone.m */; };
+		289233B00DB2D0DB0083E9F9 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AD0DB2D0DB0083E9F9 /* SettingsViewController.m */; };
+		50034D031E1EED2400CB1A5E /* PageViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 50034D021E1EED2400CB1A5E /* PageViewContainer.m */; };
+		50034D051E1F1BFE00CB1A5E /* PageViewContainer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50034D041E1F1BFE00CB1A5E /* PageViewContainer.xib */; };
 		50036EE8150A3D0F006BE168 /* ImportFromCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50036EE6150A3D0F006BE168 /* ImportFromCalendarViewController.m */; };
 		50036EE9150A3D0F006BE168 /* ImportFromCalendarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50036EE7150A3D0F006BE168 /* ImportFromCalendarViewController.xib */; };
 		50036EF3150A42DC006BE168 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50036EF2150A42DC006BE168 /* EventKit.framework */; };
@@ -41,8 +42,6 @@
 		504FD338164D2F3200D54381 /* CloserAppDelegate_Pad.m in Sources */ = {isa = PBXBuildFile; fileRef = 504FD336164D2F3200D54381 /* CloserAppDelegate_Pad.m */; };
 		504FD339164D2F3200D54381 /* MainViewController_Pad.m in Sources */ = {isa = PBXBuildFile; fileRef = 504FD337164D2F3200D54381 /* MainViewController_Pad.m */; };
 		504FD33D164D2F8200D54381 /* MainViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 504FD33C164D2F8200D54381 /* MainViewController_Pad.xib */; };
-		504FD342164D350E00D54381 /* SettingsViewController_Pad.m in Sources */ = {isa = PBXBuildFile; fileRef = 504FD340164D350E00D54381 /* SettingsViewController_Pad.m */; };
-		504FD343164D350E00D54381 /* SettingsViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 504FD341164D350E00D54381 /* SettingsViewController_Pad.xib */; };
 		5051305616600DE20056CB42 /* NSObject+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5051305516600DE20056CB42 /* NSObject+additions.m */; };
 		505904CB1352351B00959167 /* FontDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 505904CA1352351B00959167 /* FontDescription.m */; };
 		505CC6B81BB80A4C00B3ECAB /* Closer Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 50E00D2B1AC0AA9000784B98 /* Closer Watch App.app */; };
@@ -193,12 +192,11 @@
 		1D3623250D0F684500981E51 /* CloserAppDelegate_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CloserAppDelegate_Phone.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1D6058910D05DD3D006BFB54 /* Closer & Closer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Closer & Closer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		280E754A0DD40C5E005A515E /* SettingsViewController_Phone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsViewController_Phone.xib; sourceTree = "<group>"; };
 		288765580DF743DE002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		289233A80DB2D0DB0083E9F9 /* MainViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController_Phone.h; path = Classes/MainViewController_Phone.h; sourceTree = "<group>"; };
 		289233A90DB2D0DB0083E9F9 /* MainViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MainViewController_Phone.m; path = Classes/MainViewController_Phone.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		289233AC0DB2D0DB0083E9F9 /* SettingsViewController_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController_Phone.h; path = Classes/SettingsViewController_Phone.h; sourceTree = "<group>"; };
-		289233AD0DB2D0DB0083E9F9 /* SettingsViewController_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SettingsViewController_Phone.m; path = Classes/SettingsViewController_Phone.m; sourceTree = "<group>"; wrapsLines = 1; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		289233AC0DB2D0DB0083E9F9 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController.h; path = ../Classes/SettingsViewController.h; sourceTree = "<group>"; };
+		289233AD0DB2D0DB0083E9F9 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SettingsViewController.m; path = ../Classes/SettingsViewController.m; sourceTree = "<group>"; wrapsLines = 1; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		32CA4F630368D1EE00C91783 /* Closer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Closer_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50036EE5150A3D0F006BE168 /* ImportFromCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ImportFromCalendarViewController.h; path = ../Classes/ImportFromCalendarViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -220,7 +218,6 @@
 		5014122F1312B51500D61066 /* CountdownPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountdownPageView.m; sourceTree = "<group>"; };
 		501412301312B51500D61066 /* CountdownPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountdownPageView.xib; sourceTree = "<group>"; };
 		5016A9DD1C96EB3E00971A7C /* Main~pad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main~pad.storyboard"; sourceTree = "<group>"; };
-		5028E7DE1C515BCE00A5FF85 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		502950841CE48F7800143F4E /* Closer Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Closer Watch App.entitlements"; path = "../Closer Watch App.entitlements"; sourceTree = "<group>"; };
 		502950851CE490A500143F4E /* Closer Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Closer Watch Extension.entitlements"; path = "../Closer Watch Extension.entitlements"; sourceTree = "<group>"; };
 		502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ExportToWebsiteViewController.m; path = ../Classes/ExportToWebsiteViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -242,9 +239,6 @@
 		504FD336164D2F3200D54381 /* CloserAppDelegate_Pad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CloserAppDelegate_Pad.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		504FD337164D2F3200D54381 /* MainViewController_Pad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MainViewController_Pad.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		504FD33C164D2F8200D54381 /* MainViewController_Pad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController_Pad.xib; sourceTree = "<group>"; };
-		504FD33F164D350E00D54381 /* SettingsViewController_Pad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SettingsViewController_Pad.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		504FD340164D350E00D54381 /* SettingsViewController_Pad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SettingsViewController_Pad.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		504FD341164D350E00D54381 /* SettingsViewController_Pad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController_Pad.xib; sourceTree = "<group>"; };
 		5051305416600DE20056CB42 /* NSObject+additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+additions.h"; sourceTree = "<group>"; };
 		5051305516600DE20056CB42 /* NSObject+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+additions.m"; sourceTree = "<group>"; };
 		505904C91352351B00959167 /* FontDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FontDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -506,9 +500,6 @@
 				504FD335164D2F3200D54381 /* MainViewController_Pad.h */,
 				504FD337164D2F3200D54381 /* MainViewController_Pad.m */,
 				504FD33C164D2F8200D54381 /* MainViewController_Pad.xib */,
-				504FD33F164D350E00D54381 /* SettingsViewController_Pad.h */,
-				504FD340164D350E00D54381 /* SettingsViewController_Pad.m */,
-				504FD341164D350E00D54381 /* SettingsViewController_Pad.xib */,
 				509ED3D5198B0AA800CCC424 /* EditViewController.h */,
 				509ED3D6198B0AA800CCC424 /* EditViewController.m */,
 				509ED3D7198B0AA800CCC424 /* EditViewController.xib */,
@@ -561,9 +552,6 @@
 				080E96DDFE201D6D7F000001 /* Application Delegate */,
 				289233A80DB2D0DB0083E9F9 /* MainViewController_Phone.h */,
 				289233A90DB2D0DB0083E9F9 /* MainViewController_Phone.m */,
-				289233AC0DB2D0DB0083E9F9 /* SettingsViewController_Phone.h */,
-				289233AD0DB2D0DB0083E9F9 /* SettingsViewController_Phone.m */,
-				280E754A0DD40C5E005A515E /* SettingsViewController_Phone.xib */,
 				50B208F91307F73C00AF2320 /* EditAllCountdownViewController.h */,
 				50B208FA1307F73C00AF2320 /* EditAllCountdownViewController.m */,
 				50B208FB1307F73C00AF2320 /* EditAllCountdownViewController.xib */,
@@ -589,7 +577,8 @@
 				50DF431217736AE800AAA6C9 /* TimerPageView.xib */,
 				50CF4F9C17738743004684C9 /* TimerView.h */,
 				50CF4F9D17738743004684C9 /* TimerView.m */,
-				5028E7DE1C515BCE00A5FF85 /* SettingsViewController.h */,
+				289233AC0DB2D0DB0083E9F9 /* SettingsViewController.h */,
+				289233AD0DB2D0DB0083E9F9 /* SettingsViewController.m */,
 				50AF1322176F4D230092E255 /* TypeViewController.h */,
 				50AF1323176F4D230092E255 /* TypeViewController.m */,
 				50AF1324176F4D230092E255 /* TypeViewController.xib */,
@@ -901,7 +890,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				280E754D0DD40C5E005A515E /* SettingsViewController_Phone.xib in Resources */,
 				50D15B911C88C66900B2E49B /* Main~phone.storyboard in Resources */,
 				50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */,
 				50C5A26812E3496C0013605C /* SongPickerViewController.xib in Resources */,
@@ -988,8 +976,8 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* CloserAppDelegate_Phone.m in Sources */,
 				289233AE0DB2D0DB0083E9F9 /* MainViewController_Phone.m in Sources */,
-				289233B00DB2D0DB0083E9F9 /* SettingsViewController_Phone.m in Sources */,
 				50C5A11512E32E4E0013605C /* UIColor+addition.m in Sources */,
+				289233B00DB2D0DB0083E9F9 /* SettingsViewController.m in Sources */,
 				50C5A19212E3361F0013605C /* DatePickerViewController.m in Sources */,
 				50C5A23A12E33F8B0013605C /* NSDate+addition.m in Sources */,
 				50C5A26712E3496C0013605C /* SongPickerViewController.m in Sources */,
@@ -1019,7 +1007,6 @@
 				50CEFB5E15FCF27F0044AED0 /* NetworkStatus.m in Sources */,
 				504FD338164D2F3200D54381 /* CloserAppDelegate_Pad.m in Sources */,
 				504FD339164D2F3200D54381 /* MainViewController_Pad.m in Sources */,
-				504FD342164D350E00D54381 /* SettingsViewController_Pad.m in Sources */,
 				507717CA164D57DF0042D50B /* ImportFromWebsiteViewController_Pad.m in Sources */,
 				5051305616600DE20056CB42 /* NSObject+additions.m in Sources */,
 				508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */,

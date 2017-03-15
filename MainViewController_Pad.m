@@ -227,7 +227,7 @@
 	/* Close the active settings */
 	[self closeActiveSettings];
 	
-	_settingsViewController = [[SettingsViewController_Pad alloc] init];
+	_settingsViewController = [[SettingsViewController alloc] init];
 	_settingsViewController.countdown = [Countdown countdownAtIndex:pageIndex];
 	
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:_settingsViewController];

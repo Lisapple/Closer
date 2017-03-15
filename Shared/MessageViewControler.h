@@ -15,12 +15,9 @@
 
 @interface MessageViewControler : UITableViewController <UITextViewDelegate>
 
-@property (nonatomic, strong) IBOutlet MyTextView * cellTextView;
-@property (nonatomic, strong) UITableViewCell * messageCell;
+@property (nonatomic, strong) MyTextView * textView;
 @property (nonatomic, strong) Countdown * countdown;
 
 - (IBAction)clear:(id)sender;
-- (CGFloat)rowHeight;
-- (void)update;
 
 @end

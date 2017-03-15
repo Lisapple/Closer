@@ -163,13 +163,13 @@
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		
 		[_tableView beginUpdates];
-		
-		[_countdown removeDurationAtIndex:indexPath.row];
-		
-		[_tableView deleteRowsAtIndexPaths:@[ indexPath ]
-						  withRowAnimation:UITableViewRowAnimationFade];
+		{
+			[_countdown removeDurationAtIndex:indexPath.row];
+			
+			[_tableView deleteRowsAtIndexPaths:@[ indexPath ]
+							  withRowAnimation:UITableViewRowAnimationFade];
+		}
 		[_tableView endUpdates];
 		[self updateUI];
 	}

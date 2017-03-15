@@ -22,7 +22,7 @@
 
 @property (nonatomic, assign) UIInterfaceOrientationMask currentOrientation;
 
-@property (nonatomic, strong) SettingsViewController_Pad * settingsViewController;
+@property (nonatomic, strong) SettingsViewController * settingsViewController;
 
 - (IBAction)new:(id)sender;
 - (IBAction)editAll:(id)sender;

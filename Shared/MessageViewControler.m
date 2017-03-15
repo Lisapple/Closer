@@ -48,17 +48,18 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Message", nil);
-	self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor]; // Doesn't work into IB (maybe a Xcode 7 bug)
-	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Clear", nil)
 																			  style:UIBarButtonItemStylePlain
 																			 target:self action:@selector(clear:)];
-	self.navigationItem.rightBarButtonItem.enabled = (_countdown.message.length > 0);
+	_textView = [[MyTextView alloc] init];
+	_textView.translatesAutoresizingMaskIntoConstraints = NO;
+	_textView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+	_textView.delegate = self;
+	_textView.text = _countdown.message;
 	
-	_cellTextView.text = _countdown.message;
-	_cellTextView.delegate = self;
-	_cellTextView.scrollEnabled = NO;
+	self.tableView.rowHeight = _textView.font.lineHeight * 5; // ~4 lines
 	
+	[self updateUI];
 	[self.tableView reloadData];
 }
 
@@ -71,79 +72,45 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self update];
+	[self updateUI];
 	
-	_cellTextView.undoManager = _undoManager; // Overwrite the cellTextView undo manager with the controller one since [cellTextView becomeFirstResponder] set the default undo manager from cellTextView undo manager (setActionName should not working with this method).
+	_textView.undoManager = _undoManager; // Overwrite the cellTextView undo manager with the controller one since [cellTextView becomeFirstResponder] set the default undo manager from cellTextView undo manager (setActionName should not working with this method).
 	
-	[_cellTextView becomeFirstResponder];
+	[_textView becomeFirstResponder];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	_countdown.message = _cellTextView.text;
-	
-	_cellTextView.undoManager = nil;
-	_undoManager = nil;
-	
 	[super viewWillDisappear:animated];
+	
+	_countdown.message = _textView.text;
+	
+	_textView.undoManager = nil;
+	_undoManager = nil;
 }
 
 - (void)setText:(NSString *)textString
 {
-	_cellTextView.text = textString;
+	_textView.text = textString;
 }
 
 - (IBAction)clear:(id)sender
 {
-	if (_cellTextView.text.length > 0) {
-		[_undoManager registerUndoWithTarget:self selector:@selector(setText:) object:_cellTextView.text];
+	if (_textView.text.length > 0) {
+		[_undoManager registerUndoWithTarget:self selector:@selector(setText:) object:_textView.text];
 		[_undoManager setActionName:NSLocalizedString(@"UNDO_MESSAGE_ACTION", nil)];
 		
-		_cellTextView.text = @"";
-		[self update];
+		_textView.text = nil;
+		[self updateUI];
 	}
+}
+
+- (void)updateUI
+{
+	self.navigationItem.rightBarButtonItem.enabled = (_textView.text.length > 0);
 }
 
 #pragma mark - Table view data source
-
-- (CGFloat)keyboardHeight
-{
-	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-	
-	if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight)
-		return kKeyboardHeightLandscape;
-	
-	return kKeyboardHeightPortrait;
-}
-
-- (CGFloat)rowHeight
-{
-	CGSize size = [_cellTextView sizeThatFits:CGSizeMake(_cellTextView.frame.size.width, INFINITY)];
-	
-	if (size.height < kHeightRowLandscape)
-		return kHeightRowLandscape;
-	else
-		return size.height;
-}
-
-- (void)update
-{
-	[self.tableView beginUpdates];
-	{
-		CGRect frame = _messageCell.frame;
-		_messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, [self rowHeight]);
-		self.tableView.rowHeight = [self rowHeight];
-	}
-	[self.tableView endUpdates];
-	
-	/* Update Clear button enable */
-	self.navigationItem.rightBarButtonItem.enabled = (_cellTextView.text.length > 0);
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	return [self rowHeight];
-}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -163,39 +130,34 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	
-	if (!self.messageCell) {
-		UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-		if (!cell) {
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-			cell.selectionStyle = UITableViewCellSelectionStyleNone;
-			
-			cell.clipsToBounds = YES;
-			cell.contentView.autoresizesSubviews = YES;
-			[cell.contentView addSubview:_cellTextView];
-		}
-		
-		self.messageCell = cell;
+	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	if (!cell) {
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		[cell.contentView addSubview:_textView];
+		[cell addConstraints:
+		 @[ [NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeTopMargin relatedBy:NSLayoutRelationEqual
+											toItem:_textView attribute:NSLayoutAttributeTopMargin multiplier:1 constant:0],
+			[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeLeftMargin relatedBy:NSLayoutRelationEqual
+											toItem:_textView attribute:NSLayoutAttributeLeftMargin multiplier:1 constant:0],
+			[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeRightMargin relatedBy:NSLayoutRelationEqual
+											toItem:_textView attribute:NSLayoutAttributeRightMargin multiplier:1 constant:0],
+			[NSLayoutConstraint constraintWithItem:cell attribute:NSLayoutAttributeBottomMargin relatedBy:NSLayoutRelationEqual
+											toItem:_textView attribute:NSLayoutAttributeBottomMargin multiplier:1 constant:0] ]];
 	}
-	
-	return self.messageCell;
+	return cell;
 }
 
 #pragma mark - Table view data source
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-	[self update];
+	[self updateUI];
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-	[self update];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-	[self update];
+	[self updateUI];
 }
 
 - (BOOL)canBecomeFirstResponder

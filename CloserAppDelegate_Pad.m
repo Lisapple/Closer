@@ -129,7 +129,7 @@
 	NSInteger index = [Countdown indexOfCountdown:countdown];
 	if (index != NSNotFound) {
 		[self.viewController showSettingsForPageAtIndex:index animated:NO];
-		SettingsViewController_Pad * controller = self.viewController.settingsViewController;
+		SettingsViewController * controller = self.viewController.settingsViewController;
 		DurationsViewController * durationController = (DurationsViewController *)[controller showSettingsType:SettingsTypeDurations animated:NO];
 		[durationController showAddDurationWithAnimation:NO];
 	}

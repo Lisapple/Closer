@@ -18,6 +18,7 @@
 	_tableView.dataSource = self;
 	_tableView.alwaysBounceVertical = YES;
 	
+	_cellTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 	_cellTextField.text = _countdown.name;
 	_cellTextField.delegate = self;
 	
@@ -41,10 +42,15 @@
 
 #pragma mark - Table view data source
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+	return [[UIView alloc] init];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-	return UIInterfaceOrientationIsPortrait(orientation) ? @" " : @"";
+	return UIInterfaceOrientationIsPortrait(orientation) ? 50 : 0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section

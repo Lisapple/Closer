@@ -19,7 +19,7 @@
 @property (nonatomic, assign) BOOL hasTimeDate;
 @property (nonatomic, strong) NSTimer * updateDatePickerTimer;
 
-- (void)updatePickerMinimalDate;
+- (void)updatePickerMinimumDate;
 - (void)updateWithOrientation:(UIInterfaceOrientation)orientation;
 
 @end
@@ -73,10 +73,10 @@
 	NSDateComponents * components = [calendar components:NSCalendarUnitSecond fromDate:[NSDate date]];
 	double delayInSeconds = 60. - components.second;
 	
-	// Start -[DatePickerViewController updatePickerMinimalDate] to set minimum date at the next time change and call it every minutes
+	// Start -[DatePickerViewController updatePickerMinimumDate] to set minimum date at the next time change and call it every minutes
 	[NSObject performBlock:^{
 		_updateDatePickerTimer = [NSTimer scheduledTimerWithTimeInterval:60. // Every minutes
-																  target:self selector:@selector(updatePickerMinimalDate)
+																  target:self selector:@selector(updatePickerMinimumDate)
 																userInfo:nil repeats:YES];
 	}
 				afterDelay:delayInSeconds];
@@ -113,19 +113,26 @@
 	[_undoManager registerUndoWithTarget:self selector:@selector(setDatePickerDate:) object:self.date];
 	[_undoManager setActionName:NSLocalizedString(@"UNDO_DATE_ACTION", nil)];
 	
-	self.date = _datePicker.date;
+	if (_datePicker.date.timeIntervalSinceNow < 0) { // Avoid time to be reset if earlier than minimum date
+		const NSCalendar * calendar = [NSCalendar currentCalendar];
+		NSInteger hour, minute;
+		[calendar getHour:&hour minute:&minute second:nil nanosecond:nil fromDate:self.date];
+		self.date = [calendar dateBySettingHour:hour minute:minute second:0 ofDate:_datePicker.date options:0];
+	} else {
+		self.date = _datePicker.date;
+	}
 	[self reloadData];
 }
 
-- (void)updatePickerMinimalDate
+- (void)updatePickerMinimumDate
 {
-	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60];// minimumDate = now + 1 minute
-	[self reloadData];// Force reload data to prevent change from datePicker
+	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60]; // minimumDate = now + 1 minute
+	[self reloadData]; // Force reload data to prevent change from datePicker
 }
 
 - (void)reloadData
 {
-	/* Reload tableView and retain the current selection */
+	// Reload tableView and retain the current selection
 	NSIndexPath * selectedCellIndexPath = _tableView.indexPathForSelectedRow;
 	[_tableView reloadData];
 	[_tableView selectRowAtIndexPath:selectedCellIndexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
@@ -133,10 +140,15 @@
 
 #pragma mark - Table view data source
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+	return [[UIView alloc] init];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-	return (UIInterfaceOrientationIsPortrait(orientation)) ? @" " : @"";
+	return UIInterfaceOrientationIsPortrait(orientation) ? 50 : 0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -167,8 +179,8 @@
 		if (_hasTimeDate)
 			cell.textLabel.text = [_date naturalTimeString];
 		else {
-			cell.textLabel.text = @"-:--";
-			cell.textLabel.textColor = [UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.];
+			cell.textLabel.text = NSLocalizedString(@"NO_DATE_FORMAT", nil);
+			cell.textLabel.textColor = [UIColor redColor];
 		}
 	}
 	
