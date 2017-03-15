@@ -8,8 +8,8 @@
 
 @interface CCLabel : UILabel <NSCopying>
 
-@property (nonatomic, strong) NSString * animatedText;
+@property (nonatomic, strong, nullable) NSString * animatedText;
 
-- (void)setText:(NSString *)text animated:(BOOL)animated;
+- (void)setText:(NSString * _Nullable)text animated:(BOOL)animated;
 
 @end

@@ -35,6 +35,17 @@
 		_contentView.frame = self.bounds;
 		_contentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		[self.scrollView addSubview:_contentView];
+		const CGFloat offset = 20.;
+		const ParallaxAxis axis = (ParallaxAxisVertical | ParallaxAxisHorizontal);
+		[_daysLabel addParallaxEffect:axis offset:offset];
+		[_hoursLabel addParallaxEffect:axis offset:offset];
+		[_minutesLabel addParallaxEffect:axis offset:offset];
+		[_secondsLabel addParallaxEffect:axis offset:offset];
+		[_daysDescriptionLabel addParallaxEffect:axis offset:offset];
+		[_hoursDescriptionLabel addParallaxEffect:axis offset:offset];
+		[_minutesDescriptionLabel addParallaxEffect:axis offset:offset];
+		[_secondsDescriptionLabel addParallaxEffect:axis offset:offset];
+		
 		
 		_idleTimerDisabled = NO;
 	}

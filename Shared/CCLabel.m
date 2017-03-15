@@ -8,15 +8,27 @@
 
 #import "CCLabel.h"
 
+#define DefaultFontWeigth UIFontWeightThin
+
+@interface CCLabel ()
+
+@property (nonatomic, strong, nullable) NSString * textValue;
+
+@end
+
 @implementation CCLabel
 
 @dynamic animatedText;
 
+- (BOOL)isOpaque
+{
+	return NO;
+}
+
 - (instancetype)copyWithZone:(nullable NSZone *)zone
 {
-	CCLabel * label = [[self.class allocWithZone:zone] initWithFrame:self.frame];
-	label.backgroundColor = self.backgroundColor;
-	label.text = self.text;
+	CCLabel * label = [[self.class allocWithZone:zone] initWithFrame:self.bounds];
+	label.backgroundColor = [UIColor clearColor];
 	label.font = self.font;
 	label.textColor = self.textColor;
 	label.textAlignment = self.textAlignment;
@@ -25,7 +37,7 @@
 
 - (NSString *)animatedText
 {
-	return self.text;
+	return _textValue;
 }
 
 - (void)setAnimatedText:(NSString *)animatedText
@@ -35,25 +47,38 @@
 
 - (void)setText:(NSString *)text animated:(BOOL)animated
 {
-	if (animated && ![text isEqualToString:self.text]) {
-		CCLabel * labelCopy = self.copy;
-		[self.superview addSubview:labelCopy];
-		labelCopy.text = self.text;
-		labelCopy.alpha = 1.;
+	BOOL shouldDisableAnimation = UIAccessibilityIsReduceMotionEnabled();
+	animated &= !shouldDisableAnimation;
+	
+	if (animated && ![text isEqualToString:self.animatedText]) {
+		BOOL usesMonospacedFont = ([[NSScanner scannerWithString:text] scanInt:nil]);
+		if (usesMonospacedFont && [UIFont respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) // iOS 9+
+			self.font = [UIFont monospacedDigitSystemFontOfSize:self.font.pointSize weight:DefaultFontWeigth];
+		else
+			self.font = [UIFont systemFontOfSize:self.font.pointSize weight:DefaultFontWeigth];
 		
-		self.text = text;
-		self.alpha = 0.;
-		
-		[UIView animateWithDuration:0.25
-							  delay:0.
-							options:(UIViewAnimationOptionCurveEaseIn)
-						 animations:^{ labelCopy.alpha = 0.; }
-						 completion:^(BOOL finished) { [labelCopy removeFromSuperview]; }];
-		[UIView animateWithDuration:0.25
-							  delay:0.
+		CCLabel * toLabel = self.copy;
+		toLabel.text = text;
+		toLabel.alpha = 0.;
+		toLabel.font = self.font;
+		[self addSubview:toLabel];
+		[UIView animateWithDuration:0.25 delay:0.
 							options:(UIViewAnimationOptionCurveEaseOut)
-						 animations:^{ self.alpha = 1.; }
-						 completion:NULL];
+						 animations:^{ toLabel.alpha = 1.; }
+						 completion:^(BOOL finished) { [toLabel removeFromSuperview]; self.text = text; }];
+		
+		CCLabel * fromLabel = self.copy;
+		fromLabel.text = _textValue;
+		fromLabel.alpha = 1.;
+		fromLabel.font = self.font;
+		[self addSubview:fromLabel];
+		[UIView animateWithDuration:0.25 delay:0.
+							options:(UIViewAnimationOptionCurveEaseIn)
+						 animations:^{ fromLabel.alpha = 0.; }
+						 completion:^(BOOL finished) { [fromLabel removeFromSuperview]; }];
+		
+		self.text = @" "; // Keep label frame
+		_textValue = text;
 	} else
 		self.text = text;
 }

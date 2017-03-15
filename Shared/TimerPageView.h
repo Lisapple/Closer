@@ -9,6 +9,7 @@
 #import "PageView.h"
 
 #import "TimerView.h"
+#import "CCLabel.h"
 
 @interface TimerPageView : PageView <UIGestureRecognizerDelegate>
 

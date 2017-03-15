@@ -47,6 +47,7 @@
 		
 		[_timerView addTarget:self
 					   action:@selector(timerDidSelectAction:)
+		[_timerView addParallaxEffect:(ParallaxAxisVertical | ParallaxAxisHorizontal) offset:15];
 			 forControlEvents:UIControlEventTouchUpInside];
 		
 		_updateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:CountdownDidUpdateNotification
