@@ -35,42 +35,59 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 																						  target:self action:@selector(cancel:)];
 	
-	/* Add a gesture for the main view to re-show the keyboard */
-	UITapGestureRecognizer * gestureRecogninizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reshowKeyboardAction:)];
-	[self.view addGestureRecognizer:gestureRecogninizer];
-	
-	UIPasteboard * pasteBoard = [UIPasteboard generalPasteboard];
-	NSString * string = pasteBoard.string;
-	if (string.length > 0) {
-		
-		NSError * error = nil;
-		_regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{4})\\s?\\-\\s?(\\d{4})$" // Match "dddd - dddd" (with or without spaces)
-													  options:0 error:&error];
-		if (error)
-			NSLog(@"regex error: %@", error.localizedDescription);
-			
-		NSRange range = [_regex rangeOfFirstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
-		if (range.location != NSNotFound) {
-			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Paste", nil)
-																				 style:UIBarButtonItemStylePlain
-																				target:self action:@selector(pasteFromPasteboard:)];
-		}
-	}
-	
-	_password1Label1.text = _password1Label2.text = _password1Label3.text = _password1Label4.text = @"";
-	_password2Label1.text = _password2Label2.text = _password2Label3.text = _password2Label4.text = @"";
-	
 	_tableView.dataSource = self;
 	_tableView.delegate = self;
 	
+	// Add a gesture for the main view to re-show the keyboard
+	UITapGestureRecognizer * gestureRecogninizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reshowKeyboardAction:)];
+	[self.view addGestureRecognizer:gestureRecogninizer];
+	
+	_password1Label1.text = _password1Label2.text = _password1Label3.text = _password1Label4.text = nil;
+	_password2Label1.text = _password2Label2.text = _password2Label3.text = _password2Label4.text = nil;
+	
 	_hiddenTextField1.keyboardType = _hiddenTextField2.keyboardType = UIKeyboardTypeNumberPad;
 	_hiddenTextField1.delegate = _hiddenTextField2.delegate = self;
-	
 	[_hiddenTextField1 becomeFirstResponder];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(textFieldDidChange:)
 												 name:UITextFieldTextDidChangeNotification
 											   object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	
+	_pasteButton.hidden = YES;
+	UIPasteboard * pasteBoard = [UIPasteboard generalPasteboard];
+	NSString * string = pasteBoard.string;
+	if (string.length > 0 && !_password1 && !_password2) {
+		NSError * error = nil;
+		_regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{4})[^\\d]*(\\d{4})?$" // Match 4 digits once and two times (separated with non-digits)
+													  options:0 error:&error];
+		NSAssert(_regex, error.localizedDescription);
+		
+		NSRange range = NSMakeRange(0, string.length);
+		if ([_regex firstMatchInString:string options:0 range:range]) {
+			NSString * string = [UIPasteboard generalPasteboard].string;
+			NSString * password1 = [_regex stringByReplacingMatchesInString:string options:0 range:range withTemplate:@"$1"];
+			NSString * password2 = [_regex stringByReplacingMatchesInString:string options:0 range:range withTemplate:@"$2"];
+			if (password1.length && password2.length) {
+				_pasteButton.hidden = NO;
+				_password1 = password1;
+				_password2 = password2;
+				[_pasteButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Use %@ and %@", nil), password1, password2]
+							  forState:UIControlStateNormal];
+			} else if (password1.length) {
+				_pasteButton.hidden = NO;
+				_password1 = password1;
+				_password2 = nil;
+				[_pasteButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Use %@", nil), password1]
+							  forState:UIControlStateNormal];
+			}
+		}
+	}
 }
 
 - (IBAction)reshowKeyboardAction:(id)sender
@@ -89,26 +106,7 @@
 
 - (IBAction)pasteFromPasteboard:(id)sender
 {
-	NSString * string = [UIPasteboard generalPasteboard].string;
-	NSString * password1 = [_regex stringByReplacingMatchesInString:string options:0 range:NSMakeRange(0, string.length)
-													   withTemplate:@"$1"];
-	NSString * password2 = [_regex stringByReplacingMatchesInString:string options:0 range:NSMakeRange(0, string.length)
-													   withTemplate:@"$2"];
-	if (password1 && password2) {
-		_password1 = password1;
-		_password2 = password2;
-		
-		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Do you want to use\n %@ and %@\nas passwords to import?", nil), password1, password2];
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Paste Passwords", nil)
-																		message:message preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import", nil) style:UIAlertActionStyleDefault
-												handler:^(UIAlertAction * action) { [self send]; }]];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel
-												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
-		[self presentViewController:alert animated:YES completion:nil];
-	} else {
-		// @TODO: show that failure
-	}
+	[self send];
 }
 
 - (void)send

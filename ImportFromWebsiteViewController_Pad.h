@@ -13,6 +13,7 @@
 @property (nonatomic, strong) IBOutlet UIView * contentView1, * contentView2;
 @property (nonatomic, strong) IBOutlet UILabel * password1Label1, * password1Label2, * password1Label3, * password1Label4;
 @property (nonatomic, strong) IBOutlet UILabel * password2Label1, * password2Label2, * password2Label3, * password2Label4;
+@property (nonatomic, strong) IBOutlet UIButton * pasteButton;
 
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView * activityIndicator;
 

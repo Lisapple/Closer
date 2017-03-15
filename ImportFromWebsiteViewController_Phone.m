@@ -34,37 +34,52 @@
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 																						  target:self action:@selector(cancel:)];
 	
-	UIPasteboard * pasteBoard = [UIPasteboard generalPasteboard];
-	NSString * string = pasteBoard.string;
-	if (string.length > 0) {
-		
-		NSError * error = nil;
-		_regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{4})\\s?\\-\\s?(\\d{4})$" // Match "dddd - dddd" (with or without spaces)
-													 options:0 error:&error];
-		if (error) {
-			NSDebugLog(@"regex error: %@", error.localizedDescription);
-		}
-		
-		NSRange range = [_regex rangeOfFirstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
-		if (range.location != NSNotFound) {
-			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Paste", nil)
-																					  style:UIBarButtonItemStylePlain
-																					 target:self action:@selector(pasteFromPasteboard:)];
-		}
-	}
-	
-	_instructionLabel.text = NSLocalizedString(@"Enter the First Password", nil);
-	_passwordLabel1.text = _passwordLabel2.text = _passwordLabel3.text = _passwordLabel4.text = @"";
-	
 	_pushed = NO, _sent = NO;
 	
 	_tableView.dataSource = self;
 	_tableView.delegate = self;
-    
+	
+	_instructionLabel.text = NSLocalizedString(@"Enter the First Password", nil);
+	_passwordLabel1.text = _passwordLabel2.text = _passwordLabel3.text = _passwordLabel4.text = nil;
+	
 	[_hiddenTextField becomeFirstResponder];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:)
-												 name:UITextFieldTextDidChangeNotification
-											   object:nil];
+												 name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	
+	_pasteButton.hidden = YES;
+	UIPasteboard * pasteBoard = [UIPasteboard generalPasteboard];
+	NSString * string = pasteBoard.string;
+	if (string.length > 0 && !_password1 && !_password2) {
+		NSError * error = nil;
+		_regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{4})[^\\d]*(\\d{4})?$" // Match 4 digits once and two times (separated with non-digits)
+													  options:0 error:&error];
+		NSAssert(_regex, error.localizedDescription);
+		
+		NSRange range = NSMakeRange(0, string.length);
+		if ([_regex firstMatchInString:string options:0 range:range]) {
+			NSString * string = [UIPasteboard generalPasteboard].string;
+			NSString * password1 = [_regex stringByReplacingMatchesInString:string options:0 range:range withTemplate:@"$1"];
+			NSString * password2 = [_regex stringByReplacingMatchesInString:string options:0 range:range withTemplate:@"$2"];
+			if (password1.length && password2.length) {
+				_pasteButton.hidden = NO;
+				_password1 = password1;
+				_password2 = password2;
+				[_pasteButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Use %@ and %@", nil), password1, password2]
+							  forState:UIControlStateNormal];
+			} else if (password1.length) {
+				_pasteButton.hidden = NO;
+				_password1 = password1;
+				_password2 = nil;
+				[_pasteButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"Use %@", nil), password1]
+							  forState:UIControlStateNormal];
+			}
+		}
+	}
 }
 
 - (IBAction)cancel:(id)sender
@@ -74,34 +89,36 @@
 
 - (IBAction)pasteFromPasteboard:(id)sender
 {
-	NSString * string = [UIPasteboard generalPasteboard].string;
-	NSString * password1 = [_regex stringByReplacingMatchesInString:string options:0
-															  range:NSMakeRange(0, string.length) withTemplate:@"$1"];
-	NSString * password2 = [_regex stringByReplacingMatchesInString:string options:0
-															  range:NSMakeRange(0, string.length) withTemplate:@"$2"];
-	if (password1 && password2) {
-		_password1 = password1;
-		_password2 = password2;
-		
-		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Do you want to use\n %@ and %@\nas passwords to import?", nil), password1, password2];
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Paste Passwords", nil)
-																		message:message
-																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import", nil) style:UIAlertActionStyleDefault
-												handler:^(UIAlertAction * action) { [self send]; }]];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel
-												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
-		[self presentViewController:alert animated:YES completion:nil];
-	} else {
-		// @TODO: show that failure
+	if (_password1 && _password2) {
+		[self send];
+	} else if (_password1) {
+		_passwordLabel1.text = [_password1 substringWithRange:NSMakeRange(0, 1)];
+		_passwordLabel2.text = [_password1 substringWithRange:NSMakeRange(1, 1)];
+		_passwordLabel3.text = [_password1 substringWithRange:NSMakeRange(2, 1)];
+		_passwordLabel4.text = [_password1 substringWithRange:NSMakeRange(3, 1)];
+		_pasteButton.hidden = YES;
+		[self performSelector:@selector(pushSecondPassword) withObject:nil afterDelay:0.25];
 	}
 }
 
-- (void)push
+- (void)pushSecondPassword
 {
-	_instructionLabel.text = NSLocalizedString(@"Enter the Second Password", nil);
-	_passwordLabel1.text = _passwordLabel2.text = _passwordLabel3.text = _passwordLabel4.text = @"";
-	_hiddenTextField.text = @"";
+	NSTimeInterval duration = 0.5;
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration / 2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		_instructionLabel.text = NSLocalizedString(@"Enter the Second Password", nil);
+		_passwordLabel1.text = _passwordLabel2.text = _passwordLabel3.text = _passwordLabel4.text = nil;
+		_hiddenTextField.text = nil;
+	});
+	[UIView animateKeyframesWithDuration:duration delay:0 options:0
+							  animations:^{
+								  [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.5 animations:^{
+									  _contentView.transform = CGAffineTransformMakeTranslation(-self.view.frame.size.width / 2, 0); }];
+								  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0 animations:^{
+									  _contentView.transform = CGAffineTransformMakeTranslation(self.view.frame.size.width / 2, 0); }];
+								  [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+									  _contentView.transform = CGAffineTransformIdentity; }];
+							  }
+							  completion:^(BOOL finished) { }];
 }
 
 - (void)send
@@ -226,15 +243,15 @@
 - (void)textFieldDidChange:(NSNotification *)notification
 {
 	NSString * string = _hiddenTextField.text;
-	_passwordLabel1.text = (string.length >= 1)? [string substringWithRange:NSMakeRange(0, 1)] : @"";
-	_passwordLabel2.text = (string.length >= 2)? [string substringWithRange:NSMakeRange(1, 1)] : @"";
-	_passwordLabel3.text = (string.length >= 3)? [string substringWithRange:NSMakeRange(2, 1)] : @"";
-	_passwordLabel4.text = (string.length >= 4)? [string substringWithRange:NSMakeRange(3, 1)] : @"";
+	_passwordLabel1.text = (string.length >= 1) ? [string substringWithRange:NSMakeRange(0, 1)] : nil;
+	_passwordLabel2.text = (string.length >= 2) ? [string substringWithRange:NSMakeRange(1, 1)] : nil;
+	_passwordLabel3.text = (string.length >= 3) ? [string substringWithRange:NSMakeRange(2, 1)] : nil;
+	_passwordLabel4.text = (string.length >= 4) ? [string substringWithRange:NSMakeRange(3, 1)] : nil;
 	
 	if (string.length >= 4) {
 		if ([_instructionLabel.text isEqualToString:NSLocalizedString(@"Enter the First Password", nil)]) {
 			if (!_pushed) {
-				[self performSelector:@selector(push) withObject:nil afterDelay:0.5];
+				[self performSelector:@selector(pushSecondPassword) withObject:nil afterDelay:0.5];
 				
 				_password1 = [string substringToIndex:4];// Just in case that we have more than 4 numbers on password, remove extre numbers
 				_pushed = YES;
@@ -268,14 +285,18 @@
 	cell.textLabel.text = countdown.name;
 	
 	if (countdown.endDate.timeIntervalSinceNow > 0) {
-		cell.detailTextLabel.text = countdown.endDate.description;
+		cell.textLabel.text = countdown.endDate.localizedDescription;
 		cell.textLabel.textColor = [UIColor blackColor];
-		cell.selectionStyle = UITableViewCellSelectionStyleGray;
-		cell.accessoryType = ([_selectedCountdowns containsObject:countdown])? UITableViewCellAccessoryCheckmark: UITableViewCellAccessoryNone;
 		
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
+		cell.accessoryType = ([_selectedCountdowns containsObject:countdown]) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 	} else {
-		cell.detailTextLabel.text = NSLocalizedString(@"Countdown finished", nil);
+		cell.textLabel.text = NSLocalizedString(@"Countdown finished", nil);
 		cell.textLabel.textColor = [UIColor grayColor];
+		
+		cell.detailTextLabel.text = countdown.endDate.localizedDescription;
+		cell.detailTextLabel.textColor = [UIColor grayColor];
+		
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		cell.accessoryType = UITableViewCellAccessoryNone;
 	}
@@ -289,22 +310,21 @@
 {
 	Countdown * countdown = _countdowns[indexPath.row];
 	
-	if (countdown.endDate.timeIntervalSinceNow > 0.) {// Change check state only for valid (not finished) countdowns
+	if (countdown.endDate.timeIntervalSinceNow > 0.) { // Change check state only for valid (not finished) countdowns
 		UITableViewCell * cell = [aTableView cellForRowAtIndexPath:indexPath];
 		if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
-			
 			[_selectedCountdowns removeObject:countdown];
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			
 		} else {
-			if (![_selectedCountdowns containsObject:countdown]) {// Just check, there is probably no way to get duplicates, but in the case of...
+			if (![_selectedCountdowns containsObject:countdown]) { // Just check, there is probably no way to get duplicates, but in the case of...
 				
 				NSInteger currentCount = [Countdown allCountdowns].count;
 				NSInteger toImportCount = _selectedCountdowns.count;
 				
 				// @TODO: show an alert when the limit have been reached the first time
 				
-				if ((toImportCount + currentCount) < 18) {// If the limit (of 18) have don't be reach, add countdown
+				if ((toImportCount + currentCount) < 18) { // If the limit (of 18) have don't be reach, add countdown
 					[_selectedCountdowns addObject:countdown];
 					cell.accessoryType = UITableViewCellAccessoryCheckmark;
 				} else {
