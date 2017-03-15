@@ -16,6 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel * label;
 @property (strong, nonatomic) UIView * progressionView;
+@property (strong, nonatomic, nonnull) NSLayoutConstraint * widthConstraint;
 
 @end
 
@@ -23,25 +24,36 @@
 
 - (void)awakeFromNib
 {
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    UIVisualEffect * effect = [UIVibrancyEffect notificationCenterVibrancyEffect];
-    UIVisualEffectView * visualEffectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-    visualEffectView.tintColor = [UIColor clearColor];
-    visualEffectView.frame = self.bounds;
-    visualEffectView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    
-    CGRect frame = CGRectMake(0., self.frame.size.height - 1., self.frame.size.width - 8., 1. / [UIScreen mainScreen].scale);
-    UIView * separator = [[UIView alloc] initWithFrame:frame];
-    separator.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
-    separator.backgroundColor = [UIColor whiteColor];
-    [visualEffectView.contentView addSubview:separator];
-    [self addSubview:visualEffectView];
-    
-    frame.size.height = 1.;
-    _progressionView = [[UIView alloc] initWithFrame:frame];
-    _progressionView.backgroundColor = [UIColor whiteColor];
-    [self addSubview:_progressionView];
+	[super awakeFromNib];
+	
+	self.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	CGRect frame = CGRectMake(0., self.frame.size.height - 1., self.frame.size.width - 8., 1. / [UIScreen mainScreen].scale);
+	if (!IS_IOS10_OR_MORE) {
+		UIVisualEffect * effect = [UIVibrancyEffect notificationCenterVibrancyEffect];
+		UIVisualEffectView * visualEffectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+		visualEffectView.tintColor = [UIColor clearColor];
+		visualEffectView.frame = self.bounds;
+		visualEffectView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+		
+		
+		UIView * separator = [[UIView alloc] initWithFrame:frame];
+		separator.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
+		separator.backgroundColor = [UIColor whiteColor];
+		[visualEffectView.contentView addSubview:separator];
+		[self addSubview:visualEffectView];
+	}
+	
+	_progressionView = [[UIView alloc] init];
+	_progressionView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self addSubview:_progressionView];
+	_widthConstraint = [NSLayoutConstraint constraintWithItem:_progressionView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+													   toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0 constant:0];
+	[self addConstraints:@[ [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+															toItem:_progressionView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
+							[NSLayoutConstraint constraintWithItem:_progressionView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+															toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:1],
+							_widthConstraint]];
 }
 
 - (void)setName:(NSString *)name
@@ -85,21 +97,21 @@
 
 - (void)update
 {
-    NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:[_name stringByAppendingString:@" "]
-                                                                                attributes:@{ NSForegroundColorAttributeName : [UIColor whiteColor] }];
-    [string appendAttributedString:[[NSAttributedString alloc] initWithString:self.formattedDuration
-                                                                   attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithWhite:0.75 alpha:1] }]];
-    _label.attributedText = string;
-    
-    double seconds = _remaining;
-    CGRect frame = _progressionView.frame;
-    if (seconds > 0.) {
-        frame.size.width = (self.frame.size.width - 8.) * (1. - (_remaining / (float)_duration));
-        frame.origin.y = self.frame.size.height - 1.;
-    } else {
-        frame.size.width = 0.;
-    }
-    _progressionView.frame = frame;
+	UIColor * textColor = IS_IOS10_OR_MORE ? [UIColor darkTextColor] : [UIColor lightTextColor];
+	
+	NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:[_name stringByAppendingString:@"\n"]
+																				attributes:@{ NSForegroundColorAttributeName : textColor }];
+	[string appendString:self.formattedDuration attributes:@{ NSForegroundColorAttributeName : [textColor colorWithAlphaComponent:0.75] }];
+	_label.attributedText = string;
+	
+	double seconds = _remaining;
+	if (seconds > 0.) {
+		CGFloat progression = 1. - (_remaining / (CGFloat)_duration);
+		_widthConstraint.constant = (self.frame.size.width - 8.) * progression;
+	} else
+		_widthConstraint.constant = 0.;
+	
+	_progressionView.backgroundColor = textColor;
 }
 
 @end

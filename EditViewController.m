@@ -31,16 +31,16 @@
 
 - (void)reloadData
 {
-    _allCountdowns = [Countdown allCountdowns].copy;
-    _includedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
-    [_includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
-        return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
-    
-    _notIncludedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == NO"]].mutableCopy;
-    [_notIncludedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
-        return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
-    
-    [self.tableView reloadData];
+	_allCountdowns = [Countdown allCountdowns].copy;
+	_includedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
+	[_includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+		return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
+	
+	_notIncludedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == NO"]].mutableCopy;
+	[_notIncludedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
+		return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
+	
+	[self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -83,63 +83,53 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (TARGET_IS_IOS8_OR_LATER)
-        return 2; // "Include in notification center" and "Do not include"
-    
-    return 1;
+	return 2; // "Include in notification center" and "Do not include"
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (TARGET_IS_IOS8_OR_LATER) {
-        if /**/ (section == 0)
-            return NSLocalizedString(@"Include in notification center", nil);
-        else if (section == 1)
-            return NSLocalizedString(@"Do not include", nil);
-    }
-    return nil;
+	if /**/ (section == 0)
+		return NSLocalizedString(@"Include in notification center", nil);
+	else if (section == 1)
+		return NSLocalizedString(@"Do not include", nil);
+	
+	return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (TARGET_IS_IOS8_OR_LATER) {
-        if /**/ (section == 0)
-            return self.includedCountdowns.count;
-        else if (section == 1)
-            return self.notIncludedCountdowns.count;
-        return 0;
-    }
-    
-    return _allCountdowns.count;
+	if /**/ (section == 0)
+		return self.includedCountdowns.count;
+	else if (section == 1)
+		return self.notIncludedCountdowns.count;
+	
+	return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * countdownCellIdentifier = @"countdownCellIdentifier";
-    UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:countdownCellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    }
-    
-    Countdown * countdown = _allCountdowns[indexPath.row];
-    if (TARGET_IS_IOS8_OR_LATER) {
-        countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-    }
-    cell.textLabel.text = countdown.name;
-    
-    if (countdown.type == CountdownTypeTimer) {
-        if (countdown.durations.count >= 2)
-            cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)countdown.durations.count];
-        else if (countdown.durations.count == 1)
-            cell.detailTextLabel.text = [countdown descriptionOfDurationAtIndex:0];
-        else
-            cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
-    } else
-        cell.detailTextLabel.text = countdown.endDate.description;
-    
-    return cell;
+	static NSString * countdownCellIdentifier = @"countdownCellIdentifier";
+	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
+	
+	if (cell == nil) {
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:countdownCellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	}
+	
+	Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
+	cell.textLabel.text = countdown.name;
+	
+	if (countdown.type == CountdownTypeTimer) {
+		if (countdown.durations.count >= 2)
+			cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%ld durations", nil), (long)countdown.durations.count];
+		else if (countdown.durations.count == 1)
+			cell.detailTextLabel.text = [countdown descriptionOfDurationAtIndex:0];
+		else
+			cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
+	} else
+		cell.detailTextLabel.text = countdown.endDate.localizedDescription;
+	
+	return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -155,13 +145,9 @@
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		
-        Countdown * countdown = _allCountdowns[indexPath.row];
-        if (TARGET_IS_IOS8_OR_LATER)
-            countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
-			
-        [self removeCountdown:countdown index:indexPath.row];
-        // @TODO: animated the row deletion
+		Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
+		[self removeCountdown:countdown index:indexPath.row];
+		// @TODO: animated the row deletion
 	}
 }
 
@@ -172,15 +158,15 @@
 
 - (void)tableView:(UITableView *)aTableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    NSUInteger sourceIndex = sourceIndexPath.section * _includedCountdowns.count + sourceIndexPath.row;
-    NSUInteger destinationIndex = destinationIndexPath.section * (_includedCountdowns.count - 1) + destinationIndexPath.row;
-    Countdown * countdown = _allCountdowns[sourceIndex];
-    countdown.notificationCenter = (destinationIndexPath.section == 0);
-    if (sourceIndex != destinationIndex)
-        [Countdown moveCountdownAtIndex:sourceIndex toIndex:destinationIndex];
-    else
-        [self reloadData];
-    // @TODO: animated the row movement
+	NSUInteger sourceIndex = sourceIndexPath.section * _includedCountdowns.count + sourceIndexPath.row;
+	NSUInteger destinationIndex = destinationIndexPath.section * (_includedCountdowns.count - 1) + destinationIndexPath.row;
+	Countdown * countdown = _allCountdowns[sourceIndex];
+	countdown.notificationCenter = (destinationIndexPath.section == 0);
+	if (sourceIndex != destinationIndex)
+		[Countdown moveCountdownAtIndex:sourceIndex toIndex:destinationIndex];
+	else
+		[self reloadData];
+	// @TODO: animated the row movement
 }
 
 @end

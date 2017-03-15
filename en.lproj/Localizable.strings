@@ -1,11 +1,14 @@
-/* 
-   Localizable.strings
-   Closer
+//
+//  Localizable.strings
+//  Closer
+//
+//  Created by Max on 3/10/11.
+//  Copyright 2011 Lis@cintosh. All rights reserved.
+//
 
-   Created by Max on 3/10/11.
-   Copyright 2011 Lis@cintosh. All rights reserved.
- */
- 
+"Next: ";
+"Choose current duration";
+
 /* MessageViewControler */
 "Message";
 "Clear";
@@ -22,7 +25,7 @@
 /* SettingsViewController */
 "Settings";
 "Edit All";
-"Closer & Closer %@\nCopyright © %lu, Lis@cintosh";
+"Closer & Closer %@\nLis@cintosh, %lu";
 "Name";
 "Date & Time";
 "Message";
@@ -40,6 +43,8 @@
 "See all my applications";
 
 "Closer & Closer";
+
+"NO_DATE_FORMAT" = "--:--";
 
 /* NameViewController */
 "Name";
@@ -93,7 +98,7 @@
 "READING_ERROR_ALERT_MESSAGE" = "An error appears when reading on disk, the file could be corrupted. You should delete the application and re-install it.";
 
 "WRITING_ERROR_ALERT_TITLE" = "Writing Error!";
-"WRITING_ERROR_ALERT_MESSAGE %@" = "An error appears when wrinting on disk. You should check for available space on your %@ or restart it.";
+"WRITING_ERROR_ALERT_MESSAGE %@" = "An error appears when writing on disk. You should check for available space on your %@ or restart it.";
 
 "PAGE_STYLE_NIGHT" = "Night";
 "PAGE_STYLE_DAY" = "Day";
@@ -123,7 +128,7 @@
 "Export %@";
 " and one more";
 " and %i more";
-"You can retreive the export file as \"%@.%@\" into iTunes Sharing.";
+"You can retrieve the export file as \"%@.%@\" into iTunes Sharing.";
 "Export Succeed!";
 "All countdowns have been added as event in the calendar app into the calendar named \"%@\".";
 
@@ -143,9 +148,11 @@
 /*** From 1.1 ***/
 /* ImportFromWebsiteViewController_Pad */
 "Import";
-"Paste";
-"Do you want to use\n %@ and %@\nas passwords to import?";
-"Import";
+"Use %@";
+"Use %@ and %@";
+//"Paste";
+//"Do you want to use\n %@ and %@\nas passwords to import?";
+//"Import";
 
 "No Countdowns found";
 "Check that:\n%@ and %@\nare two correct passwords";
@@ -153,11 +160,12 @@
 "Connection Error";
 
 /* ImportFromWebsiteViewController_Phone */
-"Enter the First Password";
-"Enter the Second Password";
+"Enter the First Password" = "Enter first password";
+"Enter the Second Password" = "Enter second password";
 
 /* ImportFromCalendarViewController */
 "Delete some countdowns and retry to import these event.";
+"IMPORT_CALENDAR_IN_DAYS" = "in";
 
 /* ExportViewController */
 "Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?";
@@ -238,7 +246,11 @@
 "no durations";
 "%ld durations";
 
+"Create";
+
 "Export Countdowns...";
+
+"About...";
 
 "Do you really want to delete this timer?";
 "Delete Timer";

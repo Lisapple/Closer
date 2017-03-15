@@ -7,7 +7,7 @@
 //
 
 #import "EditAllCountdownViewController.h"
-#import "SettingsViewController_Phone.h"
+#import "SettingsViewController.h"
 #import "ImportFromCalendarViewController.h"
 #import "ImportFromWebsiteViewController_Phone.h"
 #import "ExportViewController.h"
@@ -113,16 +113,26 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:NULL]];
 		[self presentViewController:alert animated:YES completion:NULL];
-		
 	} else {
-		Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
-		aCountDown.name = [Countdown proposedNameForType:CountdownTypeCountdown];
-		NSIndexPath * indexPath = [NSIndexPath indexPathForRow:_includedCountdowns.count inSection:0];
-		[self insertCountdown:aCountDown atIndexPath:indexPath];
-		
-		[_tableView scrollToRowAtIndexPath:indexPath
-						 atScrollPosition:UITableViewScrollPositionMiddle
-								 animated:YES];
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"New Countdown", nil)
+																		message:nil preferredStyle:UIAlertControllerStyleAlert];
+		[alert addTextFieldWithConfigurationHandler:^(UITextField * textField) {
+			textField.text = [Countdown proposedNameForType:CountdownTypeCountdown];
+			textField.placeholder = NSLocalizedString(@"Name", nil);
+		}];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Create", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+			Countdown * aCountDown = [[Countdown alloc] initWithIdentifier:nil];
+			NSString * name = alert.textFields.firstObject.text;
+			aCountDown.name = (name.length > 0) ? name : [Countdown proposedNameForType:CountdownTypeCountdown];
+			NSIndexPath * indexPath = [NSIndexPath indexPathForRow:_includedCountdowns.count inSection:0];
+			[self insertCountdown:aCountDown atIndexPath:indexPath];
+			
+			[_tableView scrollToRowAtIndexPath:indexPath
+							  atScrollPosition:UITableViewScrollPositionMiddle
+									  animated:YES];
+		}]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
+		[self presentViewController:alert animated:YES completion:NULL];
 	}
 }
 
@@ -222,7 +232,7 @@
 			else
 				cell.detailTextLabel.text = NSLocalizedString(@"No durations", nil);
 		} else
-			cell.detailTextLabel.text = (countdown.endDate).description;
+			cell.detailTextLabel.text = (countdown.endDate).localizedDescription;
 		
 	} else {
 		static NSString * shareCellIdentifier = @"shareCellIdentifier";
@@ -271,7 +281,7 @@
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-        Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
+		Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 		[self removeCountdown:countdown indexPath:indexPath];
 	}
 }

@@ -9,6 +9,7 @@
 #import "Countdown+addition.h"
 #import "NSBundle+addition.h"
 #import "NSDate+addition.h"
+#import "NSMutableAttributedString+addition.h"
 
 @implementation Countdown (LocalNotification)
 
@@ -52,12 +53,12 @@
 
 - (void)updateLocalNotification
 {
-    if (self.isActive) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.endDate && self.endDate.timeIntervalSinceNow > 0.) {
-                
-                UILocalNotification * localNotif = [self localNotification];
-                if (localNotif) {
+	if (self.isActive) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (self.endDate && self.endDate.timeIntervalSinceNow > 0.) {
+				
+				UILocalNotification * localNotif = [self localNotification];
+				if (localNotif) {
 					[self removeLocalNotification];
 				} else {
 					localNotif = [self createLocalNotification];
@@ -250,12 +251,6 @@
 				   customAttributes:nil];
 }
 
-+ (void)tagDelete
-{
-	[Answers logCustomEventWithName:@"delete-countdown"
-				   customAttributes:nil];
-}
-
 + (void)tagChangeType:(CountdownType)type
 {
 	[Answers logCustomEventWithName:@"change-countdown-type"
@@ -277,8 +272,8 @@
 + (void)tagEndDate:(NSDate *)date
 {
 	NSDictionary * attrs = nil;
-	if (date.description) {
-		attrs = @{ @"end date" : date.description };
+	if (date.localizedDescription) {
+		attrs = @{ @"end date" : date.localizedDescription };
 	}
 	[Answers logCustomEventWithName:@"change-countdown-end-date"
 				   customAttributes:attrs];
@@ -294,6 +289,12 @@
 {
 	[Answers logCustomEventWithName:@"change-countdown-theme"
 				   customAttributes:@{ @"theme" : [Countdown styles][style] }];
+}
+
++ (void)tagDelete
+{
+	[Answers logCustomEventWithName:@"delete-countdown"
+				   customAttributes:nil];
 }
 
 @end

@@ -18,7 +18,7 @@
 
 #define CLAMP(A, T, B) ( A + (B - A) * T )
 
-#define kDefaultEventDuration 7200 // The default duration for EKEvent and VEvent = 60 * 60 * 2 seconds = 2 hours
+#define kDefaultEventDuration 7200 // The default duration in seconds for EKEvent and VEvent
 
 #define TARGET_IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
@@ -26,9 +26,6 @@
 #  define OrderComparisonResult(A, B) ( ((A) < (B))? NSOrderedAscending : (((A) > (B))? NSOrderedDescending : NSOrderedSame) )
 #endif
 
-#define kLastSelectedPageIndex				@"last_selected_page_index"
 #define kLastSelectedCountdownIdentifierKey	@"lastSelectedCountdownIdentifier"
-
-#define TARGET_IS_IOS8_OR_LATER   ([UIDevice currentDevice].systemVersion.floatValue >= 8.)
 
 #define DISTANCE(P1, P2) (sqrt((P1.x-P2.x)*(P1.x-P2.x)+(P1.y-P2.y)*(P1.y-P2.y)))

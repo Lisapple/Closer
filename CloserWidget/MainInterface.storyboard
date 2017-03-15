@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="M4Y-Lb-cyx">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Today View Controller-->
@@ -14,55 +19,57 @@
                         <viewControllerLayoutGuide type="bottom" id="FKl-LY-JtV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" id="S3S-Oj-5AN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="144"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="37" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2c6-aH-Kcp">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="144"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CountdownCellID" rowHeight="37" id="IjP-MM-3Qg" customClass="CountdownTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CountdownCellID" id="IjP-MM-3Qg" customClass="CountdownTableViewCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="37"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IjP-MM-3Qg" id="YGr-we-X5I">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Countdown" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="THn-md-YOT">
-                                                    <rect key="frame" x="0.0" y="9" width="312" height="18"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Countdown" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THn-md-YOT">
+                                                    <rect key="frame" x="8" y="4" width="304" height="28.5"/>
+                                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="15"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="centerY" secondItem="THn-md-YOT" secondAttribute="centerY" id="6qF-hl-Anf"/>
-                                                <constraint firstItem="THn-md-YOT" firstAttribute="leading" secondItem="YGr-we-X5I" secondAttribute="leading" id="Yxe-40-yEu"/>
-                                                <constraint firstAttribute="trailing" secondItem="THn-md-YOT" secondAttribute="trailing" constant="8" id="aNF-d8-QBW"/>
+                                                <constraint firstItem="THn-md-YOT" firstAttribute="leading" secondItem="YGr-we-X5I" secondAttribute="leadingMargin" id="Yxe-40-yEu"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="THn-md-YOT" secondAttribute="trailing" id="aNF-d8-QBW"/>
+                                                <constraint firstAttribute="bottom" secondItem="THn-md-YOT" secondAttribute="bottom" constant="4" id="cqv-1m-a96"/>
+                                                <constraint firstItem="THn-md-YOT" firstAttribute="top" secondItem="YGr-we-X5I" secondAttribute="top" constant="4" id="oHZ-5I-vCW"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="label" destination="THn-md-YOT" id="DVJ-Fx-9sM"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="TimerCellID" selectionStyle="default" indentationWidth="10" reuseIdentifier="TimerCellID" rowHeight="37" id="6HE-bC-paf" customClass="TimerTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="TimerCellID" selectionStyle="default" indentationWidth="10" reuseIdentifier="TimerCellID" id="6HE-bC-paf" customClass="TimerTableViewCell">
                                         <rect key="frame" x="0.0" y="59" width="320" height="37"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6HE-bC-paf" id="4m7-Av-FIk">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timer" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="hZQ-Co-DLF">
-                                                    <rect key="frame" x="0.0" y="9" width="312" height="18"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timer" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hZQ-Co-DLF">
+                                                    <rect key="frame" x="8" y="4" width="304" height="28.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="centerY" secondItem="hZQ-Co-DLF" secondAttribute="centerY" id="YgX-aH-l0J"/>
-                                                <constraint firstAttribute="trailing" secondItem="hZQ-Co-DLF" secondAttribute="trailing" constant="8" id="feU-bo-GJD"/>
-                                                <constraint firstItem="hZQ-Co-DLF" firstAttribute="leading" secondItem="4m7-Av-FIk" secondAttribute="leading" id="sHd-hQ-JEd"/>
+                                                <constraint firstItem="hZQ-Co-DLF" firstAttribute="top" secondItem="4m7-Av-FIk" secondAttribute="top" constant="4" id="EOl-ge-gwi"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="hZQ-Co-DLF" secondAttribute="trailing" id="feU-bo-GJD"/>
+                                                <constraint firstAttribute="bottom" secondItem="hZQ-Co-DLF" secondAttribute="bottom" constant="4" id="p0c-qM-Lro"/>
+                                                <constraint firstItem="hZQ-Co-DLF" firstAttribute="leading" secondItem="4m7-Av-FIk" secondAttribute="leadingMargin" id="sHd-hQ-JEd"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -84,11 +91,12 @@
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="44"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="44"/>
+                    <size key="freeformSize" width="320" height="144"/>
                     <connections>
                         <outlet property="tableView" destination="2c6-aH-Kcp" id="Ae5-pk-o5i"/>
                     </connections>
@@ -98,4 +106,9 @@
             <point key="canvasLocation" x="516" y="285"/>
         </scene>
     </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
 </document>

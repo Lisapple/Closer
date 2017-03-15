@@ -76,7 +76,7 @@
 		label.numberOfLines = 0;// Infinite number of line
 		label.textColor = [UIColor darkGrayColor];
 		label.textAlignment = NSTextAlignmentCenter;
-		label.font = [UIFont boldSystemFontOfSize:18.];
+		label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
 		label.shadowOffset = CGSizeMake(0., 1.);
 		label.text = NSLocalizedString(@"No Countdowns", nil);

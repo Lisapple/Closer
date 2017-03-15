@@ -38,8 +38,17 @@
 	
 	NSUserDefaults * widgetDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
 	_countdowns = [widgetDefaults arrayForKey:@"countdowns"];
+	_tableView.estimatedRowHeight = 44.;
+	_tableView.rowHeight = UITableViewAutomaticDimension;
 	[_tableView reloadData];
-	self.preferredContentSize = CGSizeMake(_tableView.contentSize.width, _tableView.rowHeight * _countdowns.count);
+	
+	if ([self.extensionContext respondsToSelector:@selector(widgetLargestAvailableDisplayMode)] && _countdowns.count > 2) { // iOS 10+
+		self.extensionContext.widgetLargestAvailableDisplayMode = NCWidgetDisplayModeExpanded;
+	} else {
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			self.preferredContentSize = CGSizeMake(_tableView.contentSize.width, _tableView.contentSize.height);
+		});
+	}
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -49,9 +58,10 @@
 	_timer = nil;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)widgetActiveDisplayModeDidChange:(NCWidgetDisplayMode)activeDisplayMode withMaximumSize:(CGSize)maxSize
+{
+	self.preferredContentSize = CGSizeMake(_tableView.contentSize.width,
+										   MIN(maxSize.height, _tableView.contentSize.height + 8.));
 }
 
 - (void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult))completionHandler

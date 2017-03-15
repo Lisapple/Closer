@@ -127,13 +127,11 @@ static NSMutableArray * _countdowns = nil;
 						   forKey:@"countdowns"];
 		
 		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-		NSInteger index = [userDefaults integerForKey:kLastSelectedPageIndex];
-		Countdown * countdown = _countdowns.firstObject;
-		if (0 <= index && index < _countdowns.count) {
-			countdown = _countdowns[index];
-			[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
-			[sharedDefaults synchronize];
-		}
+		NSString * identifier = [userDefaults stringForKey:kLastSelectedCountdownIdentifierKey];
+		
+		Countdown * countdown = [Countdown countdownWithIdentifier:identifier] ?: _countdowns.firstObject;
+		[sharedDefaults setObject:countdown.identifier forKey:@"selectedIdentifier"];
+		[sharedDefaults synchronize];
 		
 		if (NSClassFromString(@"WCSession") && [WCSession isSupported]
 			&& [WCSession defaultSession].isWatchAppInstalled && countdown.identifier) {
@@ -147,10 +145,10 @@ static NSMutableArray * _countdowns = nil;
 									   replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
 										   dispatch_sync(dispatch_get_main_queue(), ^{
 #if TARGET_IPHONE_SIMULATOR
-											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply"
+											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Reply", nil)
 																											   message:replyMessage.description
 																										preferredStyle:UIAlertControllerStyleAlert];
-											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+											   [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil]];
 											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 #endif
 										   });
@@ -158,10 +156,10 @@ static NSMutableArray * _countdowns = nil;
 									   errorHandler:^(NSError * _Nonnull error) {
 										   dispatch_sync(dispatch_get_main_queue(), ^{
 #if TARGET_IPHONE_SIMULATOR
-											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Reply error"
+											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Reply error", nil)
 																											   message:error.localizedDescription
 																										preferredStyle:UIAlertControllerStyleAlert];
-											   [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+											   [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil]];
 											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 #endif
 										   });
@@ -172,8 +170,8 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)synchronize
 {
-    [self synchronizeWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
+	[self synchronizeWithCompletion:^(BOOL success, NSError *error) {
+		if (error) {
 			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
 																			message:error.localizedDescription
 																	 preferredStyle:UIAlertControllerStyleAlert];
@@ -413,6 +411,7 @@ static NSMutableArray * _countdowns = nil;
 		/* Don't call self.xxx to not call updateLocalNotification many times */
 		_name = NSLocalizedString(@"NO_TITLE_PLACEHOLDER", nil);
 		_endDate = nil;
+		_paused = YES;
 		_message = @"";
 		_songID = @"default";
 		_style = 0;
@@ -658,7 +657,7 @@ static NSMutableArray * _countdowns = nil;
 - (void)pause
 {
 	if (_type == CountdownTypeTimer && !_paused) {
-		_remaining = _endDate.timeIntervalSinceNow;
+		_remaining = ceil(_endDate.timeIntervalSinceNow);
 		_endDate = nil;
 		_paused = YES;
 		[self updateLocalNotification];
@@ -667,7 +666,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (void)reset
 {
-	if (_type == CountdownTypeTimer) {
+	if (_type == CountdownTypeTimer && self.currentDuration) {
 		_endDate = [NSDate dateWithTimeIntervalSinceNow:self.currentDuration.doubleValue];
 		_paused = NO;
 		[self updateLocalNotification];
@@ -714,10 +713,10 @@ static NSMutableArray * _countdowns = nil;
 		if (minutes) [components addObject:[NSString stringWithFormat:@"%ld%@", minutes, NSLocalizedString(@"m", nil)]];
 		if (seconds) [components addObject:[NSString stringWithFormat:@"%ld%@", seconds, NSLocalizedString(@"s", nil)]];
 	} else {
-		if (days) [components addObject:[NSString stringWithFormat:@"%ld %@ ", days, (days > 1) ? NSLocalizedString(@"days", nil) : NSLocalizedString(@"day", nil)]];
-		if (hours) [components addObject:[NSString stringWithFormat:@"%ld %@ ", hours, (hours > 1) ? NSLocalizedString(@"hours", nil) : NSLocalizedString(@"hour", nil)]];
-		if (minutes) [components addObject:[NSString stringWithFormat:@"%ld %@ ", minutes, NSLocalizedString(@"min", nil)]];
-		if (seconds) [components addObject:[NSString stringWithFormat:@"%ld %@ ", seconds, NSLocalizedString(@"sec", nil)]];
+		if (days) [components addObject:[NSString stringWithFormat:@"%ld %@", days, NSLocalizedString((days > 1) ? @"days" : @"day", nil)]];
+		if (hours) [components addObject:[NSString stringWithFormat:@"%ld %@", hours, NSLocalizedString((hours > 1) ? @"hours" : @"hour", nil)]];
+		if (minutes) [components addObject:[NSString stringWithFormat:@"%ld %@", minutes, NSLocalizedString(@"min", nil)]];
+		if (seconds) [components addObject:[NSString stringWithFormat:@"%ld %@", seconds, NSLocalizedString(@"sec", nil)]];
 	}
 	return [components componentsJoinedByString:@", " withLastJoin:NSLocalizedString(@" and ", nil)]; // "12 min and 34 sec", "12d, 34h, 56m and 12s"
 }

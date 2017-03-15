@@ -6,13 +6,11 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-@class SettingsViewController_Phone;
+@class SettingsViewController;
 
 @interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIViewControllerPreviewingDelegate>
 
-@property (nonatomic, strong) SettingsViewController_Phone * settingsViewController;
+@property (nonatomic, strong) SettingsViewController * settingsViewController;
 @property (nonatomic, assign) IBOutlet UITableView * tableView;
 
 - (void)reloadData;

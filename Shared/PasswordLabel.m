@@ -12,7 +12,9 @@
 
 - (void)drawRect:(CGRect)rect
 {
-	[[UIImage imageNamed:@"password-field-background"] drawInRect:rect];
+	UIImage * image = [UIImage imageNamed:@"password-field-background"];
+	[[image stretchableImageWithLeftCapWidth:image.size.width / 2
+								topCapHeight:image.size.height / 2] drawInRect:rect];
 	[super drawRect:rect];
 }
 

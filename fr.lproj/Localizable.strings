@@ -1,10 +1,13 @@
-/* 
- Localizable.strings
- Closer
- 
- Created by Max on 3/10/11.
- Copyright 2011 Lis@cintosh. All rights reserved.
- */
+//
+//  Localizable.strings
+//  Closer
+//
+//  Created by Max on 3/10/11.
+//  Copyright 2011 Lis@cintosh. All rights reserved.
+//
+
+"Next: " = "Suivant: ";
+"Choose current duration" = "Choisissez la durée actuelle";
 
 /* MessageViewControler */
 "Message" = "Message";
@@ -22,7 +25,7 @@
 /* SettingsViewController */
 "Settings" = "Réglages";
 "Edit All" = "Tout Modifier";
-"Closer & Closer %@\nCopyright © %lu, Lis@cintosh" = "Closer & Closer %@\nCopyright © %lu, Lis@cintosh";
+"Closer & Closer %@\nLis@cintosh, %lu";
 "Name" = "Nom";
 "Date & Time" = "Date et Heure";
 "Message" = "Message";
@@ -41,6 +44,8 @@
 "See all my applications" = "Voir toutes mes app";
 
 "Closer & Closer";
+
+"NO_DATE_FORMAT" = "-:--";
 
 /* NameViewController */
 "Name" = "Nom";
@@ -146,9 +151,8 @@
 /*** From 1.1 ***/
 /* ImportFromWebsiteViewController_Pad */
 "Import" = "Importer";
-"Paste" = "Coller";
-"Do you want to use\n %@ and %@\nas passwords to import?" = "Voulez-vous utiliser\n %@ et %@\ncomme mots de passe ?";
-"Import" = "Importer";
+"Use %@" = "Utiliser %@";
+"Use %@ and %@" = "Utiliser %@ et %@";
 
 "No Countdowns found" = "Aucun décompte trouvé";
 "Check that:\n%@ and %@\nare two correct passwords" = "Vérifiez que:\n%@ et %@\nsont corrects";
@@ -161,6 +165,7 @@
 
 /* ImportFromCalendarViewController */
 "Delete some countdowns and retry to import these event." = "Supprimez quelques décomptes et réessayez l'import de ces derniers.";
+"IMPORT_CALENDAR_IN_DAYS" = "dans";
 
 /* ExportViewController */
 "Do you want to export checked countdowns:\ninto iCalendar file format in iTunes Sharing,\nto the calendar app to your %@\nor to Lisacintosh.com to watch them online?" = "Voulez-vous exporter les décomptes:\nau format iCalendar dans iTunes Sharing,\nvers l'application calendrier de votre %@\nou vers Lisacintosh.com pour les afficher en ligne ?";
@@ -237,7 +242,11 @@
 "Timer" = "Minuteur";
 "Countdown" = "Décompte";
 
+"Create" = "Créer";
+
 "Export Countdowns..." = "Exporter les Décomptes...";
+
+"About..." = "À Propos...";
 
 "Do you really want to delete this timer?" = "Voulez-vous vraiment supprimer ce minuteur ?";
 "Delete Timer" = "Supprimer le Minuteur";

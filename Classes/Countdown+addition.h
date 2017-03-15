@@ -50,18 +50,13 @@
 
 + (void)tagInsert;
 
-+ (void)tagDelete;
-
 + (void)tagChangeType:(CountdownType)type;
-
 + (void)tagChangeName;
-
 + (void)tagChangeMessage;
-
 + (void)tagEndDate:(nullable NSDate *)date;
-
 + (void)tagChangeDuration;
-
 + (void)tagChangeTheme:(CountdownStyle)style;
+
++ (void)tagDelete;
 
 @end

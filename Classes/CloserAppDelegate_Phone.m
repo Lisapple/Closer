@@ -38,11 +38,11 @@
 		[session activateSession];
 	}
 	
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+	if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
 		UIUserNotificationType type = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
-    }
-    
+		[application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
+	}
+	
 	application.applicationSupportsShakeToEdit = YES; // Enabled shake to undo
 	application.statusBarStyle = UIStatusBarStyleDefault;
 	application.statusBarHidden = YES;
@@ -54,11 +54,10 @@
 	
 	/* Retreive the last selected page index and selected it */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *identifier = [userDefaults stringForKey:kLastSelectedCountdownIdentifierKey];
+	NSString * identifier = [userDefaults stringForKey:kLastSelectedCountdownIdentifierKey];
 	NSUInteger index = [Countdown.allCountdowns indexOfObject:[Countdown countdownWithIdentifier:identifier]];
-	if (index != NSNotFound) {
+	if (index != NSNotFound)
 		[_mainViewController showPageAtIndex:index animated:NO];
-	}
 	
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification
 													  object:nil queue:NSOperationQueue.currentQueue
@@ -77,13 +76,12 @@
 {
 #if TARGET_IPHONE_SIMULATOR
 	NSString * stateString = @"unkown state application";
-	if (application.applicationState == UIApplicationStateActive) {
+	if (application.applicationState == UIApplicationStateActive)
 		stateString = @"application active";
-	} else if (application.applicationState == UIApplicationStateInactive) {
+	else if (application.applicationState == UIApplicationStateInactive)
 		stateString = @"application inactive";
-	} else if (application.applicationState == UIApplicationStateBackground) {
+	else if (application.applicationState == UIApplicationStateBackground)
 		stateString = @"application background";
-	}
 	
 	NSDebugLog(@"application:didReceiveLocalNotification: %@ with an %@.", notification.alertBody, stateString);
 #endif
@@ -108,10 +106,10 @@
 			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
 																			message:notification.alertBody
 																	 preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 				// Start the next timer
 				[[NSNotificationCenter defaultCenter] postNotificationName:@"TimerDidContinueNotification" object:countdown]; }]];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
 			[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		}
@@ -119,24 +117,20 @@
 	
 	/* Play the sound */
 	if (notification.soundName) {
+		NSString * path = [NSBundle mainBundle].bundlePath;
+		if ([notification.soundName isEqualToString:UILocalNotificationDefaultSoundName] || [notification.soundName isEqualToString:@"default"])
+			path = [path stringByAppendingString:@"/Songs/complete.caf"];
+		else
+			path = [path stringByAppendingFormat:@"/%@", notification.soundName];
 		
-		NSURL * fileURL = nil;
-		if ([notification.soundName isEqualToString:UILocalNotificationDefaultSoundName] || [notification.soundName isEqualToString:@"default"]) {
-			NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [NSBundle mainBundle].bundlePath];
-			fileURL = [NSURL fileURLWithPath:path];
-		} else {
-			NSString * path = [NSString stringWithFormat:@"%@/%@", [NSBundle mainBundle].bundlePath, notification.soundName];
-			fileURL = [NSURL fileURLWithPath:path];
-		}
-		
+		NSURL * fileURL = [NSURL fileURLWithPath:path];
 		NSDebugLog(@"fileURL: %@", fileURL);
 		if (fileURL) {
 #if TARGET_IPHONE_SIMULATOR // Playing sounds on simulator is still "buggy"
 			NSDebugLog(@"Sound played: %@ (%@)", notification.soundName, fileURL);
 #else
 			NSError * error = nil;
-			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL
-																			error:&error];
+			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&error];
 			if (error)
 				NSLog(@"Error on audio player: %@ for %@", error.localizedDescription, fileURL.path.lastPathComponent);
 			
@@ -170,7 +164,7 @@
 	NSInteger index = [Countdown indexOfCountdown:countdown];
 	if (index != NSNotFound) {
 		[_mainViewController showSettingsForPageAtIndex:index animated:YES];
-		SettingsViewController_Phone * controller = _mainViewController.settingsViewController;
+		SettingsViewController * controller = _mainViewController.settingsViewController;
 		DurationsViewController * durationController = (DurationsViewController *)[controller showSettingsType:SettingsTypeDurations animated:NO];
 		[durationController showAddDurationWithAnimation:NO];
 	}
@@ -180,7 +174,7 @@
 {
 	BOOL animated = ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 	NSString * identifier = nil;
-#define URL_STRING(X) @"closer:\\/\\/countdown\\/"X
+#define URL_STRING(X) @"^closer:\\/\\/countdown\\/"X
 	// closer://countdown#[identifier]
 	if /**/ ([url.absoluteString isMatchingWithPattern:URL_STRING(@"#([^\\/]+)$") firstMatch:&identifier]) { // DEPRECATED
 		[self openCountdownWithIdentifier:identifier animated:animated];
@@ -212,7 +206,7 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation // iOS 8
 {
-    return [self openDeeplinkURL:url];
+	return [self openDeeplinkURL:url];
 }
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded))completionHandler
@@ -257,7 +251,7 @@
 #if TARGET_IPHONE_SIMULATOR
 	dispatch_async(dispatch_get_main_queue(), ^{
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) { }]];
 		[self.window.rootViewController presentViewController:alert animated:YES completion:NULL];
 	});
 #endif
@@ -299,9 +293,11 @@
 			}
 		} else {
 			NSString * identifier = message[@"lastSelectedCountdownIdentifier"];
-			if (identifier && [Countdown countdownWithIdentifier:identifier] != nil) {
+			Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+			if (identifier && countdown != nil) {
 				NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 				[userDefaults setObject:identifier forKey:kLastSelectedCountdownIdentifierKey];
+				[_mainViewController selectPageWithCountdown:countdown animated:NO];
 			}
 		}
 	} else {
@@ -314,8 +310,9 @@
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setInteger:_mainViewController.selectedPageIndex
-					  forKey:kLastSelectedPageIndex];
+	Countdown * countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
+	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
+	[userDefaults synchronize];
 	
 	[_mainViewController stopUpdateTimeLabels];
 	
@@ -334,8 +331,8 @@
 	
 	/* Save the last selected page */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setInteger:_mainViewController.selectedPageIndex
-					  forKey:kLastSelectedPageIndex];
+	Countdown * countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
+	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
 	[userDefaults synchronize];
 }
 

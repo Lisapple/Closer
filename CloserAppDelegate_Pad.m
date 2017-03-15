@@ -80,16 +80,13 @@
 	
 	/* Play the sound */
 	if (notification.soundName) {
+		NSString * path = [NSBundle mainBundle].bundlePath;
+		if ([notification.soundName isEqualToString:UILocalNotificationDefaultSoundName] || [notification.soundName isEqualToString:@"default"])
+			path = [path stringByAppendingString:@"/Songs/complete.caf"];
+		else
+			path = [path stringByAppendingFormat:@"/%@", notification.soundName];
 		
-		NSURL * fileURL = nil;
-		if ([notification.soundName isEqualToString:UILocalNotificationDefaultSoundName] || [notification.soundName isEqualToString:@"default"]) {
-			NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [NSBundle mainBundle].bundlePath];
-			fileURL = [NSURL fileURLWithPath:path];
-		} else {
-			NSString * path = [NSString stringWithFormat:@"%@/%@", [NSBundle mainBundle].bundlePath, notification.soundName];
-			fileURL = [NSURL fileURLWithPath:path];
-		}
-		
+		NSURL * fileURL = [NSURL fileURLWithPath:path];
 		if (fileURL) {
 #if TARGET_IPHONE_SIMULATOR // Playing sound into the simulator is still buggy
 			NSDebugLog(@"Sound played: %@ (%@)", notification.soundName, fileURL);

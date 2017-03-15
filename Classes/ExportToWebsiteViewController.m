@@ -192,8 +192,13 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[[UIApplication sharedApplication] openURL:[self countdownOnCloserWebsiteURL]];
-	
+	NSURL * url = self.countdownOnCloserWebsiteURL;
+	if (NSClassFromString(@"SFSafariViewController")) {
+		SFSafariViewController * viewController = [[SFSafariViewController alloc] initWithURL:url];
+		[self presentViewController:viewController animated:YES completion:nil];
+	} else {
+		[[UIApplication sharedApplication] openURL:url];
+	}
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
