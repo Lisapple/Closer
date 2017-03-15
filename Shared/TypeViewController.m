@@ -22,7 +22,7 @@
 	_tableView.dataSource = self;
 	_tableView.alwaysBounceVertical = YES;
 	
-    [super viewDidLoad];
+	[super viewDidLoad];
 }
 
 #pragma mark - Table view data source

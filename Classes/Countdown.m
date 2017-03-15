@@ -6,7 +6,6 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import "Countdown.h"
 #import "Countdown+addition.h"
 
 #import "NSBundle+addition.h"

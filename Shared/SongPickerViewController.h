@@ -6,9 +6,8 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <AudioToolbox/AudioToolbox.h>
-#import <AVFoundation/AVFoundation.h>
+@import AudioToolbox;
+@import AVFoundation;
 
 @class Countdown;
 

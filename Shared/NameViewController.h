@@ -6,9 +6,6 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-
 @interface NameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
 @property (nonatomic, assign) IBOutlet UITextField * cellTextField;

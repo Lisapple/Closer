@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Lisacintosh. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface NSObject (addition)
 
 + (void)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay;

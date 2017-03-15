@@ -6,8 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-
 @interface UIApplication (addition)
 
 - (void)enableIdleTimer;

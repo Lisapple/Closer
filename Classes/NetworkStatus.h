@@ -6,9 +6,7 @@
 //  Copyright (c) 2012 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-#import <SystemConfiguration/SystemConfiguration.h>
+@import SystemConfiguration;
 #import <netinet/in.h>
 
 #define kNetworkStatusDidChangeNotification NetworkStatusDidChangeNotification

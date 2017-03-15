@@ -59,11 +59,11 @@
 
 - (instancetype)initWithVersion:(NSString *)versionString
 {
-    if ((self = [super init])) {
+	if ((self = [super init])) {
 		_version = versionString;
 		_events = [[NSMutableArray alloc] initWithCapacity:3];
-    }
-    return self;
+	}
+	return self;
 }
 
 - (void)addEvent:(VEvent *)event

@@ -9,7 +9,6 @@
 #import "TodayViewController.h"
 #import "TimerTableViewCell.h"
 #import "CountdownTableViewCell.h"
-#import "Countdown.h"
 
 @interface TodayViewController () <NCWidgetProviding, UITableViewDataSource, UITableViewDelegate>
 

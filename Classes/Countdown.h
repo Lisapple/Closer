@@ -6,9 +6,8 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <NotificationCenter/NotificationCenter.h>
-#import <WatchConnectivity/WatchConnectivity.h>
+@import NotificationCenter;
+@import WatchConnectivity;
 
 extern NSString * _Nonnull const CountdownDidSynchronizeNotification;
 extern NSString * _Nonnull const CountdownDidUpdateNotification;

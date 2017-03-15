@@ -6,8 +6,6 @@
 //
 //
 
-#import <Foundation/Foundation.h>
-
 @interface NSString (addition)
 
 - (BOOL)isMatchingWithPattern:(nonnull NSString *)pattern;

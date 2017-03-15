@@ -8,7 +8,6 @@
 
 #import "NSDate+addition.h"
 
-
 @implementation NSDate(addition)
 
 - (NSInteger)second

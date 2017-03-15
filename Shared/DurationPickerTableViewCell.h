@@ -6,8 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-
 #import "DurationPickerView.h"
 
 @interface DurationPickerTableViewCell : UITableViewCell

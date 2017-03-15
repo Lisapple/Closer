@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Lis@cintosh. All rights reserved.
 //
 
-#import "Countdown.h"
-#import <EventKit/EventKit.h>
-#import <CoreSpotlight/CoreSpotlight.h>
-#import <MobileCoreServices/MobileCoreServices.h>
+@import EventKit;
+@import CoreSpotlight;
+@import MobileCoreServices;
+@import Crashlytics;
 
 @interface Countdown (LocalNotification)
 

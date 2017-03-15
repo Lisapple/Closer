@@ -6,8 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-
 @interface PageViewController : UIViewController
 
 @property (nonatomic, strong, readonly, nonnull) Countdown * countdown;

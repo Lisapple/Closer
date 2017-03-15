@@ -7,6 +7,8 @@
 //
 
 #import "SettingsViewController_Phone.h"
+@import Crashlytics;
+
 #import "CountdownPageView.h"
 #import "TimerPageView.h"
 

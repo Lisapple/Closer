@@ -6,10 +6,7 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "FontDescription.h"
-
-#import <QuartzCore/QuartzCore.h>
 
 #import "PageView.h"
 #import "CCLabel.h"

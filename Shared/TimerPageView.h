@@ -6,8 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-
 #import "PageView.h"
 
 #import "TimerView.h"

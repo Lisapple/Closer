@@ -8,58 +8,11 @@
 
 #import "PageView.h"
 
-#import "NSObject+additions.h"
-
-@interface _DeleteButton ()
-
-@property (nonatomic, strong) UILabel * label;
-
-@end
-
-@implementation _DeleteButton
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-	if ((self = [super initWithFrame:frame])) {
-		_label = [[UILabel alloc] initWithFrame:self.bounds];
-		_label.textColor = [UIColor whiteColor];
-		_label.backgroundColor = [UIColor clearColor];
-		_label.textAlignment = NSTextAlignmentCenter;
-		_label.font = [UIFont systemFontOfSize:20.];
-		[self addSubview:_label];
-		
-		_label.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
-		
-		self.clipsToBounds = YES;
-	}
-	return self;
-}
-
-- (void)setTitle:(NSString *)title forState:(UIControlState)state
-{
-	_label.text = title;
-}
-
-@end
-
-
-@interface PageView ()
-
-@property (nonatomic, strong) UIButton * deleteButton;
-
-@property (nonatomic, assign) CGPoint startLocation, offset;
-@property (nonatomic, assign) BOOL shouldShowDeleteConfirmation;
-
-@property (nonatomic, strong) UIScrollView * scrollView;
-
-@end
-
 @implementation PageView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame])) {
-		
 		self.opaque = NO;
 		self.backgroundColor = [UIColor clearColor];
 		

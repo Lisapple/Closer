@@ -9,10 +9,7 @@
 #import "CloserAppDelegate_Phone.h"
 #import "MainViewController_Phone.h"
 #import "DurationsViewController.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
 
-#import "Countdown.h"
 #import "Countdown+addition.h"
 
 #import "NSBundle+addition.h"

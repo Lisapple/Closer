@@ -6,8 +6,8 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
+@import AVFoundation;
+@import Fabric;
 
 @class MainViewController_Phone;
 

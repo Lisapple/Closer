@@ -9,7 +9,6 @@
 #import "MainViewController_Phone.h"
 #import "EditAllCountdownViewController.h"
 
-#import "Countdown.h"
 #import "NetworkStatus.h"
 
 #import "UIView+addition.h"

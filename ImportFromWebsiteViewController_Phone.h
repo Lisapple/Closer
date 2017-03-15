@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @interface ImportFromWebsiteViewController_Phone : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField * hiddenTextField;

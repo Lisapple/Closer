@@ -93,12 +93,12 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
-        
+	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
+		
 		_InternalSectionCalendarView * _internalSectionCalendarView = [[_InternalSectionCalendarView alloc] initWithFrame:self.frame];
 		self.backgroundView = _internalSectionCalendarView;
-    }
-    return self;
+	}
+	return self;
 }
 
 - (void)setCGColor:(CGColorRef)colorRef

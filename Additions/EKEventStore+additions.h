@@ -6,7 +6,7 @@
 //
 //
 
-#import <EventKit/EventKit.h>
+@import EventKit;
 
 @interface EKEventStore (additions)
 
@@ -16,6 +16,6 @@
 - (NSArray <EKEvent *> *)eventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendar:(EKCalendar *)calendar;
 
 - (NSUInteger)numberOfFutureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
-- (NSArray  <EKEvent *> *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
+- (NSArray <EKEvent *> *)futureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent;
 
 @end

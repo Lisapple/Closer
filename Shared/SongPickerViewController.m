@@ -25,7 +25,7 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    
+	
 	NSString * path = [[NSBundle mainBundle] pathForResource:@"songs" ofType:@"plist"];
 	_songs = [[NSMutableArray alloc] initWithContentsOfFile:path];
 	
@@ -125,7 +125,7 @@
 				NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [NSBundle mainBundle].bundlePath];
 				_player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
 #if !TARGET_IPHONE_SIMULATOR
-                /* This can crash on Simulator */
+				/* This can crash on Simulator */
 				[_player prepareToPlay];
 				[_player play];
 #endif
@@ -137,7 +137,7 @@
 			NSString * fileName = _songs[indexPath.row][@"Filename"];
 			NSString * path = [NSString stringWithFormat:@"%@/Songs/%@", [NSBundle mainBundle].bundlePath, fileName];
 			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path]
-                                                            error:nil];
+															 error:nil];
 #if !TARGET_IPHONE_SIMULATOR
 			/* This can crash on Simulator */
 			[_player prepareToPlay];

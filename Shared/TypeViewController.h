@@ -6,8 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-
 @interface TypeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, assign) IBOutlet UITableView * tableView;

@@ -10,8 +10,6 @@
 #import "NSBundle+addition.h"
 #import "NSDate+addition.h"
 
-#import <Crashlytics/Crashlytics.h>
-
 @implementation Countdown (LocalNotification)
 
 + (void)removeInvalidLocalNotifications

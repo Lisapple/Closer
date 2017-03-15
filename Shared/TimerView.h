@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @interface TimerView : UIControl
 
 @property (nonatomic, assign) CGFloat progression;

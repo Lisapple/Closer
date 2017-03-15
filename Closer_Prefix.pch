@@ -3,8 +3,6 @@
 //
 
 #ifdef __OBJC__
-	#import <Foundation/Foundation.h>
-	#import <UIKit/UIKit.h>
 	// Include Countdown to get it into all classes
 	#import "Countdown.h"
 	// Additions

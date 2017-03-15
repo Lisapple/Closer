@@ -8,8 +8,6 @@
 
 #import "PageThemeViewController.h"
 
-#import "Countdown.h"
-
 @interface PageThemeViewController ()
 
 @property (nonatomic, strong) UITableViewCell * checkedCell;
@@ -50,7 +48,7 @@
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-    
+	
 	[super viewDidLoad];
 }
 

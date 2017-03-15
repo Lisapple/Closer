@@ -6,8 +6,7 @@
 //  Copyright (c) 2012 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <EventKit/EventKit.h>
+@import EventKit;
 
 @interface ImportFromCalendarViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 

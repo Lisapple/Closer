@@ -6,13 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-
-@interface _DeleteButton : UIButton
-
-@end
-
-
 @class PageView;
 @protocol PageViewDelegate
 

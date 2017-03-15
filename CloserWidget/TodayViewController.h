@@ -6,8 +6,7 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-#import <NotificationCenter/NotificationCenter.h>
+@import NotificationCenter;
 
 @interface TodayViewController : UIViewController
 

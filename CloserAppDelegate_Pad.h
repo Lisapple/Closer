@@ -6,10 +6,8 @@
 //  Copyright (c) 2012 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
+@import AVFoundation;
+@import Fabric;
 
 @class MainViewController_Pad;
 

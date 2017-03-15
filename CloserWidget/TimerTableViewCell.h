@@ -6,8 +6,8 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-#import <NotificationCenter/NotificationCenter.h>
+@import UIKit;
+@import NotificationCenter;
 
 @interface TimerTableViewCell : UITableViewCell
 

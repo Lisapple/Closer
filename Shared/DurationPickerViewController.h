@@ -6,8 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
-
 #import "DurationPickerView.h"
 
 @interface DurationPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, DurationPickerViewDelegate, DurationPickerViewDataSource>

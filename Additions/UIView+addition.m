@@ -8,7 +8,6 @@
 
 #import "UIView+addition.h"
 
-
 @implementation UIView (addition)
 
 - (CGPoint)origin

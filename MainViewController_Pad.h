@@ -6,8 +6,9 @@
 //  Copyright (c) 2012 Lis@cintosh. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <QuartzCore/QuartzCore.h>
+@import UIKit;
+@import QuartzCore;
+@import Crashlytics;
 
 #import "SettingsViewController_Pad.h"
 #import "PageView.h"
