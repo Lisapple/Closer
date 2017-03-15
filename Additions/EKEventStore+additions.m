@@ -43,7 +43,7 @@
 
 - (NSUInteger)numberOfFutureEventsFromCalendar:(EKCalendar *)calendar includingRecurrent:(BOOL)includeRecurrent
 {
-	NSPredicate * predicate = [self predicateForEventsWithStartDate:[NSDate date]
+	NSPredicate * predicate = [self predicateForEventsWithStartDate:[NSDate dateWithTimeIntervalSinceNow:24 * 60 * 60] // From tomorrow
 															endDate:[NSDate distantFuture] // Fetch all future events that the eventStore could store
 														  calendars:@[ calendar ]];
 	
