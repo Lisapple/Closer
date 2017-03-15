@@ -22,6 +22,4 @@
 
 @property (nonatomic, strong) NSString * backgroundImageName;
 
-- (IBAction)showSettings:(id)sender;
-
 @end

@@ -10,21 +10,7 @@
 @protocol PageViewDelegate
 
 @optional
-
-//- (void)pageViewDidSingleTap:(PageView *)page;
-//- (void)pageViewDidDoubleTap:(PageView *)page;
-
-- (void)pageViewWillShowSettings:(PageView *)page;
-
-- (void)pageViewDidScroll:(PageView *)page offset:(CGPoint)offset;
-
-- (BOOL)pageViewShouldShowDeleteConfirmation:(PageView *)page;
-- (void)pageViewWillShowDeleteConfirmation:(PageView *)page;
-- (void)pageViewDidShowDeleteConfirmation:(PageView *)page;
-- (void)pageViewDidHideDeleteConfirmation:(PageView *)page;
-
-- (BOOL)pageViewShouldBeDeleted:(PageView *)page;
-- (void)pageViewDeleteButtonDidTap:(PageView *)page;
+- (void)pageViewDidDoubleTap:(PageView *)page;
 
 @end
 
@@ -33,23 +19,23 @@ static const NSTimeInterval kDoubleTapDelay = 0.35;
 /**
  @abstract: abstract method used for CountdownPageView and TimerPageView
  */
-@interface PageView : UIView <UIScrollViewDelegate>
+@interface PageView : UIView
 
-@property (nonatomic, assign) BOOL showDeleteConfirmation, isViewShown;
+@property (nonatomic, assign) BOOL isViewShown;
 @property (nonatomic, strong) Countdown * countdown;
-@property (nonatomic, assign) CGPoint position;
+@property (nonatomic, assign) CGPoint position; // ???: USED?
 @property (nonatomic, weak) NSObject <PageViewDelegate> * delegate;
 
 @property (nonatomic, assign) CountdownStyle style; // ??? Must be set only by countdown?
 
-@property (nonatomic, strong) IBOutlet UIButton * infoButton;
+//@property (nonatomic, strong) IBOutlet UIButton * infoButton;
 
 - (void)update;
-- (void)hideDeleteConfirmation; // Always with an animation
-- (void)hideDeleteConfirmationWithAnimation:(BOOL)animated;
 
 // Subclasses must call these method with super
 - (void)viewWillShow:(BOOL)animated;
 - (void)viewDidHide:(BOOL)animated;
+
+- (NSTimeInterval)minDurationBeforeIdle;
 
 @end

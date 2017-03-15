@@ -110,6 +110,7 @@
 	[super layoutSubviews];
 	
 	_progressLayer.frame = self.bounds;
+	[self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect

@@ -26,17 +26,13 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
-	PageView * pageView = nil;
-	if (_countdown.type == CountdownTypeTimer)
-		pageView = [[TimerPageView alloc] initWithFrame:self.view.bounds];
-	else
-		pageView = [[CountdownPageView alloc] initWithFrame:self.view.bounds];
-	
+	Class class = (_countdown.type == CountdownTypeTimer) ? TimerPageView.class : CountdownPageView.class;
+	PageView * pageView = [[class alloc] initWithFrame:self.view.bounds];
 	pageView.countdown = self.countdown;
 	[pageView update];
-	pageView.subviews.lastObject.backgroundColor = [[UIColor backgroundColorForStyle:self.countdown.style] colorWithAlphaComponent:0.7];
+	pageView.subviews.lastObject.backgroundColor = [[UIColor backgroundColorForStyle:self.countdown.style] colorWithAlphaComponent:0.7]; // @TODO: Should had a property for background view
 	[self.view addSubview:pageView];
 }
 

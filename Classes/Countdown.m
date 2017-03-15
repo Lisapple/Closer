@@ -14,6 +14,10 @@
 NSString * const CountdownDidSynchronizeNotification = @"CountdownDidSynchronizeNotification";
 NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotification";
 
+BOOL CountdownStyleHasDarkContent(CountdownStyle style) {
+	return (style == CountdownStyleDay || style == CountdownStyleSpring);
+}
+
 @interface Countdown ()
 
 @property (nonatomic, strong) NSMutableArray <NSNumber *> * durations;

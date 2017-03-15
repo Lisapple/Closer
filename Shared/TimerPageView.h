@@ -15,16 +15,14 @@
 
 @property (nonatomic, strong) IBOutlet TimerView * timerView;
 
-@property (nonatomic, strong) IBOutlet UILabel * timeLabel, * descriptionLabel;
-@property (nonatomic, strong) IBOutlet UIButton * leftButton;
-@property (nonatomic, strong) IBOutlet UILabel * nameLabel;
+@property (nonatomic, strong) IBOutlet CCLabel * timeLabel;
+@property (nonatomic, strong) IBOutlet UILabel * descriptionLabel;
 @property (nonatomic, strong) IBOutlet UIImageView * backgroundImageView;
 
-- (IBAction)showSettings:(id)sender;
+- (IBAction)pauseButtonAction:(id)sender;
 
-- (void)pause;
-- (void)start;
-
+- (void)tooglePause;
+- (void)reset;
 - (void)reload;
 
 @end

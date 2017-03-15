@@ -189,6 +189,56 @@
 	}
 }
 
+- (NSString * _Nullable)nextDurationName
+{
+	NSInteger nextIndex = self.durationIndex + 1;
+	if (nextIndex < self.durations.count) {
+		NSString * nextName = self.names[nextIndex];
+		if (nextName.length > 0)
+			return nextName;
+	}
+	return nil;
+}
+
+- (NSAttributedString *)attributedName
+{
+	UIColor * textColor = [UIColor textColorForStyle:self.style];
+	UIFont * font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+	NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+	paragraphStyle.alignment = NSTextAlignmentCenter;
+	paragraphStyle.paragraphSpacing = -2.5;
+	NSDictionary * attributes = @{ NSForegroundColorAttributeName : textColor,
+								   NSParagraphStyleAttributeName : paragraphStyle,
+								   NSFontAttributeName : font };
+	NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:self.name
+																				attributes:attributes];
+	
+	NSDictionary * detailsAttrs = @{ NSForegroundColorAttributeName : [textColor colorWithAlphaComponent:0.5],
+									 NSParagraphStyleAttributeName : paragraphStyle,
+									 NSFontAttributeName : font };
+	
+	NSInteger nextIndex = (self.durationIndex ?: 0) + 1;
+	if (self.promptState == PromptStateNone)
+		nextIndex %= (self.durations.count ?: 1);
+	
+	if (self.promptState != PromptStateEveryTimers && nextIndex < self.durations.count) { // Show next duration details under title
+		if (self.currentName.length > 0) {
+			NSString * name = [NSString stringWithFormat:@" %@", self.currentName];
+			[string appendString:name attributes:detailsAttrs];
+		}
+		NSString * subtitle = [NSString stringWithFormat:@"\n%@%@", NSLocalizedString(@"Next: ", nil),
+							   self.nextDurationName ?: [self descriptionOfDurationAtIndex:nextIndex]];
+		NSMutableDictionary * subtitleAttrs = detailsAttrs.mutableCopy;
+		subtitleAttrs[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+		[string appendString:subtitle attributes:subtitleAttrs];
+		
+	} else if (self.currentName.length > 0) { // Only show current duration name under title
+		NSString * name = [NSString stringWithFormat:@"\n%@", self.currentName];
+		[string appendString:name attributes:detailsAttrs];
+	}
+	return string;
+}
+
 @end
 
 

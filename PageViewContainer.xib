@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PageViewContainer">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="7QQ-CU-fgK"/>
+                <outlet property="infoButton" destination="xhr-4N-ez5" id="n3w-3K-fgz"/>
+                <outlet property="leftButton" destination="x1v-sW-LGs" id="1iq-dx-t98"/>
+                <outlet property="nameLabel" destination="r5u-m8-KP1" id="iX7-TC-aa7"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r5u-m8-KP1">
+                    <rect key="frame" x="60" y="629" width="255" height="20.5"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x1v-sW-LGs">
+                    <rect key="frame" x="8" y="619" width="44" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="Cd5-nf-LfK"/>
+                        <constraint firstAttribute="width" constant="44" id="VGT-At-xXV"/>
+                    </constraints>
+                    <state key="normal" image="pause"/>
+                    <connections>
+                        <action selector="leftAction:" destination="-1" eventType="touchUpInside" id="uja-1E-4Bs"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xhr-4N-ez5">
+                    <rect key="frame" x="323" y="619" width="44" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="9gl-kd-7zG"/>
+                        <constraint firstAttribute="width" constant="44" id="WtK-6d-U1f"/>
+                    </constraints>
+                    <state key="normal" image="info"/>
+                    <connections>
+                        <action selector="showSettings:" destination="-1" eventType="touchUpInside" id="fPE-Y8-OFR"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailingMargin" secondItem="xhr-4N-ez5" secondAttribute="trailing" id="4l2-m2-QUF"/>
+                <constraint firstItem="xhr-4N-ez5" firstAttribute="leading" secondItem="r5u-m8-KP1" secondAttribute="trailing" constant="8" id="5hS-Nf-wSh"/>
+                <constraint firstItem="x1v-sW-LGs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leadingMargin" id="CMZ-7f-Xz0"/>
+                <constraint firstAttribute="bottomMargin" secondItem="x1v-sW-LGs" secondAttribute="bottom" id="ek3-dz-dzX"/>
+                <constraint firstItem="r5u-m8-KP1" firstAttribute="leading" secondItem="x1v-sW-LGs" secondAttribute="trailing" constant="8" id="lhF-P3-j0s"/>
+                <constraint firstItem="r5u-m8-KP1" firstAttribute="centerY" secondItem="x1v-sW-LGs" secondAttribute="centerY" id="oj0-Jj-jaL"/>
+                <constraint firstAttribute="bottomMargin" secondItem="xhr-4N-ez5" secondAttribute="bottom" id="wRl-Co-Gdb"/>
+            </constraints>
+            <point key="canvasLocation" x="35.5" y="53.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="info" width="24" height="24"/>
+        <image name="pause" width="24" height="24"/>
+    </resources>
+</document>

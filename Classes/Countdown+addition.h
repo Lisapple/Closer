@@ -39,6 +39,8 @@
 
 @interface Countdown (Name)
 
+@property (nonatomic, readonly, nonnull) NSAttributedString * attributedName;
+
 + (nonnull NSString *)proposedNameForType:(CountdownType)type;
 
 @end

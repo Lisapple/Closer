@@ -13,7 +13,7 @@
 #import "SettingsViewController.h"
 #import "PageViewContainer.h"
 
-@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, PageViewDelegate, UIPopoverControllerDelegate>
+@interface MainViewController_Pad : UIViewController <UIScrollViewDelegate, PageViewContainerDelegate, UIPopoverControllerDelegate>
 
 @property (nonatomic, assign) IBOutlet UIView * defaultNavigationBarView, * editNavigationBarView;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem * doneButton;

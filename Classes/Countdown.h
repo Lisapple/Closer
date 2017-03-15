@@ -25,6 +25,8 @@ typedef NS_ENUM(NSUInteger, CountdownStyle) {
 	CountdownStyleSpring,
 };
 
+extern BOOL CountdownStyleHasDarkContent(CountdownStyle style);
+
 typedef NS_ENUM(NSUInteger, PromptState) {
 	PromptStateNone = 0,
 	PromptStateEveryTimers,

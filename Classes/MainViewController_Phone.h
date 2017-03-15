@@ -17,11 +17,12 @@
 @property (nonatomic, strong) IBOutlet UIScrollView * scrollView;
 @property (nonatomic, strong) IBOutlet UIPageControl * pageControl;
 @property (nonatomic, strong) IBOutlet UIView * mainView;
-@property (nonatomic, strong) IBOutlet UILabel * label;
-@property (nonatomic, strong) IBOutlet UIButton * infoButton;
+@property (nonatomic, strong) IBOutlet UILabel * nameLabel;
+@property (nonatomic, strong) IBOutlet UIButton * infoButton, * leftButton;
 
 @property (nonatomic, strong) NSTimer * updateTimeLabelTimer, * animationDelay;
 
+@property (nonatomic, assign) NSInteger currentPageIndex;
 @property (nonatomic, strong) NSMutableArray <PageView *> * pages;
 
 @property (nonatomic, strong) SettingsViewController * settingsViewController;
@@ -30,14 +31,9 @@
 
 - (void)selectPageWithCountdown:(Countdown *)countdown animated:(BOOL)animated;
 
-// Current Page Index
-
-- (NSInteger)selectedPageIndex;
-
 // Add Page
 
 - (void)addPageWithCountDown:(Countdown *)aCountdown;
-- (void)update;
 - (void)removeAllPages;
 
 // Page and Page's Settings Selection
@@ -53,6 +49,7 @@
 
 // Actions
 
+- (IBAction)leftButtonAction:(id)sender;
 - (IBAction)showSettings:(id)sender;
 
 // Show Description Managment
