@@ -9,8 +9,32 @@
 import WatchKit
 import Foundation
 import WatchConnectivity
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+	switch (lhs, rhs) {
+		case let (l?, r?):
+			return l < r
+		case (nil, _?):
+			return true
+		default:
+			return false
+	}
+}
 
-struct EditOption : OptionSetType {
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+	switch (lhs, rhs) {
+		case let (l?, r?):
+			return l > r
+		default:
+			return rhs < lhs
+	}
+}
+
+
+struct EditOption : OptionSet {
 	
 	let rawValue: Int
 	init(rawValue: Int) { self.rawValue = rawValue }
@@ -21,8 +45,8 @@ struct EditOption : OptionSetType {
 
 class DetailsRowController: NSObject {
 	
-	@IBOutlet private var titleLabel: WKInterfaceLabel!
-	@IBOutlet private var detailsLabel: WKInterfaceLabel!
+	@IBOutlet fileprivate var titleLabel: WKInterfaceLabel!
+	@IBOutlet fileprivate var detailsLabel: WKInterfaceLabel!
 	
 	var title: String? {
 		didSet { titleLabel.setText(title) }
@@ -38,17 +62,16 @@ class EditInterfaceController: WKInterfaceController {
 	@IBOutlet var tableView: WKInterfaceTable!
 	
 	var options: EditOption?
-	private var countdown: Countdown?
-	private var rowTypes: [String]?
+	fileprivate var countdown: Countdown?
+	fileprivate var rowTypes: [String]?
 	
-	override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+	override func awake(withContext context: Any?) {
+		super.awake(withContext: context)
 		
-		let contextDict = context as? [String : AnyObject]
-		if (contextDict != nil) {
-			self.countdown = contextDict!["countdown"] as? Countdown
-			if (contextDict!["options"] is Int) {
-				self.options = EditOption(rawValue: contextDict!["options"] as! Int)
+		if let contextDict = context as? [String : AnyObject] {
+			self.countdown = contextDict["countdown"] as? Countdown
+			if let options = contextDict["options"] as? Int {
+				self.options = EditOption(rawValue: options)
 			}
 		}
 		setTitle("Cancel")
@@ -56,7 +79,7 @@ class EditInterfaceController: WKInterfaceController {
 	
 	func reloadData() {
 		rowTypes = ["TypeIdentifier", "NameIdentifier"]
-		if (countdown?.type == .Timer) {
+		if (countdown?.type == .timer) {
 			rowTypes!.append("DurationsIdentifier") }
 		else {
 			rowTypes!.append("EndDateIdentifier")
@@ -74,24 +97,23 @@ class EditInterfaceController: WKInterfaceController {
 		
 		self.tableView.setRowTypes(rowTypes!)
 		for index in 0 ..< rowTypes!.count {
-			let rowController = self.tableView.rowControllerAtIndex(index) as? DetailsRowController
-			//rowController?.details = rowTypes[index]
+			let rowController = self.tableView.rowController(at: index) as? DetailsRowController
 			switch rowTypes![index] {
-				case "TypeIdentifier": rowController?.details = (countdown?.type == .Timer) ? "Timer" : "Countdown"
+				case "TypeIdentifier": rowController?.details = (countdown?.type == .timer) ? "Timer" : "Countdown"
 				case "NameIdentifier": rowController?.details = countdown?.name
 				case "EndDateIdentifier":
 					if (countdown?.endDate != nil) {
-						let formatter = NSDateFormatter()
-						formatter.dateStyle = .ShortStyle
-						formatter.timeStyle = .ShortStyle
-						rowController?.details = formatter.stringFromDate(countdown!.endDate!)
-						rowController?.detailsLabel.setTextColor(UIColor.grayColor())
+						let formatter = DateFormatter()
+						formatter.dateStyle = .short
+						formatter.timeStyle = .short
+						rowController?.details = formatter.string(from: countdown!.endDate! as Date)
+						rowController?.detailsLabel.setTextColor(UIColor.gray)
 					} else {
 						rowController?.details = "No date"
-						rowController?.detailsLabel.setTextColor(UIColor.redColor()) }
+						rowController?.detailsLabel.setTextColor(UIColor.red) }
 				case "MessageIdentifier": rowController?.details = countdown?.message
-				case "DurationsIdentifier" : rowController?.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : "None"
-				case "StyleIdentifier": rowController?.details = countdown?.style.toString()!.capitalizedString
+				case "DurationsIdentifier": rowController?.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : "None"
+				case "StyleIdentifier": rowController?.details = countdown?.style.toString()!.capitalized
 				default: break
 			}
 		}
@@ -106,7 +128,7 @@ class EditInterfaceController: WKInterfaceController {
 		super.didAppear()
 	}
 	
-	override func table(table: WKInterfaceTable, didSelectRowAtIndex rowIndex: Int) {
+	override func table(_ table: WKInterfaceTable, didSelectRowAt rowIndex: Int) {
 		switch rowTypes![rowIndex] {
 			case "TypeIdentifier":		setTypeAction()
 			case "NameIdentifier":		setNameAction()
@@ -123,81 +145,81 @@ class EditInterfaceController: WKInterfaceController {
 	
 	func setTypeAction() {
 		
-		pushControllerWithName("EditInterface", context: countdown)
+		pushController(withName: "EditInterface", context: countdown)
 		
 		let message = "Countdown for remaining duration until a date, or timer for specific durations";
-		presentAlertControllerWithTitle("", message: message, preferredStyle: .ActionSheet, actions: [
-			WKAlertAction(title: "Countdown", style: WKAlertActionStyle.Default, handler: { () -> Void in
-				self.countdown?.type = .Countdown; }),
-			WKAlertAction(title: "Timer", style: WKAlertActionStyle.Default, handler: { () -> Void in
-				self.countdown?.type = .Timer; })
+		presentAlert(withTitle: "", message: message, preferredStyle: .actionSheet, actions: [
+			WKAlertAction(title: "Countdown", style: WKAlertActionStyle.default, handler: { () -> Void in
+				self.countdown?.type = .countdown; }),
+			WKAlertAction(title: "Timer", style: WKAlertActionStyle.default, handler: { () -> Void in
+				self.countdown?.type = .timer; })
 		])
 	}
 	
 	func setNameAction() {
-		presentTextInputControllerWithSuggestions(nil, allowedInputMode: .Plain) { (results : [AnyObject]?) -> Void in
-			if (results?.first as? String != nil) {
-				self.countdown!.name = results?.first as! String
-			} }
+		presentTextInputController(withSuggestions: nil, allowedInputMode: .plain) { (results : [Any]?) -> Void in
+			if let result = results?.first as? String {
+				self.countdown!.name = result
+			}
+		}
 	}
 	
 	func setEndDateAction() {
-		presentControllerWithName("DatePicker", context: countdown!)
+		presentController(withName: "DatePicker", context: countdown!)
 	}
 	
 	func setMessageAction() {
-		presentTextInputControllerWithSuggestions(nil, allowedInputMode: .Plain) { (results : [AnyObject]?) -> Void in
+		presentTextInputController(withSuggestions: nil, allowedInputMode: .plain) { (results : [Any]?) -> Void in
 			if (results?.first as? String != nil) {
 				self.countdown!.message = results?.first as? String
 			} }
 	}
 
 	func setDurationsAction() {
-		let count = countdown!.durations?.count
-		if (count != nil && count > 0) {
-			let names = [String](count: count!, repeatedValue: "DurationInterface")
-			var contexts = [[String : AnyObject]]()
-			for index in 0 ..< count! {
+		if let count = countdown!.durations?.count, count > 0 {
+			let names = [String](repeating: "DurationInterface", count: count)
+			var contexts = [[String : Any]]()
+			for index in 0..<count {
 				contexts.append([ "countdown" : countdown!, "durationIndex" : index ])
 			}
-			presentControllerWithNames(names, contexts: contexts)
+			presentController(withNames: names, contexts: contexts)
 		} else {
 			// Show "No durations" page (with intructions to add duration on iPhone app)
-			presentControllerWithName("DurationInterface", context: nil)
+			presentController(withName: "DurationInterface", context: nil)
 		}
 	}
 	
 	func setStyleAction() {
-		presentControllerWithName("ThemeInterface", context: countdown)
+		presentController(withName: "ThemeInterface", context: countdown)
 	}
 	
 	func deleteAction() {
-		let title = "Delete this " + ((countdown?.type == .Timer) ? "timer" : "countdown") + "?"
-		presentAlertControllerWithTitle(title, message: nil, preferredStyle: .ActionSheet, actions: [
-			WKAlertAction(title: "Delete", style: .Destructive, handler: { () -> Void in
-				WCSession.defaultSession().sendMessage(["action" : "delete", "identifier" : self.countdown!.identifier],
-					replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
-						self.dismissController()
+		let title = "Delete this " + ((countdown?.type == .timer) ? "timer" : "countdown") + "?"
+		presentAlert(withTitle: title, message: nil, preferredStyle: .actionSheet, actions: [
+			WKAlertAction(title: "Delete", style: .destructive, handler: { () -> Void in
+				WCSession.default().sendMessage(["action" : "delete", "identifier" : self.countdown!.identifier],
+					replyHandler: { (replyInfo: [String : Any]) -> Void in
+						self.dismiss()
 					}, errorHandler: nil)
 			}),
-			WKAlertAction(title: "Cancel", style: .Cancel, handler: { () -> Void in })
+			WKAlertAction(title: "Cancel", style: .cancel, handler: { () -> Void in })
 		])
 	}
 	
 	func saveAction() {
-		let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))
-		var message = ["action" : "update", "data" : data!]
+		let data = try? JSONSerialization.data(withJSONObject: self.countdown!.toDictionary(), options: [])
+		var message = ["action" : "update", "data" : data!] as [String : Any]
 		if (self.options != nil && !self.options!.contains(.ShowAsCreate)) {
 			message["identifier"] = countdown!.identifier }
-		WCSession.defaultSession().sendMessage(message,
-			replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
+		WCSession.default().sendMessage(message,
+			replyHandler: { (replyInfo: [String : Any]) -> Void in
 				print(replyInfo)
-			}) { (error: NSError) -> Void in
+			}) { (error: Error) -> Void in
 				print(error)
 		}
 	}
 	
-    override func didDeactivate() {
-        super.didDeactivate()
-    }
+	override func didDeactivate() {
+		super.didDeactivate()
+	}
 }

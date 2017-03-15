@@ -16,69 +16,69 @@ class CountdownInterfaceController: WKInterfaceController {
 	@IBOutlet var timerLabel: WKInterfaceTimer!
 	@IBOutlet var descriptionLabel: WKInterfaceLabel!
 	
-	private weak var timer: NSTimer?
-	private var countdown: Countdown? = nil
-	private var hasChange: Bool = false
+	fileprivate weak var timer: Timer?
+	fileprivate var countdown: Countdown? = nil
+	fileprivate var hasChange: Bool = false
 	
-	override func awakeWithContext(context: AnyObject?) {
-		super.awakeWithContext(context)
+	override func awake(withContext context: Any?) {
+		super.awake(withContext: context)
 		self.countdown = context as? Countdown
 		self.setTitle(countdown?.name)
 		
 		updateUI()
-		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: #selector(newMenuAction))
-		addMenuItemWithItemIcon(WKMenuItemIcon.Trash, title: "Delete", action: #selector(deleteMenuAction))
+		addMenuItem(with: WKMenuItemIcon.add, title: "New", action: #selector(newMenuAction))
+		addMenuItem(with: WKMenuItemIcon.trash, title: "Delete", action: #selector(deleteMenuAction))
 		
-		if (countdown?.identifier == NSUserDefaults().stringForKey("selectedIdentifier")) {
+		if (countdown?.identifier == UserDefaults().string(forKey: "selectedIdentifier")) {
 			self.becomeCurrentPage()
 		}
 	}
 	
 	func updateUI() {
-		self.animateWithDuration(0.15) { () -> Void in // IDK if animation is working
-			self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 14))
+		self.animate(withDuration: 0.15) { () -> Void in // IDK if animation is working
+			self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSize(width: 74, height: 74), cornerRadius: 14))
 		}
 		if (countdown!.endDate != nil) {
-			timerLabel.setDate(countdown!.endDate!)
+			timerLabel.setDate(countdown!.endDate! as Date)
 			timerLabel.start()
 			
-			let formatter = NSDateFormatter()
-			formatter.dateStyle = .MediumStyle
-			descriptionLabel.setText("before \(formatter.stringFromDate(countdown!.endDate!))")
+			let formatter = DateFormatter()
+			formatter.dateStyle = .medium
+			descriptionLabel.setText("before \(formatter.string(from: countdown!.endDate! as Date))")
 			descriptionLabel.setHidden(false)
 		} else {
-			timerLabel.setDate(NSDate())
+			timerLabel.setDate(Date())
 			timerLabel.stop()
 			descriptionLabel.setHidden(true)
 		}
 		
 		if (countdown?.endDate != nil) {
 			let interval = (countdown!.endDate!.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0;
-			timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
+			timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
 			timer!.tolerance = interval / 2;
 		}
 	}
 	
 	@IBAction func newMenuAction() {
-		let countdown = Countdown(name: nil, identifier: nil, type: .Countdown, style: nil)
+		let countdown = Countdown(name: nil, identifier: nil, type: .countdown, style: nil)
 		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
-		presentControllerWithName("EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
+		presentController(withName: "EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
 	}
 	
 	@IBAction func editMenuAction() {
 		let options: EditOption = .ShowDeleteButton
-		presentControllerWithName("EditInterface", context: [ "countdown" : countdown!, "options" : options.rawValue ])
+		presentController(withName: "EditInterface", context: [ "countdown" : countdown!, "options" : options.rawValue ])
 		hasChange = true
 	}
 	
 	@IBAction func deleteMenuAction() {
-		WCSession.defaultSession().sendMessage(["action" : "delete", "identifier" : self.countdown!.identifier],
-			replyHandler: { (replyInfo: [String : AnyObject]) -> Void in
+		WCSession.default().sendMessage(["action" : "delete", "identifier" : self.countdown!.identifier],
+			replyHandler: { (replyInfo: [String : Any]) -> Void in
 				InterfaceController.reload()
 			}, errorHandler: nil)
 	}
 	
-	func didReceive(notification: NSNotification) {
+	func didReceive(_ notification: Notification) {
 		let identifier = notification.object as? String
 		if (identifier == self.countdown?.identifier) {
 			if (identifier != nil) {
@@ -92,27 +92,27 @@ class CountdownInterfaceController: WKInterfaceController {
 		super.willActivate()
 		updateUI()
 		
-		NSNotificationCenter.defaultCenter().removeObserver(self)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceive(_:)), name: "CountdownDidUpdateNotification", object: nil)
+		NotificationCenter.default.removeObserver(self)
+		NotificationCenter.default.addObserver(self, selector: #selector(didReceive(_:)), name: NSNotification.Name(rawValue: "CountdownDidUpdateNotification"), object: nil)
 		
 		if (hasChange) {
-			let data = try? NSJSONSerialization.dataWithJSONObject(self.countdown!.toDictionary(), options: NSJSONWritingOptions(rawValue: 0))
+			let data = try? JSONSerialization.data(withJSONObject: self.countdown!.toDictionary(), options: [])
 			if (data != nil) {
-				WCSession.defaultSession().sendMessage([ "action" : "update", "identifier" : self.countdown!.identifier, "data" : data! ],
-					replyHandler: { (replyInfo: [String : AnyObject]) -> Void in }, errorHandler: nil)
+				WCSession.default().sendMessage([ "action" : "update", "identifier" : self.countdown!.identifier, "data" : data! ],
+					replyHandler: { (replyInfo: [String : Any]) -> Void in }, errorHandler: nil)
 			}
 		}
 		
-		NSUserDefaults().setObject(self.countdown?.identifier, forKey: "selectedIdentifier")
+		UserDefaults().set(self.countdown?.identifier, forKey: "selectedIdentifier")
 		if (self.countdown != nil) {
-			WCSession.defaultSession().sendMessage([ "action" : "update", "lastSelectedCountdownIdentifier" : self.countdown!.identifier ],
-				replyHandler: { (replyInfo: [String : AnyObject]) -> Void in }, errorHandler: nil)
+			WCSession.default().sendMessage([ "action" : "update", "lastSelectedCountdownIdentifier" : self.countdown!.identifier ],
+				replyHandler: { (replyInfo: [String : Any]) -> Void in }, errorHandler: nil)
 		}
 	}
 	
 	override func didDeactivate() {
 		super.didDeactivate()
-		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NotificationCenter.default.removeObserver(self)
 	}
 	
 	deinit {

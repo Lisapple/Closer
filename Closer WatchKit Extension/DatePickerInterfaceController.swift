@@ -16,21 +16,21 @@ class DatePickerInterfaceController: WKInterfaceController {
 	@IBOutlet var daysPicker: WKInterfacePicker!
 	@IBOutlet var monthsPicker: WKInterfacePicker!
 	@IBOutlet var yearsPicker: WKInterfacePicker!
-	private var lastModifiedPicker: WKInterfacePicker?
+	fileprivate var lastModifiedPicker: WKInterfacePicker?
 	
-	private var hour: Int = 0, minute: Int = 0, day: Int = 0, month: Int = 0, year: Int = 0
-	private var countdown: Countdown?
+	fileprivate var hour: Int = 0, minute: Int = 0, day: Int = 0, month: Int = 0, year: Int = 0
+	fileprivate var countdown: Countdown?
 	
-	override func awakeWithContext(context: AnyObject?) {
-		super.awakeWithContext(context)
+	override func awake(withContext context: Any?) {
+		super.awake(withContext: context)
 		
 		self.countdown = context as? Countdown
 		
 		setTitle("Done")
 		
-		let calendar = NSCalendar.currentCalendar()
-		let comps = calendar.components([.Minute, .Hour, .Day, .Month, .Year], fromDate: (self.countdown!.endDate != nil) ? self.countdown!.endDate! : NSDate())
-		hour = comps.hour; minute = comps.minute + 1; day = comps.day; month = comps.month; year = comps.year
+		let calendar = Calendar.current
+		let comps = (calendar as NSCalendar).components([.minute, .hour, .day, .month, .year], from: (self.countdown!.endDate != nil) ? self.countdown!.endDate! as Date : Date())
+		hour = comps.hour!; minute = comps.minute! + 1; day = comps.day!; month = comps.month!; year = comps.year!
 		
 		// Hour
 		var hoursItems = [WKPickerItem]()
@@ -75,7 +75,7 @@ class DatePickerInterfaceController: WKInterfaceController {
 		
 		// Year
 		var yearsItems = [WKPickerItem]()
-		let currentYear = calendar.component(.Year, fromDate: NSDate())
+		let currentYear = (calendar as NSCalendar).component(.year, from: Date())
 		for year in currentYear ... currentYear+5 {
 			let item = WKPickerItem()
 			//item.caption = "Year"
@@ -91,20 +91,20 @@ class DatePickerInterfaceController: WKInterfaceController {
 	}
 	
 	func update() {
-		dispatch_async(dispatch_get_main_queue()) { () -> Void in
-			var comps = NSDateComponents()
+		DispatchQueue.main.async { () -> Void in
+			var comps = DateComponents()
 			comps.hour = self.hour; comps.minute = self.minute; comps.second = 0
 			comps.day = self.day; comps.month = self.month
-			let currentYear = NSCalendar.currentCalendar().component(.Year, fromDate: NSDate())
+			let currentYear = (Calendar.current as NSCalendar).component(.year, from: Date())
 			comps.year = min(self.year, currentYear+5)
 			
-			let calendar = NSCalendar.currentCalendar()
-			var date = calendar.dateFromComponents(comps)!
-			date = (date.timeIntervalSinceNow > 0) ? date : NSDate(timeIntervalSinceNow: 60)
-			comps = calendar.components([.Day, .Month, .Year], fromDate: date)
-			self.day = comps.day; self.month = comps.month; self.year = comps.year
+			let calendar = Calendar.current
+			var date = calendar.date(from: comps)!
+			date = (date.timeIntervalSinceNow > 0) ? date : Date(timeIntervalSinceNow: 60)
+			comps = (calendar as NSCalendar).components([.day, .month, .year], from: date)
+			self.day = comps.day!; self.month = comps.month!; self.year = comps.year!
 			
-			let pickers = [ self.daysPicker, self.monthsPicker, self.daysPicker ]
+			let pickers = [ self.daysPicker!, self.monthsPicker!, self.daysPicker! ]
 			_ = pickers.map { (picker: WKInterfacePicker!) -> Void in
 				if (picker != self.lastModifiedPicker) {
 					if /**/ (picker == self.daysPicker) {
@@ -120,34 +120,34 @@ class DatePickerInterfaceController: WKInterfaceController {
 		}
 	}
 	
-	@IBAction func minutesPickerAction(index: Int) {
+	@IBAction func minutesPickerAction(_ index: Int) {
 		if (index != minute) {
 			minute = index
 			update() }
 	}
-	@IBAction func hoursPickerAction(index: Int) {
+	@IBAction func hoursPickerAction(_ index: Int) {
 		if (index != hour) {
 			hour = index
 			update() }
 	}
 	
-	@IBAction func daysPickerAction(index: Int) {
+	@IBAction func daysPickerAction(_ index: Int) {
 		if (index != day) {
 			day = index + 1
 			lastModifiedPicker = daysPicker
 			update() }
 	}
 	
-	@IBAction func monthsPickerAction(index: Int) {
+	@IBAction func monthsPickerAction(_ index: Int) {
 		if (index != month) {
 			month = index + 1
 			lastModifiedPicker = monthsPicker
 			update() }
 	}
 	
-	@IBAction func yearsPickerAction(index: Int) {
+	@IBAction func yearsPickerAction(_ index: Int) {
 		if (index != year) {
-			let currentYear = NSCalendar.currentCalendar().component(.Year, fromDate: NSDate())
+			let currentYear = (Calendar.current as NSCalendar).component(.year, from: Date())
 			year = currentYear + index
 			lastModifiedPicker = yearsPicker
 			update() }

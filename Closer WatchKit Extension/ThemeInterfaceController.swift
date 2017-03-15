@@ -10,15 +10,15 @@ import WatchKit
 
 class ThemeRowController: NSObject {
 	
-	@IBOutlet private var titleLabel: WKInterfaceLabel!
-	@IBOutlet private var imageView: WKInterfaceImage!
+	@IBOutlet fileprivate var titleLabel: WKInterfaceLabel!
+	@IBOutlet fileprivate var imageView: WKInterfaceImage!
 	
 	var title: String? {
 		didSet { titleLabel.setText(title) }
 	}
 	
 	var image: UIImage? {
-		didSet { imageView.setImage(image?.imageWithRenderingMode(.AlwaysTemplate)) }
+		didSet { imageView.setImage(image?.withRenderingMode(.alwaysTemplate)) }
 	}
 }
 
@@ -27,27 +27,27 @@ class ThemeInterfaceController: WKInterfaceController {
 	@IBOutlet var tableView: WKInterfaceTable!
 	
 	var options: EditOption?
-	private var countdown: Countdown?
+	fileprivate var countdown: Countdown?
 	
-	override func awakeWithContext(context: AnyObject?) {
-		super.awakeWithContext(context)
+	override func awake(withContext context: Any?) {
+		super.awake(withContext: context)
 		
 		countdown = context as? Countdown
 	}
 	
 	func reloadData() {
 		
-		let count = Int(ColorStyle.NumberOfStyle.rawValue)
+		let count = Int(ColorStyle.numberOfStyle.rawValue)
 		tableView.setNumberOfRows(count, withRowType: "ThemeIdentifier")
 		for index in 0 ..< count {
-			let rowController = tableView.rowControllerAtIndex(index) as? ThemeRowController
+			let rowController = tableView.rowController(at: index) as? ThemeRowController
 			let colorStyle = ColorStyle(rawValue: UInt(index))
-			rowController?.title = colorStyle?.toString()?.capitalizedString
-			rowController?.titleLabel.setTextColor((countdown?.style == colorStyle) ? UIColor.whiteColor() : UIColor.grayColor())
+			rowController?.title = colorStyle?.toString()?.capitalized
+			rowController?.titleLabel.setTextColor((countdown?.style == colorStyle) ? UIColor.white : UIColor.gray)
 			rowController?.imageView.setTintColor(UIColor(colorStyle: colorStyle!))
 			rowController?.image = UIImage(named: "theme-row-accessory")
 		}
-		tableView.scrollToRowAtIndex(Int(countdown!.style.rawValue))
+		tableView.scrollToRow(at: Int(countdown!.style.rawValue))
 	}
 	
 	override func willActivate() {
@@ -55,8 +55,8 @@ class ThemeInterfaceController: WKInterfaceController {
 		reloadData()
 	}
 	
-	override func table(table: WKInterfaceTable, didSelectRowAtIndex rowIndex: Int) {
+	override func table(_ table: WKInterfaceTable, didSelectRowAt rowIndex: Int) {
 		countdown?.style = ColorStyle(rawValue: UInt(rowIndex))!
-		dismissController()
+		dismiss()
 	}
 }

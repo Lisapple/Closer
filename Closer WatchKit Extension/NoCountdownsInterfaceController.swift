@@ -10,15 +10,15 @@ import WatchKit
 
 class NoCountdownsInterfaceController: WKInterfaceController {
 	
-	override func awakeWithContext(context: AnyObject?) {
-		super.awakeWithContext(context)
+	override func awake(withContext context: Any?) {
+		super.awake(withContext: context)
 		
-		addMenuItemWithItemIcon(WKMenuItemIcon.Add, title: "New", action: #selector(newAction(_:)))
+		addMenuItem(with: WKMenuItemIcon.add, title: "New", action: #selector(newAction(_:)))
 	}
 	
-	@IBAction func newAction(sender: AnyObject) {
-		let countdown = Countdown(name: nil, identifier: nil, type: .Countdown, style: nil)
+	@IBAction func newAction(_ sender: AnyObject) {
+		let countdown = Countdown(name: nil, identifier: nil, type: .countdown, style: nil)
 		let options: EditOption = [ .ShowAsCreate, .ShowDeleteButton ]
-		presentControllerWithName("EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
+		presentController(withName: "EditInterface", context: [ "countdown" : countdown, "options" : options.rawValue ])
 	}
 }

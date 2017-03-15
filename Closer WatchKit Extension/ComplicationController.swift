@@ -11,88 +11,92 @@ import WatchConnectivity
 
 class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDelegate {
 	
-	private var countdown: Countdown?
+	fileprivate var countdown: Countdown?
 	
 	override init() {
 		super.init()
 		
-		let session = WCSession.defaultSession()
+		let session = WCSession.default()
 		session.delegate = self
-		session.activateSession()
+		session.activate()
 		
-		let userDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-		let glanceType = GlanceType(string: userDefaults.stringForKey("glance_type"))
+		let userDefaults = UserDefaults(suiteName: "group.lisacintosh.closer")!
+		let glanceType = GlanceType(string: userDefaults.string(forKey: "glance_type"))
 		countdown = Countdown.countdownWith(glanceType)
 	}
 	
-	func getSupportedTimeTravelDirectionsForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTimeTravelDirections) -> Void) {
-		handler(.Forward)
+	func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
+		handler(.forward)
 	}
 	
-	func templateForComplication(complication: CLKComplication, date: NSDate?) -> CLKComplicationTemplate? {
+	func templateForComplication(_ complication: CLKComplication, date: Date?) -> CLKComplicationTemplate? {
 		let text = (self.countdown != nil) ? self.countdown!.shortRemainingDescriptionAtDate(date) : "--"
 		let textProvider = CLKSimpleTextProvider(text: text, shortText: self.countdown?.shortestRemainingDescriptionAtDate(date))
-		let progression = (self.countdown != nil) ? Float(self.countdown!.progressionAtDate(date)) : Float(0)
+		let progression: Float = (self.countdown != nil) ? Float(self.countdown!.progression(atDate: date)) : 0
 		var template: CLKComplicationTemplate?
 		
 		switch complication.family {
-			case .CircularSmall:
+			case .circularSmall:
 				let aTemplate = CLKComplicationTemplateCircularSmallRingText()
-				aTemplate.ringStyle = .Closed
+				aTemplate.ringStyle = .closed
 				aTemplate.fillFraction = progression
 				aTemplate.textProvider = textProvider
 				template = aTemplate
 				break
-			case .ModularSmall:
+			case .modularSmall:
 				let aTemplate = CLKComplicationTemplateModularSmallRingText()
-				aTemplate.ringStyle = .Closed
+				aTemplate.ringStyle = .closed
 				aTemplate.fillFraction = progression
 				aTemplate.textProvider = textProvider
 				template = aTemplate
 				break
-			case .ModularLarge: break // @TODO: Support it
-			case .UtilitarianSmall:
+			case .modularLarge: break // @TODO: Support it
+			case .utilitarianSmall:
 				let aTemplate = CLKComplicationTemplateUtilitarianSmallRingText()
-				aTemplate.ringStyle = .Closed
+				aTemplate.ringStyle = .closed
 				aTemplate.fillFraction = progression
 				aTemplate.textProvider = textProvider
 				template = aTemplate
 				break
-			case .UtilitarianLarge: break // Not supported now
+			case .utilitarianLarge: break // Not supported now
+			case .extraLarge: break
+			case .utilitarianSmallFlat: break
 		}
 		return template
 	}
 	
-	func getCurrentTimelineEntryForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTimelineEntry?) -> Void) {
+	func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
 		
 		let template = templateForComplication(complication, date: nil)
 		if (template != nil) {
-			let entry = CLKComplicationTimelineEntry(date: NSDate(), complicationTemplate: template!)
+			let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template!)
 			handler(entry)
 		} else {
 			handler(nil)
 		}
 	}
 	
-	func getTimelineStartDateForComplication(complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
-		handler(NSDate())
+	func getTimelineStartDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
+		handler(Date())
 	}
 	
-	func getTimelineEndDateForComplication(complication: CLKComplication, withHandler handler: (NSDate?) -> Void) {
-		handler(countdown?.endDate)
+	func getTimelineEndDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
+		handler(countdown?.endDate as Date?)
 	}
 	
-	func getTimelineEntriesForComplication(complication: CLKComplication, beforeDate date: NSDate, limit: Int, withHandler handler: ([CLKComplicationTimelineEntry]?) -> Void) {
+	func getTimelineEntries(for complication: CLKComplication, before date: Date, limit: Int,
+	                        withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
 		handler(nil)
 	}
 	
-	func getTimelineEntriesForComplication(complication: CLKComplication, afterDate date: NSDate, limit: Int, withHandler handler: ([CLKComplicationTimelineEntry]?) -> Void) {
+	func getTimelineEntries(for complication: CLKComplication, after date: Date, limit: Int,
+	                        withHandler handler: @escaping ([CLKComplicationTimelineEntry]?) -> Void) {
 		if (countdown?.endDate != nil) {
-			var timeInterval: NSTimeInterval = 0
+			var timeInterval: TimeInterval = 0
 			var entries = [CLKComplicationTimelineEntry]()
 			for _ in 0 ..< limit {
-				let nextDate = NSDate(timeIntervalSinceNow: timeInterval)
-				if (nextDate.timeIntervalSinceDate(countdown!.endDate!) >= 0) {
+				let nextDate = Date(timeIntervalSinceNow: timeInterval)
+				if (nextDate.timeIntervalSince(countdown!.endDate! as Date) >= 0) {
 					break
 				}
 				let template = templateForComplication(complication, date: nextDate)
@@ -108,8 +112,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 		}
 	}
 	
-	func getPlaceholderTemplateForComplication(complication: CLKComplication, withHandler handler: (CLKComplicationTemplate?) -> Void) {
+	func getPlaceholderTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
 		let template = templateForComplication(complication, date: nil)
 		handler(template)
 	}
+	
+	@available(watchOSApplicationExtension 2.2, *)
+	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
 }

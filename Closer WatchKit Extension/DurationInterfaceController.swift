@@ -24,13 +24,13 @@ class DurationInterfaceController: WKInterfaceController {
 	@IBOutlet var hoursPicker: WKInterfacePicker!
 	@IBOutlet var daysPicker: WKInterfacePicker!
 	
-	private var countdown: Countdown?
-	private var durationIndex: Int?
+	fileprivate var countdown: Countdown?
+	fileprivate var durationIndex: Int?
 	
-	private var seconds: Int = 0, minutes: Int = 0, hours: Int = 0, days: Int = 0
+	fileprivate var seconds: Int = 0, minutes: Int = 0, hours: Int = 0, days: Int = 0
 	
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+	override func awake(withContext context: Any?) {
+		super.awake(withContext: context)
 		
 		setTitle("Done")
 		
@@ -79,27 +79,27 @@ class DurationInterfaceController: WKInterfaceController {
 		secondsPicker.setItems(secondsItems)
 		secondsPicker.setSelectedItemIndex(seconds)
 		secondsPicker.focus()
-    }
+	}
 	
-	@IBAction func daysPickerAction(index: Int) { days = index }
-	@IBAction func hoursPickerAction(index: Int) { hours = index }
-	@IBAction func minutesPickerAction(index: Int) { minutes = index }
-	@IBAction func secondsPickerAction(index: Int) { seconds = index }
+	@IBAction func daysPickerAction(_ index: Int) { days = index }
+	@IBAction func hoursPickerAction(_ index: Int) { hours = index }
+	@IBAction func minutesPickerAction(_ index: Int) { minutes = index }
+	@IBAction func secondsPickerAction(_ index: Int) { seconds = index }
 	
-    override func willActivate() {
-        // This method is called when watch view controller is about to be visible to user
-        super.willActivate()
+	override func willActivate() {
+		// This method is called when watch view controller is about to be visible to user
+		super.willActivate()
 		
-		countdown!.durations![durationIndex!] = NSTimeInterval(((days * 24 + hours * 60) + minutes) * 60 + seconds)
-    }
+		let duration = ((days * 24 + hours * 60) + minutes) * 60 + seconds
+		countdown!.durations![durationIndex!] = TimeInterval(duration)
+	}
 	
 	override func willDisappear() {
 		super.willDisappear()
 	}
 	
-    override func didDeactivate() {
-        // This method is called when watch view controller is no longer visible
-        super.didDeactivate()
-    }
-
+	override func didDeactivate() {
+		// This method is called when watch view controller is no longer visible
+		super.didDeactivate()
+	}
 }

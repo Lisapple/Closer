@@ -11,37 +11,41 @@ import Foundation
 import WatchConnectivity
 
 class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
+	/** Called when the session has completed activation. If session state is WCSessionActivationStateNotActivated there will be an error with more details. */
+	@available(watchOS 2.2, *)
+	public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
+
 	
 	@IBOutlet var titleLabel: WKInterfaceLabel!
 	@IBOutlet var imageView: WKInterfaceImage!
 	@IBOutlet var timerLabel: WKInterfaceTimer!
 	@IBOutlet var descriptionLabel: WKInterfaceLabel!
 	@IBOutlet var detailsLabel: WKInterfaceLabel!
-	var endDate: NSDate?
+	var endDate: Date?
 	
 	override init() {
 		super.init()
 		
-		let session = WCSession.defaultSession()
+		let session = WCSession.default()
 		session.delegate = self
-		session.activateSession()
+		session.activate()
 	}
 	
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+	override func awake(withContext context: Any?) {
+		super.awake(withContext: context)
 	}
 	
 	func update () {
 
-		let userDefaults = NSUserDefaults(suiteName: "group.lisacintosh.closer")!
-		let glanceType = GlanceType(string: userDefaults.stringForKey("glance_type"))
+		let userDefaults = UserDefaults(suiteName: "group.lisacintosh.closer")!
+		let glanceType = GlanceType(string: userDefaults.string(forKey: "glance_type"))
 		let countdown = Countdown.countdownWith(glanceType)
 		if (countdown != nil) {
 			endDate = countdown!.endDate
 			let color = UIColor(colorStyle: countdown!.style)
 			titleLabel.setTextColor(color)
 			titleLabel.setText(countdown!.name)
-			if (countdown!.type == .Timer) {
+			if (countdown!.type == .timer) {
 				
 				let index = countdown!.durationIndex!
 				let durations = countdown!.durations!
@@ -50,25 +54,25 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 					if (endDate != nil) {
 						timerLabel.setDate(endDate!)
 					} else {
-						timerLabel.setDate(NSDate(timeIntervalSinceNow: duration))
+						timerLabel.setDate(Date(timeIntervalSinceNow: duration))
 					}
 					timerLabel.setTextColor(color)
 					
-					imageView.setImage(countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 74/2))
+					imageView.setImage(countdown!.progressionImageWithSize(CGSize(width: 74, height: 74), cornerRadius: 74/2))
 					
 					// "of [total duration]"
-					let components = NSDateComponents()
+					var components = DateComponents()
 					components.second = Int(duration)
-					let calendar = NSCalendar.currentCalendar()
-					let date = calendar.dateFromComponents(components)
-					descriptionLabel.setText("of \(NSDateFormatter.localizedStringFromDate(date!, dateStyle: .NoStyle, timeStyle: .MediumStyle))")
+					let calendar = Calendar.current
+					let date = calendar.date(from: components)
+					descriptionLabel.setText("of \(DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium))")
 					
 					if (durations.count > 1) {
 						// "Next: [next duration]"
-						let nextComponents = NSDateComponents()
+						var nextComponents = DateComponents()
 						nextComponents.second = Int(durations[(index+1) % durations.count])
-						let nextDate = calendar.dateFromComponents(nextComponents)
-						detailsLabel.setText("Next: \(NSDateFormatter.localizedStringFromDate(nextDate!, dateStyle: .NoStyle, timeStyle: .MediumStyle))")
+						let nextDate = calendar.date(from: nextComponents)
+						detailsLabel.setText("Next: \(DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium))")
 					}
 					detailsLabel.setHidden(durations.count < 2) // Hide only one or no durations
 				}
@@ -77,12 +81,12 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 					timerLabel.setDate(endDate!)
 					timerLabel.setTextColor(color)
 					
-					imageView.setImage(countdown!.progressionImageWithSize(CGSizeMake(74, 74), cornerRadius: 14))
+					imageView.setImage(countdown!.progressionImageWithSize(CGSize(width: 74, height: 74), cornerRadius: 14))
 					
-					let formatter = NSDateFormatter()
-					formatter.dateStyle = .MediumStyle
+					let formatter = DateFormatter()
+					formatter.dateStyle = .medium
 					// "before [end date]"
-					descriptionLabel.setText("before \(formatter.stringFromDate(endDate!))")
+					descriptionLabel.setText("before \(formatter.string(from: endDate!))")
 				}
 				detailsLabel.setHidden(true)
 			}
@@ -110,7 +114,6 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 	override func didDeactivate() {
 		super.didDeactivate()
 		timerLabel.stop()
-		NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-
+		NotificationCenter.default.removeObserver(self)
+	}
 }

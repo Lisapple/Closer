@@ -10,30 +10,30 @@ import Foundation
 import UIKit
 
 enum ColorStyle: UInt {
-	case Day
-	case Dawn
-	case Oasis
-	case Spring
-	case Night
-	case NumberOfStyle
+	case day
+	case dawn
+	case oasis
+	case spring
+	case night
+	case numberOfStyle
 	
-	static func fromString(str: String) -> ColorStyle {
+	static func fromString(_ str: String) -> ColorStyle {
 		switch str {
-			case "day":		return .Day
-			case "dawn":	return .Dawn
-			case "oasis":	return .Oasis
-			case "spring":	return .Spring
-			default:		return .Night
+			case "day":		return .day
+			case "dawn":	return .dawn
+			case "oasis":	return .oasis
+			case "spring":	return .spring
+			default:		return .night
 		}
 	}
 	
 	func toString() -> String? {
 		switch self {
-			case .Day:		return "day"
-			case .Dawn:		return "dawn"
-			case .Oasis:	return "oasis"
-			case .Spring:	return "spring"
-			case .Night:	return "night"
+			case .day:		return "day"
+			case .dawn:		return "dawn"
+			case .oasis:	return "oasis"
+			case .spring:	return "spring"
+			case .night:	return "night"
 			default: return nil
 		}
 	}
@@ -42,11 +42,11 @@ enum ColorStyle: UInt {
 extension UIColor {
 	convenience init(colorStyle:ColorStyle) {
 		switch colorStyle {
-			case .Day:		self.init(red: 74/255,  green: 74/255,  blue: 74/255,  alpha: 1)
-			case .Dawn:		self.init(red: 85/255,  green: 175/255, blue: 255/255, alpha: 1)
-			case .Oasis:	self.init(red: 126/255, green: 211/255, blue: 33/255,  alpha: 1)
-			case .Spring:	self.init(red: 6/255,   green: 20/255,  blue: 158/255, alpha: 1)
-			case .Night:	self.init(white: 1, alpha:1)
+			case .day:		self.init(red: 74/255,  green: 74/255,  blue: 74/255,  alpha: 1)
+			case .dawn:		self.init(red: 90/255,  green: 170/255, blue: 240/255, alpha: 1)
+			case .oasis:	self.init(red: 105/255, green: 198/255, blue: 13/255,  alpha: 1)
+			case .spring:	self.init(red: 0/255,   green: 39/255,  blue: 153/255, alpha: 1)
+			case .night:	self.init(white: 1, alpha:1)
 			default:		self.init(white: 0, alpha:0)
 		}
 	}
