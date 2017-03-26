@@ -6,6 +6,9 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
+"generic.ok" = "OK";
+"generic.error" = "Error!";
+
 "Next: ";
 "Choose current duration";
 
@@ -48,8 +51,6 @@
 
 /* NameViewController */
 "Name";
-"The name of the countdown can help you to identify it.";
-"The name of the timer can help you to identify it.";
 
 /* DatePickerViewController */
 //"Date & Time"; // Already defined on SettingsViewController
@@ -173,7 +174,6 @@
 "Export to website";
 
 /* ExportToWebsiteViewController */
-"Error!";
 "Exported to Website";
 "Show on Safari";
 

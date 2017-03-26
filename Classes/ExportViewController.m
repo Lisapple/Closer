@@ -223,7 +223,7 @@
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"You can retreive the export file as \"%@.%@\" into iTunes Sharing.", nil), filename, extension];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Export Succeed!", nil)
 																		message:message preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault
 												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
 	}
@@ -255,7 +255,7 @@
 		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"All countdowns have been added as event in the calendar app into the calendar named \"%@\".", nil), defaultCalendar.title];
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Export Succeed!", nil)
 																		message:message preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
 	}

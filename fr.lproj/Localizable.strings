@@ -6,6 +6,9 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
+"generic.ok" = "OK";
+"generic.error" = "Erreur !";
+
 "Next: " = "Suivant: ";
 "Choose current duration" = "Choisissez la durée actuelle";
 
@@ -20,7 +23,6 @@
 "New Countdown" = "Nouveau Décompte";
 "New Countdown %i" = "Nouveau Décompte %i";
 "You must delete at least one countdown to add a new countdown." = "Vous devez supprimer au moins un décompte pour en ajouter un nouveau.";
-"OK" = "OK";
 
 /* SettingsViewController */
 "Settings" = "Réglages";
@@ -49,8 +51,6 @@
 
 /* NameViewController */
 "Name" = "Nom";
-"The name of the countdown can help you to identify it." = "Le nom du décompte peut vous servir à l'identifier.";
-"The name of the timer can help you to identify it." = "Le nom du minuteur peut vous servir à l'identifier.";
 
 /* DatePickerViewController */
 //"Date & Time"; // Already defined on SettingsViewController

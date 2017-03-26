@@ -177,7 +177,7 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Countdowns found", nil)
 																		message:message
 																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 			[alert dismissViewControllerAnimated:YES completion:nil];
 			[self dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
@@ -220,7 +220,7 @@
 	UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Connection Error", nil)
 																	message:error.localizedDescription
 															 preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 		[alert dismissViewControllerAnimated:YES completion:nil];
 		[self dismissViewControllerAnimated:YES completion:nil]; }]];
 	[self presentViewController:alert animated:YES completion:nil];

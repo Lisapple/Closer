@@ -93,7 +93,7 @@
 				 UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
 																				 message:error.localizedDescription
 																		  preferredStyle:UIAlertControllerStyleAlert];
-				 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+				 [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 					 [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 				 [self presentViewController:alert animated:YES completion:nil];
 			 }
@@ -242,7 +242,7 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Countdown Limit Reached!", nil)
 																		message:message
 																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault
 												handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 		[self presentViewController:alert animated:YES completion:nil];
 		

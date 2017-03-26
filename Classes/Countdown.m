@@ -148,7 +148,7 @@ static NSMutableArray * _countdowns = nil;
 											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Reply", nil)
 																											   message:replyMessage.description
 																										preferredStyle:UIAlertControllerStyleAlert];
-											   [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil]];
+											   [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:nil]];
 											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 #endif
 										   });
@@ -159,7 +159,7 @@ static NSMutableArray * _countdowns = nil;
 											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Reply error", nil)
 																											   message:error.localizedDescription
 																										preferredStyle:UIAlertControllerStyleAlert];
-											   [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:nil]];
+											   [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:nil]];
 											   [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 #endif
 										   });
@@ -175,7 +175,7 @@ static NSMutableArray * _countdowns = nil;
 			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil)
 																			message:error.localizedDescription
 																	 preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault
 													handler:^(UIAlertAction * action) { [alert dismissViewControllerAnimated:YES completion:nil]; }]];
 			UIViewController * rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
 			[rootViewController presentViewController:alert animated:YES completion:nil];

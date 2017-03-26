@@ -111,7 +111,7 @@
 	if (_allCountdowns.count > 18) {// The limit of countdown for the pageControl view is 18
 		NSString * title = NSLocalizedString(@"You must delete at least one countdown to add a new countdown.", nil);
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:NULL]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:NULL]];
 		[self presentViewController:alert animated:YES completion:NULL];
 	} else {
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"New Countdown", nil)
@@ -334,7 +334,7 @@
 					UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Access Denied!", nil)
 																					message:message
 																			 preferredStyle:UIAlertControllerStyleAlert];
-					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
 						[alert dismissViewControllerAnimated:YES completion:nil];
 					}]];
 					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
@@ -355,7 +355,7 @@
 					UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Import with Passwords", nil)
 																					message:message
 																			 preferredStyle:UIAlertControllerStyleAlert];
-					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 						dispatch_async(dispatch_get_main_queue(), ^{
 							ImportFromWebsiteViewController_Phone * controller = [[ImportFromWebsiteViewController_Phone alloc] init];
 							UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:controller];

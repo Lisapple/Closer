@@ -118,7 +118,7 @@
 	UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
 																	message:error.localizedDescription
 															 preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 		[alert dismissViewControllerAnimated:YES completion:nil]; }]];
 	[self presentViewController:alert animated:YES completion:nil];
 }

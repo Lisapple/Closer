@@ -95,8 +95,7 @@
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
 																		message:notification.alertBody
 																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:nil]];
 		[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		
 	} else {
@@ -251,7 +250,7 @@
 #if TARGET_IPHONE_SIMULATOR
 	dispatch_async(dispatch_get_main_queue(), ^{
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) { }]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) { }]];
 		[self.window.rootViewController presentViewController:alert animated:YES completion:NULL];
 	});
 #endif
