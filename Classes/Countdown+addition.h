@@ -11,12 +11,14 @@
 @import MobileCoreServices;
 @import Crashlytics;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface Countdown (LocalNotification)
 
 + (void)removeInvalidLocalNotifications;
 
 - (nullable UILocalNotification *)localNotification;
-- (nonnull UILocalNotification *)createLocalNotification;
+- (UILocalNotification *)createLocalNotification;
 - (void)updateLocalNotification;
 - (void)removeLocalNotification;
 
@@ -25,7 +27,7 @@
 
 @interface Countdown (Event)
 
-+ (nonnull Countdown *)countdownWithEvent:(nonnull EKEvent *)event;
++ (Countdown *)countdownWithEvent:(EKEvent *)event;
 
 @end
 
@@ -39,9 +41,9 @@
 
 @interface Countdown (Name)
 
-@property (nonatomic, readonly, nonnull) NSAttributedString * attributedName;
+@property (nonatomic, readonly) NSAttributedString * attributedName;
 
-+ (nonnull NSString *)proposedNameForType:(CountdownType)type;
++ (NSString *)proposedNameForType:(CountdownType)type;
 
 @end
 
@@ -60,3 +62,12 @@
 + (void)tagDelete;
 
 @end
+
+
+@interface Countdown (Thumbnail)
+
++ (UIImage *)thumbnailForStyle:(CountdownStyle)style;
+
+@end
+
+NS_ASSUME_NONNULL_END

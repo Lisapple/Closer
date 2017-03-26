@@ -49,9 +49,8 @@
 
 
 @interface MainViewController_Phone ()
-{
-	BOOL _shouldCreateNewCountdown;
-}
+
+@property (nonatomic, assign) BOOL shouldCreateNewCountdown;
 
 @property (nonatomic, strong) IBOutlet UIImageView * imageView;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint * leftImageViewConstraint;
@@ -104,7 +103,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[self.view insertSubview:_createCountdownLabel atIndex:0];
 	
 	if ([_nameLabel respondsToSelector:@selector(adjustsFontForContentSizeCategory)]) // iOS 10+
-		_nameLabel.adjustsFontForContentSizeCategory = YES;
+		_nameLabel.adjustsFontForContentSizeCategory = YES; // Automatically adjust labels supporting dynamic font
 	
 	_nameLabel.userInteractionEnabled = YES;
 	UILongPressGestureRecognizer * longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self
@@ -158,27 +157,22 @@ const NSTimeInterval kAnimationDelay = 5.;
 		return ;
 	
 	@synchronized(self) {
-		NSInteger pagesCount = self.pages.count;
-		NSInteger countdownsCount = [Countdown allCountdowns].count;
+		const NSInteger oldPagesCount = self.pages.count;
+		const NSInteger countdownsCount = [Countdown allCountdowns].count;
 		if (countdownsCount > 0) {
-			CLSLog(@"Reload with %ld countdowns and %ld pages", (long)countdownsCount, (long)pagesCount);
-			if (pagesCount > countdownsCount) {
-				
-				// Compute the range of page to remove
-				NSRange range = NSMakeRange(countdownsCount, pagesCount - countdownsCount);
+			CLSLog(@"Reload with %ld countdowns and %ld pages", (long)countdownsCount, (long)oldPagesCount);
+			if (oldPagesCount > countdownsCount) {
+				NSRange range = NSMakeRange(countdownsCount, oldPagesCount - countdownsCount);
 				NSIndexSet * indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
 				NSArray * pagesToRemove = [_pages objectsAtIndexes:indexSet];
 				
-				// Remove pages from superview
 				for (PageView * page in pagesToRemove)
 					[page removeFromSuperview];
 				
-				// Remove pages on array
 				[_pages removeObjectsInRange:range];
 				
-			} else if (pagesCount < countdownsCount) {
-				
-				for (NSUInteger index = pagesCount; index < countdownsCount; ++index) {
+			} else if (oldPagesCount < countdownsCount) {
+				for (NSUInteger index = oldPagesCount; index < countdownsCount; ++index) {
 					// Just add page on pages array
 					Countdown * countdown = [Countdown countdownAtIndex:index];
 					[self insertPageWithCountDown:countdown atIndex:index];
@@ -207,6 +201,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		[_scrollView setContentOffset:contentOffset animated:NO];
 		
 		[self showPageControl:NO animated:NO];
+		[self updateUI];
 		if (_pages.count) {
 			_pageControl.numberOfPages = _pages.count;
 			[self updateBarContentWithOffset:_scrollView.contentOffset];
@@ -370,7 +365,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	if ([Countdown allCountdowns].count > 0) {
 		NSInteger pageIndex = [Countdown indexOfCountdown:controller.countdown];
 		if (pageIndex == NSNotFound)
-			pageIndex = _pages.count - 1;// Select the last countdown
+			pageIndex = _pages.count - 1; // Select the last countdown
 		
 		self.currentPageIndex = pageIndex;
 		CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * pageIndex, 0.);
@@ -405,14 +400,14 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (IBAction)leftButtonAction:(id)sender
 {
 	TimerPageView * page = (TimerPageView *)_pages[_currentPageIndex];
-	if ([page isKindOfClass:TimerPageView.class]) {
-		if (page.countdown.isPaused) { // Reset
-			[page reset];
-		} else {
-			[page tooglePause];
-		}
-		[self updateLeftButton];
-	}
+	assert([page isKindOfClass:TimerPageView.class]);
+	
+	if (page.countdown.isPaused) // Reset
+		[page reset];
+	else
+		[page tooglePause];
+	
+	[self updateLeftButton];
 }
 
 - (IBAction)showSettings:(id)sender

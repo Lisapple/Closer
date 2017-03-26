@@ -40,9 +40,9 @@
 	
 	self.title = NSLocalizedString(@"All Countdowns", nil);
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-																						   target:self action:@selector(done:)];
+																						   target:self action:@selector(doneAction:)];
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-																						  target:self action:@selector(add:)];
+																						  target:self action:@selector(addAction:)];
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
@@ -92,7 +92,7 @@
 	self.navigationItem.rightBarButtonItem.enabled = (_allCountdowns.count > 0);
 }
 
-- (IBAction)done:(id)sender
+- (IBAction)doneAction:(id)sender
 {
 	NSInteger index = [Countdown indexOfCountdown:_settingsViewController.countdown];
 	if (index == NSNotFound) {
@@ -106,7 +106,7 @@
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (IBAction)add:(id)sender
+- (IBAction)addAction:(id)sender
 {
 	if (_allCountdowns.count > 18) {// The limit of countdown for the pageControl view is 18
 		NSString * title = NSLocalizedString(@"You must delete at least one countdown to add a new countdown.", nil);
@@ -126,10 +126,9 @@
 			aCountDown.name = (name.length > 0) ? name : [Countdown proposedNameForType:CountdownTypeCountdown];
 			NSIndexPath * indexPath = [NSIndexPath indexPathForRow:_includedCountdowns.count inSection:0];
 			[self insertCountdown:aCountDown atIndexPath:indexPath];
-			
-			[_tableView scrollToRowAtIndexPath:indexPath
-							  atScrollPosition:UITableViewScrollPositionMiddle
-									  animated:YES];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self selectCountdownAtIndexPath:indexPath];
+			});
 		}]];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:NULL]];
 		[self presentViewController:alert animated:YES completion:NULL];
@@ -158,8 +157,8 @@
 	Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 	countdown.notificationCenter = (toIndexPath.section == 0);
 	if (sourceIndex != destinationIndex) {
-		[Countdown moveCountdownAtIndex:MIN(MAX(0, sourceIndex), _allCountdowns.count - 1)
-								toIndex:MIN(MAX(0, destinationIndex), _allCountdowns.count - 1)];
+		[Countdown moveCountdownAtIndex:CLIP(0, sourceIndex, _allCountdowns.count - 1)
+								toIndex:CLIP(0, destinationIndex, _allCountdowns.count - 1)];
 		[[self.undoManager prepareWithInvocationTarget:self] moveCountdownAtIndex:toIndexPath toIndexPath:indexPath];
 		[self.undoManager setActionName:NSLocalizedString(@"UNDO_MOVE_COUNTDOWN_ACTION", nil)];
 	}
@@ -294,11 +293,8 @@
 - (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {
 	if (proposedDestinationIndexPath.section > 1) {
-		if (sourceIndexPath.section == 0) {
-			return [NSIndexPath indexPathForRow:_notIncludedCountdowns.count inSection:1];
-		} else {
-			return [NSIndexPath indexPathForRow:(_notIncludedCountdowns.count-1) inSection:1];
-		}
+		NSInteger row = _notIncludedCountdowns.count - (sourceIndexPath.section >= 1);
+		[NSIndexPath indexPathForRow:row inSection:1];
 	}
 	
 	return proposedDestinationIndexPath;
@@ -312,14 +308,21 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)selectCountdownAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (indexPath.section <= 1) {
 		Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 		_settingsViewController.countdown = countdown;
 		[Countdown synchronize];
-		[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 		[self dismissViewControllerAnimated:YES completion:NULL];
+	}
+}
+
+- (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (indexPath.section <= 1) {
+		[self selectCountdownAtIndexPath:indexPath];
+		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 		
 	} else if (indexPath.section == 2) { // Import
 		switch (indexPath.row) { // Import From Calendar

@@ -247,6 +247,7 @@
 		504FD33C164D2F8200D54381 /* MainViewController_Pad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController_Pad.xib; sourceTree = "<group>"; };
 		5051305416600DE20056CB42 /* NSObject+additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+additions.h"; sourceTree = "<group>"; };
 		5051305516600DE20056CB42 /* NSObject+additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+additions.m"; sourceTree = "<group>"; };
+		5056564B1E84500900309997 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		505904C91352351B00959167 /* FontDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FontDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		505904CA1352351B00959167 /* FontDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FontDescription.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		505CC6B91BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoCountdownsInterfaceController.swift; sourceTree = "<group>"; };
@@ -458,6 +459,7 @@
 			children = (
 				504357021E4B51B5004F522E /* A Propos */,
 				32CA4F630368D1EE00C91783 /* Closer_Prefix.pch */,
+				5056564B1E84500900309997 /* Constants.h */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = "Other Sources";

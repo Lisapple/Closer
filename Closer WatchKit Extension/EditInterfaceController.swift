@@ -9,30 +9,6 @@
 import WatchKit
 import Foundation
 import WatchConnectivity
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-	switch (lhs, rhs) {
-		case let (l?, r?):
-			return l < r
-		case (nil, _?):
-			return true
-		default:
-			return false
-	}
-}
-
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-	switch (lhs, rhs) {
-		case let (l?, r?):
-			return l > r
-		default:
-			return rhs < lhs
-	}
-}
-
 
 struct EditOption : OptionSet {
 	
@@ -149,9 +125,9 @@ class EditInterfaceController: WKInterfaceController {
 		
 		let message = "Countdown for remaining duration until a date, or timer for specific durations";
 		presentAlert(withTitle: "", message: message, preferredStyle: .actionSheet, actions: [
-			WKAlertAction(title: "Countdown", style: WKAlertActionStyle.default, handler: { () -> Void in
+			WKAlertAction(title: "Countdown", style: WKAlertActionStyle.default, handler: { _ in
 				self.countdown?.type = .countdown; }),
-			WKAlertAction(title: "Timer", style: WKAlertActionStyle.default, handler: { () -> Void in
+			WKAlertAction(title: "Timer", style: WKAlertActionStyle.default, handler: { _ in
 				self.countdown?.type = .timer; })
 		])
 	}
@@ -196,13 +172,13 @@ class EditInterfaceController: WKInterfaceController {
 	func deleteAction() {
 		let title = "Delete this " + ((countdown?.type == .timer) ? "timer" : "countdown") + "?"
 		presentAlert(withTitle: title, message: nil, preferredStyle: .actionSheet, actions: [
-			WKAlertAction(title: "Delete", style: .destructive, handler: { () -> Void in
+			WKAlertAction(title: "Delete", style: .destructive, handler: { _ in
 				WCSession.default().sendMessage(["action" : "delete", "identifier" : self.countdown!.identifier],
 					replyHandler: { (replyInfo: [String : Any]) -> Void in
 						self.dismiss()
 					}, errorHandler: nil)
 			}),
-			WKAlertAction(title: "Cancel", style: .cancel, handler: { () -> Void in })
+			WKAlertAction(title: "Cancel", style: .cancel, handler: { _ in })
 		])
 	}
 	

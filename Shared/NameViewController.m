@@ -8,21 +8,26 @@
 
 #import "NameViewController.h"
 
+@interface NameViewController ()
+
+@property (nonatomic, assign) IBOutlet UITextField * cellTextField;
+@property (nonatomic, assign) IBOutlet UITableView * tableView;
+
+@end
+
 @implementation NameViewController
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
 	self.title = NSLocalizedString(@"Name", nil);
 	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.alwaysBounceVertical = YES;
+	self.tableView.alwaysBounceVertical = YES;
 	
 	_cellTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 	_cellTextField.text = _countdown.name;
 	_cellTextField.delegate = self;
-	
-	[super viewDidLoad];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -67,7 +72,6 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[cell.contentView addSubview:_cellTextField];
 	}
-	
 	return cell;
 }
 
@@ -81,10 +85,10 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	
 	[_tableView reloadData];
 	[_cellTextField becomeFirstResponder];
-	
-	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 @end

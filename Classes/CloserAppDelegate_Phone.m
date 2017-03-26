@@ -54,18 +54,10 @@
 	
 	/* Retreive the last selected page index and selected it */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString * identifier = [userDefaults stringForKey:kLastSelectedCountdownIdentifierKey];
-	NSUInteger index = [Countdown.allCountdowns indexOfObject:[Countdown countdownWithIdentifier:identifier]];
+	NSString * const identifier = [userDefaults stringForKey:kLastSelectedCountdownIdentifierKey];
+	const NSUInteger index = [Countdown.allCountdowns indexOfObject:[Countdown countdownWithIdentifier:identifier]];
 	if (index != NSNotFound)
 		[_mainViewController showPageAtIndex:index animated:NO];
-	
-	[[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification
-													  object:nil queue:NSOperationQueue.currentQueue
-												  usingBlock:^(NSNotification *note) {
-													  /* Update the frame of the white view under the status bar */
-													  UIView * statusBarView = [self.window viewWithTag:4567];
-													  statusBarView.frame = application.statusBarFrame;
-												  }];
 	
 	[Countdown buildingSpolightIndexWithCompletionHandler:nil];
 	
@@ -74,20 +66,8 @@
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
-#if TARGET_IPHONE_SIMULATOR
-	NSString * stateString = @"unkown state application";
-	if (application.applicationState == UIApplicationStateActive)
-		stateString = @"application active";
-	else if (application.applicationState == UIApplicationStateInactive)
-		stateString = @"application inactive";
-	else if (application.applicationState == UIApplicationStateBackground)
-		stateString = @"application background";
-	
-	NSDebugLog(@"application:didReceiveLocalNotification: %@ with an %@.", notification.alertBody, stateString);
-#endif
-	
-	NSString * identifier = (notification.userInfo)[@"identifier"];
-	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	NSString * const identifier = (notification.userInfo)[@"identifier"];
+	Countdown * const countdown = [Countdown countdownWithIdentifier:identifier];
 	NSDebugLog(@"Local notification received: %@ - %@ (will play %@)", identifier, countdown.name, notification.soundName);
 	
 	if (countdown.type == CountdownTypeCountdown) {
@@ -105,11 +85,11 @@
 			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
 																			message:notification.alertBody
 																	 preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-				// Start the next timer
-				[[NSNotificationCenter defaultCenter] postNotificationName:TimerDidContinueNotification object:countdown]; }]];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^
+							  (UIAlertAction * action) {
+								  [[NSNotificationCenter defaultCenter] postNotificationName:TimerDidContinueNotification object:countdown]; // Start the next timer
+							  }]];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
 			[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 		}
 	}
@@ -122,7 +102,7 @@
 		else
 			path = [path stringByAppendingFormat:@"/%@", notification.soundName];
 		
-		NSURL * fileURL = [NSURL fileURLWithPath:path];
+		NSURL * const fileURL = [NSURL fileURLWithPath:path];
 		NSDebugLog(@"fileURL: %@", fileURL);
 		if (fileURL) {
 #if TARGET_IPHONE_SIMULATOR // Playing sounds on simulator is still "buggy"
@@ -141,26 +121,24 @@
 
 - (void)openCountdownWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
-	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
-	NSInteger index = [Countdown indexOfCountdown:countdown];
-	if (index != NSNotFound) {
+	Countdown * const countdown = [Countdown countdownWithIdentifier:identifier];
+	const NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound)
 		[_mainViewController showPageAtIndex:index animated:animated];
-	}
 }
 
 - (void)showCountdownSettingsWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
-	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
-	NSInteger index = [Countdown indexOfCountdown:countdown];
-	if (index != NSNotFound) {
+	Countdown * const countdown = [Countdown countdownWithIdentifier:identifier];
+	const NSInteger index = [Countdown indexOfCountdown:countdown];
+	if (index != NSNotFound)
 		[_mainViewController showSettingsForPageAtIndex:index animated:animated];
-	}
 }
 
 - (void)showAddDurationForCountdownWithIdentifier:(NSString *)identifier
 {
-	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
-	NSInteger index = [Countdown indexOfCountdown:countdown];
+	Countdown * const countdown = [Countdown countdownWithIdentifier:identifier];
+	const NSInteger index = [Countdown indexOfCountdown:countdown];
 	if (index != NSNotFound) {
 		[_mainViewController showSettingsForPageAtIndex:index animated:YES];
 		SettingsViewController * controller = _mainViewController.settingsViewController;
@@ -171,7 +149,7 @@
 
 - (BOOL)openDeeplinkURL:(NSURL *)url
 {
-	BOOL animated = ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
+	const BOOL animated = ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 	NSString * identifier = nil;
 #define URL_STRING(X) @"^closer:\\/\\/countdown\\/"X
 	// closer://countdown#[identifier]
@@ -223,7 +201,7 @@
 	
 	if (countdown) {
 		[Countdown addCountdown:countdown];
-		NSInteger index = [Countdown indexOfCountdown:countdown];
+		const NSInteger index = [Countdown indexOfCountdown:countdown];
 		[_mainViewController showPageAtIndex:index animated:NO];
 		[_mainViewController showSettingsForPageAtIndex:index animated:NO];
 		completionHandler(YES);
@@ -235,7 +213,7 @@
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler
 {
 	if (NSClassFromString(@"CSSearchableIndex")) {
-		NSString * identifier = userActivity.userInfo[CSSearchableItemActivityIdentifier];
+		NSString * const identifier = userActivity.userInfo[CSSearchableItemActivityIdentifier];
 		[self openCountdownWithIdentifier:identifier animated:NO];
 	}
 	return YES;
@@ -243,9 +221,9 @@
 
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
 {
-	NSString * identifier = message[@"identifier"];
+	NSString * const identifier = message[@"identifier"];
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
-	NSString * action = message[@"action"];
+	NSString * const action = message[@"action"];
 	
 #if TARGET_IPHONE_SIMULATOR
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -291,8 +269,8 @@
 					countdown.durationIndex = [dictionary[@"durationIndex"] integerValue]; }
 			}
 		} else {
-			NSString * identifier = message[@"lastSelectedCountdownIdentifier"];
-			Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+			NSString * const identifier = message[@"lastSelectedCountdownIdentifier"];
+			Countdown * const countdown = [Countdown countdownWithIdentifier:identifier];
 			if (identifier && countdown != nil) {
 				NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 				[userDefaults setObject:identifier forKey:kLastSelectedCountdownIdentifierKey];
@@ -309,7 +287,7 @@
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	Countdown * countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
+	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
 	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
 	[userDefaults synchronize];
 	
@@ -330,7 +308,7 @@
 	
 	/* Save the last selected page */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	Countdown * countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
+	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
 	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
 	[userDefaults synchronize];
 }

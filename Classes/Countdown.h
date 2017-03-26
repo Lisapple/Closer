@@ -18,12 +18,16 @@ typedef NS_ENUM(NSUInteger, CountdownType) {
 };
 
 typedef NS_ENUM(NSUInteger, CountdownStyle) {
+	//*** Do not change integer value (used as it when saving countdowns)
+	
 	CountdownStyleNight = 0, // Default
 	CountdownStyleDay,
 	CountdownStyleDawn,
 	CountdownStyleOasis,
 	CountdownStyleSpring,
 };
+
+extern NSString * _Nullable CountdownStyleDescription(CountdownStyle style);
 
 extern BOOL CountdownStyleHasDarkContent(CountdownStyle style);
 
@@ -78,7 +82,8 @@ typedef NS_ENUM(NSUInteger, PromptState) {
  * @param none
  * @return an array of NSString with the localized name of all styles
  */
-+ (nonnull NSArray <NSString *> *)styles;
++ (nonnull NSArray <NSNumber *> *)styles;
++ (nonnull NSArray <NSString *> *)styleNames;
 
 - (nonnull instancetype)initWithIdentifier:(nullable NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
 

@@ -3,29 +3,10 @@
 //
 
 #ifdef __OBJC__
-	// Include Countdown to get it into all classes
-	#import "Countdown.h"
-	// Additions
-	#import "UIColor+addition.h"
-	#import "UIApplication+addition.h"
+#  import "Constants.h" 
+// Include Countdown to get it into all classes
+#  import "Countdown.h"
+// Additions
+#  import "UIColor+addition.h"
+#  import "UIApplication+addition.h"
 #endif
-
-#if TARGET_IPHONE_SIMULATOR
-#  define NSDebugLog(format, ...)  NSLog(@"[DEBUG] " format, ##__VA_ARGS__)
-#else
-#  define NSDebugLog(format, ...)
-#endif
-
-#define CLAMP(A, T, B) ( A + (B - A) * T )
-
-#define kDefaultEventDuration 7200 // The default duration in seconds for EKEvent and VEvent
-
-#define TARGET_IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-
-#if !defined(OrderComparisonResult)
-#  define OrderComparisonResult(A, B) ( ((A) < (B))? NSOrderedAscending : (((A) > (B))? NSOrderedDescending : NSOrderedSame) )
-#endif
-
-#define kLastSelectedCountdownIdentifierKey	@"lastSelectedCountdownIdentifier"
-
-#define DISTANCE(P1, P2) (sqrt((P1.x-P2.x)*(P1.x-P2.x)+(P1.y-P2.y)*(P1.y-P2.y)))

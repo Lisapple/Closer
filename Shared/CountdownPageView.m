@@ -41,14 +41,11 @@
 		
 		const CGFloat offset = 20.;
 		const ParallaxAxis axis = (ParallaxAxisVertical | ParallaxAxisHorizontal);
-		[_daysLabel addParallaxEffect:axis offset:offset];
-		[_hoursLabel addParallaxEffect:axis offset:offset];
-		[_minutesLabel addParallaxEffect:axis offset:offset];
-		[_secondsLabel addParallaxEffect:axis offset:offset];
-		[_daysDescriptionLabel addParallaxEffect:axis offset:offset];
-		[_hoursDescriptionLabel addParallaxEffect:axis offset:offset];
-		[_minutesDescriptionLabel addParallaxEffect:axis offset:offset];
-		[_secondsDescriptionLabel addParallaxEffect:axis offset:offset];
+		NSArray <UILabel *> * labels = @[ _daysLabel, _hoursLabel, _minutesLabel, _secondsLabel,
+										  _daysDescriptionLabel, _hoursDescriptionLabel,
+										  _minutesDescriptionLabel, _secondsDescriptionLabel ];
+		for (UILabel * label in labels)
+			[label addParallaxEffect:axis offset:offset];
 		
 		self.contentView.hidden = YES;
 		
@@ -62,7 +59,12 @@
 	return self;
 }
 
-NSString * stringFormat(NSUInteger value, BOOL addZero)
+- (NSString *)padValue:(NSUInteger)value
+{
+	return [self formatValue:value addPadding:YES];
+}
+
+- (NSString *)formatValue:(NSUInteger)value addPadding:(BOOL)addZero
 {
 	return [NSString stringWithFormat:(addZero) ? @"%02ld" : @"%ld", (long)value];
 }
@@ -128,18 +130,16 @@ NSString * stringFormat(NSUInteger value, BOOL addZero)
 	
 	_daysLabel.hidden = (days == 0);
 	_daysDescriptionLabel.hidden = (days == 0);
-	_verticallyCenterConstraint.constant = (days == 0) ? -self.frame.size.height * 0.1 : -20;
+	_verticallyCenterConstraint.constant = (days == 0) ? (-self.frame.size.height * 0.1) : -20;
 	
 	BOOL animated = !(_contentView.hidden);
 	
-	if (days > 0) {
-		[_daysLabel setText:[NSString stringWithFormat:@"%@", stringFormat(days, NO)] animated:animated];
-		[_hoursLabel setText:[NSString stringWithFormat:@"%@", stringFormat(hours, YES)] animated: animated];
-	} else
-		[_hoursLabel setText:[NSString stringWithFormat:@"%@", stringFormat(hours, YES)] animated:animated];
+	if (days > 0)
+		[_daysLabel setText:[self formatValue:days addPadding:NO] animated:animated];
 	
-	[_minutesLabel setText:[NSString stringWithFormat:@"%@", stringFormat(minutes, YES)] animated:animated];
-	[_secondsLabel setText:[NSString stringWithFormat:@"%@", stringFormat(seconds, YES)] animated:animated];
+	[_hoursLabel   setText:[self padValue:hours]   animated:animated];
+	[_minutesLabel setText:[self padValue:minutes] animated:animated];
+	[_secondsLabel setText:[self padValue:seconds] animated:animated];
 	
 	[_daysDescriptionLabel setText:(days > 1)? NSLocalizedString(@"DAYS_MANY", nil):
 		NSLocalizedString((days == 1) ? @"DAY_ONE" : @"DAYS_ZERO", nil) animated:animated];

@@ -8,9 +8,6 @@
 
 @interface NameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
-@property (nonatomic, assign) IBOutlet UITextField * cellTextField;
-@property (nonatomic, assign) IBOutlet UITableView * tableView;
-
 @property (nonatomic, strong) Countdown * countdown;
 
 @end

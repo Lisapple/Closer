@@ -44,12 +44,13 @@
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
 	self.title = NSLocalizedString(@"Theme", nil);
 	
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	
-	[super viewDidLoad];
 }
 
 #pragma mark - Table view data source

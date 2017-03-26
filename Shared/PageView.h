@@ -23,7 +23,7 @@
 @property (nonatomic, strong) Countdown * countdown;
 @property (nonatomic, weak) NSObject <PageViewDelegate> * delegate;
 
-//@property (nonatomic, strong) IBOutlet UIButton * infoButton;
+@property (nonatomic, readonly) NSTimeInterval minDurationBeforeIdle;
 
 - (void)update;
 
@@ -31,6 +31,5 @@
 - (void)viewWillShow:(BOOL)animated;
 - (void)viewDidHide:(BOOL)animated;
 
-- (NSTimeInterval)minDurationBeforeIdle;
 
 @end

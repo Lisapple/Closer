@@ -283,7 +283,7 @@
 + (void)tagChangeTheme:(CountdownStyle)style
 {
 	[Answers logCustomEventWithName:@"change-countdown-theme"
-				   customAttributes:@{ @"theme" : [Countdown styles][style] }];
+				   customAttributes:@{ @"theme" : CountdownStyleDescription(style) }];
 }
 
 + (void)tagDelete
@@ -293,3 +293,53 @@
 }
 
 @end
+
+
+@implementation Countdown (Thumbnail)
+
++ (UIImage *)thumbnailForStyle:(CountdownStyle)style
+{
+	if (CountdownStyleIsDynamic(style)) {
+		return [self.class imageWithBackgroundColor:[UIColor backgroundColorForStyle:style]
+									foregroundColor:[UIColor textColorForStyle:style]];
+	} else {
+		const CGFloat border = (style == CountdownStyleDay) ? 1 : 0;
+		return [self.class imageWithBackgroundColor:[UIColor backgroundColorForStyle:style]
+									foregroundColor:[UIColor textColorForStyle:style]
+											 border:border];
+	}
+}
+
++ (UIImage *)imageWithBackgroundColor:(UIColor *)backgroundColor foregroundColor:(UIColor *)color
+{
+	return [self.class imageWithBackgroundColor:backgroundColor foregroundColor:color border:0];
+}
+
++ (UIImage *)imageWithBackgroundColor:(UIColor *)backgroundColor foregroundColor:(UIColor *)color border:(CGFloat)border
+{
+	const CGFloat width = 20.;
+	UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, width), NO, 0.);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+	CGRect frame = CGRectMake(0, 0, width, width);
+	CGContextSetFillColorWithColor(context, backgroundColor.CGColor);
+	CGContextFillEllipseInRect(context, frame);
+	
+	if (border > 0) {
+		CGRect frame = CGRectMake(border / 2., border / 2., width - border, width - border);
+		CGContextSetLineWidth(context, border);
+		CGContextSetStrokeColorWithColor(context, backgroundColor.darken.CGColor);
+		CGContextStrokeEllipseInRect(context, frame);
+	}
+	
+	frame = CGRectMake(width / 4., width / 4., width / 2., width / 2.);
+	CGContextSetFillColorWithColor(context, color.CGColor);
+	CGContextFillEllipseInRect(context, frame);
+	
+	UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	return image;
+}
+
+@end
+

@@ -215,7 +215,7 @@
 					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:_countdown.songID];
 					break;
 				case 3: // Theme
-					cell.detailTextLabel.text = [Countdown styles][_countdown.style];
+					cell.detailTextLabel.text = CountdownStyleDescription(_countdown.style);
 				default: break;
 			}
 		} else {
@@ -241,7 +241,7 @@
 					cell.detailTextLabel.text = [[NSBundle mainBundle] nameForSongWithID:_countdown.songID];
 					break;
 				case 4: // Theme
-					cell.detailTextLabel.text = [Countdown styles][_countdown.style];
+					cell.detailTextLabel.text = CountdownStyleDescription(_countdown.style);
 				default: break;
 			}
 		}

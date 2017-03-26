@@ -8,7 +8,7 @@
 
 #import "CCLabel.h"
 
-#define DefaultFontWeigth UIFontWeightThin
+#define DefaultFontWeight UIFontWeightThin
 
 @interface CCLabel ()
 
@@ -53,9 +53,10 @@
 	if (animated && ![text isEqualToString:self.animatedText]) {
 		BOOL usesMonospacedFont = ([[NSScanner scannerWithString:text] scanInt:nil]);
 		if (usesMonospacedFont && [UIFont respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) // iOS 9+
-			self.font = [UIFont monospacedDigitSystemFontOfSize:self.font.pointSize weight:DefaultFontWeigth];
+			self.font = [UIFont monospacedDigitSystemFontOfSize:self.font.pointSize weight:DefaultFontWeight];
 		else
-			self.font = [UIFont systemFontOfSize:self.font.pointSize weight:DefaultFontWeigth];
+			self.font = [UIFont systemFontOfSize:self.font.pointSize weight:DefaultFontWeight];
+		
 		
 		CCLabel * toLabel = self.copy;
 		toLabel.text = text;

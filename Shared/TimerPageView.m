@@ -212,8 +212,7 @@ NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 - (void)blinkIfNeeded
 {
 	if (0. < _remainingSeconds && _remainingSeconds <= 5.) {
-		[UIView animateKeyframesWithDuration:1.
-									   delay:0.
+		[UIView animateKeyframesWithDuration:1. delay:0.
 									 options:(UIViewKeyframeAnimationOptionAllowUserInteraction)
 								  animations:^{
 									  UIColor * backgroundColor = _contentView.backgroundColor;
@@ -294,12 +293,10 @@ NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 
 - (void)tooglePause
 {
-	if (self.countdown.durations.count == 0) // Don't allow "start" if no durations
+	if (self.countdown.durations.count == 0) // Don't allow to start if no durations
 		[self pause];
-	else {
-		if (self.countdown.isPaused) [self start];
-		else [self pause];
-	}
+	else
+		(self.countdown.isPaused) ? [self start] : [self pause];
 }
 
 - (void)pause

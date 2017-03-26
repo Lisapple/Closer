@@ -6,13 +6,32 @@
 //  Copyright 2011 Lis@cintosh. All rights reserved.
 //
 
-#import "Countdown+addition.h"
+#import "Countdown.h"
+
+#import "Constants.h"
 
 #import "NSBundle+addition.h"
 #import "NSArray+addition.h"
 
 NSString * const CountdownDidSynchronizeNotification = @"CountdownDidSynchronizeNotification";
 NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotification";
+
+NSString * CountdownStyleDescription(CountdownStyle style) {
+	switch (style) {
+		// Regular styles
+		case CountdownStyleNight:
+			return NSLocalizedString(@"PAGE_STYLE_NIGHT", nil);
+		case CountdownStyleDay:
+			return NSLocalizedString(@"PAGE_STYLE_DAY", nil);
+		case CountdownStyleDawn:
+			return NSLocalizedString(@"PAGE_STYLE_DAWN", nil);
+		case CountdownStyleOasis:
+			return NSLocalizedString(@"PAGE_STYLE_OASIS", nil);
+		case CountdownStyleSpring:
+			return NSLocalizedString(@"PAGE_STYLE_SPRING", nil);
+	}
+	return nil;
+}
 
 BOOL CountdownStyleHasDarkContent(CountdownStyle style) {
 	return (style == CountdownStyleDay || style == CountdownStyleSpring);
@@ -335,13 +354,22 @@ static NSMutableArray * _countdowns = nil;
 	[self removeCountdown:countdown];
 }
 
-+ (NSArray *)styles
++ (NSArray <NSNumber *> *)styles
 {
-	return @[ NSLocalizedString(@"PAGE_STYLE_NIGHT", nil),
-			  NSLocalizedString(@"PAGE_STYLE_DAY", nil),
-			  NSLocalizedString(@"PAGE_STYLE_DAWN", nil),
-			  NSLocalizedString(@"PAGE_STYLE_OASIS", nil),
-			  NSLocalizedString(@"PAGE_STYLE_SPRING", nil) ];
+	return @[ @(CountdownStyleNight),
+			  @(CountdownStyleDay),
+			  @(CountdownStyleDawn),
+			  @(CountdownStyleOasis),
+			  @(CountdownStyleSpring) ];
+}
+
++ (nonnull NSArray <NSString *> *)styleNames
+{
+	NSMutableArray <NSString *> * names = [NSMutableArray arrayWithCapacity:4];
+	for (NSNumber * style in self.styles)
+		[names addObject:CountdownStyleDescription((CountdownStyle)style.integerValue)];
+	
+	return names;
 }
 
 #pragma mark - Instance methods
