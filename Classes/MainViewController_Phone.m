@@ -509,10 +509,17 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 #pragma mark - Scroll view delegate
 
+- (BOOL)shouldCreateNewCountdownForOffset:(CGFloat)x {
+	return (150 > ABS(x) && ABS(x) >= 70); // Ignore non-manual scrolling (like after setting `contentOffset`)
+}
+
 - (void)enableCreateNewCountdown
 {
-	_shouldCreateNewCountdown = YES;
-	_createCountdownLabel.alpha = 1;
+	const CGFloat offset = _leftImageViewConstraint.constant;
+	if ([self shouldCreateNewCountdownForOffset:offset]) {
+		_shouldCreateNewCountdown = YES;
+		_createCountdownLabel.alpha = 1;
+	}
 }
 
 - (void)setBackgroundImageOffset:(CGPoint)point
@@ -526,14 +533,12 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_createCountdownLabel.origin = CGPointMake(x, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
 	_leftBottomBarConstraint.constant = point.x;
 	
-	BOOL shouldCreateNewCountdown = (150 > ABS(point.x) && ABS(point.x) >= 70); // Ignore non-manual scrolling (like after setting `contentOffset`)
-	if (shouldCreateNewCountdown)
+	if ([self shouldCreateNewCountdownForOffset:point.x])
 		[self performSelector:@selector(enableCreateNewCountdown) withObject:nil afterDelay:0.35 inModes:@[ NSRunLoopCommonModes ]];
-	else if (_shouldCreateNewCountdown) {
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableCreateNewCountdown) object:nil];
+	else {
 		_shouldCreateNewCountdown = NO;
-	} else
 		_createCountdownLabel.alpha = (ABS(point.x) - 35.) / 70.;
+	}
 }
 
 - (void)showPageControl:(BOOL)show animated:(BOOL)animated
@@ -605,14 +610,13 @@ const NSTimeInterval kAnimationDelay = 5.;
 	if (0 <= index && index < _pages.count) {
 		PageView * pageView = _pages[index];
 		if (pageView) {
-			if (_scrollView.contentOffset.x < 0.) {
-				CGFloat offset = -_scrollView.contentOffset.x;
-				[self setBackgroundImageOffset:CGPointMake(offset, 0.)];
-				
-			} else if (_scrollView.contentOffset.x > (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1))) {
-				CGFloat offset = (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)) - _scrollView.contentOffset.x;
-				[self setBackgroundImageOffset:CGPointMake(offset, 0.)];
-			}
+			CGFloat offset = 0;
+			if /**/ (_scrollView.contentOffset.x < 0.)
+				offset = -_scrollView.contentOffset.x;
+			else if (_scrollView.contentOffset.x > (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)))
+				offset = (_scrollView.frame.size.width * (_pageControl.numberOfPages - 1)) - _scrollView.contentOffset.x;
+			
+			[self setBackgroundImageOffset:CGPointMake(offset, 0.)];
 			[self setNeedsStatusBarAppearanceUpdate];
 		}
 		[self updateBarContentWithOffset:_scrollView.contentOffset];
