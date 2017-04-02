@@ -213,17 +213,15 @@ const NSTimeInterval kAnimationDelay = 5.;
 	}
 }
 
+/// Update scroll view page frames, content size and offset 
 - (void)updateContentView
 {
-	// Re-order pages
 	int index = 0;
 	for (PageView * page in _pages) {
-		CGFloat y = (self.view.frame.size.height - 423./*background image height*/) / 2.;
-		page.frame = CGRectMake(index * self.view.frame.size.width, (int)y,
+		page.frame = CGRectMake(index * self.view.frame.size.width, 0,
 								self.view.frame.size.width, self.view.frame.size.height);
 		++index;
 	}
-	
 	_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * _pages.count, 0.);
 	
 	CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * _currentPageIndex, 0.);
@@ -276,6 +274,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	[_pages insertObject:page atIndex:index];
 	
 	[self.scrollView addSubview:page];
+	[self updateContentView];
 }
 
 - (void)removePageWithCountdown:(Countdown *)aCountdown
@@ -634,11 +633,14 @@ const NSTimeInterval kAnimationDelay = 5.;
 	}
 	
 	if (_shouldCreateNewCountdown) {
+		BOOL insertOnRight = (pageIndex > 0);
+		const NSInteger index = (insertOnRight) ? _pages.count : 0;
+		
 		_quickCreatedCountdown = [[Countdown alloc] initWithIdentifier:nil];
 		_quickCreatedCountdown.name = NSLocalizedString(@"New Countdown", nil);
-		[Countdown addCountdown:_quickCreatedCountdown];
+		[Countdown insertCountdown:_quickCreatedCountdown atIndex:index];
 		[Answers logCustomEventWithName:@"use-quick-create-countdown" customAttributes:nil];
-		[self addPageWithCountDown:_quickCreatedCountdown];
+		[self insertPageWithCountDown:_quickCreatedCountdown atIndex:index];
 		
 		self.currentPageIndex = index;
 		[self.scrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0.) animated:NO];
