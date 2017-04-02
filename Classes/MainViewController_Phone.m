@@ -58,6 +58,7 @@
 @property (nonatomic, strong) IBOutlet UIView * toolbarView;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint * leftBottomBarConstraint;
 @property (nonatomic, strong) UILabel * createCountdownLabel;
+@property (nonatomic, strong, nullable) Countdown * quickCreatedCountdown;
 
 - (IBAction)changeCurrentDurationAction:(id)sender;
 
@@ -358,8 +359,16 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 #pragma mark - Settings view controller delegate
 
+- (void)settingsViewController:(SettingsViewController *)controller willDeleteCountdown:(Countdown *)countdown
+{
+	if (_quickCreatedCountdown == countdown) // Tag if a quick created countdown was deleted just after created
+		[Answers logCustomEventWithName:@"delete-quick-created-countdown" customAttributes:nil];
+}
+
 - (void)settingsViewControllerDidFinish:(SettingsViewController *)controller
 {
+	_quickCreatedCountdown = nil;
+	
 	[self reload];
 	[self updateContentView];
 	
