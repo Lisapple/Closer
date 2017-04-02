@@ -245,7 +245,9 @@ static NSMutableArray * _countdowns = nil;
 			return;
 		}
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
+		NSNotification * notification = [NSNotification notificationWithName:CountdownDidSynchronizeNotification object:nil];
+		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostWhenIdle coalesceMask:NSNotificationCoalescingOnName forModes:nil];
+		
 		if (completionHandler)
 			completionHandler(YES, nil);
 	});
@@ -288,7 +290,6 @@ static NSMutableArray * _countdowns = nil;
 	[countdown activate];
 	[_countdowns insertObject:countdown atIndex:index];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
 	[self synchronize];
 }
 
@@ -299,7 +300,6 @@ static NSMutableArray * _countdowns = nil;
 	[countdown activate];
 	[_countdowns addObject:countdown];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
 	[self synchronize];
 }
 
@@ -312,7 +312,6 @@ static NSMutableArray * _countdowns = nil;
 	
 	[_countdowns addObjectsFromArray:countdowns];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
 	[self synchronize];
 }
 
@@ -323,7 +322,6 @@ static NSMutableArray * _countdowns = nil;
 		[_countdowns removeObjectAtIndex:fromIndex];
 		[_countdowns insertObject:countdown atIndex:toIndex];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
 		[self synchronize];
 	}
 }
@@ -332,7 +330,6 @@ static NSMutableArray * _countdowns = nil;
 {
 	[_countdowns exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
 	[self synchronize];
 }
 
@@ -344,7 +341,6 @@ static NSMutableArray * _countdowns = nil;
 	[countdown desactivate];
 	[_countdowns removeObject:countdown];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidSynchronizeNotification object:nil];
 	[self synchronize];
 }
 
