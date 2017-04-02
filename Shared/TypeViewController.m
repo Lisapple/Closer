@@ -77,6 +77,9 @@
 	cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	
 	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+	
+	// @TODO: Add delay (?)
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

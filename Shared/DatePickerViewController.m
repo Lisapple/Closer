@@ -46,21 +46,22 @@
 {
 	[super viewWillAppear:animated];
 	
-	NSDate * endDate = _countdown.endDate;
+	const NSCalendar * calendar = [NSCalendar currentCalendar];
+	
+	NSDate * const endDate = _countdown.endDate;
 	_hasTimeDate = (endDate != nil && (endDate.timeIntervalSinceNow > 0)); // If endDate is nil or passed, we don't have a valid date and consider time as invalid
 	
 	if (!endDate || (endDate.timeIntervalSinceNow <= 0)) {
+		// date = today, next hour
 		NSDate * now = [NSDate date];
-		NSCalendar * calendar = [NSCalendar currentCalendar];
-		NSDateComponents * comps = [calendar components:NSCalendarUnitMinute fromDate:now];
-		comps.minute = 60 - comps.minute;
-		self.date = [calendar dateByAddingComponents:comps toDate:now options:0]; // date = today, next hour
+		self.date = [calendar dateByAddingUnit:NSCalendarUnitHour value:1 toDate:now options:0];
+		self.date = [calendar dateBySettingUnit:NSCalendarUnitMinute value:0 ofDate:self.date options:0];
 	} else
 		self.date = endDate;
 	
 	[_datePicker setDate:_date animated:NO];
-	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60]; // minimumDate = now + 1 minute
-	_datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:(100. * 365. * 24. * 60. * 60.)]; // maximumDate = now + 100 years
+	_datePicker.minimumDate = [calendar dateByAddingUnit:NSCalendarUnitMinute value:1 toDate:[NSDate date] options:0]; // +1 minute
+	_datePicker.maximumDate = [calendar dateByAddingUnit:NSCalendarUnitYear value:100 toDate:[NSDate date] options:0]; // +100 years
 	
 	[self reloadData];
 	
@@ -69,7 +70,6 @@
 	[self updateWithOrientation:[UIApplication sharedApplication].statusBarOrientation];
 	
 	// Compute the next time change (one minute - the actual number of second)
-	NSCalendar * calendar = [NSCalendar currentCalendar];
 	NSDateComponents * components = [calendar components:NSCalendarUnitSecond fromDate:[NSDate date]];
 	double delayInSeconds = 60. - components.second;
 	
@@ -126,7 +126,8 @@
 
 - (void)updatePickerMinimumDate
 {
-	_datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:60]; // minimumDate = now + 1 minute
+	const NSCalendar * calendar = [NSCalendar currentCalendar];
+	_datePicker.minimumDate = [calendar dateByAddingUnit:NSCalendarUnitMinute value:1 toDate:[NSDate date] options:0];
 	[self reloadData]; // Force reload data to prevent change from datePicker
 }
 
@@ -149,11 +150,6 @@
 {
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 	return UIInterfaceOrientationIsPortrait(orientation) ? 50 : 0;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

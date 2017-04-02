@@ -232,7 +232,7 @@ extension Countdown {
 		
 		if (cornerRadius >= size.height / 2) { // Timer
 			bitmapContext.addArc(center: center, radius: size.height / 2.0 - border,
-			                     startAngle: CGFloat(-M_PI_2 * 0.98), endAngle: CGFloat(2 * M_PI * 0.99 - M_PI_2),
+			                     startAngle: -0.98 * .pi / 2, endAngle: 0.99 * 2 * .pi - .pi / 2,
 			                     clockwise: false)
 		} else { // Countdown
 			let pt1 = CGPoint(x: cornerRadius + border, y: border)
@@ -262,8 +262,8 @@ extension Countdown {
 		if (cornerRadius >= size.height / 2.0) { // Timer
 			// @TODO: Clip progression minimum to get progress bar start
 			bitmapContext.addArc(center: center, radius: size.height / 2.0 - border,
-			                     startAngle: CGFloat(-M_PI_2 * 0.98),
-			                     endAngle: CGFloat(2 * M_PI * (Double(progress) * 0.98 + 0.01) - M_PI_2),
+			                     startAngle: -0.98 * .pi / 2,
+			                     endAngle: 2 * .pi * CGFloat(progress * 0.98 + 0.01) - .pi / 2,
 			                     clockwise: false)
 			
 			let path = bitmapContext.path!
@@ -278,7 +278,7 @@ extension Countdown {
 			bitmapContext.setStrokeColor(color.cgColor)
 			bitmapContext.strokePath()
 		} else {
-			let pathLength = (frame.height - 2.0 * border - 2.0 * cornerRadius) * 4.0 + 2.0 * CGFloat(M_PI) * cornerRadius
+			let pathLength = (frame.height - 2.0 * border - 2.0 * cornerRadius) * 4.0 + 2.0 * CGFloat.pi * cornerRadius
 			var lengths = [ CGFloat(progress) * pathLength, CGFloat.greatestFiniteMagnitude ]
 			var transform = CGAffineTransform.identity
 			let dashingPath = CGPath(__byDashing: path, transform: &transform, phase: 0.0, lengths: &lengths, count: Int(lengths.count))
