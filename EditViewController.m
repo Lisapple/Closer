@@ -159,13 +159,15 @@
 - (void)tableView:(UITableView *)aTableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
 	NSUInteger sourceIndex = sourceIndexPath.section * _includedCountdowns.count + sourceIndexPath.row;
-	NSUInteger destinationIndex = destinationIndexPath.section * (_includedCountdowns.count - 1) + destinationIndexPath.row;
-	Countdown * countdown = _allCountdowns[sourceIndex];
+	NSUInteger destinationIndex = destinationIndexPath.section * _includedCountdowns.count + destinationIndexPath.row;
+	
+	Countdown * countdown = (sourceIndexPath.section == 0) ? _includedCountdowns[sourceIndexPath.row] : _notIncludedCountdowns[sourceIndexPath.row];
 	countdown.notificationCenter = (destinationIndexPath.section == 0);
 	if (sourceIndex != destinationIndex)
-		[Countdown moveCountdownAtIndex:sourceIndex toIndex:destinationIndex];
-	else
-		[self reloadData];
+		[Countdown moveCountdownAtIndex:CLIP(0, sourceIndex, _allCountdowns.count - 1)
+								toIndex:CLIP(0, destinationIndex, _allCountdowns.count - 1)];
+	
+	[self reloadData];
 	// @TODO: animated the row movement
 }
 

@@ -28,8 +28,6 @@
 @property (nonatomic, assign) NSInteger currentSettingsPageIndex, currentNavigationBarTag;
 @property (nonatomic, strong) NSMutableArray <PageViewContainer *> * containers;
 
-@property (nonatomic, strong) UIPopoverController * popover, * editPopover;
-
 - (void)showNavigationBar:(NSInteger)navigationBarTag animated:(BOOL)animated;
 
 - (PageView *)createPageWithCountdown:(Countdown *)countdown atIndex:(NSInteger)index animated:(BOOL)animated;
@@ -144,18 +142,21 @@
 
 - (IBAction)editAction:(id)sender
 {
-	if (!_editPopover.isPopoverVisible) {
-		EditViewController * editViewController = [[EditViewController alloc] init];
-		_editPopover = [[UIPopoverController alloc] initWithContentViewController:editViewController];
-		[_editPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:NO];
-	}
+	EditViewController * editViewController = [[EditViewController alloc] init];
+	editViewController.modalPresentationStyle = UIModalPresentationPopover;
+	[self presentViewController:editViewController animated:NO completion:^{
+		editViewController.popoverPresentationController.passthroughViews = @[]; // Ignore other navBar buttons interaction
+	}];
+	
+	UIPopoverPresentationController * presentator = editViewController.popoverPresentationController;
+	presentator.permittedArrowDirections = UIPopoverArrowDirectionUp;
+	presentator.barButtonItem = sender;
 }
 
 - (IBAction)done:(id)sender
 {
-	if (_currentNavigationBarTag == kEditNavigationBar) {
+	if (_currentNavigationBarTag == kEditNavigationBar)
 		[self showNavigationBar:kDefaultNavigationBar animated:YES];
-	}
 }
 
 - (void)networkStatusDidChange:(NSNotification *)notification
@@ -227,20 +228,20 @@
 	
 	_settingsViewController = [[SettingsViewController alloc] init];
 	_settingsViewController.countdown = [Countdown countdownAtIndex:pageIndex];
+	_settingsViewController.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:_settingsViewController];
-	_popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
-	_popover.delegate = self;
-	
-	_settingsViewController.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	navigationController.modalPresentationStyle = UIModalPresentationPopover;
+	[self presentViewController:navigationController animated:NO completion:nil];
 	
 	PageViewContainer * container = _containers[pageIndex];
 	CGRect rect = [self.view convertRect:container.infoButton.frame fromView:container];
 	
-	[_popover presentPopoverFromRect:rect
-							  inView:self.view
-			permittedArrowDirections:(UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight)
-							animated:NO];
+	UIPopoverPresentationController * presentator = navigationController.popoverPresentationController;
+	presentator.permittedArrowDirections = (UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight);
+	presentator.sourceView = self.view;
+	presentator.sourceRect = rect;
+	presentator.delegate = self;
 	
 	_currentSettingsPageIndex = pageIndex;
 }
@@ -252,8 +253,7 @@
 
 - (void)closeActiveSettings
 {
-	[_popover dismissPopoverAnimated:YES];
-	_popover = nil;
+	[_settingsViewController dismissViewControllerAnimated:true completion:nil];
 	
 	if (_currentSettingsPageIndex >= 0) {
 		[self reloadPageAtIndex:_currentSettingsPageIndex];
@@ -293,9 +293,10 @@
 		}]];
 	}
 	actionSheet.view.tintColor = [UIColor defaultTintColor];
+	[self presentViewController:actionSheet animated:YES completion:nil];
+	
 	actionSheet.popoverPresentationController.sourceView = sender;
 	actionSheet.popoverPresentationController.sourceRect = sender.bounds;
-	[self presentViewController:actionSheet animated:YES completion:nil];
 }
 
 - (void)handleTapFrom:(UIGestureRecognizer *)recognizer
@@ -551,6 +552,8 @@
 
 - (void)deletePageAtIndex:(NSInteger)index animated:(NSInteger)animated
 {
+	[_settingsViewController dismissViewControllerAnimated:NO completion:nil];
+	
 	PageViewContainer * container = _containers[index];
 	container.alpha = 1.;
 	container.transform = CGAffineTransformIdentity;
@@ -674,9 +677,9 @@
 					 }];
 }
 
-#pragma mark - Popover controller delegate
+#pragma mark - Popover presentation controller delegate
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
 {
 	[self reloadPageAtIndex:_currentSettingsPageIndex];
 	_currentSettingsPageIndex = 0;
