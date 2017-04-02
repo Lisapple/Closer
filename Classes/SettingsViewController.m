@@ -142,22 +142,18 @@
 
 - (void)deleteCountdown
 {
-	/* Get the countdown next this one */
-	NSInteger index = [Countdown indexOfCountdown:self.countdown];
+	if ([_delegate respondsToSelector:@selector(settingsViewController:willDeleteCountdown:)])
+		[_delegate settingsViewController:self willDeleteCountdown:_countdown];
+	
 	[Countdown removeCountdown:self.countdown];
 	
 	NSInteger count = [Countdown allCountdowns].count;
 	if (count > 0) {
-		index = MIN(index, count-1);
-		Countdown * newCountdown = [Countdown countdownAtIndex:index];
-		self.countdown = newCountdown;
-		
-		if ([_delegate respondsToSelector:@selector(settingsViewControllerDidFinish:)]) // Returns to PageViewController
+		if ([_delegate respondsToSelector:@selector(settingsViewControllerDidFinish:)])
 			[_delegate settingsViewControllerDidFinish:self];
 		
-	} else { // If we have deleted the last countdown, show editAllCountdowns: panel
+	} else // If we have deleted the last countdown, show editAllCountdowns: panel
 		[self editAllCountdowns:nil];
-	}
 }
 
 #pragma mark - Table view data source

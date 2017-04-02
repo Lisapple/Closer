@@ -32,17 +32,17 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[_cellTextField becomeFirstResponder];
-	
 	[super viewDidAppear:animated];
+	
+	[_cellTextField becomeFirstResponder];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+	[super viewWillDisappear:animated];
+	
 	_countdown.name = _cellTextField.text;
 	[Countdown synchronize];
-	
-	[super viewWillDisappear:animated];
 }
 
 #pragma mark - Table view data source
@@ -76,6 +76,12 @@
 }
 
 #pragma mark - Text field delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+	if (_selectsTextFieldContentOnFocus)
+		[textField selectAll:nil];
+}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {

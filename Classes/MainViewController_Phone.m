@@ -8,6 +8,7 @@
 
 #import "MainViewController_Phone.h"
 #import "EditAllCountdownViewController.h"
+#import "NameViewController.h"
 
 #import "NetworkStatus.h"
 
@@ -95,7 +96,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_createCountdownLabel = [[UILabel alloc] init];
 	_createCountdownLabel.textColor = [UIColor whiteColor];
 	_createCountdownLabel.text = @"+";
-	_createCountdownLabel.font = [UIFont systemFontOfSize:32 weight:UIFontWeightUltraLight];
+	_createCountdownLabel.font = [UIFont systemFontOfSize:32 weight:UIFontWeightLight];
 	[_createCountdownLabel sizeToFit];
 	
 	_createCountdownLabel.origin = CGPointMake(15, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
@@ -196,9 +197,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 			index++;
 		}
 		
+		self.currentPageIndex = CLIP(0, _currentPageIndex, _pages.count - 1);
 		_scrollView.contentSize = CGSizeMake(self.view.frame.size.width * _pages.count, 0.);
-		CGPoint contentOffset = CGPointMake(self.view.frame.size.width * _currentPageIndex, 0.);
-		[_scrollView setContentOffset:contentOffset animated:NO];
+		_scrollView.contentOffset = CGPointMake(self.view.frame.size.width * _currentPageIndex, 0.);
 		
 		[self showPageControl:NO animated:NO];
 		[self updateUI];
@@ -470,25 +471,40 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)showSettingsForPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated
 {
-	if (pageIndex < [Countdown allCountdowns].count) {
+	[self showSettingsForPageAtIndex:pageIndex animated:animated completion:nil];
+}
+
+- (nullable SettingsViewController *)showSettingsForPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated completion:(void (^ __nullable)(void))completion
+{
+	if (0 <= pageIndex && pageIndex < [Countdown allCountdowns].count) {
 		if (!_settingsViewController) {
 			_settingsViewController = [[SettingsViewController alloc] init];
 			_settingsViewController.delegate = self;
 		}
 		
-		Countdown * currentCountdown = (Countdown *)[Countdown allCountdowns][_currentPageIndex];
+		Countdown * currentCountdown = (Countdown *)[Countdown allCountdowns][pageIndex];
 		_settingsViewController.countdown = currentCountdown;
 		
 		UINavigationController * aNavigationController = [[UINavigationController alloc] initWithRootViewController:_settingsViewController];
 		aNavigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 		[self presentViewController:aNavigationController animated:YES completion:^{
-			[_pages[pageIndex] viewDidHide:animated]; }];
+			[_pages[pageIndex] viewDidHide:animated];
+			if (completion) completion();
+		}];
 		
 		[self stopUpdateTimeLabels];
+		return _settingsViewController;
 	}
+	return nil;
 }
 
 #pragma mark - Scroll view delegate
+
+- (void)enableCreateNewCountdown
+{
+	_shouldCreateNewCountdown = YES;
+	_createCountdownLabel.alpha = 1;
+}
 
 - (void)setBackgroundImageOffset:(CGPoint)point
 {
@@ -499,10 +515,16 @@ const NSTimeInterval kAnimationDelay = 5.;
 		x = self.view.frame.size.width - _createCountdownLabel.frame.size.width - 15;
 	
 	_createCountdownLabel.origin = CGPointMake(x, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
-	_shouldCreateNewCountdown = (ABS(point.x) > 70);
-	_createCountdownLabel.alpha = (_shouldCreateNewCountdown) ? 1 : ((ABS(point.x) - 30) / 70);
-	
 	_leftBottomBarConstraint.constant = point.x;
+	
+	BOOL shouldCreateNewCountdown = (150 > ABS(point.x) && ABS(point.x) >= 70); // Ignore non-manual scrolling (like after setting `contentOffset`)
+	if (shouldCreateNewCountdown)
+		[self performSelector:@selector(enableCreateNewCountdown) withObject:nil afterDelay:0.35 inModes:@[ NSRunLoopCommonModes ]];
+	else if (_shouldCreateNewCountdown) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableCreateNewCountdown) object:nil];
+		_shouldCreateNewCountdown = NO;
+	} else
+		_createCountdownLabel.alpha = (ABS(point.x) - 35.) / 70.;
 }
 
 - (void)showPageControl:(BOOL)show animated:(BOOL)animated
@@ -568,7 +590,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	CGFloat offset = _scrollView.contentOffset.x / _scrollView.frame.size.width;
 	NSInteger index = MAX(roundf(offset), 0);
-	self.currentPageIndex = index;
+	_currentPageIndex = index;
+	_pageControl.currentPage = index;
 	
 	if (0 <= index && index < _pages.count) {
 		PageView * pageView = _pages[index];
@@ -596,6 +619,36 @@ const NSTimeInterval kAnimationDelay = 5.;
 			[page update];
 		++index;
 	}
+	
+	if (_shouldCreateNewCountdown) {
+		_quickCreatedCountdown = [[Countdown alloc] initWithIdentifier:nil];
+		_quickCreatedCountdown.name = NSLocalizedString(@"New Countdown", nil);
+		[Countdown addCountdown:_quickCreatedCountdown];
+		[Answers logCustomEventWithName:@"use-quick-create-countdown" customAttributes:nil];
+		[self addPageWithCountDown:_quickCreatedCountdown];
+		
+		self.currentPageIndex = index;
+		[self.scrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0.) animated:NO];
+		self.createCountdownLabel.hidden = YES;
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			PageView * page = _pages[index];
+			page.transform = _imageView.transform = CGAffineTransformMakeTranslation(0, page.frame.size.height); // Slide from bottom
+			page.alpha = _imageView.alpha = 0.;
+			[UIView animateWithDuration:0.5
+							 animations:^{
+								 page.transform = _imageView.transform = CGAffineTransformIdentity;
+								 page.alpha = _imageView.alpha = 1.;
+							 } completion:^(BOOL finished)
+			 {
+				 [self showSettingsForPageAtIndex:index animated:YES completion:^{
+					 NameViewController * controller = (NameViewController *)[_settingsViewController showSettingsType:SettingsTypeName animated:YES];
+					 controller.selectsTextFieldContentOnFocus = YES;
+				 }];
+				 self.createCountdownLabel.hidden = NO;
+			 }];
+		});
+	}
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -620,30 +673,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 				[aPageView viewDidHide:YES];
 		}
 		[self setBackgroundImageOffset:CGPointZero];
-		
-	} else if (_shouldCreateNewCountdown) {
-		Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
-		countdown.name = NSLocalizedString(@"New Countdown", nil);
-		[Countdown addCountdown:countdown];
-		[Answers logCustomEventWithName:@"use-quick-create-countdown" customAttributes:nil];
-		[self reload];
-		
-		NSInteger index = [Countdown indexOfCountdown:countdown];
-		dispatch_async(dispatch_get_main_queue(), ^{
-			PageView * page = _pages[index];
-			page.transform = _imageView.transform = CGAffineTransformMakeScale(0.5, 0.5);
-			page.alpha = _imageView.alpha = 0.;
-			[UIView animateWithDuration:0.25 animations:^{
-				page.transform = _imageView.transform = CGAffineTransformIdentity;
-				page.alpha = _imageView.alpha = 1.;
-			}
-							 completion:^(BOOL finished) {
-								 [self showSettingsForPageAtIndex:index animated:YES];
-							 }];
-		});
-		
-		scrollView.contentOffset = CGPointMake(index * scrollView.frame.size.width, 0);
-		self.currentPageIndex = index;
 	}
 }
 

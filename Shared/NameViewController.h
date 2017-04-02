@@ -9,5 +9,6 @@
 @interface NameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
 @property (nonatomic, strong) Countdown * countdown;
+@property (nonatomic, assign) BOOL selectsTextFieldContentOnFocus;
 
 @end

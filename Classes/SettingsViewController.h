@@ -22,7 +22,11 @@ typedef NS_ENUM(NSInteger, SettingsType) {
 @protocol SettingsViewControllerDelegate
 
 @optional
+/// User exits settings to go back to countdown pages.
 - (void)settingsViewControllerDidFinish:(SettingsViewController *)controller;
+
+/// The user deletes the countdown from toolbar button (and has validated delete confirmation).
+- (void)settingsViewController:(SettingsViewController *)controller willDeleteCountdown:(Countdown *)countdown;
 
 @end
 
