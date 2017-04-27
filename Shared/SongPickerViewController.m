@@ -17,21 +17,24 @@
 
 @implementation SongPickerViewController
 
+- (instancetype)init
+{
+	if ((self = [super initWithStyle:UITableViewStyleGrouped])) { }
+	return self;
+}
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Sound", nil);
 	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
+	[self.tableView registerClass:UITableViewCell.class forCellReuseIdentifier:@"CellID"];
 	
 	NSString * path = [[NSBundle mainBundle] pathForResource:@"songs" ofType:@"plist"];
 	_songs = [[NSMutableArray alloc] initWithContentsOfFile:path];
 	
 	self.songID = _countdown.songID;
-	
-	[_tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -65,13 +68,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString * cellIdentifier = @"CellID";
-	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	if (!cell) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		cell.selectionStyle = UITableViewCellSelectionStyleGray;
-	}
-	
+	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"CellID"];
+	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
 	if (indexPath.section == 0) {
@@ -148,6 +146,9 @@
 	}
 	
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
+	
+	if (indexPath.section == 0 && indexPath.row == 0) // "None"
+		[self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

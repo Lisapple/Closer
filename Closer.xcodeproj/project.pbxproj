@@ -87,7 +87,6 @@
 		50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50C5A19112E3361F0013605C /* DatePickerViewController.xib */; };
 		50C5A23A12E33F8B0013605C /* NSDate+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A23912E33F8B0013605C /* NSDate+addition.m */; };
 		50C5A26712E3496C0013605C /* SongPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A26512E3496C0013605C /* SongPickerViewController.m */; };
-		50C5A26812E3496C0013605C /* SongPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50C5A26612E3496C0013605C /* SongPickerViewController.xib */; };
 		50C5A2E612E3504B0013605C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C5A2E512E3504B0013605C /* AudioToolbox.framework */; };
 		50C5A32712E352590013605C /* Songs in Resources */ = {isa = PBXBuildFile; fileRef = 50C5A32512E352590013605C /* Songs */; };
 		50CEFB5E15FCF27F0044AED0 /* NetworkStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CEFB5D15FCF27F0044AED0 /* NetworkStatus.m */; };
@@ -311,7 +310,6 @@
 		50C5A23912E33F8B0013605C /* NSDate+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+addition.m"; sourceTree = "<group>"; };
 		50C5A26412E3496C0013605C /* SongPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SongPickerViewController.h; sourceTree = "<group>"; };
 		50C5A26512E3496C0013605C /* SongPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SongPickerViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50C5A26612E3496C0013605C /* SongPickerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SongPickerViewController.xib; sourceTree = "<group>"; };
 		50C5A2E512E3504B0013605C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		50C5A32512E352590013605C /* Songs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Songs; sourceTree = "<group>"; };
 		50C5A37012E37AD90013605C /* MessageViewControler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewControler.h; sourceTree = "<group>"; };
@@ -613,7 +611,6 @@
 				50C5A37112E37AD90013605C /* MessageViewControler.m */,
 				50C5A26412E3496C0013605C /* SongPickerViewController.h */,
 				50C5A26512E3496C0013605C /* SongPickerViewController.m */,
-				50C5A26612E3496C0013605C /* SongPickerViewController.xib */,
 				507AD4CE13533D6200011051 /* PageThemeViewController.h */,
 				507AD4CF13533D6200011051 /* PageThemeViewController.m */,
 				507AD4D013533D6200011051 /* PageThemeViewController.xib */,
@@ -908,7 +905,6 @@
 				50D15B911C88C66900B2E49B /* Main~phone.storyboard in Resources */,
 				50034D051E1F1BFE00CB1A5E /* PageViewContainer.xib in Resources */,
 				50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */,
-				50C5A26812E3496C0013605C /* SongPickerViewController.xib in Resources */,
 				50C5A32712E352590013605C /* Songs in Resources */,
 				50F3F51219880D1D00817B98 /* Images.xcassets in Resources */,
 				508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */,

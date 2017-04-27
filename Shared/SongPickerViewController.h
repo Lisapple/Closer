@@ -11,9 +11,7 @@
 
 @class Countdown;
 
-@interface SongPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
+@interface SongPickerViewController : UITableViewController
 
 @property (nonatomic, strong) NSMutableArray <NSDictionary *> * songs;
 @property (nonatomic, strong) NSString * songID;
