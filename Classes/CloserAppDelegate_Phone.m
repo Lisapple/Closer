@@ -14,10 +14,9 @@
 #import "Countdown+addition.h"
 #import "NSBundle+addition.h"
 #import "NSString+addition.h"
+#import "Countdown+addition.h"
 
 @interface CloserAppDelegate_Phone ()
-
-@property (nonatomic, strong) AVAudioPlayer * player;
 
 @end
 
@@ -38,9 +37,20 @@
 		[session activateSession];
 	}
 	
-	if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+	if (NSSelectorFromString(@"UNUserNotificationCenter")) { // iOS 10+
+		UNAuthorizationOptions options = (UNAuthorizationOptionAlert | UNAuthorizationOptionSound);
+		UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];
+		center.delegate = self;
+		[center requestAuthorizationWithOptions:options
+							  completionHandler:^(BOOL granted, NSError * _Nullable error) {
+								  if (error)
+									  NSDebugLog(@"Error registering notification: %@", error.localizedDescription);
+							  }];
+	} else { // iOS 8-9
+IGNORE_DEPRECATION_BEGIN
 		UIUserNotificationType type = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
 		[application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
+IGNORE_DEPRECATION_END
 	}
 	
 	application.applicationSupportsShakeToEdit = YES; // Enabled shake to undo
@@ -64,60 +74,46 @@
 	return YES;
 }
 
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
+	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
+	[userDefaults synchronize];
+	
+	[_mainViewController stopUpdateTimeLabels];
+	
+	[Countdown removeInvalidLocalNotifications];
+	[Countdown synchronize];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+	[_mainViewController startUpdateTimeLabels];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+	[Countdown synchronize];
+	
+	/* Save the last selected page */
+	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
+	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
+	[userDefaults synchronize];
+}
+
+#pragma mark - Local Notification
+
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
 	NSString * const identifier = (notification.userInfo)[@"identifier"];
 	Countdown * const countdown = [Countdown countdownWithIdentifier:identifier];
 	NSDebugLog(@"Local notification received: %@ - %@ (will play %@)", identifier, countdown.name, notification.soundName);
-	
-	if (countdown.type == CountdownTypeCountdown) {
-		
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
-																		message:notification.alertBody
-																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:nil]];
-		[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-		
-	} else {
-		/* Show an alert if needed to show an alert (to show an alert at the end of each timer or at the end of the loop of timers) */
-		if (countdown.promptState == PromptStateEveryTimers
-			|| (countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) {
-			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
-																			message:notification.alertBody
-																	 preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^
-							  (UIAlertAction * action) {
-								  [[NSNotificationCenter defaultCenter] postNotificationName:TimerDidContinueNotification object:countdown]; // Start the next timer
-							  }]];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
-			[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-		}
-	}
-	
-	/* Play the sound */
-	if (notification.soundName) {
-		NSString * path = [NSBundle mainBundle].bundlePath;
-		if ([notification.soundName isEqualToString:UILocalNotificationDefaultSoundName] || [notification.soundName isEqualToString:@"default"])
-			path = [path stringByAppendingString:@"/Songs/complete.caf"];
-		else
-			path = [path stringByAppendingFormat:@"/%@", notification.soundName];
-		
-		NSURL * const fileURL = [NSURL fileURLWithPath:path];
-		NSDebugLog(@"fileURL: %@", fileURL);
-		if (fileURL) {
-#if TARGET_IPHONE_SIMULATOR // Playing sounds on simulator is still "buggy"
-			NSDebugLog(@"Sound played: %@ (%@)", notification.soundName, fileURL);
-#else
-			NSError * error = nil;
-			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&error];
-			if (error)
-				NSLog(@"Error on audio player: %@ for %@", error.localizedDescription, fileURL.path.lastPathComponent);
-			
-			[_player play];
-#endif
-		}
-	}
+	[countdown presentLocalNotification];
 }
+
+#pragma mark - Deeplink
 
 - (void)openCountdownWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
@@ -186,6 +182,8 @@
 	return [self openDeeplinkURL:url];
 }
 
+#pragma mark - Shortcut
+
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded))completionHandler
 {
 	Countdown * countdown = nil;
@@ -210,6 +208,8 @@
 	}
 }
 
+#pragma mark - Spotlight
+
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler
 {
 	if (NSClassFromString(@"CSSearchableIndex")) {
@@ -219,7 +219,16 @@
 	return YES;
 }
 
-- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+#pragma mark - WCSessionDelegate
+
+- (void)session:(WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error { }
+
+- (void)sessionDidBecomeInactive:(WCSession *)session { }
+
+- (void)sessionDidDeactivate:(WCSession *)session { }
+
+- (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message
+   replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
 {
 	NSString * const identifier = message[@"identifier"];
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
@@ -260,9 +269,9 @@
 					formatter.timeStyle = NSDateFormatterMediumStyle;
 					countdown.endDate = [formatter dateFromString:dictionary[@"endDate"]]; }
 				if (dictionary[@"durations"]) {
-					for (int i = 0; i < countdown.durations.count; ++i) {
+					for (int i = 0; i < countdown.durations.count; ++i)
 						[countdown removeDurationAtIndex:i];
-					}
+					
 					[countdown addDurations:dictionary[@"durations"] withNames:nil]; // @TODO: support durations names on Apple Watch
 				}
 				if (dictionary[@"durationIndex"]) {
@@ -284,33 +293,15 @@
 	replyHandler(@{ @"result" : @"OK" });
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
-	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
-	[userDefaults synchronize];
-	
-	[_mainViewController stopUpdateTimeLabels];
-	
-	[Countdown removeInvalidLocalNotifications];
-	[Countdown synchronize];
-}
+#pragma mark - UNUserNotificationCenterDelegate
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+	   willPresentNotification:(UNNotification *)notification
+		 withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
-	[_mainViewController startUpdateTimeLabels];
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-	[Countdown synchronize];
-	
-	/* Save the last selected page */
-	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
-	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
-	[userDefaults synchronize];
+	NSString * const identifier = notification.request.identifier;
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	[countdown presentLocalNotification];
 }
 
 @end

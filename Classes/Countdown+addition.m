@@ -6,26 +6,43 @@
 //  Copyright (c) 2012 Lis@cintosh. All rights reserved.
 //
 
+#import "TimerPageView.h"
+
 #import "Countdown+addition.h"
 #import "NSBundle+addition.h"
 #import "NSDate+addition.h"
 #import "NSMutableAttributedString+addition.h"
 
+static AVAudioPlayer * __player = nil;
+
 @implementation Countdown (LocalNotification)
 
 + (void)removeInvalidLocalNotifications
 {
-	NSArray * allLocalNotifications = [UIApplication sharedApplication].scheduledLocalNotifications;
-	for (UILocalNotification * localNotif in allLocalNotifications) {
-		NSString * anIdentifier = localNotif.userInfo[@"identifier"];
-		Countdown * countdown = [Countdown countdownWithIdentifier:anIdentifier];
-		if (!countdown || ![countdown.endDate isEqualToDate:localNotif.fireDate]) {
-			[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
-			NSDebugLog(@"Remove local notification: name = %@, endDate = %@", countdown.name, localNotif.fireDate);
+	if (NSSelectorFromString(@"UNUserNotificationCenter")) { // iOS 10+
+		UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];
+		[center getPendingNotificationRequestsWithCompletionHandler:^(NSArray<UNNotificationRequest *> * requests) {
+			NSMutableArray * invalidIdentifiers = [[requests valueForKey:NSStringFromSelector(@selector(identifier))] mutableCopy];
+			for (Countdown * countdown in [Countdown allCountdowns]) {
+				if (countdown.endDate) // Countdown is valid
+					[invalidIdentifiers removeObject:countdown.identifier];
+			}
+			[center removePendingNotificationRequestsWithIdentifiers:invalidIdentifiers];
+		}];
+	} else { // iOS 8-9
+IGNORE_DEPRECATION_BEGIN
+		NSArray * allLocalNotifications = [UIApplication sharedApplication].scheduledLocalNotifications;
+		for (UILocalNotification * localNotif in allLocalNotifications) {
+			NSString * anIdentifier = localNotif.userInfo[@"identifier"];
+			Countdown * countdown = [Countdown countdownWithIdentifier:anIdentifier];
+			if (!countdown || ![countdown.endDate isEqualToDate:localNotif.fireDate])
+				[[UIApplication sharedApplication] cancelLocalNotification:localNotif];
 		}
+IGNORE_DEPRECATION_END
 	}
 }
 
+IGNORE_DEPRECATION_BEGIN
 - (UILocalNotification *)localNotification
 {
 	NSArray <UILocalNotification *> * notifications = [UIApplication sharedApplication].scheduledLocalNotifications;
@@ -45,59 +62,113 @@
 	UILocalNotification * notification = [[UILocalNotification alloc] init];
 	notification.timeZone = [NSTimeZone localTimeZone];
 	notification.userInfo = @{ @"identifier": self.identifier };
+	notification.fireDate = self.endDate;
+	notification.alertBody = self.alertBody;
+	
+	notification.repeatInterval = 0;
+	notification.hasAction = YES;
+	
+	if ([self.songID isEqualToString:@"-1"]) { // Don't play any sound ("-1" means "none")
+		
+	} else if ([self.songID isEqualToString:@"default"]) { // Play default sound
+		notification.soundName = UILocalNotificationDefaultSoundName;
+		
+	} else { // Play other sound from Songs folder
+		NSString * songPath = [NSString stringWithFormat:@"Songs/%@", [[NSBundle mainBundle] filenameForSongWithID:self.songID]];
+		notification.soundName = songPath;
+	}
+	
+	/* localNotif.userInfo => don't change userInfo, it alrealdy contains identifier */
+	NSDebugLog(@"Update local notification: (%@ %@)", notification.fireDate, notification.alertBody);
+	
 	return notification;
+}
+IGNORE_DEPRECATION_END
+
+- (nullable NSString *)soundPath
+{
+	NSString * path = [NSBundle mainBundle].bundlePath;
+	if /**/ ([self.songID isEqualToString:@"-1"])
+		return nil;
+	else if ([self.songID isEqualToString:@"default"])
+		path = [path stringByAppendingString:@"/Songs/complete.caf"];
+	else
+		path = [path stringByAppendingFormat:@"/Songs/%@", [[NSBundle mainBundle] filenameForSongWithID:self.songID]];
+	
+	return path;
+}
+
+- (NSString *)alertBody
+{
+	NSString * messageString = self.message;
+	if (!self.message || [self.message isEqualToString:@""]) { // If no message, show the default message
+		if (self.type == CountdownTypeTimer) {
+			if (self.name) // If name was set, add it to default message
+				messageString = [NSString localizedUserNotificationStringForKey:@"TIMER_FINISHED_MESSAGE %@" arguments:@[ self.name ]];
+			else // Else if wasn't set, just show the default message
+				messageString = [NSString localizedUserNotificationStringForKey:@"TIMER_FINISHED_DEFAULT_MESSAGE" arguments:nil];
+		} else {
+			if (self.name)
+				messageString = [NSString localizedUserNotificationStringForKey:@"COUNTDOWN_FINISHED_MESSAGE %@" arguments:@[ self.name ]];
+			else
+				messageString = [NSString localizedUserNotificationStringForKey:@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE" arguments:nil];
+		}
+	}
+	return messageString;
+}
+
+- (UNNotificationContent *)notificationContent
+{
+	UNMutableNotificationContent * content = [[UNMutableNotificationContent alloc] init];
+	content.title = @"Closer & Closer";
+	content.body = self.alertBody;
+	
+	if ([self.songID isEqualToString:@"-1"])
+		{ } // Don't play any sound
+	else if ([self.songID isEqualToString:@"default"])
+		content.sound = [UNNotificationSound defaultSound];
+	else { // Play other sound from Songs folder
+		content.sound = [UNNotificationSound soundNamed:self.soundPath];
+	}
+	
+	/* localNotif.userInfo => don't change userInfo, it alrealdy contains identifier */
+	//NSDebugLog(@"Update local notification: (%@ %@)", notification.fireDate, notification.alertBody);
+	
+	return content;
 }
 
 - (void)updateLocalNotification
 {
 	if (self.isActive) {
 		dispatch_async(dispatch_get_main_queue(), ^{
+			[self removeLocalNotification];
+			
 			if (self.endDate && self.endDate.timeIntervalSinceNow > 0.) {
 				
-				UILocalNotification * notification = [self localNotification];
-				if (notification)
-					[self removeLocalNotification];
-				else
-					notification = [self createLocalNotification];
-				
-				notification.fireDate = self.endDate;
-				
-				NSString * messageString = self.message;
-				if (!self.message || [self.message isEqualToString:@""]) {// If no message, show the default message
-					if (self.type == CountdownTypeTimer) {
-						if (self.name)// If name was set, add it to default message
-							messageString = [NSString stringWithFormat:NSLocalizedString(@"TIMER_FINISHED_MESSAGE %@", nil), self.name];
-						else // Else if wasn't set, just show the default message
-							messageString = NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil);
-					} else {
-						if (self.name) messageString = [NSString stringWithFormat:NSLocalizedString(@"COUNTDOWN_FINISHED_MESSAGE %@", nil), self.name];
-						else messageString = NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil);
-					}
-				}
-				notification.alertBody = messageString;
-				
-				notification.repeatInterval = 0;
-				notification.hasAction = YES;
-				
-				if ([self.songID isEqualToString:@"-1"]) { // Don't play any sound ("-1" means "none")
+				if (NSSelectorFromString(@"UNUserNotificationCenter")) { // iOS 10+
+					NSCalendarUnit units = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute);
+					if (self.type == CountdownTypeTimer)
+						units |= NSCalendarUnitSecond;
 					
-				} else if ([self.songID isEqualToString:@"default"]) { // Play default sound
-					notification.soundName = UILocalNotificationDefaultSoundName;
+					NSDateComponents * const components = [[NSCalendar currentCalendar] components:units fromDate:self.endDate];
+					UNCalendarNotificationTrigger * trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:NO];
+					UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:self.identifier
+																						   content:self.notificationContent
+																						   trigger:trigger];
 					
-				} else { // Play other sound from Songs folder
-					NSString * songPath = [NSString stringWithFormat:@"Songs/%@", [[NSBundle mainBundle] filenameForSongWithID:self.songID]];
-					notification.soundName = songPath;
+					UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];
+					[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+						if (error)
+							NSDebugLog(@"Error registering local notification: %@", error.localizedDescription);
+					}];
+					
+				} else { // iOS 8-9
+IGNORE_DEPRECATION_BEGIN
+					UILocalNotification * notification = [self createLocalNotification];
+					[[UIApplication sharedApplication] scheduleLocalNotification:notification];
+IGNORE_DEPRECATION_END
 				}
-				
-				/* localNotif.userInfo => don't change userInfo, it alrealdy contains identifier */
-				
-				NSDebugLog(@"Update local notification: (%@ %@)", notification.fireDate, notification.alertBody);
-				
-				[[UIApplication sharedApplication] scheduleLocalNotification:notification];
-			} else {
-				[self removeLocalNotification];
 			}
-			
 			// Send a notification from the countdown/timer
 			[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidUpdateNotification
 																object:self];
@@ -107,10 +178,62 @@
 
 - (void)removeLocalNotification
 {
-	UILocalNotification * notification = [self localNotification];
-	if (notification) {
-		[[UIApplication sharedApplication] cancelLocalNotification:notification];
-		NSDebugLog(@"Cancel local notification for countdown : %@ => %@", self.name, self.endDate.localizedDescription);
+	if (NSSelectorFromString(@"UNUserNotificationCenter")) { // iOS 10+
+		UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];
+		[center removePendingNotificationRequestsWithIdentifiers:@[ self.identifier ]];
+		
+	} else { // iOS 8-9
+IGNORE_DEPRECATION_BEGIN
+		UILocalNotification * notification = [self localNotification];
+		if (notification)
+			[[UIApplication sharedApplication] cancelLocalNotification:notification];
+IGNORE_DEPRECATION_END
+	}
+}
+
+- (void)presentLocalNotification
+{
+	UIViewController * controller = UIApplication.sharedApplication.keyWindow.rootViewController;
+	
+	if (self.type == CountdownTypeCountdown) {
+		
+		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
+																		message:self.alertBody
+																 preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:nil]];
+		[controller presentViewController:alert animated:YES completion:nil];
+		
+	} else {
+		/* Show an alert if needed to show an alert (to show an alert at the end of each timer or at the end of the loop of timers) */
+		if (self.promptState == PromptStateEveryTimers
+			|| (self.promptState == PromptStateEnd && self.durationIndex == (self.durations.count - 1))) {
+			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
+																			message:self.alertBody
+																	 preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault
+													handler:^(UIAlertAction * action)
+							  { [[NSNotificationCenter defaultCenter] postNotificationName:TimerDidContinueNotification object:self]; }]]; // Start the next timer
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+			[controller presentViewController:alert animated:YES completion:nil];
+		}
+	}
+	
+	// Play the sound
+	NSString * const path = self.soundPath;
+	if (path) {
+		NSURL * const fileURL = [NSURL fileURLWithPath:path];
+		if (fileURL) {
+#if TARGET_IPHONE_SIMULATOR
+			// Playing sounds on simulator is still "buggy"
+#else
+			NSError * error = nil;
+			__player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&error];
+			if (error)
+				NSLog(@"Error on audio player: %@ for %@", error.localizedDescription, fileURL.path.lastPathComponent);
+			
+			[__player play];
+#endif
+		}
 	}
 }
 

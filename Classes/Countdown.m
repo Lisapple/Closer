@@ -46,6 +46,22 @@ BOOL CountdownStyleHasDarkContent(CountdownStyle style) {
 
 @end
 
+@interface Countdown (addition)
+
++ (void)tagInsert;
++ (void)tagChangeType:(CountdownType)type;
++ (void)tagChangeName;
++ (void)tagChangeMessage;
++ (void)tagEndDate:(nullable NSDate *)date;
++ (void)tagChangeDuration;
++ (void)tagChangeTheme:(CountdownStyle)style;
++ (void)tagDelete;
+
+- (void)updateLocalNotification;
+- (void)removeLocalNotification;
+
+@end
+
 @implementation Countdown
 
 static NSString * _countdownsListPath = nil;

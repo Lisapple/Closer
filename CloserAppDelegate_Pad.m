@@ -29,7 +29,17 @@
 	[Fabric with:@[ CrashlyticsKit ]];
 #endif
 	
-	if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+	if (NSSelectorFromString(@"UNUserNotificationCenter")) { // iOS 10+
+		UNAuthorizationOptions options = (UNAuthorizationOptionAlert | UNAuthorizationOptionSound);
+		UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];
+		center.delegate = self;
+		[center requestAuthorizationWithOptions:options
+							  completionHandler:^(BOOL granted, NSError * _Nullable error) {
+								  if (error)
+									  NSDebugLog(@"Error registering notification: %@", error.localizedDescription);
+							  }];
+	} else { // iOS 8-9
+		IGNORE_DEPRECATION_BEGIN
 		UIUserNotificationType type = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
 		[application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
 	}
@@ -53,72 +63,23 @@
 	NSString * identifier = (notification.userInfo)[@"identifier"];
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSDebugLog(@"Local notification received: %@ - %@ (will play %@)", identifier, countdown.name, notification.soundName);
-	
-	if (countdown.type == CountdownTypeCountdown) {
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil)
-																		message:notification.alertBody
-																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-			[alert dismissViewControllerAnimated:YES completion:nil]; }]];
-		[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-		
-	} else {
-		/* Show an alert if needed to show an alert (to show an alert at the end of each timer or at the end of the loop of timers) */
-		if (countdown.promptState == PromptStateEveryTimers
-			|| (countdown.promptState == PromptStateEnd && countdown.durationIndex == (countdown.durations.count - 1))) {
-			
-			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil)
-																			message:notification.alertBody
-																	 preferredStyle:UIAlertControllerStyleAlert];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-				// Start the next timer
-				[[NSNotificationCenter defaultCenter] postNotificationName:TimerDidContinueNotification object:countdown]; }]];
-			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
-			[self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-		}
-	}
-	
-	/* Play the sound */
-	if (notification.soundName) {
-		NSString * path = [NSBundle mainBundle].bundlePath;
-		if ([notification.soundName isEqualToString:UILocalNotificationDefaultSoundName] || [notification.soundName isEqualToString:@"default"])
-			path = [path stringByAppendingString:@"/Songs/complete.caf"];
-		else
-			path = [path stringByAppendingFormat:@"/%@", notification.soundName];
-		
-		NSURL * fileURL = [NSURL fileURLWithPath:path];
-		if (fileURL) {
-#if TARGET_IPHONE_SIMULATOR // Playing sound into the simulator is still buggy
-			NSDebugLog(@"Sound played: %@ (%@)", notification.soundName, fileURL);
-#else
-			NSError * error = nil;
-			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL
-															error:&error];
-			if (error)
-				NSLog(@"Error on audio player: %@ for %@", error.localizedDescription, fileURL.path.lastPathComponent);
-			
-			[_player play];
-#endif
-		}
-	}
+	[countdown presentLocalNotification];
 }
 
 - (void)openCountdownWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSInteger index = [Countdown indexOfCountdown:countdown];
-	if (index != NSNotFound) {
+	if (index != NSNotFound)
 		[self.viewController showPageAtIndex:(index % 3) animated:animated];
-	}
 }
 
 - (void)showCountdownSettingsWithIdentifier:(NSString *)identifier animated:(BOOL)animated
 {
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSInteger index = [Countdown indexOfCountdown:countdown];
-	if (index != NSNotFound) {
-	}
+	if (index != NSNotFound)
+		[self.viewController showSettingsForPageAtIndex:index animated:NO];
 }
 
 - (void)showAddDurationForCountdownWithIdentifier:(NSString *)identifier
@@ -209,6 +170,17 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
 	[Countdown synchronize];
+}
+
+#pragma mark - UNUserNotificationCenterDelegate
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+	   willPresentNotification:(UNNotification *)notification
+		 withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
+{
+	NSString * const identifier = notification.request.identifier;
+	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
+	[countdown presentLocalNotification];
 }
 
 @end

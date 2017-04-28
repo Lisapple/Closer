@@ -10,6 +10,7 @@
 @import CoreSpotlight;
 @import MobileCoreServices;
 @import Crashlytics;
+@import UserNotifications;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,10 +18,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)removeInvalidLocalNotifications;
 
+IGNORE_DEPRECATION_BEGIN
 - (nullable UILocalNotification *)localNotification;
 - (UILocalNotification *)createLocalNotification;
+IGNORE_DEPRECATION_END
 - (void)updateLocalNotification;
 - (void)removeLocalNotification;
+
+- (void)presentLocalNotification;
 
 @end
 
