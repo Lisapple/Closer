@@ -158,8 +158,9 @@
 
 - (void)tableView:(UITableView *)aTableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-	NSUInteger sourceIndex = sourceIndexPath.section * _includedCountdowns.count + sourceIndexPath.row;
-	NSUInteger destinationIndex = destinationIndexPath.section * _includedCountdowns.count + destinationIndexPath.row;
+	NSUInteger newIncludedCount = _includedCountdowns.count - (!sourceIndexPath.section && destinationIndexPath.section);
+	NSUInteger sourceIndex = sourceIndexPath.section * newIncludedCount + sourceIndexPath.row;
+	NSUInteger destinationIndex = destinationIndexPath.section * newIncludedCount + destinationIndexPath.row;
 	
 	Countdown * countdown = (sourceIndexPath.section == 0) ? _includedCountdowns[sourceIndexPath.row] : _notIncludedCountdowns[sourceIndexPath.row];
 	countdown.notificationCenter = (destinationIndexPath.section == 0);

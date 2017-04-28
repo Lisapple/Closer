@@ -152,8 +152,9 @@
 
 - (void)moveCountdownAtIndex:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-	NSUInteger sourceIndex = indexPath.section * _includedCountdowns.count + indexPath.row;
-	NSUInteger destinationIndex = toIndexPath.section * _includedCountdowns.count + toIndexPath.row;
+	NSUInteger newIncludedCount = _includedCountdowns.count - (!indexPath.section && toIndexPath.section);
+	const NSUInteger sourceIndex = indexPath.section * newIncludedCount + indexPath.row;
+	const NSUInteger destinationIndex = toIndexPath.section * newIncludedCount + toIndexPath.row;
 	
 	Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 	countdown.notificationCenter = (toIndexPath.section == 0);
@@ -164,6 +165,7 @@
 		[self.undoManager setActionName:NSLocalizedString(@"UNDO_MOVE_COUNTDOWN_ACTION", nil)];
 	}
 	[self updateData];
+	[self.tableView reloadData];
 }
 
 - (void)removeCountdown:(Countdown *)countdown indexPath:(NSIndexPath *)indexPath
@@ -409,15 +411,14 @@ IGNORE_DEPRECATION_END
 	NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:location];
 	if (indexPath) {
 		Countdown * countdown = nil;
-		if /**/ (indexPath.section == 0) {
-			countdown = _includedCountdowns[indexPath.row];
+		switch (indexPath.section) {
+			case 0: countdown = _includedCountdowns[indexPath.row]; break;
+			case 1: countdown = _notIncludedCountdowns[indexPath.row];
+			default: break;
 		}
-		else if (indexPath.section == 1) {
-			countdown = _notIncludedCountdowns[indexPath.row];
-		}
-		if (countdown) {
+		
+		if (countdown)
 			return [[PageViewController alloc] initWithCountdown:countdown];
-		}
 	}
 	
 	return nil;
