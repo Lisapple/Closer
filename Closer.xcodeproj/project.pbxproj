@@ -962,6 +962,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		505656351E843BD400309997 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:|\\?\\?\\?:|!!!:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0\\\n| xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\"\\\n| perl -p -e \"s/($TAGS)/ warning: \\$1/\"\n\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0\\\n| xargs -0 egrep --with-filename --line-number --only-matching \"// ?DEBUG\"\\\n| perl -p -e \"s/\\/\\/ ?DEBUG/ warning: DEBUG comment found/\"\n";
+		};
 		508343DE1BD1176C00754409 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
