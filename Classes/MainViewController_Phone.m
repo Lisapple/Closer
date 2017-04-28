@@ -223,9 +223,6 @@ const NSTimeInterval kAnimationDelay = 5.;
 		++index;
 	}
 	_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * _pages.count, 0.);
-	
-	CGPoint contentOffset = CGPointMake(_scrollView.frame.size.width * _currentPageIndex, 0.);
-	[_scrollView setContentOffset:contentOffset animated:NO];
 }
 
 - (void)updateUI
@@ -343,9 +340,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	int index = 0;
 	for (PageView * page in _pages) {
-		if (ABS(_currentPageIndex - index) <= 1) { // Update only the current page and it left and right neighbours
+		if (ABS(_currentPageIndex - index) <= 1) // Update only the current page and it left and right neighbours
 			dispatch_async(dispatch_get_main_queue(), ^{ [page update]; });
-		}
+		
 		++index;
 	}
 }
@@ -602,7 +599,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
 	CGFloat offset = _scrollView.contentOffset.x / _scrollView.frame.size.width;
-	NSInteger index = MAX(roundf(offset), 0);
+	NSInteger index = CLIP(0, roundf(offset), _pages.count - 1);
 	_currentPageIndex = index;
 	_pageControl.currentPage = index;
 	
