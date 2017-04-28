@@ -57,7 +57,7 @@
 
 - (IBAction)export:(id)sender
 {
-	NSURL * url = [NSURL URLWithString:@"http://closer.lisacintosh.com/import.php"];
+	NSURL * url = [NSURL URLWithString:@"https://closer.lisacintosh.com/import.php"];
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
 	
 	NSData * JSONData = nil;

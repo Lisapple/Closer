@@ -55,17 +55,6 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>closer.lisacintosh.com</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allowing calendars access to be able to import event from it.</string>
 	<key>UIApplicationShortcutItems</key>

@@ -133,7 +133,7 @@
 	_instructionLabel.hidden = YES;
 	_passwordLabel1.hidden = _passwordLabel2.hidden = _passwordLabel3.hidden = _passwordLabel4.hidden = YES;
 	
-	NSURL * url = [NSURL URLWithString:@"http://closer.lisacintosh.com/export.php"];
+	NSURL * url = [NSURL URLWithString:@"https://closer.lisacintosh.com/export.php"];
 	NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
 	request.HTTPBody = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", _password1, _password2] dataUsingEncoding:NSUTF8StringEncoding];
 	request.HTTPMethod = @"POST";

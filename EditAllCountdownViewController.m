@@ -383,10 +383,10 @@
 	} else {
 		AProposViewController * controller = [[AProposViewController alloc] initWithLicenseType:ApplicationLicenseTypeMIT];
 		controller.author = @"Lis@cintosh";
-		[controller setURLsStrings:@[ @"http://closer.lisacintosh.com",
+		[controller setURLsStrings:@[ @"closer.lisacintosh.com",
 									  @"appstore.com/lisacintosh",
-									  @"http://support.lisacintosh.com/closer",
-									  @"http://lisacintosh.com"]];
+									  @"support.lisacintosh.com/closer",
+									  @"lisacintosh.com"]];
 		controller.repositoryURL = [NSURL URLWithString:@"https://github.com/lisapple/closer"];
 		
 		UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:controller];

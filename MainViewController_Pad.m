@@ -281,10 +281,10 @@
 						infoDictionary[@"CFBundleShortVersionString"], [NSDate date].year];
 	UIAlertController * actionSheet = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 	
-	NSDictionary<NSString *, NSString *> * labels = @{ @"closer.lisacintosh.com" : @"http://closer.lisacintosh.com",
-													   @"support.lisacintosh.com" : @"http://support.lisacintosh.com/closer/",
-													   @"lisacintosh.com" : @"http://lisacintosh.com/",
-													   @"appstore.com/lisacintosh" : @"http://appstore.com/lisacintosh/" };
+	NSDictionary<NSString *, NSString *> * labels = @{ @"closer.lisacintosh.com" : @"https://closer.lisacintosh.com",
+													   @"support.lisacintosh.com" : @"https://support.lisacintosh.com/closer/",
+													   @"lisacintosh.com" : @"https://lisacintosh.com/",
+													   @"appstore.com/lisacintosh" : @"https://appstore.com/lisacintosh/" };
 	for (NSString * label in labels) {
 		[actionSheet addAction:[UIAlertAction actionWithTitle:label style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 			NSURL * url = [NSURL URLWithString:labels[label]];
