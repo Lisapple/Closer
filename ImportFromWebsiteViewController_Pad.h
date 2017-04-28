@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+@import Crashlytics;
+
 @interface ImportFromWebsiteViewController_Pad : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField * hiddenTextField1, * hiddenTextField2;

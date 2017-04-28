@@ -107,65 +107,61 @@
 	request.HTTPBody = data;
 	request.HTTPMethod = @"POST";
 	
-	NSURLConnection * connection = [NSURLConnection connectionWithRequest:request delegate:self];
-	[connection start];
+	NSURLSession * session = [[NSURLSession alloc] init];
+	[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		[_activityIndicator stopAnimating];
+		
+		if (error) {
+			UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
+																			message:error.localizedDescription
+																	 preferredStyle:UIAlertControllerStyleAlert];
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+				[alert dismissViewControllerAnimated:YES completion:nil]; }]];
+			[self presentViewController:alert animated:YES completion:nil];
+			
+		} else {
+			NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+			
+			_password1 = dictionary[@"password1"];
+			_password2 = dictionary[@"password2"];
+			
+			NSDebugLog(@"(%@|%@)", _password1, _password2);
+			
+			if (_password1 && _password2) {
+				
+				_password1Label1.text = [_password1 substringWithRange:NSMakeRange(0, 1)];
+				_password1Label2.text = [_password1 substringWithRange:NSMakeRange(1, 1)];
+				_password1Label3.text = [_password1 substringWithRange:NSMakeRange(2, 1)];
+				_password1Label4.text = [_password1 substringWithRange:NSMakeRange(3, 1)];
+				
+				_password2Label1.text = [_password2 substringWithRange:NSMakeRange(0, 1)];
+				_password2Label2.text = [_password2 substringWithRange:NSMakeRange(1, 1)];
+				_password2Label3.text = [_password2 substringWithRange:NSMakeRange(2, 1)];
+				_password2Label4.text = [_password2 substringWithRange:NSMakeRange(3, 1)];
+				
+				// @TODO: Find more possibilities with pasteboard
+				UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
+				pasteboard.URL = [self countdownOnCloserWebsiteURL];
+				pasteboard.string = [NSString stringWithFormat:@"%@ - %@", _password1, _password2];
+				
+				_tableView.frame = self.view.frame;
+				[self.view addSubview:_tableView];
+				[_tableView reloadData];
+				
+				[Answers logCustomEventWithName:@"export-to-website" customAttributes:nil];
+			}
+		}
+	}];
 	
 	[_activityIndicator startAnimating];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-	UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error!", nil)
-																	message:error.localizedDescription
-															 preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-		[alert dismissViewControllerAnimated:YES completion:nil]; }]];
-	[self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-	[_activityIndicator stopAnimating];
-	
-	NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-	
-	_password1 = dictionary[@"password1"];
-	_password2 = dictionary[@"password2"];
-	
-	NSDebugLog(@"(%@|%@)", _password1, _password2);
-	
-	if (_password1 && _password2) {
-		
-		_password1Label1.text = [_password1 substringWithRange:NSMakeRange(0, 1)];
-		_password1Label2.text = [_password1 substringWithRange:NSMakeRange(1, 1)];
-		_password1Label3.text = [_password1 substringWithRange:NSMakeRange(2, 1)];
-		_password1Label4.text = [_password1 substringWithRange:NSMakeRange(3, 1)];
-		
-		_password2Label1.text = [_password2 substringWithRange:NSMakeRange(0, 1)];
-		_password2Label2.text = [_password2 substringWithRange:NSMakeRange(1, 1)];
-		_password2Label3.text = [_password2 substringWithRange:NSMakeRange(2, 1)];
-		_password2Label4.text = [_password2 substringWithRange:NSMakeRange(3, 1)];
-		
-		// @TODO: Find more possibilities with pasteboard
-		UIPasteboard * pasteboard = [UIPasteboard generalPasteboard];
-		pasteboard.URL = [self countdownOnCloserWebsiteURL];
-		pasteboard.string = [NSString stringWithFormat:@"%@ - %@", _password1, _password2];
-		
-		_tableView.frame = self.view.frame;
-		[self.view addSubview:_tableView];
-		[_tableView reloadData];
-	}
-}
-
 - (NSURL *)countdownOnCloserWebsiteURL
 {
-	if (_password1 && _password2) {
-		NSString * urlString = [NSString stringWithFormat:@"http://closer.lisacintosh.com/(%@%%7C%@)", _password1, _password2];// "%7C" ("%%7C" for the format) for "|" (not reconized by -[NSURL URLWithString:] because this is not a valid character for URL)
-		return [NSURL URLWithString:urlString];
-	}
+	NSAssert(_password1 && _password2, @"\"password1\" and \"password2\" must have been set.");
 	
-	[NSException raise:@"ExportToWebsiteViewControllerException" format:@"\"password1\" and \"password2\" must have been set."];
-	return nil;
+	NSString * urlString = [NSString stringWithFormat:@"closer.lisacintosh.com/(%@%%7C%@)", _password1, _password2];// %7C ("%%7C") is "|"
+	return [NSURL URLWithString:urlString];
 }
 
 #pragma mark - Table view data source
@@ -197,7 +193,9 @@
 		SFSafariViewController * viewController = [[SFSafariViewController alloc] initWithURL:url];
 		[self presentViewController:viewController animated:YES completion:nil];
 	} else {
+IGNORE_DEPRECATION_BEGIN
 		[[UIApplication sharedApplication] openURL:url];
+IGNORE_DEPRECATION_END
 	}
 	[aTableView deselectRowAtIndexPath:indexPath animated:YES];
 }

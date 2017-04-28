@@ -126,73 +126,88 @@
 	NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
 	request.HTTPBody = [[NSString stringWithFormat:@"psw1=%@&psw2=%@", _password1, _password2] dataUsingEncoding:NSUTF8StringEncoding];
 	request.HTTPMethod = @"POST";
-	_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-	_selectedCountdowns = [[NSMutableArray alloc] initWithCapacity:3];
 	
-	NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-	formatter.locale = [NSLocale currentLocale];
-	formatter.dateFormat = @"YYYY-MM-dd HH:mm:ss";
-	formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-	
-	NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-	
-	if ([dictionary valueForKey:@"group"]) {// If we have a group (many countdowns)
-		
-		NSMutableArray * countdowns = [[NSMutableArray alloc] initWithCapacity:10];
-		
-		NSArray * array = [dictionary valueForKey:@"group"];
-		for (NSDictionary * attributes in array) {
-			Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
-			countdown.endDate = [formatter dateFromString:attributes[@"endDate"]];
-			countdown.name = attributes[@"name"];
-			countdown.message = attributes[@"message"];
-			countdown.style = [attributes[@"style"] integerValue];
-			[countdowns addObject:countdown];
+	NSURLSession * session = [NSURLSession sharedSession];
+	[[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[_activityIndicator stopAnimating];
 			
-			if (countdown.endDate.timeIntervalSinceNow > 0)
-				[_selectedCountdowns addObject:countdown];
-		}
-		
-		_countdowns = (NSArray *)countdowns;
-		
-	} else if ([dictionary valueForKey:@"endDate"]) {// Else is we have just a countdown
-		
-		Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
-		countdown.endDate = [formatter dateFromString:dictionary[@"endDate"]];
-		countdown.name = dictionary[@"name"];
-		countdown.message = dictionary[@"message"];
-		countdown.style = [dictionary[@"style"] integerValue];
-		
-		if ((countdown.endDate).timeIntervalSinceNow > 0)
-			[_selectedCountdowns addObject:countdown];
-		
-		_countdowns = @[ countdown ];
-		
-	} else {
-		NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Check that:\n%@ and %@\nare two correct passwords.", nil), _password1, _password2];
-		UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Countdowns found", nil)
-																		message:message
-																 preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-			[alert dismissViewControllerAnimated:YES completion:nil];
-			[self dismissViewControllerAnimated:YES completion:nil]; }]];
-		[self presentViewController:alert animated:YES completion:nil];
-	}
-	
-	if (_countdowns.count > 0) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
-																			  style:UIBarButtonItemStyleDone
-																			 target:self action:@selector(import:)];
-	}
-	
-	[self updateUI];
-	
-	[self.view addSubview:_tableView];
-	[_tableView reloadData];
+			if (error) {
+				UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Connection Error", nil)
+																				message:error.localizedDescription
+																		 preferredStyle:UIAlertControllerStyleAlert];
+				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+					[alert dismissViewControllerAnimated:YES completion:nil];
+					[self dismissViewControllerAnimated:YES completion:nil]; }]];
+				[self presentViewController:alert animated:YES completion:nil];
+				
+			} else {
+				_selectedCountdowns = [[NSMutableArray alloc] initWithCapacity:3];
+				
+				NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+				formatter.locale = [NSLocale currentLocale];
+				formatter.dateFormat = @"YYYY-MM-dd HH:mm:ss";
+				formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+				
+				NSDictionary * dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+				
+				if ([dictionary valueForKey:@"group"]) {// If we have a group (many countdowns)
+					
+					NSMutableArray * countdowns = [[NSMutableArray alloc] initWithCapacity:10];
+					
+					NSArray * array = [dictionary valueForKey:@"group"];
+					for (NSDictionary * attributes in array) {
+						Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
+						countdown.endDate = [formatter dateFromString:attributes[@"endDate"]];
+						countdown.name = attributes[@"name"];
+						countdown.message = attributes[@"message"];
+						countdown.style = [attributes[@"style"] integerValue];
+						[countdowns addObject:countdown];
+						
+						if (countdown.endDate.timeIntervalSinceNow > 0)
+							[_selectedCountdowns addObject:countdown];
+					}
+					
+					_countdowns = (NSArray *)countdowns;
+					
+				} else if ([dictionary valueForKey:@"endDate"]) {// Else is we have just a countdown
+					
+					Countdown * countdown = [[Countdown alloc] initWithIdentifier:nil];
+					countdown.endDate = [formatter dateFromString:dictionary[@"endDate"]];
+					countdown.name = dictionary[@"name"];
+					countdown.message = dictionary[@"message"];
+					countdown.style = [dictionary[@"style"] integerValue];
+					
+					if ((countdown.endDate).timeIntervalSinceNow > 0)
+						[_selectedCountdowns addObject:countdown];
+					
+					_countdowns = @[ countdown ];
+					
+				} else {
+					NSString * message = [NSString stringWithFormat:NSLocalizedString(@"Check that:\n%@ and %@\nare two correct passwords.", nil), _password1, _password2];
+					UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Countdowns found", nil)
+																					message:message preferredStyle:UIAlertControllerStyleAlert];
+					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+						[alert dismissViewControllerAnimated:YES completion:nil];
+						[self dismissViewControllerAnimated:YES completion:nil]; }]];
+					[self presentViewController:alert animated:YES completion:nil];
+				}
+				
+				if (_countdowns.count > 0) {
+					self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
+																							  style:UIBarButtonItemStyleDone
+																							 target:self action:@selector(import:)];
+					
+					[Answers logCustomEventWithName:@"import-from-website" customAttributes:nil];
+				}
+				
+				[self updateUI];
+				
+				[self.view addSubview:_tableView];
+				[_tableView reloadData];
+			}
+		});
+	}] resume];
 }
 
 - (void)updateUI
@@ -202,33 +217,11 @@
 
 - (IBAction)import:(id)sender
 {
-#if TARGET_IPHONE_SIMULATOR
-	NSInteger currentCount = [Countdown allCountdowns].count;
-	NSInteger importedCount = _selectedCountdowns.count;
-	NSDebugLog(@"%ld from current countdowns + %ld imported countdowns", (long)currentCount, (long)importedCount);
-#endif
-	
 	[Countdown addCountdowns:_selectedCountdowns];
 	[self dismissViewControllerAnimated:YES completion:NULL];
 	
 	/* Send a notification to reload countdowns on main page */
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CountdownDidCreateNewNotification" object:nil];
-}
-
-- (void)connection:(NSURLConnection *)aConnection didFailWithError:(NSError *)error
-{
-	UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Connection Error", nil)
-																	message:error.localizedDescription
-															 preferredStyle:UIAlertControllerStyleAlert];
-	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-		[alert dismissViewControllerAnimated:YES completion:nil];
-		[self dismissViewControllerAnimated:YES completion:nil]; }]];
-	[self presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)aConnection
-{
-	[_activityIndicator stopAnimating];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

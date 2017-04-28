@@ -35,7 +35,7 @@
 "Sound";
 "No date";
 
-"Do you really want to delete this countdown?";
+"Do you really want to delete this countdown?" = "This countdown will be deleted. This cannot be undone.";
 "Delete Countdown";
 
 "More information?";
@@ -252,7 +252,7 @@
 
 "About...";
 
-"Do you really want to delete this timer?";
+"Do you really want to delete this timer?" = "This timer will be deleted. This cannot be undone.";
 "Delete Timer";
 
 "Countdowns allow you to watch the duration until a precise date, timers are used to measure small periods.";
