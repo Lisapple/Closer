@@ -42,8 +42,9 @@
 	_tableView.rowHeight = UITableViewAutomaticDimension;
 	[_tableView reloadData];
 	
-	if ([self.extensionContext respondsToSelector:@selector(widgetLargestAvailableDisplayMode)] && _countdowns.count > 2) { // iOS 10+
-		self.extensionContext.widgetLargestAvailableDisplayMode = NCWidgetDisplayModeExpanded;
+	if ([self.extensionContext respondsToSelector:@selector(widgetLargestAvailableDisplayMode)]) { // iOS 10+
+		NCWidgetDisplayMode mode = (_countdowns.count > 2) ? NCWidgetDisplayModeExpanded : NCWidgetDisplayModeCompact;
+		self.extensionContext.widgetLargestAvailableDisplayMode = mode;
 	} else {
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 			self.preferredContentSize = CGSizeMake(_tableView.contentSize.width, _tableView.contentSize.height);

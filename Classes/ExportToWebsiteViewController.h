@@ -7,6 +7,7 @@
 //
 
 @import SafariServices;
+@import Crashlytics;
 
 @interface ExportToWebsiteViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 

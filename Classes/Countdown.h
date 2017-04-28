@@ -71,18 +71,15 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 + (void)addCountdowns:(nonnull NSArray <Countdown *> *)countdowns;
 
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
-+ (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2;
++ (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2; // UNUSED
 
 + (void)removeCountdown:(nonnull Countdown *)countdown;
 + (void)removeCountdownAtIndex:(NSInteger)index;
 
-/**
- * Returns an array of NSString with all coundown's style names.
- *
- * @param none
- * @return an array of NSString with the localized name of all styles
- */
-+ (nonnull NSArray <NSNumber *> *)styles;
+/// Returns all CountdownStyles as NSNumber.
++ (nonnull NSArray <NSNumber /* CountdownStyle */ *> *)styles;
+
+/// Return localized name of all styles.
 + (nonnull NSArray <NSString *> *)styleNames;
 
 - (nonnull instancetype)initWithIdentifier:(nullable NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
@@ -100,7 +97,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 - (void)setDuration:(nonnull NSNumber *)duration atIndex:(NSInteger)index;
 - (void)setDurationName:(nonnull NSString *)name atIndex:(NSInteger)index;
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
-- (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2;
+- (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2; // UNUSED
 - (void)removeDurationAtIndex:(NSUInteger)index;
 - (void)resetDurationIndex;
 

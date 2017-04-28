@@ -10,6 +10,9 @@
 
 #define DefaultFontWeight UIFontWeightThin
 
+#define FromLabelTag 1001
+#define ToLabelTag 1002
+
 @interface CCLabel ()
 
 @property (nonatomic, strong, nullable) NSString * textValue;
@@ -57,8 +60,10 @@
 		else
 			self.font = [UIFont systemFontOfSize:self.font.pointSize weight:DefaultFontWeight];
 		
+		NSString * const kPlaceholderString = @" "; // Placeholder for label to keep minimum width
 		
 		CCLabel * toLabel = self.copy;
+		toLabel.tag = ToLabelTag;
 		toLabel.text = text;
 		toLabel.alpha = 0.;
 		toLabel.font = self.font;
@@ -66,9 +71,14 @@
 		[UIView animateWithDuration:0.25 delay:0.
 							options:(UIViewAnimationOptionCurveEaseOut)
 						 animations:^{ toLabel.alpha = 1.; }
-						 completion:^(BOOL finished) { [toLabel removeFromSuperview]; self.text = text; }];
+						 completion:^(BOOL finished) {
+							 [toLabel removeFromSuperview];
+							 if ([self.text isEqualToString:kPlaceholderString]) // If text was not changed without animation
+								 self.text = text;
+						 }];
 		
 		CCLabel * fromLabel = self.copy;
+		fromLabel.tag = FromLabelTag;
 		fromLabel.text = _textValue;
 		fromLabel.alpha = 1.;
 		fromLabel.font = self.font;
@@ -78,10 +88,13 @@
 						 animations:^{ fromLabel.alpha = 0.; }
 						 completion:^(BOOL finished) { [fromLabel removeFromSuperview]; }];
 		
-		self.text = @" "; // Keep label frame
+		self.text = kPlaceholderString;
 		_textValue = text;
-	} else
+	} else {
 		self.text = text;
+		[[self viewWithTag:ToLabelTag] removeFromSuperview];
+		[[self viewWithTag:FromLabelTag] removeFromSuperview];
+	}
 }
 
 @end

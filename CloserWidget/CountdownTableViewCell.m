@@ -29,11 +29,13 @@
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
 	
 	if (!IS_IOS10_OR_MORE) {
+IGNORE_DEPRECATION_BEGIN
 		UIVisualEffect * effect = [UIVibrancyEffect notificationCenterVibrancyEffect];
 		UIVisualEffectView * visualEffectView = [[UIVisualEffectView alloc] initWithEffect:effect];
 		visualEffectView.tintColor = [UIColor clearColor];
 		visualEffectView.frame = self.bounds;
 		visualEffectView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+IGNORE_DEPRECATION_END
 		
 		const CGRect frame = CGRectMake(0., self.frame.size.height - 1., self.frame.size.width - 8., 1. / [UIScreen mainScreen].scale);
 		UIView * separator = [[UIView alloc] initWithFrame:frame];

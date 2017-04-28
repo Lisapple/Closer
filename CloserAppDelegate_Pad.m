@@ -42,6 +42,7 @@
 		IGNORE_DEPRECATION_BEGIN
 		UIUserNotificationType type = (UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
 		[application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:type categories:nil]];
+		IGNORE_DEPRECATION_END
 	}
 	
 	self.window.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1];

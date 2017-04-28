@@ -288,7 +288,13 @@
 	for (NSString * label in labels) {
 		[actionSheet addAction:[UIAlertAction actionWithTitle:label style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 			NSURL * url = [NSURL URLWithString:labels[label]];
-			[[UIApplication sharedApplication] openURL:url];
+			if ([UIApplication instancesRespondToSelector:@selector(openURL:options:completionHandler:)])
+				[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+			else
+IGNORE_DEPRECATION_BEGIN
+				[[UIApplication sharedApplication] openURL:url];
+IGNORE_DEPRECATION_END
+			
 			[Answers logCustomEventWithName:@"open-about-url" customAttributes:@{ @"url" : url }];
 		}]];
 	}

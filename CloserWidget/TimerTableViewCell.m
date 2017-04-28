@@ -30,12 +30,13 @@
 	
 	CGRect frame = CGRectMake(0., self.frame.size.height - 1., self.frame.size.width - 8., 1. / [UIScreen mainScreen].scale);
 	if (!IS_IOS10_OR_MORE) {
+IGNORE_DEPRECATION_BEGIN
 		UIVisualEffect * effect = [UIVibrancyEffect notificationCenterVibrancyEffect];
 		UIVisualEffectView * visualEffectView = [[UIVisualEffectView alloc] initWithEffect:effect];
 		visualEffectView.tintColor = [UIColor clearColor];
 		visualEffectView.frame = self.bounds;
 		visualEffectView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-		
+IGNORE_DEPRECATION_END
 		
 		UIView * separator = [[UIView alloc] initWithFrame:frame];
 		separator.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);

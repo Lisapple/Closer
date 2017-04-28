@@ -27,6 +27,9 @@
 
 - (void)update;
 
+- (void)setNeedsUpdateStyle;
+- (void)styleDidChange:(CountdownStyle)style;
+
 // Subclasses must call these method with super
 - (void)viewWillShow:(BOOL)animated;
 - (void)viewDidHide:(BOOL)animated;

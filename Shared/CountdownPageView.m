@@ -9,6 +9,7 @@
 #import "CountdownPageView.h"
 
 #import "UIView+addition.h"
+#import "Countdown+addition.h"
 
 @interface PageView ()
 
@@ -69,7 +70,7 @@
 	return [NSString stringWithFormat:(addZero) ? @"%02ld" : @"%ld", (long)value];
 }
 
-- (void)setStyle:(CountdownStyle)aStyle
+- (void)styleDidChange:(CountdownStyle)style
 {
 	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
 	[self setTextColor:[UIColor textColorForStyle:aStyle]];
@@ -77,8 +78,11 @@
 
 - (void)setTextColor:(UIColor *)textColor
 {
-	_daysLabel.textColor = _hoursLabel.textColor = _minutesLabel.textColor = _secondsLabel.textColor = textColor;
-	_daysDescriptionLabel.textColor = _hoursDescriptionLabel.textColor = _minutesDescriptionLabel.textColor = _secondsDescriptionLabel.textColor = textColor;
+	NSArray <UILabel *> * const labels = @[ _daysLabel, _hoursLabel, _minutesLabel, _secondsLabel,
+											_daysDescriptionLabel, _hoursDescriptionLabel,
+											_minutesDescriptionLabel, _secondsDescriptionLabel ];
+	for (UILabel * label in labels)
+		label.textColor = textColor;
 }
 
 - (void)setCountdown:(Countdown *)aCountdown
@@ -89,7 +93,7 @@
 	if (oldCountdown != nil)
 		[self update];
 	
-	self.style = self.countdown.style;
+	[self setNeedsUpdateStyle];
 }
 
 - (void)viewWillShow:(BOOL)animated

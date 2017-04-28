@@ -8,19 +8,6 @@
 
 import UIKit
 import WatchConnectivity
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-	switch (lhs, rhs) {
-		case let (l?, r?):
-			return l < r
-		case (nil, _?):
-			return true
-		default:
-			return false
-	}
-}
-
 
 enum CountdownType: UInt {
 	case countdown
@@ -98,8 +85,8 @@ class Countdown: NSObject {
 			// Get all countdowns sorted by endDate
 			var sortedCountdowns = countdowns.filter { $0.type == .countdown }
 			sortedCountdowns.sort(by: { (countdown1: Countdown, countdown2: Countdown) -> Bool in
-				if let endDate2 = countdown2.endDate {
-					return (countdown1.endDate?.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
+				if let endDate = countdown1.endDate, let endDate2 = countdown2.endDate {
+					return (endDate.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
 				}
 				return false
 			})
@@ -112,8 +99,8 @@ class Countdown: NSObject {
 			// Get all timers sorted by endDate
 			var sortedTimers = countdowns.filter { $0.type == .timer }
 			sortedTimers.sort(by: { (timer1: Countdown, timer2: Countdown) -> Bool in
-				if let endDate2 = timer2.endDate {
-					return (timer1.endDate?.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
+				if let endDate = timer1.endDate, let endDate2 = timer2.endDate {
+					return (endDate.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
 				}
 				return false
 			})

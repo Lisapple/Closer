@@ -83,13 +83,14 @@
 	_notIncludedCountdowns = [_allCountdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == NO"]].mutableCopy;
 	[_notIncludedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
 		return OrderComparisonResult([_allCountdowns indexOfObject:countdown1], [_allCountdowns indexOfObject:countdown2]); }];
+	
+	self.navigationItem.rightBarButtonItem.enabled = (_allCountdowns.count > 0);
 }
 
 - (void)reloadData
 {
 	[self updateData];
 	[self.tableView reloadData];
-	self.navigationItem.rightBarButtonItem.enabled = (_allCountdowns.count > 0);
 }
 
 - (IBAction)doneAction:(id)sender
@@ -342,7 +343,12 @@
 					}]];
 					[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
 						NSURL * settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-						[[UIApplication sharedApplication] openURL:settingsURL];
+						if ([UIApplication instancesRespondToSelector:@selector(openURL:options:completionHandler:)])
+							[[UIApplication sharedApplication] openURL:settingsURL options:@{} completionHandler:nil];
+						else
+IGNORE_DEPRECATION_BEGIN
+							[[UIApplication sharedApplication] openURL:settingsURL];
+IGNORE_DEPRECATION_END
 					}]];
 					
 					[self presentViewController:alert animated:YES completion:nil];

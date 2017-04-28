@@ -8,6 +8,7 @@
 
 #import "TimerPageView.h"
 #import "UIView+addition.h"
+#import "Countdown+addition.h"
 
 NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 
@@ -110,8 +111,6 @@ NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 {
 	super.countdown = aCountdown;
 	
-	self.style = aCountdown.style;
-	
 	if (self.countdown.durations.count) {
 		_duration = self.countdown.durations[(self.countdown.durationIndex % self.countdown.durations.count)].doubleValue;
 		_remainingSeconds = self.countdown.endDate.timeIntervalSinceNow;
@@ -128,6 +127,7 @@ NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 		_descriptionLabel.hidden = YES;
 	}
 	
+	[self setNeedsUpdateStyle];
 	[self update];
 }
 
@@ -139,7 +139,7 @@ NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 	_descriptionLabel.textColor = textColor;
 }
 
-- (void)setStyle:(CountdownStyle)aStyle
+- (void)styleDidChange:(CountdownStyle)style
 {
 	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
 	[self setTextColor:[UIColor textColorForStyle:aStyle]];
@@ -356,7 +356,12 @@ NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 	
 	if (self.countdown.durations.count == 0) {
 		NSString * URLString = [NSString stringWithFormat:@"closer://countdown/%@/settings/durations/add", self.countdown.identifier];
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLString]];
+		if ([UIApplication instancesRespondToSelector:@selector(openURL:options:completionHandler:)])
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLString] options:@{} completionHandler:nil];
+		else
+IGNORE_DEPRECATION_BEGIN
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLString]];
+IGNORE_DEPRECATION_END
 	}
 }
 

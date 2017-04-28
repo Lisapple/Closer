@@ -34,6 +34,16 @@
 	return minDurationBeforeIdle;
 }
 
+- (void)setNeedsUpdateStyle
+{
+	[self styleDidChange:self.countdown.style];
+}
+
+- (void)styleDidChange:(CountdownStyle)style
+{
+	/* Subsclasses must implement it */
+}
+
 - (void)viewWillShow:(BOOL)animated
 {
 	_visible = YES;
