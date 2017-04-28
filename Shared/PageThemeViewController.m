@@ -84,7 +84,7 @@
 		_checkedCell = cell;
 	}
 	
-	cell.textLabel.text = [Countdown styles][indexPath.row];
+	cell.textLabel.text = CountdownStyleDescription(indexPath.row);
 	cell.imageView.image = [self.class imageForStyle:indexPath.row];
 	
 	return cell;

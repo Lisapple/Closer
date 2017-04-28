@@ -422,15 +422,10 @@ IGNORE_DEPRECATION_END
 
 + (UIImage *)thumbnailForStyle:(CountdownStyle)style
 {
-	if (CountdownStyleIsDynamic(style)) {
-		return [self.class imageWithBackgroundColor:[UIColor backgroundColorForStyle:style]
-									foregroundColor:[UIColor textColorForStyle:style]];
-	} else {
-		const CGFloat border = (style == CountdownStyleDay) ? 1 : 0;
-		return [self.class imageWithBackgroundColor:[UIColor backgroundColorForStyle:style]
-									foregroundColor:[UIColor textColorForStyle:style]
-											 border:border];
-	}
+	const CGFloat border = (style == CountdownStyleDay) ? 1 : 0;
+	return [self.class imageWithBackgroundColor:[UIColor backgroundColorForStyle:style]
+								foregroundColor:[UIColor textColorForStyle:style]
+										 border:border];
 }
 
 + (UIImage *)imageWithBackgroundColor:(UIColor *)backgroundColor foregroundColor:(UIColor *)color

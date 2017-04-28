@@ -754,6 +754,7 @@
 				504B56581A7D5C9A00292475 /* Embed App Extensions */,
 				507F9BE91B38C382002B5CF4 /* Embed Watch Content */,
 				508343DE1BD1176C00754409 /* ShellScript */,
+				50AD97C41EB37F6D00C23BBF /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -962,19 +963,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		505656351E843BD400309997 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "TAGS=\"TODO:|FIXME:|\\?\\?\\?:|!!!:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0\\\n| xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\"\\\n| perl -p -e \"s/($TAGS)/ warning: \\$1/\"\n\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0\\\n| xargs -0 egrep --with-filename --line-number --only-matching \"// ?DEBUG\"\\\n| perl -p -e \"s/\\/\\/ ?DEBUG/ warning: DEBUG comment found/\"\n";
-		};
 		508343DE1BD1176C00754409 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -987,6 +975,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./Fabric.framework/run ff25ea654b1977a1b75790328380c0a34c60cbc8 fa8b9d8838ec0b5f094ae074298a32cf17e1258999ec60df6a22edb65b557ea8";
+		};
+		50AD97C41EB37F6D00C23BBF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0\\\n| xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\"\\\n| perl -p -e \"s/($TAGS)/ warning: \\$1/\"\n\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0\\\n| xargs -0 egrep --with-filename --line-number --only-matching \"// ?DEBUG\"\\\n| perl -p -e \"s/\\/\\/ ?DEBUG/ warning: DEBUG comment found/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -141,8 +141,8 @@ NSString * const TimerDidContinueNotification = @"TimerDidContinueNotification";
 
 - (void)styleDidChange:(CountdownStyle)style
 {
-	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:aStyle] colorWithAlphaComponent:0.7];
-	[self setTextColor:[UIColor textColorForStyle:aStyle]];
+	_contentView.backgroundColor = [[UIColor backgroundColorForStyle:style] colorWithAlphaComponent:0.7];
+	[self setTextColor:[UIColor textColorForStyle:style]];
 }
 
 - (void)viewWillShow:(BOOL)animated
