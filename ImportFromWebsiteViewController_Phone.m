@@ -207,8 +207,9 @@
 					self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", nil)
 																							  style:UIBarButtonItemStyleDone
 																							 target:self action:@selector(import:)];
-					
+#if ANALYTICS_ENABLED
 					[Answers logCustomEventWithName:@"import-from-website" customAttributes:nil];
+#endif
 				}
 				
 				[self updateUI];

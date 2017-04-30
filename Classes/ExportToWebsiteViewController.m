@@ -147,8 +147,10 @@
 				_tableView.frame = self.view.frame;
 				[self.view addSubview:_tableView];
 				[_tableView reloadData];
-				
+
+#if ANALYTICS_ENABLED
 				[Answers logCustomEventWithName:@"export-to-website" customAttributes:nil];
+#endif
 			}
 		}
 	}];

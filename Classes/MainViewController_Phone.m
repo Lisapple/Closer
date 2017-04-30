@@ -357,8 +357,10 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)settingsViewController:(SettingsViewController *)controller willDeleteCountdown:(Countdown *)countdown
 {
+#if ANALYTICS_ENABLED
 	if (_quickCreatedCountdown == countdown) // Tag if a quick created countdown was deleted just after created
 		[Answers logCustomEventWithName:@"delete-quick-created-countdown" customAttributes:nil];
+#endif
 }
 
 - (void)settingsViewControllerDidFinish:(SettingsViewController *)controller
@@ -636,7 +638,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 		_quickCreatedCountdown = [[Countdown alloc] initWithIdentifier:nil];
 		_quickCreatedCountdown.name = NSLocalizedString(@"New Countdown", nil);
 		[Countdown insertCountdown:_quickCreatedCountdown atIndex:index];
+#if ANALYTICS_ENABLED
 		[Answers logCustomEventWithName:@"use-quick-create-countdown" customAttributes:nil];
+#endif
 		[self insertPageWithCountDown:_quickCreatedCountdown atIndex:index];
 		
 		self.currentPageIndex = index;

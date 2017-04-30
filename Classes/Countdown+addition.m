@@ -365,54 +365,70 @@ IGNORE_DEPRECATION_END
 
 + (void)tagInsert
 {
+#if ANALYTICS_ENABLED
 	[Answers logCustomEventWithName:@"insert-countdown"
 				   customAttributes:nil];
+#endif
 }
 
 + (void)tagChangeType:(CountdownType)type
 {
+#if ANALYTICS_ENABLED
 	[Answers logCustomEventWithName:@"change-countdown-type"
 				   customAttributes:@{ @"new type" : (type == CountdownTypeTimer) ? @"timer" : @"countdown" }];
+#endif
 }
 
 + (void)tagChangeName
 {
+#if ANALYTICS_ENABLED
 	[Answers logCustomEventWithName:@"change-countdown-name"
 				   customAttributes:nil];
+#endif
 }
 
 + (void)tagChangeMessage
 {
+#if ANALYTICS_ENABLED
 	[Answers logCustomEventWithName:@"change-countdown-message"
 				   customAttributes:nil];
+#endif
 }
 
 + (void)tagEndDate:(NSDate *)date
 {
+#if ANALYTICS_ENABLED
 	NSDictionary * attrs = nil;
 	if (date.localizedDescription) {
 		attrs = @{ @"end date" : date.localizedDescription };
 	}
 	[Answers logCustomEventWithName:@"change-countdown-end-date"
 				   customAttributes:attrs];
+#endif
 }
 
 + (void)tagChangeDuration
 {
+#if ANALYTICS_ENABLED
 	[Answers logCustomEventWithName:@"change-countdown-duration"
 				   customAttributes:@{ }];
+#endif
 }
 
 + (void)tagChangeTheme:(CountdownStyle)style
 {
+#if ANALYTICS_ENABLED
 	[Answers logCustomEventWithName:@"change-countdown-theme"
 				   customAttributes:@{ @"theme" : CountdownStyleDescription(style) }];
+#endif
 }
 
 + (void)tagDelete
 {
+#if ANALYTICS_ENABLED
 	[Answers logCustomEventWithName:@"delete-countdown"
 				   customAttributes:nil];
+#endif
 }
 
 @end

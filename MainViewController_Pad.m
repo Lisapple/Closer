@@ -295,7 +295,10 @@ IGNORE_DEPRECATION_BEGIN
 				[[UIApplication sharedApplication] openURL:url];
 IGNORE_DEPRECATION_END
 			
+#if ANALYTICS_ENABLED
 			[Answers logCustomEventWithName:@"open-about-url" customAttributes:@{ @"url" : url }];
+#endif
+			
 		}]];
 	}
 	actionSheet.view.tintColor = [UIColor defaultTintColor];
