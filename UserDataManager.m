@@ -172,6 +172,8 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 		for (NSString * key in changedKeys) {
 			if ([key isEqualToString:KeyValueStoreCountdownsKey]) {
 				
+				NSMutableArray * identifiers = [NSMutableArray arrayWithCapacity:5];
+				NSUInteger index = 0;
 				KVSCountdowns * countdowns = (KVSCountdowns *)[_keyValueStore arrayForKey:KeyValueStoreCountdownsKey];
 				for (KVSCountdown * countdownDict in countdowns) {
 					
@@ -182,6 +184,7 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 					NSArray <NSDictionary *> * durationsDict = countdownDict[@"durations"];
 					
 					NSString * const identifier = countdownDict[@"id"];
+					[identifiers addObject:identifier];
 					Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 					if (!countdown) { // Find a similar existing countdown (same name and same endDate or durations (ignoring names))
 						
@@ -213,6 +216,7 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 						}
 						[Countdown addCountdown:countdown];
 					}
+					
 					countdown.style = [countdownDict[@"style"] unsignedIntegerValue];
 					countdown.songID = countdownDict[@"songID"];
 					countdown.notificationCenter = [countdownDict[@"notif"] boolValue];
@@ -226,7 +230,18 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 							[countdown setDurationName:durationDict[@"name"]
 											   atIndex:index++];
 					}
+					
+					// Re-order countdown
+					[Countdown moveCountdownAtIndex:[Countdown indexOfCountdown:countdown]
+											toIndex:index];
+					++index;
 				}
+				
+				// Delete others countdowns
+				NSPredicate * const predicate = [NSPredicate predicateWithFormat:@"NOT %K IN %@", NSStringFromSelector(@selector(identifier)), identifiers];
+				NSArray <Countdown *> * countdownsToDelete = [[Countdown allCountdowns] filteredArrayUsingPredicate:predicate];
+				for (Countdown * countdown in countdownsToDelete.copy)
+					[Countdown removeCountdown:countdown];
 			}
 		}
 		
@@ -283,7 +298,7 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 		NSMutableDictionary * countdownDict = @{ @"id": countdown.identifier,
 												 @"type": @(countdown.type == CountdownTypeTimer),
 												 @"name": countdown.name ?: @"---",
-												 @"theme": @(countdown.style),
+												 @"style": @(countdown.style),
 												 @"notif": @(countdown.notificationCenter) }.mutableCopy;
 		if (countdown.message)
 			countdownDict[@"message"] = countdown.message;

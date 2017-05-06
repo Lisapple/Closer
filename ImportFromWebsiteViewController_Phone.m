@@ -7,7 +7,9 @@
 //
 
 #import "ImportFromWebsiteViewController_Phone.h"
+
 #import "NSDate+addition.h"
+#import "NSObject+additions.h"
 
 @interface ImportFromWebsiteViewController_Phone ()
 
@@ -104,11 +106,12 @@
 - (void)pushSecondPassword
 {
 	NSTimeInterval duration = 0.5;
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration / 2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+	[NSObject performBlock:^{
 		_instructionLabel.text = NSLocalizedString(@"Enter the Second Password", nil);
 		_passwordLabel1.text = _passwordLabel2.text = _passwordLabel3.text = _passwordLabel4.text = nil;
-		_hiddenTextField.text = nil;
-	});
+		_hiddenTextField.text = nil; }
+				afterDelay:duration / 2];
+	
 	[UIView animateKeyframesWithDuration:duration delay:0 options:0
 							  animations:^{
 								  [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.5 animations:^{

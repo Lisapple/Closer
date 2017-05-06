@@ -360,6 +360,8 @@ static NSMutableArray * _countdowns = nil;
 
 + (void)removeCountdown:(Countdown *)countdown
 {
+	NSString * const identifier = countdown.identifier.copy;
+	
 	[Countdown tagDelete];
 	
 	[countdown remove];
@@ -369,7 +371,7 @@ static NSMutableArray * _countdowns = nil;
 	[self synchronize];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidDeleteNotification
-														object:countdown];
+														object:identifier];
 }
 
 + (void)removeCountdownAtIndex:(NSInteger)index

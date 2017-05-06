@@ -14,6 +14,7 @@
 
 #import "UIView+addition.h"
 #import "Countdown+addition.h"
+#import "NSObject+additions.h"
 
 @interface ShadowDropView : UIView
 @end
@@ -202,7 +203,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		_scrollView.contentSize = CGSizeMake(self.view.frame.size.width * _pages.count, 0.);
 		_scrollView.contentOffset = CGPointMake(self.view.frame.size.width * _currentPageIndex, 0.);
 		
-		[self showPageControl:NO animated:NO];
+		[self showPageControl:YES animated:NO];
 		[self updateUI];
 		if (_pages.count) {
 			_pageControl.numberOfPages = _pages.count;
@@ -210,6 +211,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 			[self setCurrentPageIndex:_currentPageIndex];
 		} else
 			_nameLabel.text = nil;
+		
+		[NSObject performBlock:^{
+			[self showPageControl:NO animated:YES]; } afterDelay:2];
 	}
 }
 
@@ -304,6 +308,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_pageControl.currentPage = pageIndex;
 	_currentPageIndex = pageIndex;
 	[self updateUI];
+	[self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)showPageAtIndex:(NSInteger)pageIndex animated:(BOOL)animated

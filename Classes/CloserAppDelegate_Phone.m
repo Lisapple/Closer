@@ -10,6 +10,7 @@
 #import "MainViewController_Phone.h"
 #import "DurationsViewController.h"
 #import "TimerPageView.h"
+#import "UserDataManager.h"
 
 #import "Countdown+addition.h"
 #import "NSBundle+addition.h"
@@ -71,6 +72,8 @@ IGNORE_DEPRECATION_END
 	
 	[Countdown updateSpotlightIndexWithCompletionHandler:nil];
 	
+	[[UserDataManager defaultManager] synchronize];
+	
 	return YES;
 }
 
@@ -85,6 +88,7 @@ IGNORE_DEPRECATION_END
 	
 	[Countdown removeInvalidLocalNotifications];
 	[Countdown synchronize];
+	[[UserDataManager defaultManager] synchronize];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -95,6 +99,7 @@ IGNORE_DEPRECATION_END
 - (void)applicationWillTerminate:(UIApplication *)application
 {
 	[Countdown synchronize];
+	[[UserDataManager defaultManager] synchronize];
 	
 	/* Save the last selected page */
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];

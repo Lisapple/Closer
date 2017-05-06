@@ -10,6 +10,7 @@
 #import "MainViewController_Pad.h"
 #import "DurationsViewController.h"
 #import "TimerPageView.h"
+#import "UserDataManager.h"
 
 #import "Countdown+addition.h"
 #import "NSString+addition.h"
@@ -55,6 +56,8 @@
 	navigationController.navigationBar.tintColor = [UIColor whiteColor];
 	
 	[Countdown updateSpotlightIndexWithCompletionHandler:nil];
+	
+	[[UserDataManager defaultManager] synchronize];
 	
 	return YES;
 }
@@ -166,11 +169,13 @@
 {
 	[Countdown removeInvalidLocalNotifications];
 	[Countdown synchronize];
+	[[UserDataManager defaultManager] synchronize];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
 	[Countdown synchronize];
+	[[UserDataManager defaultManager] synchronize];
 }
 
 #pragma mark - UNUserNotificationCenterDelegate
