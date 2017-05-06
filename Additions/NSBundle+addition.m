@@ -14,7 +14,7 @@
 {
 	if ([songID isEqualToString:@"-1"])
 		return nil;
-	else if ([songID isEqualToString:@"default"])
+	else if ([songID isEqualToString:CountdownDefaultSoundName])
 		return NSLocalizedString(@"Default", nil);
 	else {
 		NSString * path = [[NSBundle mainBundle] pathForResource:@"songs" ofType:@"plist"];

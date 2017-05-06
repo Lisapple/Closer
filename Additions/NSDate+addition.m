@@ -92,8 +92,7 @@
 
 - (NSString *)rfc5545Format
 {
-	// Returns a date at date-time format (yyyy MM dd 'T' HH mm ss 'Z')
-	
+	// Returns a date at date-time format
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.locale = [NSLocale currentLocale];
 	dateFormatter.dateFormat = @"yyyyMMdd'T'HHmmss'Z'";
@@ -105,7 +104,6 @@
 - (NSString *)SQLDateTime
 {
 	// Returns a date at date-time format (YYYY-MM-dd HH:mm:ss)
-	
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.locale = [NSLocale currentLocale];
 	dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";

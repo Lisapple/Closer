@@ -69,7 +69,7 @@ IGNORE_DEPRECATION_END
 	if (index != NSNotFound)
 		[_mainViewController showPageAtIndex:index animated:NO];
 	
-	[Countdown buildingSpolightIndexWithCompletionHandler:nil];
+	[Countdown updateSpotlightIndexWithCompletionHandler:nil];
 	
 	return YES;
 }

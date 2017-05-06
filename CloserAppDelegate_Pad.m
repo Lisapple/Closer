@@ -54,7 +54,7 @@
 	navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:0.1 alpha:1.];
 	navigationController.navigationBar.tintColor = [UIColor whiteColor];
 	
-	[Countdown buildingSpolightIndexWithCompletionHandler:nil];
+	[Countdown updateSpotlightIndexWithCompletionHandler:nil];
 	
 	return YES;
 }

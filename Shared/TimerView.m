@@ -11,9 +11,9 @@
 #import "NSObject+additions.h"
 
 @interface TimerView ()
-{
-	BOOL _cancel, _animating;
-}
+
+@property (nonatomic, assign) BOOL cancel;
+@property (nonatomic, assign) BOOL animating;
 
 @property (nonatomic, strong) UIView * selectedBackgroundView;
 @property (nonatomic, strong) CAShapeLayer * progressLayer;

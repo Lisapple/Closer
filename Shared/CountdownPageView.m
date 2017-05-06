@@ -60,14 +60,14 @@
 	return self;
 }
 
-- (NSString *)padValue:(NSUInteger)value
+- (NSString *)padNumber:(NSUInteger)value
 {
-	return [self formatValue:value addPadding:YES];
+	return [self formatNumber:value withPadding:YES];
 }
 
-- (NSString *)formatValue:(NSUInteger)value addPadding:(BOOL)addZero
+- (NSString *)formatNumber:(NSUInteger)number withPadding:(BOOL)padding
 {
-	return [NSString stringWithFormat:(addZero) ? @"%02ld" : @"%ld", (long)value];
+	return [NSString stringWithFormat:(padding) ? @"%02ld" : @"%ld", (long)number];
 }
 
 - (void)styleDidChange:(CountdownStyle)style
@@ -139,11 +139,11 @@
 	BOOL animated = !(_contentView.hidden);
 	
 	if (days > 0)
-		[_daysLabel setText:[self formatValue:days addPadding:NO] animated:animated];
+		[_daysLabel setText:[self formatNumber:days withPadding:NO] animated:animated];
 	
-	[_hoursLabel   setText:[self padValue:hours]   animated:animated];
-	[_minutesLabel setText:[self padValue:minutes] animated:animated];
-	[_secondsLabel setText:[self padValue:seconds] animated:animated];
+	[_hoursLabel   setText:[self padNumber:hours]   animated:animated];
+	[_minutesLabel setText:[self padNumber:minutes] animated:animated];
+	[_secondsLabel setText:[self padNumber:seconds] animated:animated];
 	
 	[_daysDescriptionLabel setText:(days > 1)? NSLocalizedString(@"DAYS_MANY", nil):
 		NSLocalizedString((days == 1) ? @"DAY_ONE" : @"DAYS_ZERO", nil) animated:animated];

@@ -43,9 +43,11 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 	PromptStateEnd
 };
 
+extern NSString * const CountdownDefaultSoundName;
+
 @interface Countdown : NSObject
 
-@property (nonatomic, strong, nullable)NSString * name;
+@property (nonatomic, strong, nullable) NSString * name; // @TODO: Should not be nullable
 @property (nonatomic, strong, nullable) NSDate * endDate;
 @property (nonatomic, strong, nullable) NSString * message;
 @property (nonatomic, strong, nullable) NSString * songID;
@@ -65,43 +67,44 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 + (NSInteger)numberOfCountdowns;
 
-+ (nonnull NSArray <Countdown *> *)allCountdowns;
++ (NSArray <Countdown *> *)allCountdowns;
 
-+ (nullable Countdown *)countdownWithIdentifier:(nonnull NSString *)identifier;
++ (nullable Countdown *)countdownWithIdentifier:(NSString *)identifier;
 
-+ (nonnull Countdown *)countdownAtIndex:(NSInteger)index;
-+ (NSInteger)indexOfCountdown:(nonnull Countdown *)countdown;
++ (Countdown *)countdownAtIndex:(NSInteger)index;
++ (NSInteger)indexOfCountdown:(Countdown *)countdown;
 
-+ (void)insertCountdown:(nonnull Countdown *)countdown atIndex:(NSInteger)index;
-+ (void)addCountdown:(nonnull Countdown *)countdown;
-+ (void)addCountdowns:(nonnull NSArray <Countdown *> *)countdowns;
++ (void)insertCountdown:(Countdown *)countdown atIndex:(NSInteger)index;
++ (void)addCountdown:(Countdown *)countdown;
++ (void)addCountdowns:(NSArray <Countdown *> *)countdowns;
 
+/// Move the countdown at `fromIndex` (throw an exception is out of bounds) to `toIndex` (clipped to bounds).
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 + (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2 UNAVAILABLE_ATTRIBUTE;
 
-+ (void)removeCountdown:(nonnull Countdown *)countdown;
++ (void)removeCountdown:(Countdown *)countdown;
 + (void)removeCountdownAtIndex:(NSInteger)index;
 
 /// Returns all CountdownStyles as NSNumber.
-+ (nonnull NSArray <NSNumber /* CountdownStyle */ *> *)styles;
++ (NSArray <NSNumber /* CountdownStyle */ *> *)styles;
 
 /// Return localized name of all styles.
-+ (nonnull NSArray <NSString *> *)styleNames;
++ (NSArray <NSString *> *)styleNames;
 
-- (nonnull instancetype)initWithIdentifier:(nullable NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithIdentifier:(nullable NSString *)anIdentifier NS_DESIGNATED_INITIALIZER;
 
 // Timer methods
 
 - (nullable NSNumber *)currentDuration;
-- (nonnull NSArray <NSNumber *> *)durations;
+- (NSArray <NSNumber *> *)durations;
 
 - (nullable NSString *)currentName;
-- (nonnull NSArray <NSString *> *)names; // The number of items must be exactly the same that |durations|, with empty string by default
+- (NSArray <NSString *> *)names; // The number of items must be exactly the same that |durations|, with empty string by default
 
-- (void)addDuration:(nonnull NSNumber *)duration withName:(nullable NSString *)name;
-- (void)addDurations:(nonnull NSArray <NSNumber *> *)durations withNames:(nullable NSArray <NSString *> *)names;
-- (void)setDuration:(nonnull NSNumber *)duration atIndex:(NSInteger)index;
-- (void)setDurationName:(nonnull NSString *)name atIndex:(NSInteger)index;
+- (void)addDuration:(NSNumber *)duration withName:(nullable NSString *)name;
+- (void)addDurations:(NSArray <NSNumber *> *)durations withNames:(nullable NSArray <NSString *> *)names;
+- (void)setDuration:(NSNumber *)duration atIndex:(NSInteger)index;
+- (void)setDurationName:(NSString *)name atIndex:(NSInteger)index;
 - (void)moveDurationAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 - (void)exchangeDurationAtIndex:(NSInteger)index1 withDurationAtIndex:(NSInteger)index2; // UNUSED
 - (void)removeDurationAtIndex:(NSUInteger)index;
@@ -115,13 +118,14 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 // Activation methods
 
 - (BOOL)isActive;
-- (void)activate; /* Make the countdown active to send local notification */
+/// Make the countdown active to send local notification
+- (void)activate;
 - (void)desactivate;
 
 // Localized description methods
 
-- (nonnull NSString *)descriptionOfDurationAtIndex:(NSInteger)index;
-- (nonnull NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index;
+- (NSString *)descriptionOfDurationAtIndex:(NSInteger)index;
+- (NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index;
 
 @end
 
@@ -130,6 +134,8 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 
 + (void)synchronize_async DEPRECATED_ATTRIBUTE;
 
-- (nonnull NSMutableDictionary *)_countdownToDictionary;
+- (NSMutableDictionary *)_countdownToDictionary;
 
 @end
+
+NS_ASSUME_NONNULL_END

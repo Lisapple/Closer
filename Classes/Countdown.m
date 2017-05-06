@@ -41,6 +41,8 @@ BOOL CountdownStyleHasDarkContent(CountdownStyle style) {
 	return (style == CountdownStyleDay || style == CountdownStyleSpring);
 }
 
+NSString * const CountdownDefaultSoundName = @"default";
+
 @interface Countdown ()
 
 @property (nonatomic, strong) NSMutableArray <NSNumber *> * durations;
@@ -129,7 +131,8 @@ static NSMutableArray * _countdowns = nil;
 			[countdown activate];
 			[_countdowns addObject:countdown];
 		}
-		[_countdowns sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"notificationCenter" ascending:NO] ]];
+		[_countdowns sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(notificationCenter))
+																		   ascending:NO] ]];
 		
 		[NSNotificationCenter.defaultCenter addObserverForName:CountdownDidUpdateNotification
 														object:nil queue:NSOperationQueue.currentQueue
@@ -141,7 +144,8 @@ static NSMutableArray * _countdowns = nil;
 													usingBlock:^(NSNotification *note) {
 														[self updateUserDefaults];
 														
-														NSPredicate * predicate = [NSPredicate predicateWithFormat:@"notificationCenter == YES"];
+														NSPredicate * predicate = [NSPredicate predicateWithFormat:@"%K == YES",
+																				   NSStringFromSelector(@selector(notificationCenter))];
 														NSArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate];
 														[[NCWidgetController widgetController] setHasContent:(includedCountdowns.count > 0)
 																			   forWidgetWithBundleIdentifier:@"com.lisacintosh.closer.Widget"];
@@ -158,7 +162,8 @@ static NSMutableArray * _countdowns = nil;
 		if (!sharedDefaults)
 			sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.lisacintosh.closer"];
 		
-		NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"notificationCenter == YES"]].mutableCopy;
+		NSPredicate * predicate = [NSPredicate predicateWithFormat:@"%K == YES", NSStringFromSelector(@selector(notificationCenter))];
+		NSMutableArray * includedCountdowns = [_countdowns filteredArrayUsingPredicate:predicate].mutableCopy;
 		[includedCountdowns sortUsingComparator:^NSComparisonResult(Countdown * countdown1, Countdown * countdown2) {
 			return OrderComparisonResult([_countdowns indexOfObject:countdown1], [_countdowns indexOfObject:countdown2]); }];
 		
@@ -460,7 +465,7 @@ static NSMutableArray * _countdowns = nil;
 		_endDate = nil;
 		_paused = YES;
 		_message = @"";
-		_songID = @"default";
+		_songID = CountdownDefaultSoundName;
 		_style = 0;
 		_type = CountdownTypeCountdown;
 		_notificationCenter = YES;
@@ -490,9 +495,8 @@ static NSMutableArray * _countdowns = nil;
 			
 			_durationIndex = [dictionary[@"durationIndex"] integerValue];
 			_promptState = [dictionary[@"prompt"] integerValue];
-		} else { // Countdown
+		} else // Countdown
 			_message = dictionary[@"message"];
-		}
 		
 		_name = dictionary[@"name"];
 		_endDate = dictionary[@"endDate"];

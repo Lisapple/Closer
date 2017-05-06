@@ -39,7 +39,7 @@ IGNORE_DEPRECATION_END
 
 @interface Countdown (Spotlight)
 
-+ (void)buildingSpolightIndexWithCompletionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler;
++ (void)updateSpotlightIndexWithCompletionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler;
 
 @end
 

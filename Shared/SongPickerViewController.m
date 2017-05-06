@@ -81,7 +81,7 @@
 			cell.textLabel.text = NSLocalizedString(@"None", nil);
 		}
 		else if (indexPath.row == 1) {
-			if ([_songID isEqualToString:@"default"]) {
+			if ([_songID isEqualToString:CountdownDefaultSoundName]) {
 				cell.accessoryType = UITableViewCellAccessoryCheckmark;
 				_checkedIndexPath = indexPath;
 			}
@@ -127,7 +127,7 @@
 				[_player prepareToPlay];
 				[_player play];
 #endif
-				self.songID = @"default";
+				self.songID = CountdownDefaultSoundName;
 			}
 			
 		} else if (indexPath.section == 1) {

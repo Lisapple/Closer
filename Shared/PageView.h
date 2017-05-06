@@ -19,10 +19,11 @@
  */
 @interface PageView : UIView
 
-@property (nonatomic, readonly, assign, getter=isVisible) BOOL visible;
-@property (nonatomic, strong) Countdown * countdown;
 @property (nonatomic, weak) NSObject <PageViewDelegate> * delegate;
 
+@property (nonatomic, strong) Countdown * countdown;
+
+@property (nonatomic, readonly, assign, getter=isVisible) BOOL visible;
 @property (nonatomic, readonly) NSTimeInterval minDurationBeforeIdle;
 
 - (void)update;

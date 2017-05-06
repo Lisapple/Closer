@@ -70,7 +70,7 @@ IGNORE_DEPRECATION_BEGIN
 	
 	if ([self.songID isEqualToString:@"-1"]) { // Don't play any sound ("-1" means "none")
 		
-	} else if ([self.songID isEqualToString:@"default"]) { // Play default sound
+	} else if ([self.songID isEqualToString:CountdownDefaultSoundName]) { // Play default sound
 		notification.soundName = UILocalNotificationDefaultSoundName;
 		
 	} else { // Play other sound from Songs folder
@@ -90,7 +90,7 @@ IGNORE_DEPRECATION_END
 	NSString * path = [NSBundle mainBundle].bundlePath;
 	if /**/ ([self.songID isEqualToString:@"-1"])
 		return nil;
-	else if ([self.songID isEqualToString:@"default"])
+	else if ([self.songID isEqualToString:CountdownDefaultSoundName])
 		path = [path stringByAppendingString:@"/Songs/complete.caf"];
 	else
 		path = [path stringByAppendingFormat:@"/Songs/%@", [[NSBundle mainBundle] filenameForSongWithID:self.songID]];
@@ -125,7 +125,7 @@ IGNORE_DEPRECATION_END
 	
 	if ([self.songID isEqualToString:@"-1"])
 		{ } // Don't play any sound
-	else if ([self.songID isEqualToString:@"default"])
+	else if ([self.songID isEqualToString:CountdownDefaultSoundName])
 		content.sound = [UNNotificationSound defaultSound];
 	else { // Play other sound from Songs folder
 		content.sound = [UNNotificationSound soundNamed:self.soundPath];
@@ -256,7 +256,7 @@ IGNORE_DEPRECATION_END
 
 @implementation Countdown (Spotlight)
 
-+ (void)buildingSpolightIndexWithCompletionHandler:(void (^)(NSError * error))completionHandler
++ (void)updateSpotlightIndexWithCompletionHandler:(void (^)(NSError * error))completionHandler
 {
 	if (NSClassFromString(@"CSSearchableIndex")) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -265,20 +265,15 @@ IGNORE_DEPRECATION_END
 				if (countdown.type == CountdownTypeCountdown) {
 					CSSearchableItemAttributeSet * attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:(NSString *)kUTTypeItem];
 					attributeSet.title = countdown.name;
-					if (countdown.endDate)
-						attributeSet.contentDescription = [NSString stringWithFormat:@"%@ - %@", countdown.endDate.naturalDateString, countdown.message];
-					else
-						attributeSet.contentDescription = countdown.message;
-					
 					attributeSet.relatedUniqueIdentifier = countdown.identifier;
-					
 					attributeSet.keywords = @[ countdown.name, countdown.message ];
-					CSSearchableItem * item = [[CSSearchableItem alloc] initWithUniqueIdentifier:countdown.identifier
-																				domainIdentifier:@"countdown"
-																					attributeSet:attributeSet];
-					[searchableItems addObject:item];
 					
-					NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:@"com.lisacintosh.closer.show-countdown"];
+					NSString * const endDescription = [NSString stringWithFormat:@"%@ - %@", countdown.endDate.naturalDateString, countdown.message];
+					attributeSet.contentDescription = (countdown.endDate) ? endDescription : countdown.message;
+					[searchableItems addObject:[[CSSearchableItem alloc] initWithUniqueIdentifier:countdown.identifier
+																				 domainIdentifier:@"countdown"
+																					 attributeSet:attributeSet]];
+					NSUserActivity * activity = [[NSUserActivity alloc] initWithActivityType:@"com.lisacintosh.closer.show-countdown"];
 					activity.contentAttributeSet = attributeSet;
 				}
 			}
