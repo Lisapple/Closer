@@ -61,7 +61,6 @@
 		507AD4D213533D6200011051 /* PageThemeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507AD4D013533D6200011051 /* PageThemeViewController.xib */; };
 		507C345A1A8C0A3600C485C3 /* TimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */; };
 		507F9BE41B38C381002B5CF4 /* Closer Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 50E00D211AC0AA9000784B98 /* Closer Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		508343E21BD1185800754409 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343DF1BD1185800754409 /* Security.framework */; };
 		508343E31BD1185800754409 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343E01BD1185800754409 /* Fabric.framework */; };
 		508343E41BD1185800754409 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343E11BD1185800754409 /* Crashlytics.framework */; };
 		508578F416BC5F4900A04DAE /* UINavigationController+additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 508578F316BC5F4900A04DAE /* UINavigationController+additions.m */; };
@@ -89,7 +88,6 @@
 		50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50C5A19112E3361F0013605C /* DatePickerViewController.xib */; };
 		50C5A23A12E33F8B0013605C /* NSDate+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A23912E33F8B0013605C /* NSDate+addition.m */; };
 		50C5A26712E3496C0013605C /* SongPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A26512E3496C0013605C /* SongPickerViewController.m */; };
-		50C5A2E612E3504B0013605C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C5A2E512E3504B0013605C /* AudioToolbox.framework */; };
 		50C5A32712E352590013605C /* Songs in Resources */ = {isa = PBXBuildFile; fileRef = 50C5A32512E352590013605C /* Songs */; };
 		50CEFB5E15FCF27F0044AED0 /* NetworkStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CEFB5D15FCF27F0044AED0 /* NetworkStatus.m */; };
 		50CEFB6015FCF3FB0044AED0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50CEFB5F15FCF3FB0044AED0 /* SystemConfiguration.framework */; };
@@ -390,9 +388,7 @@
 				50036EF3150A42DC006BE168 /* EventKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				508343E21BD1185800754409 /* Security.framework in Frameworks */,
 				288765590DF743DE002DB57D /* CoreGraphics.framework in Frameworks */,
-				50C5A2E612E3504B0013605C /* AudioToolbox.framework in Frameworks */,
 				50FF49D6131E996D0094645C /* AVFoundation.framework in Frameworks */,
 				508343E41BD1185800754409 /* Crashlytics.framework in Frameworks */,
 				508343E31BD1185800754409 /* Fabric.framework in Frameworks */,
@@ -444,7 +440,7 @@
 			children = (
 				504FD31B164D2A2900D54381 /* iPhone */,
 				5029FA881610CEE3002E2FC0 /* iPad */,
-				504FD31D164D2ACB00D54381 /* Shared */,
+				504FD31D164D2ACB00D54381 /* View Controllers */,
 				502313E91EB7B14700019BF8 /* Model */,
 				502313EA1EB7B15D00019BF8 /* Views */,
 				504FD31E164D2BF000D54381 /* Additions */,
@@ -625,7 +621,7 @@
 			name = iPhone;
 			sourceTree = "<group>";
 		};
-		504FD31D164D2ACB00D54381 /* Shared */ = {
+		504FD31D164D2ACB00D54381 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				50E1400B1C6F73F50058DDE6 /* PageViewController.h */,
@@ -669,6 +665,7 @@
 				50CEFB5B15FCD1AE0044AED0 /* ExportToWebsiteViewController.h */,
 				502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */,
 			);
+			name = "View Controllers";
 			path = Shared;
 			sourceTree = "<group>";
 		};
