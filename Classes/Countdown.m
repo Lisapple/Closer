@@ -16,6 +16,10 @@
 NSString * const CountdownDidSynchronizeNotification = @"CountdownDidSynchronizeNotification";
 NSString * const CountdownDidUpdateNotification = @"CountdownDidUpdateNotification";
 
+NSString * const CountdownDidCreateNotification = @"CountdownDidCreateNotification";
+NSString * const CountdownDidMoveNotification = @"CountdownDidMoveNotification";
+NSString * const CountdownDidDeleteNotification = @"CountdownDidDeleteNotification";
+
 NSString * CountdownStyleDescription(CountdownStyle style) {
 	switch (style) {
 		// Regular styles
@@ -307,16 +311,14 @@ static NSMutableArray * _countdowns = nil;
 	[_countdowns insertObject:countdown atIndex:index];
 	
 	[self synchronize];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidCreateNotification
+														object:countdown];
 }
 
 + (void)addCountdown:(Countdown *)countdown
 {
-	[Countdown tagInsert];
-	
-	[countdown activate];
-	[_countdowns addObject:countdown];
-	
-	[self synchronize];
+	[self addCountdowns:@[ countdown ]];
 }
 
 + (void)addCountdowns:(NSArray *)countdowns
@@ -329,6 +331,10 @@ static NSMutableArray * _countdowns = nil;
 	[_countdowns addObjectsFromArray:countdowns];
 	
 	[self synchronize];
+	
+	for (Countdown * countdown in countdowns)
+		[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidCreateNotification
+															object:countdown];
 }
 
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex
@@ -336,17 +342,15 @@ static NSMutableArray * _countdowns = nil;
 	if (fromIndex != toIndex) {
 		Countdown * countdown = _countdowns[fromIndex];
 		[_countdowns removeObjectAtIndex:fromIndex];
-		[_countdowns insertObject:countdown atIndex:toIndex];
+		
+		const NSUInteger index = CLIP(0, toIndex, _countdowns.count);
+		[_countdowns insertObject:countdown atIndex:index];
 		
 		[self synchronize];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidMoveNotification
+															object:countdown userInfo:@{ @"oldIndex" : @(index) }];
 	}
-}
-
-+ (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2
-{
-	[_countdowns exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
-	
-	[self synchronize];
 }
 
 + (void)removeCountdown:(Countdown *)countdown
@@ -358,6 +362,9 @@ static NSMutableArray * _countdowns = nil;
 	[_countdowns removeObject:countdown];
 	
 	[self synchronize];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:CountdownDidDeleteNotification
+														object:countdown];
 }
 
 + (void)removeCountdownAtIndex:(NSInteger)index

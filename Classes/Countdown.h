@@ -9,8 +9,14 @@
 @import NotificationCenter;
 @import WatchConnectivity;
 
-extern NSString * _Nonnull const CountdownDidSynchronizeNotification;
-extern NSString * _Nonnull const CountdownDidUpdateNotification;
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSString * const CountdownDidSynchronizeNotification;
+extern NSString * const CountdownDidUpdateNotification;
+
+extern NSString * const CountdownDidCreateNotification; // object is Countdown
+extern NSString * const CountdownDidMoveNotification; // object is Countdown, userInfo contains "oldIndex"
+extern NSString * const CountdownDidDeleteNotification; // object is countdown identifier
 
 typedef NS_ENUM(NSUInteger, CountdownType) {
 	CountdownTypeCountdown = 0,
@@ -71,7 +77,7 @@ typedef NS_ENUM(NSUInteger, PromptState) {
 + (void)addCountdowns:(nonnull NSArray <Countdown *> *)countdowns;
 
 + (void)moveCountdownAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
-+ (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2; // UNUSED
++ (void)exchangeCountdownAtIndex:(NSInteger)index1 withCountdownAtIndex:(NSInteger)index2 UNAVAILABLE_ATTRIBUTE;
 
 + (void)removeCountdown:(nonnull Countdown *)countdown;
 + (void)removeCountdownAtIndex:(NSInteger)index;
