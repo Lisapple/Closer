@@ -15,22 +15,26 @@ enum CountdownType: UInt {
 }
 
 enum GlanceType: UInt {
+	/// Last selected countdonw or timer.
 	case lastSelectedPage
+	
+	/// Nearest countdown to end.
 	case closestCountdown
+	
+	/// Nearest timer to end.
 	case closestTimer
 	
 	init(string: String?) {
+		self = .lastSelectedPage
+		
 		if let string = string {
 			switch string {
 				case "closest_countdown":
-					self.init(rawValue: GlanceType.closestCountdown.rawValue)!
+					self = .closestCountdown
 				case "closest_timer":
-					self.init(rawValue: GlanceType.closestTimer.rawValue)!
-				default:
-					self.init(rawValue: GlanceType.lastSelectedPage.rawValue)!
+					self = .closestTimer
+				default: break
 			}
-		} else {
-			self.init(rawValue: GlanceType.lastSelectedPage.rawValue)!
 		}
 	}
 }
@@ -84,48 +88,23 @@ class Countdown: NSObject {
 	
 	class func with(_ glanceType: GlanceType) -> Countdown? {
 		var countdown: Countdown?
-		if (glanceType == .closestCountdown) {
-			// Get all countdowns sorted by endDate
-			var sortedCountdowns = all.filter { $0.type == .countdown }
-			sortedCountdowns.sort(by: { (countdown1: Countdown, countdown2: Countdown) -> Bool in
-				if let endDate = countdown1.endDate, let endDate2 = countdown2.endDate {
-					return (endDate.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
-				}
-				return false
-			})
-			// Set |countdown| with the closest countdown to finish (if any)
-			if (sortedCountdowns.first != nil && sortedCountdowns.first?.endDate != nil) {
-				countdown = sortedCountdowns.first!
-			}
+		if (glanceType == .closestCountdown) { // Nearest to end
+			let countdowns = all.filter { $0.type == .countdown && $0.endDate != nil }
+			countdown = countdowns.sorted {
+				$0.endDate!.timeIntervalSince($1.endDate!) < 0 }.first
 		}
-		else if (glanceType == .closestCountdown) {
-			// Get all timers sorted by endDate
-			var sortedTimers = all.filter { $0.type == .timer }
-			sortedTimers.sort(by: { (timer1: Countdown, timer2: Countdown) -> Bool in
-				if let endDate = timer1.endDate, let endDate2 = timer2.endDate {
-					return (endDate.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
-				}
-				return false
-			})
-			// Set |countdown| with the closest timer to finish (if any, find the timer with the shortest duration else)
-			if let firstSortedTimers = sortedTimers.first {
-				if (firstSortedTimers.endDate != nil) {
-					countdown = firstSortedTimers
-				} else {
-					sortedTimers.sort(by: { (timer1: Countdown, timer2: Countdown) -> Bool in
-						let currentDuration1 = timer1.durations![timer1.durationIndex!]
-						let currentDuration2 = timer2.durations![timer2.durationIndex!]
-						return (currentDuration1 < currentDuration2) // asc order
-					})
-					if let firstSortedTimers = sortedTimers.first {
-						countdown = firstSortedTimers
-					}
-				}
+		else if (glanceType == .closestTimer) { // Closest timer to end or timer with the shortest duration
+			let timers = all.filter { $0.type == .timer }
+			let nonFinishedTimers = timers.filter {
+				$0.endDate != nil
+			}.sorted {
+				$0.endDate!.timeIntervalSince($1.endDate!) < 0
 			}
+			countdown = nonFinishedTimers.first ?? timers.sorted { return ($0.currentDuration! < $1.currentDuration!) }.first
 		}
 		if (glanceType == .lastSelectedPage || countdown == nil) {
 			let identifier = UserDefaults().string(forKey: "selectedIdentifier")
-			countdown = all.filter { $0.identifier == identifier }.first ?? all.first
+			countdown = .with(identifier ?? "") ?? all.first
 		}
 		return countdown
 	}
@@ -167,8 +146,7 @@ class Countdown: NSObject {
 		if let message = message {
 			dictionary["message"] = message }
 		if let endDate = endDate {
-			dictionary["endDate"] = dateFormatter.string(from: endDate)
-		}
+			dictionary["endDate"] = dateFormatter.string(from: endDate) }
 		if let durations = durations {
 			dictionary["durations"] = durations }
 		if let names = names {
