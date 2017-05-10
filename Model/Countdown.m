@@ -179,12 +179,13 @@ static NSMutableArray * _countdowns = nil;
 		
 		if (NSClassFromString(@"WCSession") && [WCSession isSupported]
 			&& [WCSession defaultSession].isWatchAppInstalled && countdown.identifier) {
-			NSDictionary * context = @{ @"countdowns" : [includedCountdowns valueForKeyPath:@"JSONDictionary"], @"selectedIdentifier": countdown.identifier };
+			NSDictionary * context = @{ @"countdowns" : [includedCountdowns valueForKeyPath:@"JSONDictionary"],
+										@"selectedIdentifier": countdown.identifier };
 			NSError * error = nil;
 			BOOL success = [[WCSession defaultSession] updateApplicationContext:context error:&error];
-			if (!success) {
+			if (!success)
 				NSLog(@"error: %@", error.localizedDescription);
-			}
+			
 			[[WCSession defaultSession] sendMessage:@{ @"update" : @YES }
 									   replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
 										   dispatch_sync(dispatch_get_main_queue(), ^{
