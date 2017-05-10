@@ -26,8 +26,8 @@ class CountdownInterfaceController: WKInterfaceController {
 		self.setTitle(countdown?.name)
 		
 		updateUI()
-		addMenuItem(with: WKMenuItemIcon.add, title: "New", action: #selector(newMenuAction))
-		addMenuItem(with: WKMenuItemIcon.trash, title: "Delete", action: #selector(deleteMenuAction))
+		addMenuItem(with: .add, title: NSLocalizedString("menu.action.new", comment: ""), action: #selector(newMenuAction))
+		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
 		
 		if (countdown?.identifier == UserDefaults().string(forKey: "selectedIdentifier")) {
 			self.becomeCurrentPage()
@@ -36,15 +36,15 @@ class CountdownInterfaceController: WKInterfaceController {
 	
 	func updateUI() {
 		self.animate(withDuration: 0.15) { () -> Void in // IDK if animation is working
-			self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSize(width: 74, height: 74), cornerRadius: 14))
+			self.imageView.setImage(self.countdown!.progressionImage(size: CGSize(width: 74, height: 74), cornerRadius: 14))
 		}
-		if (countdown!.endDate != nil) {
-			timerLabel.setDate(countdown!.endDate! as Date)
+		if let endDate = countdown!.endDate {
+			timerLabel.setDate(endDate)
 			timerLabel.start()
 			
 			let formatter = DateFormatter()
 			formatter.dateStyle = .medium
-			descriptionLabel.setText("before \(formatter.string(from: countdown!.endDate! as Date))")
+			descriptionLabel.setText("_before \(formatter.string(from: endDate))")
 			descriptionLabel.setHidden(false)
 		} else {
 			timerLabel.setDate(Date())
@@ -52,9 +52,11 @@ class CountdownInterfaceController: WKInterfaceController {
 			descriptionLabel.setHidden(true)
 		}
 		
-		if (countdown?.endDate != nil) {
-			let interval = (countdown!.endDate!.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0;
-			timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
+		if let endDate = countdown?.endDate {
+			let interval = (endDate.timeIntervalSinceNow > 3 * 60) ? 60.0 : 1.0;
+			timer = Timer.scheduledTimer(timeInterval: interval,
+			                             target: self, selector: #selector(updateUI),
+			                             userInfo: nil, repeats: false)
 			timer!.tolerance = interval / 2;
 		}
 	}
@@ -73,19 +75,14 @@ class CountdownInterfaceController: WKInterfaceController {
 	
 	@IBAction func deleteMenuAction() {
 		WCSession.default().sendMessage(["action" : "delete", "identifier" : self.countdown!.identifier],
-			replyHandler: { (replyInfo: [String : Any]) -> Void in
-				InterfaceController.reload()
-			}, errorHandler: nil)
+			replyHandler: { _ in InterfaceController.reload() }, errorHandler: nil)
 	}
 	
 	func didReceive(_ notification: Notification) {
-		let identifier = notification.object as? String
-		if (identifier == self.countdown?.identifier) {
-			if (identifier != nil) {
-				self.countdown = Countdown.countdownWith(identifier!)
-			}
-			updateUI()
+		if let identifier = notification.object as? String, identifier == self.countdown?.identifier {
+			self.countdown = Countdown.with(identifier)
 		}
+		updateUI()
 	}
 	
 	override func willActivate() {
@@ -93,20 +90,20 @@ class CountdownInterfaceController: WKInterfaceController {
 		updateUI()
 		
 		NotificationCenter.default.removeObserver(self)
-		NotificationCenter.default.addObserver(self, selector: #selector(didReceive(_:)), name: NSNotification.Name(rawValue: "CountdownDidUpdateNotification"), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(didReceive(_:)),
+		                                       name: CountdownDidUpdateNotification, object: nil)
 		
 		if (hasChange) {
-			let data = try? JSONSerialization.data(withJSONObject: self.countdown!.toDictionary(), options: [])
-			if (data != nil) {
-				WCSession.default().sendMessage([ "action" : "update", "identifier" : self.countdown!.identifier, "data" : data! ],
-					replyHandler: { (replyInfo: [String : Any]) -> Void in }, errorHandler: nil)
+			if let data = try? JSONSerialization.data(withJSONObject: self.countdown!.toDictionary(), options: []) {
+				let message: [String : Any] = [ "action" : "update", "identifier" : self.countdown!.identifier, "data" : data ]
+				WCSession.default().sendMessage(message, replyHandler: { _ in }, errorHandler: nil)
 			}
 		}
 		
 		UserDefaults().set(self.countdown?.identifier, forKey: "selectedIdentifier")
-		if (self.countdown != nil) {
-			WCSession.default().sendMessage([ "action" : "update", "lastSelectedCountdownIdentifier" : self.countdown!.identifier ],
-				replyHandler: { (replyInfo: [String : Any]) -> Void in }, errorHandler: nil)
+		if let identifier = self.countdown?.identifier {
+			let message = [ "action" : "update", "lastSelectedCountdownIdentifier" : identifier ]
+			WCSession.default().sendMessage(message, replyHandler: { _ in }, errorHandler: nil)
 		}
 	}
 	

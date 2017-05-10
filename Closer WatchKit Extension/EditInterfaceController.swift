@@ -75,21 +75,21 @@ class EditInterfaceController: WKInterfaceController {
 		for index in 0 ..< rowTypes!.count {
 			let rowController = self.tableView.rowController(at: index) as? DetailsRowController
 			switch rowTypes![index] {
-				case "TypeIdentifier": rowController?.details = (countdown?.type == .timer) ? "Timer" : "Countdown"
-				case "NameIdentifier": rowController?.details = countdown?.name
+				case "TypeIdentifier": rowController!.details = (countdown?.type == .timer) ? "_Timer" : "_Countdown"
+				case "NameIdentifier": rowController!.details = countdown?.name
 				case "EndDateIdentifier":
 					if (countdown?.endDate != nil) {
 						let formatter = DateFormatter()
 						formatter.dateStyle = .short
 						formatter.timeStyle = .short
-						rowController?.details = formatter.string(from: countdown!.endDate! as Date)
-						rowController?.detailsLabel.setTextColor(UIColor.gray)
+						rowController!.details = formatter.string(from: countdown!.endDate!)
+						rowController!.detailsLabel.setTextColor(UIColor.gray)
 					} else {
-						rowController?.details = "No date"
-						rowController?.detailsLabel.setTextColor(UIColor.red) }
-				case "MessageIdentifier": rowController?.details = countdown?.message
-				case "DurationsIdentifier": rowController?.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : "None"
-				case "StyleIdentifier": rowController?.details = countdown?.style.toString()!.capitalized
+						rowController!.details = NSLocalizedString("label.no-date.name", comment: "")
+						rowController!.detailsLabel.setTextColor(UIColor.red) }
+				case "MessageIdentifier": rowController!.details = countdown?.message
+				case "DurationsIdentifier": rowController!.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : "_None"
+				case "StyleIdentifier": rowController!.details = countdown?.style.name
 				default: break
 			}
 		}
@@ -106,30 +106,29 @@ class EditInterfaceController: WKInterfaceController {
 	
 	override func table(_ table: WKInterfaceTable, didSelectRowAt rowIndex: Int) {
 		switch rowTypes![rowIndex] {
-			case "TypeIdentifier":		setTypeAction()
-			case "NameIdentifier":		setNameAction()
+			case "TypeIdentifier":	setTypeAction()
+			case "NameIdentifier":	setNameAction()
 			case "EndDateIdentifier":	setEndDateAction()
 			case "MessageIdentifier":	setMessageAction()
 			case "DurationsIdentifier": setDurationsAction()
-			case "StyleIdentifier":		setStyleAction()
-			case "DeleteIdentifier":	deleteAction()
-			case "CreateIdentifier":		saveAction()
-			case "SaveIdentifier":		saveAction()
+			case "StyleIdentifier":	 setStyleAction()
+			case "DeleteIdentifier": deleteAction()
+			case "CreateIdentifier", "SaveIdentifier":
+				saveAction()
 			default: break
 		}
 	}
 	
 	func setTypeAction() {
-		
 		pushController(withName: "EditInterface", context: countdown)
 		
-		let message = "Countdown for remaining duration until a date, or timer for specific durations";
-		presentAlert(withTitle: "", message: message, preferredStyle: .actionSheet, actions: [
-			WKAlertAction(title: "Countdown", style: WKAlertActionStyle.default, handler: { _ in
-				self.countdown?.type = .countdown; }),
-			WKAlertAction(title: "Timer", style: WKAlertActionStyle.default, handler: { _ in
-				self.countdown?.type = .timer; })
-		])
+		let actions = [
+			WKAlertAction(title: NSLocalizedString("prompt.type.countdown.name", comment: ""), style: .default,
+			              handler: { _ in self.countdown?.type = .countdown; }),
+			WKAlertAction(title: NSLocalizedString("prompt.type.timer.name", comment: ""), style: .default,
+			              handler: { _ in self.countdown?.type = .timer; }) ]
+		presentAlert(withTitle: "", message: NSLocalizedString("prompt.type.message", comment: ""),
+		             preferredStyle: .actionSheet, actions: actions)
 	}
 	
 	func setNameAction() {
@@ -146,18 +145,15 @@ class EditInterfaceController: WKInterfaceController {
 	
 	func setMessageAction() {
 		presentTextInputController(withSuggestions: nil, allowedInputMode: .plain) { (results : [Any]?) -> Void in
-			if (results?.first as? String != nil) {
-				self.countdown!.message = results?.first as? String
+			if let result = results?.first as? String {
+				self.countdown!.message = result
 			} }
 	}
 
 	func setDurationsAction() {
 		if let count = countdown!.durations?.count, count > 0 {
 			let names = [String](repeating: "DurationInterface", count: count)
-			var contexts = [[String : Any]]()
-			for index in 0..<count {
-				contexts.append([ "countdown" : countdown!, "durationIndex" : index ])
-			}
+			let contexts = (0..<count).map { [ "countdown" : countdown!, "durationIndex" : $0 ] }
 			presentController(withNames: names, contexts: contexts)
 		} else {
 			// Show "No durations" page (with intructions to add duration on iPhone app)
@@ -170,15 +166,13 @@ class EditInterfaceController: WKInterfaceController {
 	}
 	
 	func deleteAction() {
-		let title = "Delete this " + ((countdown?.type == .timer) ? "timer" : "countdown") + "?"
+		let title = "_Delete this " + ((countdown?.type == .timer) ? "timer" : "countdown") + "?"
 		presentAlert(withTitle: title, message: nil, preferredStyle: .actionSheet, actions: [
-			WKAlertAction(title: "Delete", style: .destructive, handler: { _ in
-				WCSession.default().sendMessage(["action" : "delete", "identifier" : self.countdown!.identifier],
-					replyHandler: { (replyInfo: [String : Any]) -> Void in
-						self.dismiss()
-					}, errorHandler: nil)
+			WKAlertAction(title: NSLocalizedString("menu.action.delete", comment: ""), style: .destructive, handler: { _ in
+				let message = ["action" : "delete", "identifier" : self.countdown!.identifier]
+				WCSession.default().sendMessage(message, replyHandler: { _ in self.dismiss() }, errorHandler: nil)
 			}),
-			WKAlertAction(title: "Cancel", style: .cancel, handler: { _ in })
+			WKAlertAction(title: NSLocalizedString("generic.cancel", comment: ""), style: .cancel, handler: { _ in })
 		])
 	}
 	
@@ -188,14 +182,7 @@ class EditInterfaceController: WKInterfaceController {
 		if (self.options != nil && !self.options!.contains(.ShowAsCreate)) {
 			message["identifier"] = countdown!.identifier }
 		WCSession.default().sendMessage(message,
-			replyHandler: { (replyInfo: [String : Any]) -> Void in
-				print(replyInfo)
-			}) { (error: Error) -> Void in
-				print(error)
+			replyHandler: { (replyInfo) in print(replyInfo) }) { (error) -> Void in print(error)
 		}
-	}
-	
-	override func didDeactivate() {
-		super.didDeactivate()
 	}
 }

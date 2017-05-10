@@ -9,27 +9,21 @@
 import WatchKit
 import WatchConnectivity
 
+let CountdownDidUpdateNotification = Notification.Name(rawValue: "CountdownDidUpdateNotification")
+
 class SessionDelegate: NSObject, WCSessionDelegate {
 	
 	@available(watchOSApplicationExtension 2.2, *)
-	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-		
-	}
+	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
 	
 	func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-		if (message["update"] is Bool && (message["update"]! as! Bool) == true) {
+		if let updated = message["update"] as? Bool, updated {
 			InterfaceController.reload()
 			
 			let identifier = message["identifier"] as? String
-			var identifiers: [String]? = (identifier != nil) ? [identifier!] : nil
-			if (identifiers == nil) {
-				identifiers = Countdown.allCountdowns().map({ (countdown: Countdown) -> String in
-					return countdown.identifier })
-			}
-			if (identifiers != nil) {
-				for identifier in identifiers! {
-					NotificationCenter.default.post(name: Notification.Name(rawValue: "CountdownDidUpdateNotification"), object: identifier)
-				}
+			let identifiers = (identifier != nil) ? [identifier!] : Countdown.all.map { $0.identifier }
+			identifiers.forEach {
+				NotificationCenter.default.post(name: CountdownDidUpdateNotification, object: $0)
 			}
 		}
 		replyHandler(["result" : "OK"])
@@ -38,57 +32,45 @@ class SessionDelegate: NSObject, WCSessionDelegate {
 
 class InterfaceController: WKInterfaceController {
 	
-	private static var __once: () = { () -> Void in
-			let session = WCSession.default()
-			InterfaceController.sessionDelegate = SessionDelegate()
-			session.delegate = InterfaceController.sessionDelegate
-			session.activate()
-		}()
-	
-	fileprivate static var sessionDelegate: SessionDelegate?
-	fileprivate static var once: Int = 0
-	fileprivate static var countdowns = [Countdown]()
+	private static let sessionDelegate = SessionDelegate()
+	private static var countdowns = [Countdown]()
 	
 	override func awake(withContext context: Any?) {
 		super.awake(withContext: context)
 		
-		_ = InterfaceController.__once
+		let session = WCSession.default()
+		session.delegate = InterfaceController.sessionDelegate
+		session.activate()
 		
 		InterfaceController.reload()
 	}
 	
-	fileprivate class func hasChange() -> Bool {
-		
-		let newCountdowns = Countdown.allCountdowns()
+	/// Returns true if countdowns list need refreshing
+	private static var needsReload: Bool {
+		let newCountdowns = Countdown.all
 		var index = 0
 		if (newCountdowns.count == self.countdowns.count) {
 			for countdown in newCountdowns {
-				if (countdown.identifier == self.countdowns[index].identifier &&
+				let matching = (countdown.identifier == self.countdowns[index].identifier &&
 					countdown.type == self.countdowns[index].type &&
-					countdown.name == self.countdowns[index].name) {
-				} else {
-					break
+					countdown.name == self.countdowns[index].name)
+				if (!matching) {
+					return true
 				}
 				index += 1
 			}
 		}
-		return (index != newCountdowns.count)
+		return false
 	}
 	
 	class func reload() {
-		if (self.hasChange()) {
-			self.countdowns = Countdown.allCountdowns()
-			
-			var names = [String]()
-			var contexts = [Countdown]()
-			for countdown in self.countdowns {
-				names.append((countdown.type == .timer) ? "TimerItem" : "CountdownItem")
-				contexts.append(countdown)
-			}
-			if (contexts.count == 0) { // No countdowns, show error message
+		if (self.needsReload || Countdown.all.count == 0) {
+			self.countdowns = Countdown.all
+			let names = self.countdowns.map { ($0.type == .timer) ? "TimerItem" : "CountdownItem" }
+			if (names.count > 0) {
+				WKInterfaceController.reloadRootControllers(withNames: names, contexts: self.countdowns)
+			} else { // No countdowns, show error message
 				WKInterfaceController.reloadRootControllers(withNames: ["NoCountdowns"], contexts: [])
-			} else {
-				WKInterfaceController.reloadRootControllers(withNames: names, contexts: contexts)
 			}
 		}
 	}
@@ -96,9 +78,5 @@ class InterfaceController: WKInterfaceController {
 	override func willActivate() {
 		super.willActivate()
 		InterfaceController.reload()
-	}
-	
-	override func didDeactivate() {
-		super.didDeactivate()
 	}
 }

@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6R1-w5-qUn">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6R1-w5-qUn">
+    <device id="watch38" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="10032"/>
+        <deployment identifier="watchOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="12029"/>
     </dependencies>
     <scenes>
         <!--Timer-->
@@ -11,7 +15,7 @@
                 <controller identifier="TimerItem" title="Timer" id="P3y-OZ-n9y" customClass="TimerInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
                         <separator alignment="left" id="MBC-hE-esC">
-                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </separator>
                         <group width="1" height="187" alignment="left" layout="vertical" id="FLU-cf-yDY">
                             <items>
@@ -19,7 +23,7 @@
                                     <items>
                                         <imageView width="74" height="74" alignment="left" id="jxL-n6-dz9"/>
                                         <separator alignment="left" id="dwV-PI-wdx">
-                                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </separator>
                                         <timer alignment="left" verticalAlignment="center" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="KUB-aE-1NY">
                                             <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
@@ -30,7 +34,7 @@
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                                 <separator alignment="left" id="sva-oQ-etF">
-                                    <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </separator>
                                 <button width="1" alignment="left" title="Pause" id="2Pc-Pw-Pto">
                                     <connections>
@@ -67,7 +71,7 @@
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Type" id="PIS-Fw-ocI"/>
                                             <label height="1" alignment="right" verticalAlignment="center" text="Label" id="j1j-vs-X9L">
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </label>
                                         </items>
                                     </group>
@@ -81,7 +85,7 @@
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Name" id="SOJ-bm-NtB"/>
                                             <label height="1" alignment="right" verticalAlignment="center" text="Label" numberOfLines="2" minimumScaleFactor="0.5" id="OYh-6J-Xoj">
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </label>
                                         </items>
                                     </group>
@@ -95,7 +99,7 @@
                                         <items>
                                             <label alignment="left" verticalAlignment="center" text="End date" id="8oZ-kQ-8jI"/>
                                             <label alignment="left" verticalAlignment="center" text="Label" id="RkA-kn-juQ">
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </label>
                                         </items>
                                     </group>
@@ -109,7 +113,7 @@
                                         <items>
                                             <label alignment="left" verticalAlignment="center" text="Message" id="5gX-as-2kt"/>
                                             <label alignment="left" verticalAlignment="center" text="Label" numberOfLines="0" id="dRK-ta-L7q">
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </label>
                                         </items>
                                     </group>
@@ -123,7 +127,7 @@
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Durations" id="jpI-lb-6Wl"/>
                                             <label height="1" alignment="right" verticalAlignment="center" text="Label" id="bwI-Te-YQY">
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </label>
                                         </items>
                                     </group>
@@ -137,7 +141,7 @@
                                         <items>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Theme" id="AeQ-u9-PnL"/>
                                             <label height="1" alignment="right" verticalAlignment="center" text="Label" id="4JT-pf-WGn">
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </label>
                                         </items>
                                     </group>
@@ -150,10 +154,10 @@
                                     <group key="rootItem" width="1" alignment="left" id="GLt-oi-wyK">
                                         <items>
                                             <label height="1" alignment="center" verticalAlignment="center" text="Delete" textAlignment="center" id="XN0-b4-OqE">
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </label>
                                         </items>
-                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </group>
                                 </tableRow>
                                 <tableRow identifier="CreateIdentifier" id="4qA-od-BjV">
@@ -191,14 +195,14 @@
                     <items>
                         <table alignment="left" id="wy0-2f-xE1">
                             <items>
-                                <tableRow identifier="ThemeIdentifier" id="yXq-fJ-Xum" customClass="ThemeRowController" customModule="Closer_WatchKit_Extension">
+                                <tableRow identifier="ThemeIdentifier" id="yXq-fJ-Xum" customClass="ThemeRowController" customModule="Closer_Watch_Extension">
                                     <group key="rootItem" width="1" alignment="left" id="hN8-zp-6Xl">
                                         <items>
                                             <imageView width="20" height="20" alignment="left" verticalAlignment="center" image="theme-row-accessory" contentMode="center" id="sZb-jx-LOR">
-                                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </imageView>
                                             <separator alignment="left" id="hzv-lT-L4j">
-                                                <color key="color" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <color key="color" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             </separator>
                                             <label height="1" alignment="left" verticalAlignment="center" text="Label" id="di0-Ej-1H6"/>
                                         </items>
@@ -269,7 +273,7 @@
                             <items>
                                 <label alignment="center" text="No durations" textAlignment="center" id="g0P-VD-Byg"/>
                                 <label alignment="center" text="Open Closer &amp; Closer on your iPhone and add new durations" textAlignment="center" numberOfLines="0" id="n5g-8A-b0C">
-                                    <color key="textColor" white="0.49820106907894735" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" red="0.49820107221603394" green="0.49820107221603394" blue="0.49820107221603394" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                             </items>
@@ -285,13 +289,13 @@
                 <controller identifier="CountdownItem" title="Countdown" id="Nfd-Sl-zfc" customClass="CountdownInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
                         <separator alignment="left" id="FOX-g1-lje">
-                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </separator>
                         <group width="1" alignment="left" id="F0L-YK-DlW">
                             <items>
                                 <imageView width="74" height="74" alignment="left" id="8iY-5N-HnJ"/>
                                 <separator alignment="left" id="KE7-E8-zGQ">
-                                    <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </separator>
                                 <timer alignment="left" verticalAlignment="center" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="N6V-Lt-cO0">
                                     <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>
@@ -302,7 +306,7 @@
                             <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                         </label>
                         <separator alignment="left" id="YJO-c0-j8k">
-                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </separator>
                         <button width="1" alignment="left" title="Edit" id="Tp5-aA-UPG">
                             <connections>
@@ -325,7 +329,7 @@
                 <controller identifier="DatePicker" hidesWhenLoading="NO" id="kGP-69-6gR" customClass="DatePickerInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
                         <label alignment="left" text="Time" id="E5r-39-cE2">
-                            <color key="textColor" white="0.50078124999999996" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="textColor" red="0.50078123807907104" green="0.50078123807907104" blue="0.50078123807907104" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </label>
                         <group width="1" alignment="left" id="G5p-TS-CLj">
                             <items>
@@ -343,10 +347,10 @@
                             </items>
                         </group>
                         <separator alignment="left" id="m4m-Cg-XXI">
-                            <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </separator>
                         <label alignment="left" text="Date" id="dBV-WS-Jnh">
-                            <color key="textColor" white="0.50385237068965516" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="textColor" red="0.50385236740112305" green="0.50385236740112305" blue="0.50385236740112305" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </label>
                         <group width="1" alignment="left" id="byN-EX-DDa">
                             <items>
@@ -406,14 +410,14 @@
                 <glanceController topTemplateType="body1Medium" bottomTemplateType="groupBody1Footer" id="Aqf-9n-ola" customClass="GlanceInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
                         <label alignment="left" text="Closer &amp; Closer" id="OR2-bJ-PtH">
-                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </label>
                         <label alignment="left" text="Title" minimumScaleFactor="0.5" id="Da9-UV-tEt"/>
                         <group alignment="left" id="C5u-oM-nrV">
                             <items>
                                 <imageView width="74" height="74" alignment="left" id="BNc-ff-TdN"/>
                                 <separator alignment="left" id="Ols-dc-1gI">
-                                    <color key="color" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="color" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 </separator>
                                 <timer alignment="left" verticalAlignment="center" textAlignment="left" numberOfLines="0" minimumScaleFactor="0.5" enabled="YES" format="abbreviated" previewedSeconds="95696" id="Lsa-Rz-BmJ">
                                     <calendarUnit key="units" day="YES" hour="YES" minute="YES" second="YES"/>

@@ -18,7 +18,7 @@ class ThemeRowController: NSObject {
 	}
 	
 	var image: UIImage? {
-		didSet { imageView.setImage(image?.withRenderingMode(.alwaysTemplate)) }
+		didSet { imageView.setImage(image) }
 	}
 }
 
@@ -27,25 +27,25 @@ class ThemeInterfaceController: WKInterfaceController {
 	@IBOutlet var tableView: WKInterfaceTable!
 	
 	var options: EditOption?
-	fileprivate var countdown: Countdown?
+	fileprivate var countdown: Countdown!
 	
 	override func awake(withContext context: Any?) {
 		super.awake(withContext: context)
 		
-		countdown = context as? Countdown
+		countdown = context as! Countdown
 	}
 	
 	func reloadData() {
-		
-		let count = Int(ColorStyle.numberOfStyle.rawValue)
-		tableView.setNumberOfRows(count, withRowType: "ThemeIdentifier")
-		for index in 0 ..< count {
-			let rowController = tableView.rowController(at: index) as? ThemeRowController
-			let colorStyle = ColorStyle(rawValue: UInt(index))
-			rowController?.title = colorStyle?.toString()?.capitalized
-			rowController?.titleLabel.setTextColor((countdown?.style == colorStyle) ? UIColor.white : UIColor.gray)
-			rowController?.imageView.setTintColor(UIColor(colorStyle: colorStyle!))
-			rowController?.image = UIImage(named: "theme-row-accessory")
+		let styles = ColorStyle.styles
+		tableView.setNumberOfRows(styles.count, withRowType: "ThemeIdentifier")
+		var index = 0
+		for style in styles {
+			let rowController = tableView.rowController(at: index) as! ThemeRowController
+			rowController.title = style.name
+			rowController.titleLabel.setTextColor((countdown?.style == style) ? .white : .gray)
+			rowController.imageView.setTintColor(UIColor(colorStyle: style))
+			rowController.image = #imageLiteral(resourceName: "theme-row-accessory")
+			index += 1
 		}
 		tableView.scrollToRow(at: Int(countdown!.style.rawValue))
 	}
@@ -56,7 +56,7 @@ class ThemeInterfaceController: WKInterfaceController {
 	}
 	
 	override func table(_ table: WKInterfaceTable, didSelectRowAt rowIndex: Int) {
-		countdown?.style = ColorStyle(rawValue: UInt(rowIndex))!
+		countdown.style = ColorStyle(rawValue: UInt(rowIndex))!
 		dismiss()
 	}
 }

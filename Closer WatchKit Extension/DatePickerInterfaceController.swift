@@ -26,7 +26,7 @@ class DatePickerInterfaceController: WKInterfaceController {
 		
 		self.countdown = context as? Countdown
 		
-		setTitle("Done")
+		setTitle(NSLocalizedString("generic.done", comment: ""))
 		
 		let calendar = Calendar.current
 		let comps = (calendar as NSCalendar).components([.minute, .hour, .day, .month, .year], from: (self.countdown!.endDate != nil) ? self.countdown!.endDate! as Date : Date())
@@ -58,16 +58,15 @@ class DatePickerInterfaceController: WKInterfaceController {
 		var daysItems = [WKPickerItem]()
 		for day in 1 ... 31 {
 			let item = WKPickerItem()
-			//item.caption = "Day"
 			item.title = "\(day)"
 			daysItems.append(item)
 		}
 		daysPicker.setItems(daysItems)
 		
 		// Month
-		let monthsItems = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ].map { (month: String) -> WKPickerItem in
+		let months = NSLocalizedString("months.names", comment: "").components(separatedBy: ",")
+		let monthsItems = months.map { month -> WKPickerItem in
 			let item = WKPickerItem()
-			//item.caption = "Hour" 
 			item.title = month
 			return item
 		}
@@ -78,7 +77,6 @@ class DatePickerInterfaceController: WKInterfaceController {
 		let currentYear = (calendar as NSCalendar).component(.year, from: Date())
 		for year in currentYear ... currentYear+5 {
 			let item = WKPickerItem()
-			//item.caption = "Year"
 			item.title = "\(year-2000)"
 			yearsItems.append(item)
 		}

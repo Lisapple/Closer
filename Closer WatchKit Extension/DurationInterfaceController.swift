@@ -32,18 +32,18 @@ class DurationInterfaceController: WKInterfaceController {
 	override func awake(withContext context: Any?) {
 		super.awake(withContext: context)
 		
-		setTitle("Done")
+		setTitle(NSLocalizedString("generic.done", comment: ""))
 		
 		let contextDict = context as? [String : AnyObject]
 		self.countdown = contextDict!["countdown"] as? Countdown
 		durationIndex = contextDict!["durationIndex"] as? Int
-		label.setText("Duration #\(durationIndex!+1)")
+		label.setText("_Duration #\(durationIndex!+1)")
 		
 		seconds = Int(countdown!.durations![durationIndex!])
 		
 		var daysItems = [WKPickerItem]()
 		for day in 0 ..< 6 {
-			let title = "\(day) " + ((day == 1) ? "day" : "days")
+			let title = "\(day) " + NSLocalizedString((day == 1) ? "picker.label.day" : "picker.label.days", comment: "")
 			daysItems.append(WKPickerItem(title: title))
 		}
 		daysPicker.setItems(daysItems)
@@ -53,7 +53,7 @@ class DurationInterfaceController: WKInterfaceController {
 		
 		var hoursItems = [WKPickerItem]()
 		for hour in 0 ..< 24 {
-			let title = "\(hour) " + ((hour == 1) ? "hour" : "hours")
+			let title = "\(hour) " + NSLocalizedString((hour == 1) ? "picker.label.hour" : "picker.label.hours", comment: "")
 			hoursItems.append(WKPickerItem(title: title))
 		}
 		hoursPicker.setItems(hoursItems)
@@ -63,7 +63,7 @@ class DurationInterfaceController: WKInterfaceController {
 		
 		var minutesItems = [WKPickerItem]()
 		for minute in 0 ..< 60 {
-			let title = "\(minute) " + ((minute == 1) ? "minute" : "minutes")
+			let title = "\(minute) " + NSLocalizedString((minute == 1) ? "picker.label.minute" : "picker.label.minutes", comment: "")
 			minutesItems.append(WKPickerItem(title: title))
 		}
 		minutesPicker.setItems(minutesItems)
@@ -73,7 +73,7 @@ class DurationInterfaceController: WKInterfaceController {
 		
 		var secondsItems = [WKPickerItem]()
 		for second in 0 ..< 60 {
-			let title = "\(second) " + ((second == 1) ? "second" : "seconds")
+			let title = "\(second) " + NSLocalizedString((second == 1) ? "picker.label.second" : "picker.label.seconds", comment: "")
 			secondsItems.append(WKPickerItem(title: title))
 		}
 		secondsPicker.setItems(secondsItems)
@@ -92,14 +92,5 @@ class DurationInterfaceController: WKInterfaceController {
 		
 		let duration = ((days * 24 + hours * 60) + minutes) * 60 + seconds
 		countdown!.durations![durationIndex!] = TimeInterval(duration)
-	}
-	
-	override func willDisappear() {
-		super.willDisappear()
-	}
-	
-	override func didDeactivate() {
-		// This method is called when watch view controller is no longer visible
-		super.didDeactivate()
 	}
 }

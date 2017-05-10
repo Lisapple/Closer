@@ -22,7 +22,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 		
 		let userDefaults = UserDefaults(suiteName: "group.lisacintosh.closer")!
 		let glanceType = GlanceType(string: userDefaults.string(forKey: "glance_type"))
-		countdown = Countdown.countdownWith(glanceType)
+		countdown = Countdown.with(glanceType)
 	}
 	
 	func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
@@ -30,8 +30,8 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 	}
 	
 	func templateForComplication(_ complication: CLKComplication, date: Date?) -> CLKComplicationTemplate? {
-		let text = (self.countdown != nil) ? self.countdown!.shortRemainingDescriptionAtDate(date) : "--"
-		let textProvider = CLKSimpleTextProvider(text: text, shortText: self.countdown?.shortestRemainingDescriptionAtDate(date))
+		let text = (self.countdown != nil) ? self.countdown!.shortRemainingDescription(forDate: date) : "--"
+		let textProvider = CLKSimpleTextProvider(text: text, shortText: self.countdown?.shortestRemainingDescription(forDate: date))
 		let progression: Float = (self.countdown != nil) ? Float(self.countdown!.progression(atDate: date)) : 0
 		var template: CLKComplicationTemplate?
 		
@@ -58,18 +58,14 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 				aTemplate.textProvider = textProvider
 				template = aTemplate
 				break
-			case .utilitarianLarge: break // Not supported now
-			case .extraLarge: break
-			case .utilitarianSmallFlat: break
+			case .utilitarianLarge, .extraLarge, .utilitarianSmallFlat: break // Not supported now
 		}
 		return template
 	}
 	
 	func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
-		
-		let template = templateForComplication(complication, date: nil)
-		if (template != nil) {
-			let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template!)
+		if let template = templateForComplication(complication, date: nil) {
+			let entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
 			handler(entry)
 		} else {
 			handler(nil)
@@ -96,16 +92,14 @@ class ComplicationController: NSObject, CLKComplicationDataSource, WCSessionDele
 			var entries = [CLKComplicationTimelineEntry]()
 			for _ in 0 ..< limit {
 				let nextDate = Date(timeIntervalSinceNow: timeInterval)
-				if (nextDate.timeIntervalSince(countdown!.endDate! as Date) >= 0) {
+				if (nextDate.timeIntervalSince(countdown!.endDate!) >= 0) {
 					break
 				}
 				let template = templateForComplication(complication, date: nextDate)
 				let entry = CLKComplicationTimelineEntry(date: nextDate, complicationTemplate: template!)
-				timeInterval += countdown!.timeIntervalForNextUpdateAtDate(nextDate)
+				timeInterval += countdown!.timeIntervalForNextUpdate(forDate: nextDate)
 				entries.append(entry)
 			}
-			//print(entries.map { (entry: CLKComplicationTimelineEntry) -> String in
-			//	return ((entry.complicationTemplate as! CLKComplicationTemplateUtilitarianSmallRingText).textProvider as! CLKSimpleTextProvider).text })
 			handler(entries)
 		} else {
 			handler(nil)

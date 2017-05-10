@@ -22,12 +22,13 @@ class TimerInterfaceController: WKInterfaceController {
 	fileprivate var timer: Timer?
 	fileprivate var paused: Bool = false {
 		didSet {
-			toogleButton?.setTitle((paused) ? "Resume" : "Pause")
+			toogleButton?.setTitle(
+				NSLocalizedString((paused) ? "menu.action.resume" : "menu.action.pause", comment: ""))
 			self.updateUI()
 		}
 	}
 	
-	fileprivate var countdown: Countdown? = nil
+	fileprivate var countdown: Countdown!
 	fileprivate var hasChange: Bool = false
 	
 	override func awake(withContext context: Any?) {
@@ -40,14 +41,14 @@ class TimerInterfaceController: WKInterfaceController {
 		
 		updateUI()
 		
-		addMenuItem(with: WKMenuItemIcon.add, title: "New", action: #selector(newMenuAction))
+		addMenuItem(with: .add, title: NSLocalizedString("menu.action.new", comment: ""), action: #selector(newMenuAction))
 		if (paused) {
-			addMenuItem(withImageNamed: "resume-button", title: "Resume", action: #selector(resumeMenuAction)) }
+			addMenuItem(withImageNamed: "resume-button", title: NSLocalizedString("menu.action.resume", comment: ""), action: #selector(resumeMenuAction)) }
 		else {
-			addMenuItem(with: WKMenuItemIcon.pause, title: "Pause", action: #selector(pauseMenuAction)) }
+			addMenuItem(with: .pause, title: NSLocalizedString("menu.action.pause", comment: ""), action: #selector(pauseMenuAction)) }
 		
-		addMenuItem(withImageNamed: "reset-button", title: "Reset", action: #selector(resetMenuAction))
-		addMenuItem(with: WKMenuItemIcon.trash, title: "Delete", action: #selector(deleteMenuAction))
+		addMenuItem(withImageNamed: "reset-button", title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
 		
 		if (countdown?.identifier == UserDefaults().string(forKey: "selectedIdentifier")) {
 			self.becomeCurrentPage()
@@ -73,12 +74,12 @@ class TimerInterfaceController: WKInterfaceController {
 				let nextDurationIndex = (countdown!.durationIndex!+1) % countdown!.durations!.count
 				components.second = Int(countdown!.durations![nextDurationIndex])
 				let nextDate = calendar.date(from: components)
-				descriptionLabel.setText("Next: \(DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium))")
+				descriptionLabel.setText("_Next: \(DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium))")
 			} else {
 				// "of [total duration]"
 				components.second = Int(duration)
 				let date = calendar.date(from: components)
-				descriptionLabel.setText("of \(DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium))")
+				descriptionLabel.setText("_of \(DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium))")
 			}
 			
 			if (timer == nil) {
@@ -93,7 +94,7 @@ class TimerInterfaceController: WKInterfaceController {
 	}
 	
 	func updateProgressionImage() {
-		self.imageView.setImage(self.countdown!.progressionImageWithSize(CGSize(width: 74, height: 74), cornerRadius: 74/2))
+		self.imageView.setImage(self.countdown!.progressionImage(size: CGSize(width: 74, height: 74), cornerRadius: 74/2))
 	}
 	
 	@IBAction func newMenuAction() {
@@ -121,9 +122,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItem(withImageNamed: "resume-button", title: "Resume", action: #selector(resumeMenuAction))
-		addMenuItem(withImageNamed: "reset-button", title: "Reset", action: #selector(resetMenuAction))
-		addMenuItem(with: WKMenuItemIcon.trash, title: "Delete", action: #selector(deleteMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "resume-button"), title: NSLocalizedString("menu.action.resume", comment: ""), action: #selector(resumeMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title:NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func resumeMenuAction() {
@@ -136,9 +137,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItem(with: WKMenuItemIcon.pause, title: "Pause", action: #selector(pauseMenuAction))
-		addMenuItem(withImageNamed: "reset-button", title: "Reset", action: #selector(resetMenuAction))
-		addMenuItem(with: WKMenuItemIcon.trash, title: "Delete", action: #selector(deleteMenuAction))
+		addMenuItem(with: .pause, title: NSLocalizedString("menu.action.resume", comment: ""), action: #selector(pauseMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func resetMenuAction() {
@@ -150,9 +151,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItem(with: WKMenuItemIcon.pause, title: "Pause", action: #selector(pauseMenuAction))
-		addMenuItem(withImageNamed: "reset-button", title: "Reset", action: #selector(resetMenuAction))
-		addMenuItem(with: WKMenuItemIcon.trash, title: "Delete", action: #selector(deleteMenuAction))
+		addMenuItem(with: .pause, title: NSLocalizedString("menu.action.pause", comment: ""), action: #selector(pauseMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func editMenuAction() {
@@ -163,19 +164,16 @@ class TimerInterfaceController: WKInterfaceController {
 	
 	@IBAction func deleteMenuAction() {
 		WCSession.default().sendMessage(["action" : "delete", "identifier" : countdown!.identifier],
-			replyHandler: { (replyInfo: [String : Any]) -> Void in
+			replyHandler: { _ in
 				InterfaceController.reload()
 			}, errorHandler: nil)
 	}
 	
 	func didReceive(_ notification: Notification) {
-		let identifier = notification.object as? String
-		if (identifier == self.countdown?.identifier) {
-			if (identifier != nil) {
-				self.countdown = Countdown.countdownWith(identifier!)
-			}
-			updateUI()
+		if let identifier = notification.object as? String, identifier == self.countdown?.identifier {
+			self.countdown = Countdown.with(identifier)
 		}
+		updateUI()
 	}
 	
 	override func willActivate() {
@@ -184,20 +182,19 @@ class TimerInterfaceController: WKInterfaceController {
 		
 		NotificationCenter.default.removeObserver(self)
 		NotificationCenter.default.addObserver(self, selector: #selector(didReceive(_:)),
-		                                       name: NSNotification.Name(rawValue: "CountdownDidUpdateNotification"), object: nil)
+		                                       name: CountdownDidUpdateNotification, object: nil)
 		
 		if (hasChange) {
-			let data = try? JSONSerialization.data(withJSONObject: self.countdown!.toDictionary(), options: [])
-			if (data != nil) {
-				WCSession.default().sendMessage([ "action" : "update", "identifier" : self.countdown!.identifier, "data" : data! ],
-				                                replyHandler: { (replyInfo: [String : Any]) -> Void in }, errorHandler: nil)
+			if let data = try? JSONSerialization.data(withJSONObject: self.countdown!.toDictionary(), options: []) {
+				let message: [String : Any] = [ "action" : "update", "identifier" : self.countdown!.identifier, "data" : data ]
+				WCSession.default().sendMessage(message, replyHandler: { _ in }, errorHandler: nil)
 			}
 		}
 		
 		UserDefaults().set(self.countdown?.identifier, forKey: "selectedIdentifier")
-		if (self.countdown != nil) {
-			WCSession.default().sendMessage([ "action" : "update", "lastSelectedCountdownIdentifier" : self.countdown!.identifier ],
-				replyHandler: { (replyInfo: [String : Any]) -> Void in }, errorHandler: nil)
+		if let countdown = self.countdown {
+			let message = [ "action" : "update", "lastSelectedCountdownIdentifier" : countdown.identifier ]
+			WCSession.default().sendMessage(message, replyHandler: { _ in }, errorHandler: nil)
 		}
 	}
 	

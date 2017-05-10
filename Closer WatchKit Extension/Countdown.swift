@@ -38,7 +38,7 @@ enum GlanceType: UInt {
 class Countdown: NSObject {
 	
 	var identifier: String {
-		get { return _identifier }
+		return _identifier
 	}
 	fileprivate var _identifier: String
 	var type: CountdownType = .countdown
@@ -50,23 +50,27 @@ class Countdown: NSObject {
 	var names: [String]?
 	var durationIndex: Int?
 	var currentDuration: TimeInterval? {
-		get {
-			if let durations = durations, let durationIndex = durationIndex {
-				return durations[durationIndex]
-			}
-			return nil
+		if let durations = durations, let durationIndex = durationIndex {
+			return durations[durationIndex]
 		}
+		return nil
+		
 	}
 	var currentName: String? {
-		get {
-			if let names = names, let durationIndex = durationIndex {
-				return names[durationIndex]
-			}
-			return nil
+		if let names = names, let durationIndex = durationIndex {
+			return names[durationIndex]
 		}
+		return nil
 	}
 	
-	class func allCountdowns() -> [Countdown] {
+	private var dateFormatter: DateFormatter {
+		let formatter = DateFormatter()
+		formatter.timeStyle = .medium
+		formatter.dateStyle = .medium
+		return formatter
+	}
+	
+	static var all: [Countdown] {
 		let context = WCSession.default().receivedApplicationContext
 		if let array = context["countdowns"] as? [[String : AnyObject]] {
 			return array.map { Countdown(dictionary: $0) }
@@ -74,16 +78,15 @@ class Countdown: NSObject {
 		return [Countdown]()
 	}
 	
-	class func countdownWith(_ identifier: String) -> Countdown? {
-		return allCountdowns().filter { $0.identifier == identifier }.first
+	class func with(_ identifier: String) -> Countdown? {
+		return all.filter { $0.identifier == identifier }.first
 	}
 	
-	class func countdownWith(_ glanceType: GlanceType) -> Countdown? {
+	class func with(_ glanceType: GlanceType) -> Countdown? {
 		var countdown: Countdown?
-		let countdowns = allCountdowns()
 		if (glanceType == .closestCountdown) {
 			// Get all countdowns sorted by endDate
-			var sortedCountdowns = countdowns.filter { $0.type == .countdown }
+			var sortedCountdowns = all.filter { $0.type == .countdown }
 			sortedCountdowns.sort(by: { (countdown1: Countdown, countdown2: Countdown) -> Bool in
 				if let endDate = countdown1.endDate, let endDate2 = countdown2.endDate {
 					return (endDate.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
@@ -97,7 +100,7 @@ class Countdown: NSObject {
 		}
 		else if (glanceType == .closestCountdown) {
 			// Get all timers sorted by endDate
-			var sortedTimers = countdowns.filter { $0.type == .timer }
+			var sortedTimers = all.filter { $0.type == .timer }
 			sortedTimers.sort(by: { (timer1: Countdown, timer2: Countdown) -> Bool in
 				if let endDate = timer1.endDate, let endDate2 = timer2.endDate {
 					return (endDate.timeIntervalSince(endDate2) < 0) // Return true if endDate1 < endDate2 (i.e. endDate1 - endDate2 < 0)
@@ -122,7 +125,7 @@ class Countdown: NSObject {
 		}
 		if (glanceType == .lastSelectedPage || countdown == nil) {
 			let identifier = UserDefaults().string(forKey: "selectedIdentifier")
-			countdown = countdowns.filter { $0.identifier == identifier }.first ?? countdowns.first
+			countdown = all.filter { $0.identifier == identifier }.first ?? all.first
 		}
 		return countdown
 	}
@@ -142,10 +145,7 @@ class Countdown: NSObject {
 		          type: type, style: style )
 		
 		if let endDate = dictionary["endDate"] as? String {
-			let formatter = DateFormatter()
-			formatter.timeStyle = .medium
-			formatter.dateStyle = .medium
-			self.endDate = formatter.date(from: endDate)
+			self.endDate = dateFormatter.date(from: endDate)
 		}
 		self.message = dictionary["message"] as? String
 		self.durations = dictionary["durations"] as? [TimeInterval]
@@ -154,12 +154,12 @@ class Countdown: NSObject {
 	}
 	
 	init(name: String?, identifier: String?, type: CountdownType?, style: ColorStyle?) {
-		self.name = (name != nil) ? name! : ((type != nil && type! == .timer) ? "New timer" : "New countdown")
+		self.name = name ?? NSLocalizedString((type == .timer) ? "new.timer.name" : "new.countdown.name", comment: "")
 		_identifier = identifier ?? UUID().uuidString
 		super.init()
 		
-		if (type != nil) { self.type = type! }
-		if (style != nil) { self.style = style! }
+		if let type = type { self.type = type }
+		if let style = style { self.style = style }
 	}
 	
 	func toDictionary() -> [String : Any] {
@@ -167,10 +167,7 @@ class Countdown: NSObject {
 		if let message = message {
 			dictionary["message"] = message }
 		if let endDate = endDate {
-			let formatter = DateFormatter()
-			formatter.timeStyle = .medium
-			formatter.dateStyle = .medium
-			dictionary["endDate"] = formatter.string(from: endDate)
+			dictionary["endDate"] = dateFormatter.string(from: endDate)
 		}
 		if let durations = durations {
 			dictionary["durations"] = durations }
@@ -189,24 +186,22 @@ extension Countdown {
 		if (self.type == .timer) { // Timer
 			if let durations = self.durations, let durationIndex = self.durationIndex, durations.count > 0 {
 				let duration = durations[durationIndex]
-				let endDate = (date != nil) ? self.endDate!.addingTimeInterval(-date!.timeIntervalSinceNow) : self.endDate
-				let remaining = (endDate != nil) ? Date().timeIntervalSince(endDate!) : 0
-				progression = 1 - (endDate?.timeIntervalSinceNow ?? remaining) / duration
+				let endDate = self.endDate?.addingTimeInterval(-(date?.timeIntervalSinceNow ?? 0))
+				progression = 1 - (endDate?.timeIntervalSinceNow ?? 0) / duration
 			}
 		} else { // Countdown
-			if let endDate = (date != nil) ? self.endDate!.addingTimeInterval(-date!.timeIntervalSinceNow) : self.endDate {
-				let seconds = max(floor(endDate.timeIntervalSinceNow), 0) as Double
-				progression = 1 - (log(seconds / (60 * M_E)) - 1) / 14;
-			}
+			let endDate = self.endDate!.addingTimeInterval(-(date?.timeIntervalSinceNow ?? 0))
+			let seconds = max(floor(endDate.timeIntervalSinceNow), 0)
+			progression = 1 - (log(seconds / (60 * M_E)) - 1) / 14;
 		}
 		return progression
 	}
 	
-	func progressionImageWithSize(_ size: CGSize, cornerRadius: CGFloat) -> UIImage { // Countdown: corner radius = 14, Timer = 74/2
+	func progressionImage(size: CGSize, cornerRadius: CGFloat) -> UIImage { // Countdown: corner radius = 14, Timer = 74/2
 		
 		let progress = progression(atDate: nil)
 		
-		let frame = CGRect(origin: CGPoint.zero, size: size)
+		let frame = CGRect(origin: .zero, size: size)
 		UIGraphicsBeginImageContextWithOptions(frame.size, false /* non-opaque */, 0)
 		
 		let bitmapContext = UIGraphicsGetCurrentContext()!
@@ -291,7 +286,7 @@ extension Countdown {
 		return image!
 	}
 	
-	func shortRemainingDescriptionAtDate(_ date: Date?) -> String {
+	func shortRemainingDescription(forDate date: Date?) -> String {
 		if let endDate = (date != nil) ? self.endDate!.addingTimeInterval(-date!.timeIntervalSinceNow) : self.endDate {
 			let days = endDate.timeIntervalSinceNow / (24 * 60 * 60)
 			if (days >= 2) {
@@ -309,7 +304,7 @@ extension Countdown {
 		return "--"
 	}
 	
-	func shortestRemainingDescriptionAtDate(_ date: Date?) -> String {
+	func shortestRemainingDescription(forDate date: Date?) -> String {
 		if let endDate = (date != nil) ? self.endDate!.addingTimeInterval(-date!.timeIntervalSinceNow) : self.endDate {
 			let days = endDate.timeIntervalSinceNow / (24 * 60 * 60)
 			if (days >= 2) {
@@ -327,19 +322,20 @@ extension Countdown {
 		return "--"
 	}
 	
-	func timeIntervalForNextUpdateAtDate(_ date: Date?) -> TimeInterval {
-		if let endDate = (date != nil) ? self.endDate!.addingTimeInterval(-date!.timeIntervalSinceNow) : self.endDate {
+	func timeIntervalForNextUpdate(forDate date: Date?) -> TimeInterval {
+		if let endDate = self.endDate?.addingTimeInterval(-(date?.timeIntervalSinceNow ?? 0)) {
 			let days = endDate.timeIntervalSinceNow / (24 * 60 * 60)
 			if (days >= 2) {
-				return endDate.timeIntervalSinceNow - floor(days) * (24 * 60 * 60) }
-			
+				return endDate.timeIntervalSinceNow - floor(days) * (24 * 60 * 60)
+			}
 			let hours = endDate.timeIntervalSinceNow / (60 * 60)
 			if (hours >= 2) {
-				return endDate.timeIntervalSinceNow - floor(hours) * (60 * 60) }
-			
+				return endDate.timeIntervalSinceNow - floor(hours) * (60 * 60)
+			}
 			let minutes = endDate.timeIntervalSinceNow / 60
 			if (minutes >= 2) {
-				return endDate.timeIntervalSinceNow - floor(minutes) * (60 * 60) }
+				return endDate.timeIntervalSinceNow - floor(minutes) * (60 * 60)
+			}
 			return 1
 		}
 		return 0

@@ -31,15 +31,10 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 		session.activate()
 	}
 	
-	override func awake(withContext context: Any?) {
-		super.awake(withContext: context)
-	}
-	
 	func update () {
-
 		let userDefaults = UserDefaults(suiteName: "group.lisacintosh.closer")!
 		let glanceType = GlanceType(string: userDefaults.string(forKey: "glance_type"))
-		let countdown = Countdown.countdownWith(glanceType)
+		let countdown = Countdown.with(glanceType)
 		if (countdown != nil) {
 			endDate = countdown!.endDate
 			let color = UIColor(colorStyle: countdown!.style)
@@ -58,21 +53,21 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 					}
 					timerLabel.setTextColor(color)
 					
-					imageView.setImage(countdown!.progressionImageWithSize(CGSize(width: 74, height: 74), cornerRadius: 74/2))
+					imageView.setImage(countdown!.progressionImage(size: CGSize(width: 74, height: 74), cornerRadius: 74/2))
 					
 					// "of [total duration]"
 					var components = DateComponents()
 					components.second = Int(duration)
 					let calendar = Calendar.current
 					let date = calendar.date(from: components)
-					descriptionLabel.setText("of \(DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium))")
+					descriptionLabel.setText("_of \(DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium))")
 					
 					if (durations.count > 1) {
 						// "Next: [next duration]"
 						var nextComponents = DateComponents()
 						nextComponents.second = Int(durations[(index+1) % durations.count])
 						let nextDate = calendar.date(from: nextComponents)
-						detailsLabel.setText("Next: \(DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium))")
+						detailsLabel.setText("_Next: \(DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium))")
 					}
 					detailsLabel.setHidden(durations.count < 2) // Hide only one or no durations
 				}
@@ -81,18 +76,18 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 					timerLabel.setDate(endDate!)
 					timerLabel.setTextColor(color)
 					
-					imageView.setImage(countdown!.progressionImageWithSize(CGSize(width: 74, height: 74), cornerRadius: 14))
+					imageView.setImage(countdown!.progressionImage(size: CGSize(width: 74, height: 74), cornerRadius: 14))
 					
 					let formatter = DateFormatter()
 					formatter.dateStyle = .medium
 					// "before [end date]"
-					descriptionLabel.setText("before \(formatter.string(from: endDate!))")
+					descriptionLabel.setText("_before \(formatter.string(from: endDate!))")
 				}
 				detailsLabel.setHidden(true)
 			}
 			
 		} else { // No countdowns, show error message
-			titleLabel.setText("No Countdowns")
+			titleLabel.setText("_No Countdowns")
 			detailsLabel.setHidden(true)
 		}
 		
