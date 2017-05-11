@@ -60,14 +60,16 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 					components.second = Int(duration)
 					let calendar = Calendar.current
 					let date = calendar.date(from: components)
-					descriptionLabel.setText("_of \(DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium))")
+					let text = DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium)
+					descriptionLabel.setText(LocalizedFormat("glance.timer.label.of@", text))
 					
 					if (durations.count > 1) {
 						// "Next: [next duration]"
 						var nextComponents = DateComponents()
 						nextComponents.second = Int(durations[(index+1) % durations.count])
 						let nextDate = calendar.date(from: nextComponents)
-						detailsLabel.setText("_Next: \(DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium))")
+						let text = DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium)
+						detailsLabel.setText(LocalizedFormat("glance.countdown.label.next@", text))
 					}
 					detailsLabel.setHidden(durations.count < 2) // Hide only one or no durations
 				}
@@ -81,13 +83,13 @@ class GlanceInterfaceController: WKInterfaceController, WCSessionDelegate {
 					let formatter = DateFormatter()
 					formatter.dateStyle = .medium
 					// "before [end date]"
-					descriptionLabel.setText("_before \(formatter.string(from: endDate!))")
+					descriptionLabel.setText(LocalizedFormat("glance.countdown.label.before@", formatter.string(from: endDate!)))
 				}
 				detailsLabel.setHidden(true)
 			}
 			
 		} else { // No countdowns, show error message
-			titleLabel.setText("_No Countdowns")
+			titleLabel.setText(LocalizedString("glance.no-countdown.label"))
 			detailsLabel.setHidden(true)
 		}
 		

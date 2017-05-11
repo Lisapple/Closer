@@ -82,14 +82,15 @@
 		50BBE3CF1B1528A700577858 /* GlanceInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BBE3CE1B1528A700577858 /* GlanceInterfaceController.swift */; };
 		50BEE0D11786F8730086F2B9 /* DurationPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BEE0CF1786F8730086F2B9 /* DurationPickerView.m */; };
 		50BEE0D81786F8EF0086F2B9 /* DurationPickerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BEE0D71786F8EF0086F2B9 /* DurationPickerTableViewCell.m */; };
+		50BF70981EC3D715002DE392 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BF70971EC3D715002DE392 /* Utilities.swift */; };
+		50BF70991EC3DC31002DE392 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50BF709C1EC3DC31002DE392 /* Localizable.strings */; };
+		50BF709A1EC3DC31002DE392 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50BF709C1EC3DC31002DE392 /* Localizable.strings */; };
 		50C025961BBB036F008E4818 /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C025951BBB036F008E4818 /* WatchConnectivity.framework */; };
 		50C5A19212E3361F0013605C /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A19012E3361F0013605C /* DatePickerViewController.m */; };
 		50C5A19312E3361F0013605C /* DatePickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50C5A19112E3361F0013605C /* DatePickerViewController.xib */; };
 		50C5A23A12E33F8B0013605C /* NSDate+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A23912E33F8B0013605C /* NSDate+addition.m */; };
 		50C5A26712E3496C0013605C /* SongPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A26512E3496C0013605C /* SongPickerViewController.m */; };
 		50C5A32712E352590013605C /* Songs in Resources */ = {isa = PBXBuildFile; fileRef = 50C5A32512E352590013605C /* Songs */; };
-		50CA34731EC331A20057960C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50CA34721EC331A20057960C /* Localizable.strings */; };
-		50CA34741EC331A20057960C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50CA34721EC331A20057960C /* Localizable.strings */; };
 		50CA34781EC335C90057960C /* ImportFromWebsiteViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50CA34771EC335C90057960C /* ImportFromWebsiteViewController_Phone.xib */; };
 		50CEFB5E15FCF27F0044AED0 /* NetworkStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CEFB5D15FCF27F0044AED0 /* NetworkStatus.m */; };
 		50CEFB6015FCF3FB0044AED0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50CEFB5F15FCF3FB0044AED0 /* SystemConfiguration.framework */; };
@@ -306,6 +307,9 @@
 		50BEE0D01786F8730086F2B9 /* DurationPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationPickerView.h; path = ../Views/DurationPickerView.h; sourceTree = "<group>"; };
 		50BEE0D61786F8EF0086F2B9 /* DurationPickerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationPickerTableViewCell.h; path = "../View Controllers/DurationPickerTableViewCell.h"; sourceTree = "<group>"; };
 		50BEE0D71786F8EF0086F2B9 /* DurationPickerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DurationPickerTableViewCell.m; path = "../View Controllers/DurationPickerTableViewCell.m"; sourceTree = "<group>"; };
+		50BF70971EC3D715002DE392 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		50BF709B1EC3DC31002DE392 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		50BF709D1EC3DC38002DE392 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		50C025951BBB036F008E4818 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
 		50C5A11312E32E4E0013605C /* UIColor+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+addition.h"; sourceTree = "<group>"; };
 		50C5A18F12E3361F0013605C /* DatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatePickerViewController.h; path = "../View Controllers/DatePickerViewController.h"; sourceTree = "<group>"; };
@@ -319,7 +323,6 @@
 		50C5A32512E352590013605C /* Songs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Songs; sourceTree = "<group>"; };
 		50C5A37012E37AD90013605C /* MessageViewControler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageViewControler.h; path = "../View Controllers/MessageViewControler.h"; sourceTree = "<group>"; };
 		50C5A37112E37AD90013605C /* MessageViewControler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MessageViewControler.m; path = "../View Controllers/MessageViewControler.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50CA34721EC331A20057960C /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		50CA34761EC3354D0057960C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		50CA34771EC335C90057960C /* ImportFromWebsiteViewController_Phone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportFromWebsiteViewController_Phone.xib; path = iPhone/ImportFromWebsiteViewController_Phone.xib; sourceTree = "<group>"; };
 		50CEFB5B15FCD1AE0044AED0 /* ExportToWebsiteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ExportToWebsiteViewController.h; path = "../View Controllers/ExportToWebsiteViewController.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -729,6 +732,7 @@
 				50BBE3CE1B1528A700577858 /* GlanceInterfaceController.swift */,
 				50A28F621BBEAF79006B7097 /* ComplicationController.swift */,
 				50E00D461AC0AAB700784B98 /* ColorExtension.swift */,
+				50BF70971EC3D715002DE392 /* Utilities.swift */,
 				50E00D231AC0AA9000784B98 /* Supporting Files */,
 			);
 			path = "Closer WatchKit Extension";
@@ -738,7 +742,7 @@
 			isa = PBXGroup;
 			children = (
 				50E00D241AC0AA9000784B98 /* Info.plist */,
-				50CA34721EC331A20057960C /* Localizable.strings */,
+				50BF709C1EC3DC31002DE392 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -972,7 +976,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50461BEC1BB8398A00B58E1E /* Images.xcassets in Resources */,
-				50CA34731EC331A20057960C /* Localizable.strings in Resources */,
+				50BF70991EC3DC31002DE392 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -981,7 +985,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50E00D341AC0AA9000784B98 /* Interface.storyboard in Resources */,
-				50CA34741EC331A20057960C /* Localizable.strings in Resources */,
+				50BF709A1EC3DC31002DE392 /* Localizable.strings in Resources */,
 				50E00D361AC0AA9000784B98 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1098,6 +1102,7 @@
 				500B0BDB1BB70F8700D3915F /* DurationInterfaceController.swift in Sources */,
 				50E00D261AC0AA9000784B98 /* InterfaceController.swift in Sources */,
 				500C03841BB96170002CE3F3 /* DatePickerInterfaceController.swift in Sources */,
+				50BF70981EC3D715002DE392 /* Utilities.swift in Sources */,
 				50E00D471AC0AAB700784B98 /* TimerInterfaceController.swift in Sources */,
 				505CC6BA1BB80BFA00B3ECAB /* NoCountdownsInterfaceController.swift in Sources */,
 				50A28F631BBEAF79006B7097 /* ComplicationController.swift in Sources */,
@@ -1157,6 +1162,15 @@
 			);
 			name = ExportToWebsiteViewController_Pad.xib;
 			sourceTree = SOURCE_ROOT;
+		};
+		50BF709C1EC3DC31002DE392 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50BF709B1EC3DC31002DE392 /* en */,
+				50BF709D1EC3DC38002DE392 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
 		};
 		50E00D321AC0AA9000784B98 /* Interface.storyboard */ = {
 			isa = PBXVariantGroup;

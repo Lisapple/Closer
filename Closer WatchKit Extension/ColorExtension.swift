@@ -22,11 +22,11 @@ enum ColorStyle: UInt {
 	
 	var name: String {
 		switch self {
-			case .day:	  return NSLocalizedString("style.day.name", comment: "")
-			case .dawn:	  return NSLocalizedString("style.dawn.name", comment: "")
-			case .oasis:  return NSLocalizedString("style.oasis.name", comment: "")
-			case .spring: return NSLocalizedString("style.spring.name", comment: "")
-			case .night:  return NSLocalizedString("style.night.name", comment: "")
+			case .day:	  return LocalizedString("style.day.name")
+			case .dawn:	  return LocalizedString("style.dawn.name")
+			case .oasis:  return LocalizedString("style.oasis.name")
+			case .spring: return LocalizedString("style.spring.name")
+			case .night:  return LocalizedString("style.night.name")
 		}
 	}
 }

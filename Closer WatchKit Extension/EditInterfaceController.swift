@@ -75,7 +75,7 @@ class EditInterfaceController: WKInterfaceController {
 		for index in 0 ..< rowTypes!.count {
 			let rowController = self.tableView.rowController(at: index) as? DetailsRowController
 			switch rowTypes![index] {
-				case "TypeIdentifier": rowController!.details = (countdown?.type == .timer) ? "_Timer" : "_Countdown"
+				case "TypeIdentifier": rowController!.details = LocalizedString((countdown?.type == .timer) ? "type.timer.name" : "type.countdown.name")
 				case "NameIdentifier": rowController!.details = countdown?.name
 				case "EndDateIdentifier":
 					if (countdown?.endDate != nil) {
@@ -85,10 +85,11 @@ class EditInterfaceController: WKInterfaceController {
 						rowController!.details = formatter.string(from: countdown!.endDate!)
 						rowController!.detailsLabel.setTextColor(UIColor.gray)
 					} else {
-						rowController!.details = NSLocalizedString("label.no-date.name", comment: "")
+						rowController!.details = LocalizedString("label.no-date.name")
 						rowController!.detailsLabel.setTextColor(UIColor.red) }
 				case "MessageIdentifier": rowController!.details = countdown?.message
-				case "DurationsIdentifier": rowController!.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : "_None"
+				case "DurationsIdentifier": rowController!.details = (countdown?.durations != nil) ? "\(countdown!.durations!.count)" : LocalizedString("duration.none")
+				
 				case "StyleIdentifier": rowController!.details = countdown?.style.name
 				default: break
 			}
@@ -123,11 +124,11 @@ class EditInterfaceController: WKInterfaceController {
 		pushController(withName: "EditInterface", context: countdown)
 		
 		let actions = [
-			WKAlertAction(title: NSLocalizedString("prompt.type.countdown.name", comment: ""), style: .default,
+			WKAlertAction(title: LocalizedString("prompt.type.countdown.name"), style: .default,
 			              handler: { _ in self.countdown?.type = .countdown; }),
-			WKAlertAction(title: NSLocalizedString("prompt.type.timer.name", comment: ""), style: .default,
+			WKAlertAction(title: LocalizedString("prompt.type.timer.name"), style: .default,
 			              handler: { _ in self.countdown?.type = .timer; }) ]
-		presentAlert(withTitle: "", message: NSLocalizedString("prompt.type.message", comment: ""),
+		presentAlert(withTitle: "", message: LocalizedString("prompt.type.message"),
 		             preferredStyle: .actionSheet, actions: actions)
 	}
 	
@@ -166,13 +167,13 @@ class EditInterfaceController: WKInterfaceController {
 	}
 	
 	func deleteAction() {
-		let title = "_Delete this " + ((countdown?.type == .timer) ? "timer" : "countdown") + "?"
+		let title = LocalizedString((countdown?.type == .timer) ? "edit.delete.timer.name" : "edit.delete.countdown.name")
 		presentAlert(withTitle: title, message: nil, preferredStyle: .actionSheet, actions: [
-			WKAlertAction(title: NSLocalizedString("menu.action.delete", comment: ""), style: .destructive, handler: { _ in
+			WKAlertAction(title: LocalizedString("menu.action.delete"), style: .destructive, handler: { _ in
 				let message = ["action" : "delete", "identifier" : self.countdown!.identifier]
 				WCSession.default().sendMessage(message, replyHandler: { _ in self.dismiss() }, errorHandler: nil)
 			}),
-			WKAlertAction(title: NSLocalizedString("generic.cancel", comment: ""), style: .cancel, handler: { _ in })
+			WKAlertAction(title: LocalizedString("generic.cancel"), style: .cancel, handler: { _ in })
 		])
 	}
 	

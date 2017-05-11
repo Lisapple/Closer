@@ -1,0 +1,64 @@
+"generic.done" = "OK";
+"generic.cancel" = "Annuler";
+
+// No countdown
+"instruction.message" = "Ouvrez Closer & Closer depuis votre iPhone pour commencer la synchronisation.";
+"new.button.title" = "Créer";
+
+// Countdown
+"new.countdown.name" = "Nouveau décompte";
+
+"countdown.label.before@" = "avant %@";
+
+// Timer
+"new.timer.name" = "Nouveau minuteur";
+
+"timer.label.next@" = "Suivant: %@";
+"timer.label.of@" = "sur %@";
+
+// Themes
+"style.day.name" = "Jour";
+"style.dawn.name" = "Aube";
+"style.oasis.name" = "Oasis";
+"style.spring.name" = "Printemps";
+"style.night.name" = "Nuit";
+
+// Menu actions
+"menu.action.new" = "Nouveau";
+"menu.action.pause" = "Pause";
+"menu.action.resume" = "Reprendre";
+"menu.action.reset" = "Rétablir";
+"menu.action.delete" = "Supprimer";
+
+// Date picker
+"picker.duration.title@" = "Duration %@";
+
+"picker.label.day" = "jour";
+"picker.label.days" = "jours";
+"picker.label.hour" = "heure";
+"picker.label.hours" = "heures";
+"picker.label.minute" = "minute";
+"picker.label.minutes" = "minutes";
+"picker.label.second" = "seconde";
+"picker.label.seconds" = "secondes";
+"months.names" = "Jan,Fev,Mar,Avr,Mai,Juin,Juil,Août,Sept,Oct,Nov,Dec";
+
+// Edit
+"prompt.type.message" = "Décompte avant une certaine date, ou minuteur pour des durées.";
+"prompt.type.timer.name" = "Minuteur";
+"prompt.type.countdown.name" = "Décompte";
+
+"type.timer.name" = "Minuteur";
+"type.countdown.name" = "Décompte";
+
+"edit.delete.countdown.name" = "Supprimer ce décompte?";
+"edit.delete.timer.name" = "Supprimer ce minuteur?";
+
+"duration.none" = "Aucune";
+"label.no-date.name" = "Aucune date";
+
+// Glance
+"glance.timer.label.of@" = "sur %@";
+"glance.timer.label.next@" = "Suivant: %@";
+"glance.countdown.label.before@" = "avant %@";
+"glance.no-countdown.label" = "Aucune décompte";

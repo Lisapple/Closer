@@ -1,0 +1,64 @@
+"generic.done" = "Done";
+"generic.cancel" = "Cancel";
+
+// No countdown
+"instruction.message" = "Open Closer & Closer on your iPhone to sync countdowns";
+"new.button.title" = "New";
+
+// Countdown
+"new.countdown.name" = "New countdown";
+
+"countdown.label.before@" = "before %@";
+
+// Timer
+"new.timer.name" = "New timer";
+
+"timer.label.next@" = "Next: %@";
+"timer.label.of@" = "of %@";
+
+// Themes
+"style.day.name" = "Day";
+"style.dawn.name" = "Dawn";
+"style.oasis.name" = "Oasis";
+"style.spring.name" = "Spring";
+"style.night.name" = "Night";
+
+// Menu actions
+"menu.action.new" = "New";
+"menu.action.pause" = "Pause";
+"menu.action.resume" = "Resume";
+"menu.action.reset" = "Reset";
+"menu.action.delete" = "Delete";
+
+// Date picker
+"picker.duration.title@" = "Duration #%@";
+
+"picker.label.day" = "day";
+"picker.label.days" = "days";
+"picker.label.hour" = "hour";
+"picker.label.hours" = "hours";
+"picker.label.minute" = "minute";
+"picker.label.minutes" = "minutes";
+"picker.label.second" = "second";
+"picker.label.seconds" = "seconds";
+"months.names" = "Jan,Feb,Mar,Apr,May,June,July,Aug,Sept,Oct,Nov,Dec";
+
+// Edit
+"prompt.type.message" = "Countdown for remaining duration until a date, or timer for specific durations";
+"prompt.type.timer.name" = "Timer";
+"prompt.type.countdown.name" = "Countdown";
+
+"type.timer.name" = "Timer";
+"type.countdown.name" = "Countdown";
+
+"edit.delete.countdown.name" = "Delete this countdown?";
+"edit.delete.timer.name" = "Delete this timer?";
+
+"duration.none" = "None";
+"label.no-date.name" = "No date";
+
+// Glance
+"glance.timer.label.of@" = "of %@";
+"glance.timer.label.next@" = "Next: %@";
+"glance.countdown.label.before@" = "before %@";
+"glance.no-countdown.label" = "No Countdowns";

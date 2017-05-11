@@ -23,7 +23,7 @@ class TimerInterfaceController: WKInterfaceController {
 	fileprivate var paused: Bool = false {
 		didSet {
 			toogleButton?.setTitle(
-				NSLocalizedString((paused) ? "menu.action.resume" : "menu.action.pause", comment: ""))
+				LocalizedString((paused) ? "menu.action.resume" : "menu.action.pause"))
 			self.updateUI()
 		}
 	}
@@ -41,14 +41,14 @@ class TimerInterfaceController: WKInterfaceController {
 		
 		updateUI()
 		
-		addMenuItem(with: .add, title: NSLocalizedString("menu.action.new", comment: ""), action: #selector(newMenuAction))
+		addMenuItem(with: .add, title: LocalizedString("menu.action.new"), action: #selector(newMenuAction))
 		if (paused) {
-			addMenuItem(withImageNamed: "resume-button", title: NSLocalizedString("menu.action.resume", comment: ""), action: #selector(resumeMenuAction)) }
+			addMenuItem(withImageNamed: "resume-button", title: LocalizedString("menu.action.resume"), action: #selector(resumeMenuAction)) }
 		else {
-			addMenuItem(with: .pause, title: NSLocalizedString("menu.action.pause", comment: ""), action: #selector(pauseMenuAction)) }
+			addMenuItem(with: .pause, title: LocalizedString("menu.action.pause"), action: #selector(pauseMenuAction)) }
 		
-		addMenuItem(withImageNamed: "reset-button", title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
-		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
+		addMenuItem(withImageNamed: "reset-button", title: LocalizedString("menu.action.reset"), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title: LocalizedString("menu.action.delete"), action: #selector(deleteMenuAction))
 		
 		if (countdown?.identifier == UserDefaults().string(forKey: "selectedIdentifier")) {
 			self.becomeCurrentPage()
@@ -74,12 +74,14 @@ class TimerInterfaceController: WKInterfaceController {
 				let nextDurationIndex = (countdown!.durationIndex!+1) % countdown!.durations!.count
 				components.second = Int(countdown!.durations![nextDurationIndex])
 				let nextDate = calendar.date(from: components)
-				descriptionLabel.setText("_Next: \(DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium))")
+				let text = DateFormatter.localizedString(from: nextDate!, dateStyle: .none, timeStyle: .medium)
+				descriptionLabel.setText(LocalizedFormat("timer.label.next@", text))
 			} else {
 				// "of [total duration]"
 				components.second = Int(duration)
 				let date = calendar.date(from: components)
-				descriptionLabel.setText("_of \(DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium))")
+				let text = DateFormatter.localizedString(from: date!, dateStyle: .none, timeStyle: .medium)
+				descriptionLabel.setText(LocalizedFormat("timer.label.of@", text))
 			}
 			
 			if (timer == nil) {
@@ -122,9 +124,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItem(with: #imageLiteral(resourceName: "resume-button"), title: NSLocalizedString("menu.action.resume", comment: ""), action: #selector(resumeMenuAction))
-		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
-		addMenuItem(with: .trash, title:NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "resume-button"), title: LocalizedString("menu.action.resume"), action: #selector(resumeMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: LocalizedString("menu.action.reset"), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title:LocalizedString("menu.action.delete"), action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func resumeMenuAction() {
@@ -137,9 +139,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItem(with: .pause, title: NSLocalizedString("menu.action.resume", comment: ""), action: #selector(pauseMenuAction))
-		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
-		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
+		addMenuItem(with: .pause, title: LocalizedString("menu.action.resume"), action: #selector(pauseMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: LocalizedString("menu.action.reset"), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title: LocalizedString("menu.action.delete"), action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func resetMenuAction() {
@@ -151,9 +153,9 @@ class TimerInterfaceController: WKInterfaceController {
 			}, errorHandler: nil)
 		
 		clearAllMenuItems()
-		addMenuItem(with: .pause, title: NSLocalizedString("menu.action.pause", comment: ""), action: #selector(pauseMenuAction))
-		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: NSLocalizedString("menu.action.reset", comment: ""), action: #selector(resetMenuAction))
-		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
+		addMenuItem(with: .pause, title: LocalizedString("menu.action.pause"), action: #selector(pauseMenuAction))
+		addMenuItem(with: #imageLiteral(resourceName: "reset-button"), title: LocalizedString("menu.action.reset"), action: #selector(resetMenuAction))
+		addMenuItem(with: .trash, title: LocalizedString("menu.action.delete"), action: #selector(deleteMenuAction))
 	}
 	
 	@IBAction func editMenuAction() {

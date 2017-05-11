@@ -133,7 +133,7 @@ class Countdown: NSObject {
 	}
 	
 	init(name: String?, identifier: String?, type: CountdownType?, style: ColorStyle?) {
-		self.name = name ?? NSLocalizedString((type == .timer) ? "new.timer.name" : "new.countdown.name", comment: "")
+		self.name = name ?? LocalizedString((type == .timer) ? "new.timer.name" : "new.countdown.name")
 		_identifier = identifier ?? UUID().uuidString
 		super.init()
 		

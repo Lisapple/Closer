@@ -26,8 +26,8 @@ class CountdownInterfaceController: WKInterfaceController {
 		self.setTitle(countdown?.name)
 		
 		updateUI()
-		addMenuItem(with: .add, title: NSLocalizedString("menu.action.new", comment: ""), action: #selector(newMenuAction))
-		addMenuItem(with: .trash, title: NSLocalizedString("menu.action.delete", comment: ""), action: #selector(deleteMenuAction))
+		addMenuItem(with: .add, title: LocalizedString("menu.action.new"), action: #selector(newMenuAction))
+		addMenuItem(with: .trash, title: LocalizedString("menu.action.delete"), action: #selector(deleteMenuAction))
 		
 		if (countdown?.identifier == UserDefaults().string(forKey: "selectedIdentifier")) {
 			self.becomeCurrentPage()
@@ -44,7 +44,7 @@ class CountdownInterfaceController: WKInterfaceController {
 			
 			let formatter = DateFormatter()
 			formatter.dateStyle = .medium
-			descriptionLabel.setText("_before \(formatter.string(from: endDate))")
+			descriptionLabel.setText(LocalizedFormat("countdown.label.before@", formatter.string(from: endDate)))
 			descriptionLabel.setHidden(false)
 		} else {
 			timerLabel.setDate(Date())

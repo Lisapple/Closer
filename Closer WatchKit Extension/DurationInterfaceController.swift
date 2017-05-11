@@ -32,18 +32,18 @@ class DurationInterfaceController: WKInterfaceController {
 	override func awake(withContext context: Any?) {
 		super.awake(withContext: context)
 		
-		setTitle(NSLocalizedString("generic.done", comment: ""))
+		setTitle(LocalizedString("generic.done"))
 		
 		let contextDict = context as? [String : AnyObject]
 		self.countdown = contextDict!["countdown"] as? Countdown
 		durationIndex = contextDict!["durationIndex"] as? Int
-		label.setText("_Duration #\(durationIndex!+1)")
+		label.setText(LocalizedFormat("picker.duration.title@", durationIndex!+1))
 		
 		seconds = Int(countdown!.durations![durationIndex!])
 		
 		var daysItems = [WKPickerItem]()
 		for day in 0 ..< 6 {
-			let title = "\(day) " + NSLocalizedString((day == 1) ? "picker.label.day" : "picker.label.days", comment: "")
+			let title = "\(day) " + LocalizedString((day == 1) ? "picker.label.day" : "picker.label.days")
 			daysItems.append(WKPickerItem(title: title))
 		}
 		daysPicker.setItems(daysItems)
@@ -53,7 +53,7 @@ class DurationInterfaceController: WKInterfaceController {
 		
 		var hoursItems = [WKPickerItem]()
 		for hour in 0 ..< 24 {
-			let title = "\(hour) " + NSLocalizedString((hour == 1) ? "picker.label.hour" : "picker.label.hours", comment: "")
+			let title = "\(hour) " + LocalizedString((hour == 1) ? "picker.label.hour" : "picker.label.hours")
 			hoursItems.append(WKPickerItem(title: title))
 		}
 		hoursPicker.setItems(hoursItems)
@@ -63,7 +63,7 @@ class DurationInterfaceController: WKInterfaceController {
 		
 		var minutesItems = [WKPickerItem]()
 		for minute in 0 ..< 60 {
-			let title = "\(minute) " + NSLocalizedString((minute == 1) ? "picker.label.minute" : "picker.label.minutes", comment: "")
+			let title = "\(minute) " + LocalizedString((minute == 1) ? "picker.label.minute" : "picker.label.minutes")
 			minutesItems.append(WKPickerItem(title: title))
 		}
 		minutesPicker.setItems(minutesItems)
@@ -73,7 +73,7 @@ class DurationInterfaceController: WKInterfaceController {
 		
 		var secondsItems = [WKPickerItem]()
 		for second in 0 ..< 60 {
-			let title = "\(second) " + NSLocalizedString((second == 1) ? "picker.label.second" : "picker.label.seconds", comment: "")
+			let title = "\(second) " + LocalizedString((second == 1) ? "picker.label.second" : "picker.label.seconds")
 			secondsItems.append(WKPickerItem(title: title))
 		}
 		secondsPicker.setItems(secondsItems)

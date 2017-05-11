@@ -264,25 +264,6 @@
             </objects>
             <point key="canvasLocation" x="679" y="579.5"/>
         </scene>
-        <!--Close-->
-        <scene sceneID="YjO-tW-KEw">
-            <objects>
-                <controller identifier="NoDurations" title="Close" hidesWhenLoading="NO" id="cLf-eh-o16">
-                    <items>
-                        <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="nK7-ZH-oab">
-                            <items>
-                                <label alignment="center" text="No durations" textAlignment="center" id="g0P-VD-Byg"/>
-                                <label alignment="center" text="Open Closer &amp; Closer on your iPhone and add new durations" textAlignment="center" numberOfLines="0" id="n5g-8A-b0C">
-                                    <color key="textColor" red="0.49820107221603394" green="0.49820107221603394" blue="0.49820107221603394" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
-                                </label>
-                            </items>
-                        </group>
-                    </items>
-                </controller>
-            </objects>
-            <point key="canvasLocation" x="866" y="557"/>
-        </scene>
         <!--Countdown-->
         <scene sceneID="JZO-PS-Goh">
             <objects>
@@ -388,10 +369,14 @@
             <objects>
                 <controller identifier="NoCountdowns" contentMode="center" id="V3H-ho-KhY" customClass="NoCountdownsInterfaceController" customModule="Closer_Watch_Extension">
                     <items>
-                        <label width="1" height="20" alignment="left" id="aGW-wR-OI9"/>
+                        <label width="1" height="20" alignment="left" id="aGW-wR-OI9" userLabel="Separator"/>
                         <group width="1" alignment="left" verticalAlignment="center" layout="vertical" id="tra-HV-D2x">
                             <items>
                                 <label width="1" alignment="left" text="No countdowns" textAlignment="center" id="0Ij-W9-e4x"/>
+                                <label alignment="center" text="Open Closer &amp; Closer on your iPhone to sync countdowns" textAlignment="center" numberOfLines="0" id="I8R-UH-j23">
+                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                </label>
                                 <button width="1" alignment="left" title="New" id="WQK-P9-vnw">
                                     <connections>
                                         <action selector="newAction:" destination="V3H-ho-KhY" id="Lyy-90-YdF"/>
@@ -400,6 +385,10 @@
                             </items>
                         </group>
                     </items>
+                    <connections>
+                        <outlet property="instructionsLabel" destination="I8R-UH-j23" id="fH3-TQ-xrO"/>
+                        <outlet property="newButton" destination="WQK-P9-vnw" id="WC2-fi-TQt"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="51" y="557"/>
