@@ -59,8 +59,9 @@ class InterfaceController: WKInterfaceController {
 				}
 				index += 1
 			}
+			return false
 		}
-		return false
+		return true
 	}
 	
 	class func reload() {
