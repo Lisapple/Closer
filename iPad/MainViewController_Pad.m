@@ -521,9 +521,6 @@ IGNORE_DEPRECATION_END
 
 - (void)reloadPageAtIndex:(NSInteger)index
 {
-	// @TODO: Change the type of countdown (if needed)
-	// @TODO: Update the page
-		
 	NSDebugLog(@"Reloading page at index: %ld", (long)index);
 	
 	CGSize screenSize = ([UIScreen mainScreen].bounds.size);
@@ -533,12 +530,13 @@ IGNORE_DEPRECATION_END
 		screenSize = CGSizeMake(screenSize.height, screenSize.width);
 	
 	CGSize pageSize = (self.currentOrientation & UIInterfaceOrientationMaskLandscape) ?
-	CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
-	CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
+		CGSizeMake(screenSize.width / 3., screenSize.height - self.topLayoutGuide.length) :
+		CGSizeMake(screenSize.width / 2., (screenSize.height - self.topLayoutGuide.length) / 2.);
 	CGRect rect = CGRectMake(0., 0., pageSize.width, pageSize.height);
 	
-	PageViewContainer * container = _containers[index];
-	Countdown * countdown = [Countdown allCountdowns][index];
+	PageViewContainer * container = _containers[CLIP(0, index, _containers.count-1)];
+	NSArray <Countdown *> * const countdowns = [Countdown allCountdowns];
+	Countdown * const countdown = countdowns[CLIP(0, index, countdowns.count-1)];
 	if (([container.pageView isKindOfClass:CountdownPageView.class] && countdown.type != CountdownTypeCountdown) ||
 		([container.pageView isKindOfClass:TimerPageView.class] && countdown.type != CountdownTypeTimer)) {
 		

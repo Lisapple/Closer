@@ -55,6 +55,25 @@ IGNORE_DEPRECATION_BEGIN
 	return nil;
 }
 
+- (NSString *)alertBody // iOS 8-9
+{
+	NSString * messageString = self.message;
+	if (!self.message || [self.message isEqualToString:@""]) { // If no message, show the default message
+		if (self.type == CountdownTypeTimer) {
+			if (self.name) // If name was set, add it to default message
+				messageString = [NSString stringWithFormat:NSLocalizedString(@"TIMER_FINISHED_MESSAGE %@", nil), self.name];
+			else // Else if wasn't set, just show the default message
+				messageString = NSLocalizedString(@"TIMER_FINISHED_DEFAULT_MESSAGE", nil);
+		} else {
+			if (self.name)
+				messageString = [NSString stringWithFormat:NSLocalizedString(@"COUNTDOWN_FINISHED_MESSAGE %@", nil), self.name];
+			else
+				messageString = NSLocalizedString(@"COUNTDOWN_FINISHED_DEFAULT_MESSAGE", nil);
+		}
+	}
+	return messageString;
+}
+
 - (UILocalNotification *)createLocalNotification
 {
 	NSDebugLog(@"Create new local notification for countdown : %@ => %@", self.name, self.endDate.localizedDescription);
@@ -98,7 +117,7 @@ IGNORE_DEPRECATION_END
 	return path;
 }
 
-- (NSString *)alertBody
+- (NSString *)localizedBody // iOS 10+
 {
 	NSString * messageString = self.message;
 	if (!self.message || [self.message isEqualToString:@""]) { // If no message, show the default message
@@ -117,11 +136,11 @@ IGNORE_DEPRECATION_END
 	return messageString;
 }
 
-- (UNNotificationContent *)notificationContent
+- (UNNotificationContent *)notificationContent // iOS 10+
 {
 	UNMutableNotificationContent * content = [[UNMutableNotificationContent alloc] init];
 	content.title = @"Closer & Closer";
-	content.body = self.alertBody;
+	content.body = self.localizedBody;
 	
 	if ([self.songID isEqualToString:@"-1"])
 		{ } // Don't play any sound

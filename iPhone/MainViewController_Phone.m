@@ -566,8 +566,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	NSInteger index = floor(offset.x / _scrollView.frame.size.width);
 	CGFloat progression = (offset.x / _scrollView.frame.size.width) - index;
-	PageView * leftPageView = _pages[MAX(0, index)];
-	PageView * rightPageView = _pages[MIN(index+1, _pages.count-1)];
+	PageView * leftPageView = _pages[CLIP(0, index, _pages.count-1)];
+	PageView * rightPageView = _pages[CLIP(0, index+1, _pages.count-1)];
 	const CountdownStyle * styles = (const CountdownStyle[]){
 		leftPageView.countdown.style, rightPageView.countdown.style };
 	UIColor * tintColor = [UIColor textColorForStyles:styles indexValue:progression];
@@ -699,7 +699,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-	if (_pages.count) {
+	if (0 <= _currentPageIndex && _currentPageIndex <= (NSInteger)_pages.count-1) {
 		PageView * pageView = _pages[_currentPageIndex];
 		return CountdownStyleHasDarkContent(pageView.countdown.style) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 	}

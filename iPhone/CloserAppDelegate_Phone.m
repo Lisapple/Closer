@@ -79,10 +79,13 @@ IGNORE_DEPRECATION_END
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
-	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
-	[userDefaults synchronize];
+	const NSInteger index = _mainViewController.currentPageIndex;
+	if (0 <= index && index <= Countdown.allCountdowns.count-1) {
+		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+		Countdown * const countdown = [Countdown countdownAtIndex:index];
+		[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
+		[userDefaults synchronize];
+	}
 	
 	[_mainViewController stopUpdateTimeLabels];
 	
