@@ -16,13 +16,11 @@
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
 	self.title = NSLocalizedString(@"Type", nil);
 	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.alwaysBounceVertical = YES;
-	
-	[super viewDidLoad];
+	self.tableView.alwaysBounceVertical = YES;
 }
 
 #pragma mark - Table view data source
@@ -45,7 +43,7 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -66,17 +64,17 @@
 	_countdown.type = indexPath.row;
 	
 	if (indexPath.row == 0) {
-		[_tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0] ]
+		[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0] ]
 						  withRowAnimation:UITableViewRowAnimationNone];
 	} else {
-		[_tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ]
+		[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ]
 						  withRowAnimation:UITableViewRowAnimationNone];
 	}
 	
-	UITableViewCell * cell = [_tableView cellForRowAtIndexPath:indexPath];
+	UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
 	cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	
-	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	
 	// @TODO: Add delay (?)
 	[self.navigationController popViewControllerAnimated:YES];

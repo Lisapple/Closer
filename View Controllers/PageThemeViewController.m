@@ -47,10 +47,6 @@
 	[super viewDidLoad];
 	
 	self.title = NSLocalizedString(@"Theme", nil);
-	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	
 }
 
 #pragma mark - Table view data source
@@ -73,7 +69,7 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;

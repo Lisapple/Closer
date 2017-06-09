@@ -23,11 +23,9 @@
 	
 	self.title = NSLocalizedString(@"Durations", nil);
 	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.alwaysBounceVertical = YES;
-	_tableView.allowsSelectionDuringEditing = YES;
-	_tableView.editing = YES;
+	self.tableView.alwaysBounceVertical = YES;
+	self.tableView.allowsSelectionDuringEditing = YES;
+	self.tableView.editing = YES;
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 																						   target:self action:@selector(addAction:)];
@@ -41,7 +39,7 @@
 	[[NSNotificationCenter defaultCenter] addObserverForName:UIMenuControllerWillHideMenuNotification
 													  object:nil queue:nil
 												  usingBlock:^(NSNotification * note) {
-													  [_tableView deselectRowAtIndexPath:_tableView.indexPathForSelectedRow animated:NO];
+													  [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:NO];
 												  }];
 }
 
@@ -63,15 +61,15 @@
 		button.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		[button setTitle:NSLocalizedString(@"Add Duration", nil) forState:UIControlStateNormal];
 		[button addTarget:self action:@selector(addAction:) forControlEvents:UIControlEventTouchUpInside];
-		_tableView.tableFooterView = button;
+		self.tableView.tableFooterView = button;
 	} else
-		_tableView.tableFooterView = nil;
+		self.tableView.tableFooterView = nil;
 }
 
 - (void)reloadData
 {
 	[self updateUI];
-	[_tableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (IBAction)addAction:(id)sender
@@ -84,7 +82,7 @@
 	[_countdown addDuration:@0 withName:nil];
 	
 	NSInteger index = _countdown.durations.count - 1;
-	DurationPickerViewController * controller = [[DurationPickerViewController alloc] init];
+	DurationPickerViewController * controller = [[DurationPickerViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	controller.countdown = self.countdown;
 	controller.durationIndex = index;
 	[self.navigationController pushViewController:controller animated:animated];
@@ -109,7 +107,7 @@
 {
 	if (indexPath.section == 0) {
 		static NSString * promptCellIdentifier = @"PromptCellID";
-		UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:promptCellIdentifier];
+		UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:promptCellIdentifier];
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:promptCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -134,7 +132,7 @@
 		
 	} else {
 		static NSString * cellIdentifier = @"CellID";
-		UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -181,14 +179,14 @@
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		[_tableView beginUpdates];
+		[self.tableView beginUpdates];
 		{
 			[_countdown removeDurationAtIndex:indexPath.row];
 			
-			[_tableView deleteRowsAtIndexPaths:@[ indexPath ]
+			[self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
 							  withRowAnimation:UITableViewRowAnimationFade];
 		}
-		[_tableView endUpdates];
+		[self.tableView endUpdates];
 		[self updateUI];
 	}
 }
@@ -223,16 +221,16 @@
 
 - (void)duplicateDurationAction:(id)sender
 {
-	[_tableView beginUpdates];
+	[self.tableView beginUpdates];
 	{
-		NSIndexPath * indexPath = _tableView.indexPathForSelectedRow;
+		NSIndexPath * indexPath = self.tableView.indexPathForSelectedRow;
 		NSNumber * duration = _countdown.durations[indexPath.row];
 		NSString * name = _countdown.names[indexPath.row];
 		[_countdown addDuration:duration withName:name];
-		[_tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_countdown.durations.count-1 inSection:indexPath.section] ]
+		[self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_countdown.durations.count-1 inSection:indexPath.section] ]
 						  withRowAnimation:UITableViewRowAnimationTop];
 	}
-	[_tableView endUpdates];
+	[self.tableView endUpdates];
 	[self updateUI];
 }
 
@@ -244,18 +242,18 @@
 		return ;
 	
 	if (indexPath.section == 0) {
-		PromptViewController * promptViewController = [[PromptViewController alloc] init];
+		PromptViewController * promptViewController = [[PromptViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		promptViewController.countdown = self.countdown;
 		[self.navigationController pushViewController:promptViewController animated:YES];
 		
 	} else {
-		DurationPickerViewController * durationPickerViewController = [[DurationPickerViewController alloc] init];
+		DurationPickerViewController * durationPickerViewController = [[DurationPickerViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		durationPickerViewController.countdown = self.countdown;
 		durationPickerViewController.durationIndex = indexPath.row;
 		[self.navigationController pushViewController:durationPickerViewController animated:YES];
 	}
 	
-	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

@@ -6,9 +6,8 @@
 //
 //
 
-@interface PromptViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface PromptViewController : UITableViewController
 
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
 @property (nonatomic, strong) Countdown * countdown;
 
 @end

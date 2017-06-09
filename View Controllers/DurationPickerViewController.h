@@ -8,9 +8,8 @@
 
 #import "DurationPickerView.h"
 
-@interface DurationPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, DurationPickerViewDelegate, DurationPickerViewDataSource>
+@interface DurationPickerViewController : UITableViewController <DurationPickerViewDelegate, DurationPickerViewDataSource>
 
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
 @property (nonatomic, strong) Countdown * countdown;
 @property (nonatomic, assign) NSInteger durationIndex;
 

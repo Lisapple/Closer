@@ -6,9 +6,8 @@
 //
 //
 
-@interface DurationsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface DurationsViewController : UITableViewController
 
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
 @property (nonatomic, strong) IBOutlet Countdown * countdown;
 
 - (void)showAddDurationWithAnimation:(BOOL)animated;

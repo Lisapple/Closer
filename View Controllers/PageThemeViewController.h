@@ -8,9 +8,8 @@
 
 @class PageThemeTableViewCell;
 
-@interface PageThemeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface PageThemeViewController : UITableViewController
 
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
 @property (nonatomic, strong) Countdown * countdown;
 
 @end

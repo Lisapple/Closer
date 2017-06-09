@@ -6,9 +6,8 @@
 //
 //
 
-@interface TypeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface TypeViewController : UITableViewController
 
-@property (nonatomic, assign) IBOutlet UITableView * tableView;
 @property (nonatomic, strong) Countdown * countdown;
 
 @end

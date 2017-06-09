@@ -142,7 +142,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	if (self.pages.count > 0) {
 		[self reload];
 	} else { // If no coutdowns to show (if the last coutdown has been deleted from delete button)
-		EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] init];
+		EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:editAllCountdownViewController];
 		[self presentViewController:navigationController animated:NO completion:NULL];
 	}
@@ -389,7 +389,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		[self dismissViewControllerAnimated:YES completion:NULL];
 		
 	} else {
-		EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] init];
+		EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:editAllCountdownViewController];
 		
 		[self dismissViewControllerAnimated:NO completion:NULL];
@@ -490,7 +490,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 {
 	if (0 <= pageIndex && pageIndex < [Countdown allCountdowns].count) {
 		if (!_settingsViewController) {
-			_settingsViewController = [[SettingsViewController alloc] init];
+			_settingsViewController = [[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
 			_settingsViewController.delegate = self;
 		}
 		

@@ -29,6 +29,8 @@
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
 	self.title = NSLocalizedString(@"Choose Countdowns", nil);
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Export", nil)
 																			  style:UIBarButtonItemStyleDone
@@ -50,12 +52,7 @@
 	
 	[self updateUI];
 	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	[_tableView reloadData];
-	
-	[super viewDidLoad];
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 }
 
 - (void)updateUI
@@ -80,7 +77,7 @@
 		label.shadowColor = [UIColor colorWithWhite:1. alpha:0.7];
 		label.shadowOffset = CGSizeMake(0., 1.);
 		label.text = NSLocalizedString(@"No Countdowns", nil);
-		_tableView.tableFooterView = label;
+		self.tableView.tableFooterView = label;
 	}
 	
 	self.navigationItem.rightBarButtonItem.enabled = (_selectedCountdowns.count > 0);
@@ -138,7 +135,7 @@
 	Countdown * countdown = _countdowns[indexPath.row];
 	if (countdown.endDate.timeIntervalSinceNow > 0. || countdown.type == CountdownTypeTimer) { // Disable finished countdowns and timers
 		static NSString * cellIdentifier = @"CellID";
-		cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 			cell.textLabel.textColor = [UIColor blackColor];
@@ -150,7 +147,7 @@
 		
 	} else {
 		static NSString * finishedCellIdentifier = @"FinishedCellIdentifier";
-		cell = [_tableView dequeueReusableCellWithIdentifier:finishedCellIdentifier];
+		cell = [self.tableView dequeueReusableCellWithIdentifier:finishedCellIdentifier];
 		
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:finishedCellIdentifier];

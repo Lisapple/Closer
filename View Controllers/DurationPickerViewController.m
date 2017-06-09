@@ -27,9 +27,7 @@
 	
 	self.title = NSLocalizedString(@"Duration", nil);
 	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.alwaysBounceVertical = YES;
+	self.tableView.alwaysBounceVertical = YES;
 	
 	_cellTextField = [[UITextField alloc] init];
 	_cellTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -89,7 +87,7 @@
 	if (indexPath.section == 0) { // Name field
 		static NSString * nameCellIdentifier = @"NameCellID";
 		
-		UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:nameCellIdentifier];
+		UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:nameCellIdentifier];
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nameCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -112,7 +110,7 @@
 	} else { // Duration picker
 		NSUInteger newSection = indexPath.section - 1;
 		static NSString * cellIdentifier = @"DurationCellID";
-		DurationPickerTableViewCell * cell = (DurationPickerTableViewCell *)[_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+		DurationPickerTableViewCell * cell = (DurationPickerTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 		if (!cell) {
 			cell = [[DurationPickerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -148,7 +146,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Text field delegate

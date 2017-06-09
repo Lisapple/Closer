@@ -8,10 +8,9 @@
 
 @class SettingsViewController;
 
-@interface EditAllCountdownViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIViewControllerPreviewingDelegate>
+@interface EditAllCountdownViewController : UITableViewController <UIViewControllerPreviewingDelegate>
 
 @property (nonatomic, strong) SettingsViewController * settingsViewController;
-@property (nonatomic, assign) IBOutlet UITableView * tableView;
 
 - (void)reloadData;
 

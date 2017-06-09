@@ -122,7 +122,7 @@
 
 - (IBAction)editAllCountdowns:(id)sender
 {
-	EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] init];
+	EditAllCountdownViewController * editAllCountdownViewController = [[EditAllCountdownViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	editAllCountdownViewController.settingsViewController = self;
 	UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:editAllCountdownViewController];
 	[self presentViewController:navigationController animated:YES completion:NULL];
@@ -260,7 +260,12 @@
 		default: break;
 	}
 	
-	UIViewController * viewController = (UIViewController *)[[controllerClass alloc] init];
+	UIViewController * viewController = nil;
+	if ([controllerClass instancesRespondToSelector:@selector(initWithStyle:)]) {
+		viewController = (UITableViewController *)[[controllerClass alloc] initWithStyle:UITableViewStyleGrouped];
+	} else {
+		viewController = (UIViewController *)[[controllerClass alloc] init];
+	}
 	NSAssert([viewController isKindOfClass:UIViewController.class], @"%@ must be a view controller", viewController);
 	if ([viewController respondsToSelector:@selector(countdown)])
 		[viewController performSelector:@selector(setCountdown:) withObject:_countdown];
@@ -272,7 +277,7 @@
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (indexPath.section == 0) {
-		TypeViewController * typeViewController = [[TypeViewController alloc] init];
+		TypeViewController * typeViewController = [[TypeViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		typeViewController.countdown = _countdown;
 		[self.navigationController pushViewController:typeViewController animated:YES];
 		

@@ -142,7 +142,7 @@
 
 - (IBAction)editAction:(id)sender
 {
-	EditViewController * editViewController = [[EditViewController alloc] init];
+	EditViewController * editViewController = [[EditViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	editViewController.modalPresentationStyle = UIModalPresentationPopover;
 	[self presentViewController:editViewController animated:NO completion:^{
 		editViewController.popoverPresentationController.passthroughViews = @[]; // Ignore other navBar buttons interaction
@@ -170,7 +170,7 @@
 	UIAlertController * actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 	[actionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import from Calendar", nil) style:UIAlertActionStyleDefault handler:
 							^(UIAlertAction * action) {
-								ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] init];
+								ImportFromCalendarViewController * importFromCalendarViewController = [[ImportFromCalendarViewController alloc] initWithStyle:UITableViewStyleGrouped];
 								UINavigationController * navigationController = [[UINavigationController alloc] initWithRootViewController:importFromCalendarViewController];
 								navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 								navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -226,7 +226,7 @@
 	/* Close the active settings */
 	[self closeActiveSettings];
 	
-	_settingsViewController = [[SettingsViewController alloc] init];
+	_settingsViewController = [[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	_settingsViewController.countdown = [Countdown countdownAtIndex:pageIndex];
 	_settingsViewController.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	

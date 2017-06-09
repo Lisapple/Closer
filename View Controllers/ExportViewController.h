@@ -8,9 +8,7 @@
 
 @import EventKit;
 
-@interface ExportViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-
-@property (nonatomic, strong) IBOutlet UITableView * tableView;
+@interface ExportViewController : UITableViewController
 
 - (IBAction)exportAction:(id)sender;
 - (void)updateUI;

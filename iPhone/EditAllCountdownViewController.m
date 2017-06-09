@@ -43,11 +43,9 @@
 																						   target:self action:@selector(doneAction:)];
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
 																						  target:self action:@selector(addAction:)];
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-	_tableView.allowsSelectionDuringEditing = YES;
-	_tableView.editing = YES;
+	self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	self.tableView.allowsSelectionDuringEditing = YES;
+	self.tableView.editing = YES;
 	[self reloadData];
 	
 	if ([self respondsToSelector:@selector(registerForPreviewingWithDelegate:sourceView:)]) {
@@ -70,7 +68,7 @@
 - (void)networkStatusDidChange:(NSNotification *)notification
 {
 	/* Reload the whole table view (do not show animations) */
-	[_tableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)updateData
@@ -217,7 +215,7 @@
 	
 	if (indexPath.section <= 1) {
 		static NSString * countdownCellIdentifier = @"countdownCellIdentifier";
-		cell = [_tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
+		cell = [self.tableView dequeueReusableCellWithIdentifier:countdownCellIdentifier];
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:countdownCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -238,7 +236,7 @@
 		
 	} else {
 		static NSString * shareCellIdentifier = @"shareCellIdentifier";
-		cell = [_tableView dequeueReusableCellWithIdentifier:shareCellIdentifier];
+		cell = [self.tableView dequeueReusableCellWithIdentifier:shareCellIdentifier];
 		if (!cell) {
 			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:shareCellIdentifier];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -386,7 +384,7 @@ IGNORE_DEPRECATION_END
 			default: break;
 		}
 	} else if (indexPath.section == 3) { // Export
-		ExportViewController * exportViewController = [[ExportViewController alloc] init];
+		ExportViewController * exportViewController = [[ExportViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		[self.navigationController pushViewController:exportViewController animated:YES];
 	} else {
 		AProposViewController * controller = [[AProposViewController alloc] initWithLicenseType:ApplicationLicenseTypeMIT];

@@ -22,9 +22,7 @@
 	
 	self.title = NSLocalizedString(@"Ask to Continue", nil);
 	
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.alwaysBounceVertical = YES;
+	self.tableView.alwaysBounceVertical = YES;
 	
 	_cellsTitle = @[NSLocalizedString(@"Never", nil), NSLocalizedString(@"At the end of each timer", nil), NSLocalizedString(@"When all timers are finished", nil)];
 }
@@ -50,7 +48,7 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString * cellIdentifier = @"CellID";
-	UITableViewCell * cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -69,15 +67,15 @@
 	
 	for (NSInteger row = 0; row < _cellsTitle.count; row++) {
 		if (row != indexPath.row) {
-			[_tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:0] ]
+			[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:0] ]
 							  withRowAnimation:UITableViewRowAnimationNone];
 		}
 	}
 	
-	UITableViewCell * cell = [_tableView cellForRowAtIndexPath:indexPath];
+	UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
 	cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	
-	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

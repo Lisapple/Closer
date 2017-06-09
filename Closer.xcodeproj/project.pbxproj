@@ -24,7 +24,6 @@
 		500B0BDB1BB70F8700D3915F /* DurationInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500B0BDA1BB70F8700D3915F /* DurationInterfaceController.swift */; };
 		500C03841BB96170002CE3F3 /* DatePickerInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C03831BB96170002CE3F3 /* DatePickerInterfaceController.swift */; };
 		50107E0B1770E39C00184976 /* DurationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50107E091770E39C00184976 /* DurationsViewController.m */; };
-		50107E0C1770E39C00184976 /* DurationsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50107E0A1770E39C00184976 /* DurationsViewController.xib */; };
 		5012B63717B91EAA00F8B228 /* NSArray+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5012B63617B91EAA00F8B228 /* NSArray+addition.m */; };
 		501412311312B51500D61066 /* CountdownPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5014122F1312B51500D61066 /* CountdownPageView.m */; };
 		501412321312B51500D61066 /* CountdownPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501412301312B51500D61066 /* CountdownPageView.xib */; };
@@ -57,7 +56,6 @@
 		507A116317133D6C004909D0 /* ExportToWebsiteViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507A116517133D6C004909D0 /* ExportToWebsiteViewController_Phone.xib */; };
 		507A116717133D7A004909D0 /* ExportToWebsiteViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507A116917133D7A004909D0 /* ExportToWebsiteViewController_Pad.xib */; };
 		507AD4D113533D6200011051 /* PageThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AD4CF13533D6200011051 /* PageThemeViewController.m */; };
-		507AD4D213533D6200011051 /* PageThemeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 507AD4D013533D6200011051 /* PageThemeViewController.xib */; };
 		507C345A1A8C0A3600C485C3 /* TimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */; };
 		507F9BE41B38C381002B5CF4 /* Closer Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 50E00D211AC0AA9000784B98 /* Closer Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		508343E31BD1185800754409 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508343E01BD1185800754409 /* Fabric.framework */; };
@@ -69,14 +67,11 @@
 		5092AB771509337B005D6B12 /* VCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5092AB761509337B005D6B12 /* VCalendar.m */; };
 		50980E251C513D7800639A27 /* NSString+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50980E241C513D7800639A27 /* NSString+addition.m */; };
 		509ED3D8198B0AA800CCC424 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509ED3D6198B0AA800CCC424 /* EditViewController.m */; };
-		509ED3D9198B0AA800CCC424 /* EditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509ED3D7198B0AA800CCC424 /* EditViewController.xib */; };
 		50A2080E12E4E52200D8FCAA /* NSBundle+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A2080D12E4E52200D8FCAA /* NSBundle+addition.m */; };
 		50A28F631BBEAF79006B7097 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A28F621BBEAF79006B7097 /* ComplicationController.swift */; };
 		50A6E53913291BC9007C0C79 /* MessageViewControler.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5A37112E37AD90013605C /* MessageViewControler.m */; };
 		50AF1325176F4D230092E255 /* TypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AF1323176F4D230092E255 /* TypeViewController.m */; };
-		50AF1326176F4D230092E255 /* TypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50AF1324176F4D230092E255 /* TypeViewController.xib */; };
 		50B208FC1307F73C00AF2320 /* EditAllCountdownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B208FA1307F73C00AF2320 /* EditAllCountdownViewController.m */; };
-		50B208FD1307F73C00AF2320 /* EditAllCountdownViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50B208FB1307F73C00AF2320 /* EditAllCountdownViewController.xib */; };
 		50B2095B1307FE6300AF2320 /* Countdown.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B2095A1307FE6300AF2320 /* Countdown.m */; };
 		50B2A086150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B2A085150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m */; };
 		50BBE3CF1B1528A700577858 /* GlanceInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BBE3CE1B1528A700577858 /* GlanceInterfaceController.swift */; };
@@ -97,12 +92,9 @@
 		50CF4F9E17738743004684C9 /* TimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CF4F9D17738743004684C9 /* TimerView.m */; };
 		50D15B911C88C66900B2E49B /* Main~phone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50D15B901C88C66900B2E49B /* Main~phone.storyboard */; };
 		50D5B5CF17847C8000140DDB /* PromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D5B5CD17847C8000140DDB /* PromptViewController.m */; };
-		50D5B5D017847C8000140DDB /* PromptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D5B5CE17847C8000140DDB /* PromptViewController.xib */; };
 		50D5B5D41784800F00140DDB /* DurationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D5B5D21784800E00140DDB /* DurationPickerViewController.m */; };
-		50D5B5D51784800F00140DDB /* DurationPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D5B5D31784800F00140DDB /* DurationPickerViewController.xib */; };
 		50DA0DB1150B84DE00E32165 /* Countdown+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DA0DB0150B84DE00E32165 /* Countdown+addition.m */; };
 		50DA0DB5150B8D1700E32165 /* ExportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DA0DB3150B8D1700E32165 /* ExportViewController.m */; };
-		50DA0DB6150B8D1700E32165 /* ExportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DA0DB4150B8D1700E32165 /* ExportViewController.xib */; };
 		50DF430E17736AB900AAA6C9 /* PageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF430D17736AB900AAA6C9 /* PageView.m */; };
 		50DF431117736AD000AAA6C9 /* TimerPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DF431017736AD000AAA6C9 /* TimerPageView.m */; };
 		50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DF431217736AE800AAA6C9 /* TimerPageView.xib */; };
@@ -216,7 +208,6 @@
 		500C03831BB96170002CE3F3 /* DatePickerInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerInterfaceController.swift; sourceTree = "<group>"; };
 		50107E081770E39C00184976 /* DurationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationsViewController.h; path = "../View Controllers/DurationsViewController.h"; sourceTree = "<group>"; };
 		50107E091770E39C00184976 /* DurationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = DurationsViewController.m; path = "../View Controllers/DurationsViewController.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50107E0A1770E39C00184976 /* DurationsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DurationsViewController.xib; path = "../View Controllers/DurationsViewController.xib"; sourceTree = "<group>"; };
 		5012B63517B91EAA00F8B228 /* NSArray+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+addition.h"; sourceTree = "<group>"; };
 		5012B63617B91EAA00F8B228 /* NSArray+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+addition.m"; sourceTree = "<group>"; };
 		5014122E1312B51500D61066 /* CountdownPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CountdownPageView.h; path = ../Views/CountdownPageView.h; sourceTree = "<group>"; };
@@ -271,7 +262,6 @@
 		507A116A17133D7E004909D0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/ExportToWebsiteViewController_Pad.xib; sourceTree = "<group>"; };
 		507AD4CE13533D6200011051 /* PageThemeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PageThemeViewController.h; path = "../View Controllers/PageThemeViewController.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		507AD4CF13533D6200011051 /* PageThemeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PageThemeViewController.m; path = "../View Controllers/PageThemeViewController.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		507AD4D013533D6200011051 /* PageThemeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PageThemeViewController.xib; path = "../View Controllers/PageThemeViewController.xib"; sourceTree = "<group>"; };
 		507C34581A8C0A3600C485C3 /* TimerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerTableViewCell.h; sourceTree = "<group>"; };
 		507C34591A8C0A3600C485C3 /* TimerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerTableViewCell.m; sourceTree = "<group>"; };
 		508343DF1BD1185800754409 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -288,16 +278,13 @@
 		50980E241C513D7800639A27 /* NSString+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+addition.m"; sourceTree = "<group>"; };
 		509ED3D5198B0AA800CCC424 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditViewController.h; path = iPad/EditViewController.h; sourceTree = "<group>"; };
 		509ED3D6198B0AA800CCC424 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditViewController.m; path = iPad/EditViewController.m; sourceTree = "<group>"; };
-		509ED3D7198B0AA800CCC424 /* EditViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditViewController.xib; path = iPad/EditViewController.xib; sourceTree = "<group>"; };
 		50A2080C12E4E52200D8FCAA /* NSBundle+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+addition.h"; sourceTree = "<group>"; };
 		50A2080D12E4E52200D8FCAA /* NSBundle+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+addition.m"; sourceTree = "<group>"; };
 		50A28F621BBEAF79006B7097 /* ComplicationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		50AF1322176F4D230092E255 /* TypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TypeViewController.h; path = "../View Controllers/TypeViewController.h"; sourceTree = "<group>"; };
 		50AF1323176F4D230092E255 /* TypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TypeViewController.m; path = "../View Controllers/TypeViewController.m"; sourceTree = "<group>"; };
-		50AF1324176F4D230092E255 /* TypeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TypeViewController.xib; path = "../View Controllers/TypeViewController.xib"; sourceTree = "<group>"; };
 		50B208F91307F73C00AF2320 /* EditAllCountdownViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditAllCountdownViewController.h; path = iPhone/EditAllCountdownViewController.h; sourceTree = "<group>"; };
 		50B208FA1307F73C00AF2320 /* EditAllCountdownViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = EditAllCountdownViewController.m; path = iPhone/EditAllCountdownViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50B208FB1307F73C00AF2320 /* EditAllCountdownViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = EditAllCountdownViewController.xib; path = iPhone/EditAllCountdownViewController.xib; sourceTree = "<group>"; };
 		50B209591307FE6300AF2320 /* Countdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Countdown.h; path = ../Model/Countdown.h; sourceTree = "<group>"; };
 		50B2095A1307FE6300AF2320 /* Countdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Countdown.m; path = ../Model/Countdown.m; sourceTree = "<group>"; };
 		50B2A084150AD6B000F4BAC5 /* SectionCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SectionCalendarTableViewCell.h; path = "../View Controllers/SectionCalendarTableViewCell.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -334,15 +321,12 @@
 		50D15B901C88C66900B2E49B /* Main~phone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Main~phone.storyboard"; path = "../iPhone/Main~phone.storyboard"; sourceTree = "<group>"; };
 		50D5B5CC17847C8000140DDB /* PromptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PromptViewController.h; path = "../View Controllers/PromptViewController.h"; sourceTree = "<group>"; };
 		50D5B5CD17847C8000140DDB /* PromptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PromptViewController.m; path = "../View Controllers/PromptViewController.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50D5B5CE17847C8000140DDB /* PromptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PromptViewController.xib; path = "../View Controllers/PromptViewController.xib"; sourceTree = "<group>"; };
 		50D5B5D11784800E00140DDB /* DurationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationPickerViewController.h; path = "../View Controllers/DurationPickerViewController.h"; sourceTree = "<group>"; };
 		50D5B5D21784800E00140DDB /* DurationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = DurationPickerViewController.m; path = "../View Controllers/DurationPickerViewController.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50D5B5D31784800F00140DDB /* DurationPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DurationPickerViewController.xib; path = "../View Controllers/DurationPickerViewController.xib"; sourceTree = "<group>"; };
 		50DA0DAF150B84DE00E32165 /* Countdown+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "Countdown+addition.h"; path = "../Model/Countdown+addition.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50DA0DB0150B84DE00E32165 /* Countdown+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "Countdown+addition.m"; path = "../Model/Countdown+addition.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50DA0DB2150B8D1700E32165 /* ExportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ExportViewController.h; path = "../View Controllers/ExportViewController.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50DA0DB3150B8D1700E32165 /* ExportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ExportViewController.m; path = "../View Controllers/ExportViewController.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		50DA0DB4150B8D1700E32165 /* ExportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ExportViewController.xib; path = "../View Controllers/ExportViewController.xib"; sourceTree = "<group>"; };
 		50DF430C17736AB900AAA6C9 /* PageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageView.h; path = ../Views/PageView.h; sourceTree = "<group>"; };
 		50DF430D17736AB900AAA6C9 /* PageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PageView.m; path = ../Views/PageView.m; sourceTree = "<group>"; };
 		50DF430F17736AD000AAA6C9 /* TimerPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerPageView.h; path = ../Views/TimerPageView.h; sourceTree = "<group>"; };
@@ -566,7 +550,6 @@
 				50034D041E1F1BFE00CB1A5E /* PageViewContainer.xib */,
 				509ED3D5198B0AA800CCC424 /* EditViewController.h */,
 				509ED3D6198B0AA800CCC424 /* EditViewController.m */,
-				509ED3D7198B0AA800CCC424 /* EditViewController.xib */,
 				507717C7164D57DF0042D50B /* ImportFromWebsiteViewController_Pad.h */,
 				507717C8164D57DF0042D50B /* ImportFromWebsiteViewController_Pad.m */,
 				507A116117133D3E004909D0 /* ImportFromWebsiteViewController_Pad.xib */,
@@ -618,7 +601,6 @@
 				289233A90DB2D0DB0083E9F9 /* MainViewController_Phone.m */,
 				50B208F91307F73C00AF2320 /* EditAllCountdownViewController.h */,
 				50B208FA1307F73C00AF2320 /* EditAllCountdownViewController.m */,
-				50B208FB1307F73C00AF2320 /* EditAllCountdownViewController.xib */,
 				505DCD1915EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.h */,
 				505DCD1A15EF8F21005F4B4A /* ImportFromWebsiteViewController_Phone.m */,
 				50CA34771EC335C90057960C /* ImportFromWebsiteViewController_Phone.xib */,
@@ -636,7 +618,6 @@
 				289233AD0DB2D0DB0083E9F9 /* SettingsViewController.m */,
 				50AF1322176F4D230092E255 /* TypeViewController.h */,
 				50AF1323176F4D230092E255 /* TypeViewController.m */,
-				50AF1324176F4D230092E255 /* TypeViewController.xib */,
 				50FF4837131E711B0094645C /* NameViewController.h */,
 				50FF4838131E711B0094645C /* NameViewController.m */,
 				50FF4839131E711B0094645C /* NameViewController.xib */,
@@ -645,20 +626,16 @@
 				50C5A19112E3361F0013605C /* DatePickerViewController.xib */,
 				50107E081770E39C00184976 /* DurationsViewController.h */,
 				50107E091770E39C00184976 /* DurationsViewController.m */,
-				50107E0A1770E39C00184976 /* DurationsViewController.xib */,
 				50D5B5CC17847C8000140DDB /* PromptViewController.h */,
 				50D5B5CD17847C8000140DDB /* PromptViewController.m */,
-				50D5B5CE17847C8000140DDB /* PromptViewController.xib */,
 				50D5B5D11784800E00140DDB /* DurationPickerViewController.h */,
 				50D5B5D21784800E00140DDB /* DurationPickerViewController.m */,
-				50D5B5D31784800F00140DDB /* DurationPickerViewController.xib */,
 				50C5A37012E37AD90013605C /* MessageViewControler.h */,
 				50C5A37112E37AD90013605C /* MessageViewControler.m */,
 				50C5A26412E3496C0013605C /* SongPickerViewController.h */,
 				50C5A26512E3496C0013605C /* SongPickerViewController.m */,
 				507AD4CE13533D6200011051 /* PageThemeViewController.h */,
 				507AD4CF13533D6200011051 /* PageThemeViewController.m */,
-				507AD4D013533D6200011051 /* PageThemeViewController.xib */,
 				50B2A084150AD6B000F4BAC5 /* SectionCalendarTableViewCell.h */,
 				50B2A085150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m */,
 				50BEE0D61786F8EF0086F2B9 /* DurationPickerTableViewCell.h */,
@@ -667,12 +644,10 @@
 				50036EE6150A3D0F006BE168 /* ImportFromCalendarViewController.m */,
 				50DA0DB2150B8D1700E32165 /* ExportViewController.h */,
 				50DA0DB3150B8D1700E32165 /* ExportViewController.m */,
-				50DA0DB4150B8D1700E32165 /* ExportViewController.xib */,
 				50CEFB5B15FCD1AE0044AED0 /* ExportToWebsiteViewController.h */,
 				502AEA5915FA44E3009D9764 /* ExportToWebsiteViewController.m */,
 			);
-			name = "View Controllers";
-			path = Shared;
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		504FD31E164D2BF000D54381 /* Additions */ = {
@@ -937,28 +912,20 @@
 				50C5A32712E352590013605C /* Songs in Resources */,
 				50F3F51219880D1D00817B98 /* Images.xcassets in Resources */,
 				508677E71B34C89900891644 /* Settings-Watch.bundle in Resources */,
-				50B208FD1307F73C00AF2320 /* EditAllCountdownViewController.xib in Resources */,
 				501412321312B51500D61066 /* CountdownPageView.xib in Resources */,
 				50FF483B131E711B0094645C /* NameViewController.xib in Resources */,
-				509ED3D9198B0AA800CCC424 /* EditViewController.xib in Resources */,
-				507AD4D213533D6200011051 /* PageThemeViewController.xib in Resources */,
 				50F918F3149D3C5F003F33B8 /* Countdown.plist in Resources */,
 				50CA34781EC335C90057960C /* ImportFromWebsiteViewController_Phone.xib in Resources */,
 				50F918F7149D3C7E003F33B8 /* songs.plist in Resources */,
 				50F918FB149D3C87003F33B8 /* Localizable.strings in Resources */,
-				50DA0DB6150B8D1700E32165 /* ExportViewController.xib in Resources */,
 				507A116317133D6C004909D0 /* ExportToWebsiteViewController_Phone.xib in Resources */,
 				5016A9DE1C96EB3E00971A7C /* Main~pad.storyboard in Resources */,
 				504FD33D164D2F8200D54381 /* MainViewController_Pad.xib in Resources */,
 				9C00BDE919D2DA9B00E93271 /* Launch.xib in Resources */,
 				507A116717133D7A004909D0 /* ExportToWebsiteViewController_Pad.xib in Resources */,
 				507A115F17133D3E004909D0 /* ImportFromWebsiteViewController_Pad.xib in Resources */,
-				50AF1326176F4D230092E255 /* TypeViewController.xib in Resources */,
-				50107E0C1770E39C00184976 /* DurationsViewController.xib in Resources */,
 				50DF431317736AE800AAA6C9 /* TimerPageView.xib in Resources */,
-				50D5B5D017847C8000140DDB /* PromptViewController.xib in Resources */,
 				50E140121C6F79820058DDE6 /* InfoPlist.strings in Resources */,
-				50D5B5D51784800F00140DDB /* DurationPickerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
