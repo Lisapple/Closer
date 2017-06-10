@@ -375,10 +375,12 @@ IGNORE_DEPRECATION_END
 	if (!self.countdown.isPaused || self.countdown.durations.count == 0)
 		return ;
 	
-	// Don't start the pan gesture (set set the timer progression by dragging up/down) if the user starts scrolling to right/left
-	int contentOffsetX = ceil(((UIScrollView *)self.superview).contentOffset.x);
-	if ((contentOffsetX % (int)self.frame.size.width) != 0)
-		return ;
+	if ([self.superview isKindOfClass:UIScrollView.class]) { // iPhone
+		// Don't start the pan gesture (set set the timer progression by dragging up/down) if the user starts scrolling to right/left
+		int contentOffsetX = ceil(((UIScrollView *)self.superview).contentOffset.x);
+		if ((contentOffsetX % (int)self.frame.size.width) != 0)
+			return ;
+	}
 
 #define kIndexOffset 100.
 	
