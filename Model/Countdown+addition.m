@@ -164,7 +164,7 @@ IGNORE_DEPRECATION_END
 			
 			if (self.endDate && self.endDate.timeIntervalSinceNow > 0.) {
 				
-				if (NSSelectorFromString(@"UNUserNotificationCenter")) { // iOS 10+
+				if (NSClassFromString(@"UNUserNotificationCenter")) { // iOS 10+
 					NSCalendarUnit units = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute);
 					if (self.type == CountdownTypeTimer)
 						units |= NSCalendarUnitSecond;
