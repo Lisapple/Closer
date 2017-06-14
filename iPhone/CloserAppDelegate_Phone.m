@@ -80,7 +80,7 @@ IGNORE_DEPRECATION_END
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	const NSInteger index = _mainViewController.currentPageIndex;
-	if (0 <= index && index <= Countdown.allCountdowns.count-1) {
+	if (0 <= index && index < Countdown.allCountdowns.count) {
 		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 		Countdown * const countdown = [Countdown countdownAtIndex:index];
 		[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];

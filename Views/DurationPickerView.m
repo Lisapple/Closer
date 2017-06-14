@@ -215,7 +215,7 @@ const CGFloat kLabelWidth = 40.;
 	CGFloat offset = _scrollView.contentOffset.x + margin;
 	CGFloat index = offset / kLabelWidth - 0.5;
 	for (NSInteger i = index-2; i <= index+2; ++i) {
-		if (0 <= i && i <= _labels.count-1) {
+		if (0 <= i && i < _labels.count) {
 			_labels[i].textColor = [self.unhighlightedTextColor interpolateColor:self.highlightedTextColor
 																		progress:1 - ABS(index - i) / 2.5];
 		}

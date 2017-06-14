@@ -699,7 +699,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-	if (0 <= _currentPageIndex && _currentPageIndex <= (NSInteger)_pages.count-1) {
+	if (0 <= _currentPageIndex && _currentPageIndex < _pages.count) {
 		PageView * pageView = _pages[_currentPageIndex];
 		return CountdownStyleHasDarkContent(pageView.countdown.style) ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 	}

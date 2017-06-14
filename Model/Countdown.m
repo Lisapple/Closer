@@ -609,7 +609,7 @@ static NSMutableArray * _countdowns = nil;
 - (NSNumber *)currentDuration
 {
 	/* Return the current duration (at index "duratonIndex" if not out of bounds, else return the first duration if exists, else return "nil" */
-	return (_durationIndex <= ((NSInteger)_durations.count - 1)) ? _durations[_durationIndex] : _durations.firstObject;
+	return (_durationIndex < _durations.count) ? _durations[_durationIndex] : _durations.firstObject;
 }
 
 - (NSArray *)durations
@@ -619,7 +619,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)currentName
 {
-	return (_durationIndex <= ((NSInteger)_names.count - 1)) ? _names[_durationIndex] : _names.firstObject;
+	return (_durationIndex < _names.count) ? _names[_durationIndex] : _names.firstObject;
 }
 
 - (NSArray *)names
