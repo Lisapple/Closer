@@ -50,7 +50,7 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 @property (nonatomic, strong) NSUbiquitousKeyValueStore * keyValueStore;
 
 /// Remove old events (more than 2 weeks) that should not be applied on iCloud synchronisation merge.
-/// This also clean up saved events if iCloud sync is disabled to avoid growing user default storage.
+/// This also clean up saved events if iCloud sync is disabled, and duplicates events, to avoid growing user default storage.
 - (void)removeStaleEvents;
 
 @end
@@ -91,10 +91,17 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 		if (event) [events addObject:event];
 	}
 	
-	NSDate * const date = [NSDate dateWithTimeIntervalSinceNow:-2 * 7 * 24 * 60 * 60]; // 2 weeks
+	// Remove events older than 2 weeks
+	NSDate * const date = [NSDate dateWithTimeIntervalSinceNow:-2*7*24*60*60/*2 weeks*/];
 	[events filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K > %@", NSStringFromSelector(@selector(timestamp)), date]];
 	
-	NSMutableArray <NSData *> * eventDatas = @[].mutableCopy;
+	// Remove duplicates
+	NSSet <NSString *> * const descriptionsToKeep = [[NSSet setWithArray:events] valueForKey:NSStringFromSelector(@selector(description))];
+	[events filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UserDataEvent * event, NSDictionary * bindings) {
+		return [descriptionsToKeep member:event.description]; // Check equality on pointer
+	}]];
+	
+	NSMutableArray <NSData *> * eventDatas = [NSMutableArray arrayWithCapacity:events.count];
 	for (UserDataEvent * event in events)
 		[eventDatas addObject:[NSKeyedArchiver archivedDataWithRootObject:event]];
 	

@@ -74,6 +74,7 @@
 		50B208FC1307F73C00AF2320 /* EditAllCountdownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B208FA1307F73C00AF2320 /* EditAllCountdownViewController.m */; };
 		50B2095B1307FE6300AF2320 /* Countdown.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B2095A1307FE6300AF2320 /* Countdown.m */; };
 		50B2A086150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B2A085150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m */; };
+		50B501F01EF6F78D00EA1299 /* UserDataEvent+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B501EF1EF6F78D00EA1299 /* UserDataEvent+addition.m */; };
 		50BBE3CF1B1528A700577858 /* GlanceInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BBE3CE1B1528A700577858 /* GlanceInterfaceController.swift */; };
 		50BEE0D11786F8730086F2B9 /* DurationPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BEE0CF1786F8730086F2B9 /* DurationPickerView.m */; };
 		50BEE0D81786F8EF0086F2B9 /* DurationPickerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BEE0D71786F8EF0086F2B9 /* DurationPickerTableViewCell.m */; };
@@ -289,6 +290,8 @@
 		50B2095A1307FE6300AF2320 /* Countdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Countdown.m; path = ../Model/Countdown.m; sourceTree = "<group>"; };
 		50B2A084150AD6B000F4BAC5 /* SectionCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SectionCalendarTableViewCell.h; path = "../View Controllers/SectionCalendarTableViewCell.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50B2A085150AD6B000F4BAC5 /* SectionCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SectionCalendarTableViewCell.m; path = "../View Controllers/SectionCalendarTableViewCell.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		50B501EE1EF6F78D00EA1299 /* UserDataEvent+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UserDataEvent+addition.h"; path = "../Model/UserDataEvent+addition.h"; sourceTree = "<group>"; };
+		50B501EF1EF6F78D00EA1299 /* UserDataEvent+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UserDataEvent+addition.m"; path = "../Model/UserDataEvent+addition.m"; sourceTree = "<group>"; };
 		50BBE3CE1B1528A700577858 /* GlanceInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlanceInterfaceController.swift; sourceTree = "<group>"; };
 		50BEE0CF1786F8730086F2B9 /* DurationPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DurationPickerView.m; path = ../Views/DurationPickerView.m; sourceTree = "<group>"; };
 		50BEE0D01786F8730086F2B9 /* DurationPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationPickerView.h; path = ../Views/DurationPickerView.h; sourceTree = "<group>"; };
@@ -509,6 +512,8 @@
 				5092AB761509337B005D6B12 /* VCalendar.m */,
 				502313EB1EB7B44600019BF8 /* UserDataEvent.h */,
 				502313EC1EB7B44600019BF8 /* UserDataEvent.m */,
+				50B501EE1EF6F78D00EA1299 /* UserDataEvent+addition.h */,
+				50B501EF1EF6F78D00EA1299 /* UserDataEvent+addition.m */,
 			);
 			name = Model;
 			path = Classes;
@@ -996,6 +1001,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* CloserAppDelegate_Phone.m in Sources */,
 				289233AE0DB2D0DB0083E9F9 /* MainViewController_Phone.m in Sources */,
+				50B501F01EF6F78D00EA1299 /* UserDataEvent+addition.m in Sources */,
 				289233B00DB2D0DB0083E9F9 /* SettingsViewController.m in Sources */,
 				50C5A19212E3361F0013605C /* DatePickerViewController.m in Sources */,
 				50C5A23A12E33F8B0013605C /* NSDate+addition.m in Sources */,
