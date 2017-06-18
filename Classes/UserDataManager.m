@@ -94,7 +94,7 @@ NSString * const UserDataEventsKey = @"userDataEvents";
 	NSDate * const date = [NSDate dateWithTimeIntervalSinceNow:-2 * 7 * 24 * 60 * 60]; // 2 weeks
 	[events filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K > %@", NSStringFromSelector(@selector(timestamp)), date]];
 	
-	NSMutableArray <NSData *> * eventDatas = ([userDefaults arrayForKey:UserDataEventsKey] ?: @[]).mutableCopy;
+	NSMutableArray <NSData *> * eventDatas = @[].mutableCopy;
 	for (UserDataEvent * event in events)
 		[eventDatas addObject:[NSKeyedArchiver archivedDataWithRootObject:event]];
 	
