@@ -16,12 +16,6 @@
 
 // Plateform macros
 
-#if TARGET_IPHONE_SIMULATOR
-#  define NSDebugLog(format, ...)  NSLog(@"[DEBUG] " format, ##__VA_ARGS__)
-#else
-#  define NSDebugLog(format, ...)
-#endif
-
 #define TARGET_IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 // Math helpers

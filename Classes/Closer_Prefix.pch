@@ -10,3 +10,9 @@
 #  import "UIColor+addition.h"
 #  import "UIApplication+addition.h"
 #endif
+
+#if TARGET_OS_SIMULATOR // The only place where this macro works correctly on simulator 
+#  define NSDebugLog(format, ...)  NSLog(@"[DEBUG] " format, ##__VA_ARGS__)
+#else
+#  define NSDebugLog(format, ...)
+#endif
