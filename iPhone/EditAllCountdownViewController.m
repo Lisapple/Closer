@@ -311,10 +311,11 @@
 - (void)selectCountdownAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (indexPath.section <= 1) {
+		[self dismissViewControllerAnimated:YES completion:NULL];
+		
 		Countdown * countdown = (indexPath.section == 0) ? _includedCountdowns[indexPath.row] : _notIncludedCountdowns[indexPath.row];
 		_settingsViewController.countdown = countdown;
 		[Countdown synchronize];
-		[self dismissViewControllerAnimated:YES completion:NULL];
 	}
 }
 

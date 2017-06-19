@@ -162,6 +162,10 @@ const NSTimeInterval kAnimationDelay = 5.;
 	@synchronized(self) {
 		const NSInteger oldPagesCount = self.pages.count;
 		const NSInteger countdownsCount = [Countdown allCountdowns].count;
+		
+		if (oldPagesCount == 0 && countdownsCount > 0) // If the user was forced to create a countdown because there weren't, show settings
+			[self showSettingsForPageAtIndex:0 animated:YES];
+		
 		if (countdownsCount > 0) {
 			CLSLog(@"Reload with %ld countdowns and %ld pages", (long)countdownsCount, (long)oldPagesCount);
 			if (oldPagesCount > countdownsCount) {
@@ -499,7 +503,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 		
 		UINavigationController * aNavigationController = [[UINavigationController alloc] initWithRootViewController:_settingsViewController];
 		aNavigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-		[self presentViewController:aNavigationController animated:YES completion:^{
+		[self presentViewController:aNavigationController animated:animated completion:^{
 			[_pages[pageIndex] viewDidHide:animated];
 			if (completion) completion();
 		}];
