@@ -79,16 +79,15 @@ IGNORE_DEPRECATION_END
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+	[_mainViewController stopUpdateTimeLabels];
+	
+	// Save the last selected page
 	const NSInteger index = _mainViewController.currentPageIndex;
 	if (0 <= index && index < Countdown.allCountdowns.count) {
 		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 		Countdown * const countdown = [Countdown countdownAtIndex:index];
 		[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
-		[userDefaults synchronize];
 	}
-	
-	[_mainViewController stopUpdateTimeLabels];
-	
 	[Countdown removeInvalidLocalNotifications];
 	[Countdown synchronize];
 	[[UserDataManager defaultManager] synchronize];
@@ -101,14 +100,15 @@ IGNORE_DEPRECATION_END
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+	// Save the last selected page
+	const NSInteger index = _mainViewController.currentPageIndex;
+	if (0 <= index && index < Countdown.allCountdowns.count) {
+		NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+		Countdown * const countdown = [Countdown countdownAtIndex:index];
+		[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
+	}
 	[Countdown synchronize];
 	[[UserDataManager defaultManager] synchronize];
-	
-	/* Save the last selected page */
-	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-	Countdown * const countdown = [Countdown countdownAtIndex:_mainViewController.currentPageIndex];
-	[userDefaults setObject:countdown.identifier forKey:kLastSelectedCountdownIdentifierKey];
-	[userDefaults synchronize];
 }
 
 #pragma mark - Local Notification
