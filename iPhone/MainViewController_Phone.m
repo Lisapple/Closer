@@ -550,6 +550,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 
 - (void)showPageControl:(BOOL)show animated:(BOOL)animated
 {
+	show &= (_pageControl.numberOfPages > 1); // Don't show page control if only one page
 	if (animated) {
 		NSTimeInterval duration = 0.15;
 		[UIView animateWithDuration:duration animations:^{
