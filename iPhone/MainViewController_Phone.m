@@ -59,6 +59,7 @@
 @property (nonatomic, strong) IBOutlet UIView * toolbarView;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint * leftBottomBarConstraint;
 @property (nonatomic, strong) UILabel * createCountdownLabel;
+@property (nonatomic, strong) NSShadow * createCountdownShadow;
 @property (nonatomic, strong, nullable) Countdown * quickCreatedCountdown;
 
 - (IBAction)changeCurrentDurationAction:(id)sender;
@@ -96,10 +97,14 @@ const NSTimeInterval kAnimationDelay = 5.;
 	_pageControl.currentPage = _currentPageIndex;
 	
 	_createCountdownLabel = [[UILabel alloc] init];
-	_createCountdownLabel.textColor = [UIColor whiteColor];
 	_createCountdownLabel.text = @"+";
+	_createCountdownLabel.textColor = [UIColor whiteColor];
 	_createCountdownLabel.font = [UIFont systemFontOfSize:32 weight:UIFontWeightLight];
 	[_createCountdownLabel sizeToFit];
+	
+	_createCountdownShadow = [[NSShadow alloc] init];
+	_createCountdownShadow.shadowColor = [UIColor whiteColor];
+	_createCountdownShadow.shadowBlurRadius = 5;
 	
 	_createCountdownLabel.origin = CGPointMake(15, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
 	_createCountdownLabel.alpha = 0;
@@ -526,6 +531,10 @@ const NSTimeInterval kAnimationDelay = 5.;
 	if ([self shouldCreateNewCountdownForOffset:offset]) {
 		_shouldCreateNewCountdown = YES;
 		_createCountdownLabel.alpha = 1;
+		
+		NSDictionary * attributes = @{ NSShadowAttributeName : _createCountdownShadow };
+		_createCountdownLabel.attributedText = [[NSAttributedString alloc] initWithString:@"+"
+																			   attributes:attributes];
 	}
 }
 
@@ -535,7 +544,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 	
 	CGFloat x = 15;
 	if (point.x < 0)
-		x = self.view.frame.size.width - _createCountdownLabel.frame.size.width - 15;
+		x -= self.view.frame.size.width - _createCountdownLabel.frame.size.width;
 	
 	_createCountdownLabel.origin = CGPointMake(x, (self.view.frame.size.height - _createCountdownLabel.frame.size.height) / 2.);
 	_leftBottomBarConstraint.constant = point.x;
@@ -544,7 +553,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 		[self performSelector:@selector(enableCreateNewCountdown) withObject:nil afterDelay:0.35 inModes:@[ NSRunLoopCommonModes ]];
 	else {
 		_shouldCreateNewCountdown = NO;
-		_createCountdownLabel.alpha = (ABS(point.x) - 35.) / 70.;
+		const CGFloat alpha = (ABS(point.x) - 35.) / 70.;
+		_createCountdownLabel.alpha = alpha;
+		_createCountdownLabel.text = @"+";
 	}
 }
 
