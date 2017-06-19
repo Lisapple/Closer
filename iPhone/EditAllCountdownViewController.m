@@ -295,9 +295,8 @@
 {
 	if (proposedDestinationIndexPath.section > 1) {
 		NSInteger row = _notIncludedCountdowns.count - (sourceIndexPath.section >= 1);
-		[NSIndexPath indexPathForRow:row inSection:1];
+		return [NSIndexPath indexPathForRow:row inSection:1];
 	}
-	
 	return proposedDestinationIndexPath;
 }
 
