@@ -174,10 +174,9 @@ const NSTimeInterval kAnimationDelay = 5.;
 		if (countdownsCount > 0) {
 			CLSLog(@"Reload with %ld countdowns and %ld pages", (long)countdownsCount, (long)oldPagesCount);
 			if (oldPagesCount > countdownsCount) {
-				NSRange range = NSMakeRange(countdownsCount, oldPagesCount - countdownsCount);
-				NSIndexSet * indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
-				NSArray * pagesToRemove = [_pages objectsAtIndexes:indexSet];
-				
+				const NSRange range = NSMakeRange(countdownsCount, oldPagesCount - countdownsCount);
+				NSIndexSet * const indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
+				NSArray * const pagesToRemove = [_pages objectsAtIndexes:indexSet];
 				for (PageView * page in pagesToRemove)
 					[page removeFromSuperview];
 				
@@ -194,9 +193,8 @@ const NSTimeInterval kAnimationDelay = 5.;
 		// Reload pages
 		int index = 0;
 		for (Countdown * countdown in [Countdown allCountdowns].copy) {
-			PageView * page = _pages[index];
-			
-			/* If the type of page needs to change, remove the current page and re-create one */
+			PageView * const page = _pages[index];
+			// If the type of page needs to change, remove the current page and re-create one
 			if ((countdown.type == CountdownTypeTimer && [page isKindOfClass:CountdownPageView.class]) ||
 				(countdown.type == CountdownTypeCountdown && [page isKindOfClass:TimerPageView.class])) {
 				[self removePageAtIndex:index];
@@ -522,7 +520,7 @@ const NSTimeInterval kAnimationDelay = 5.;
 #pragma mark - Scroll view delegate
 
 - (BOOL)shouldCreateNewCountdownForOffset:(CGFloat)x {
-	return (150 > ABS(x) && ABS(x) >= 70); // Ignore non-manual scrolling (like after setting `contentOffset`)
+	return (70 <= ABS(x) && ABS(x) < 150); // Ignore non-manual scrolling (like after setting `contentOffset`)
 }
 
 - (void)enableCreateNewCountdown

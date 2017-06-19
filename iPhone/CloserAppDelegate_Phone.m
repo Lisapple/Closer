@@ -27,7 +27,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
 #else
 	[Fabric with:@[ CrashlyticsKit ]];
 #endif
@@ -242,7 +242,7 @@ IGNORE_DEPRECATION_END
 	Countdown * countdown = [Countdown countdownWithIdentifier:identifier];
 	NSString * const action = message[@"action"];
 	
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
 	dispatch_async(dispatch_get_main_queue(), ^{
 		UIAlertController * alert = [UIAlertController alertControllerWithTitle:action message:message.description preferredStyle:UIAlertControllerStyleAlert];
 		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"generic.ok", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) { }]];

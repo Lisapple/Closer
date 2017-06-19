@@ -102,7 +102,7 @@
 
 - (IBAction)done:(id)sender
 {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
 	[Countdown synchronize];
 #endif
 	

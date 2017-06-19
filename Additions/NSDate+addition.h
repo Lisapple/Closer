@@ -10,13 +10,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDate(addition)
 
-- (NSInteger)second;
-- (NSInteger)minute;
-- (NSString *)minuteString;
-- (NSInteger)hour;
-
-- (NSInteger)day;
-- (NSInteger)month;
 - (NSInteger)year;
 
 - (NSInteger)daysFromNow;

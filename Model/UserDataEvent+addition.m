@@ -40,7 +40,7 @@
 	if (![event isKindOfClass:self.class])
 		return [super isEqual:event];
 	
-	return [super isEqual:object]
+	return [super isEqual:event]
 		&& [self.countdownIdentifier isEqualToString:event.countdownIdentifier];
 }
 
@@ -60,7 +60,7 @@
 	if (![event isKindOfClass:self.class])
 		return [super isEqual:event];
 	
-	return [super isEqual:object]
+	return [super isEqual:event]
 		&& (self.notificationCenter == event.notificationCenter)
 		&& (self.index == event.index);
 }
@@ -82,7 +82,7 @@
 	if (![event isKindOfClass:self.class])
 		return [super isEqual:event];
 	
-	return [super isEqual:object]
+	return [super isEqual:event]
 		&& (self.notificationCenter == event.notificationCenter)
 		&& (self.fromIndex == event.fromIndex)
 		&& (self.toIndex == event.toIndex);

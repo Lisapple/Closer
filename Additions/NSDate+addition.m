@@ -10,48 +10,6 @@
 
 @implementation NSDate(addition)
 
-- (NSInteger)second
-{
-	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	dateFormatter.dateFormat = @"s";
-	return [dateFormatter stringFromDate:self].integerValue;
-}
-
-- (NSInteger)minute
-{
-	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	dateFormatter.dateFormat = @"m";
-	return [dateFormatter stringFromDate:self].integerValue;
-}
-
-- (NSString *)minuteString
-{
-	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	dateFormatter.dateFormat = @"mm";
-	return [dateFormatter stringFromDate:self];
-}
-
-- (NSInteger)hour
-{
-	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	dateFormatter.dateFormat = @"H";
-	return [dateFormatter stringFromDate:self].integerValue;
-}
-
-- (NSInteger)day
-{
-	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	dateFormatter.dateFormat = @"dd";
-	return [dateFormatter stringFromDate:self].integerValue;
-}
-
-- (NSInteger)month
-{
-	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
-	dateFormatter.dateFormat = @"MM";
-	return [dateFormatter stringFromDate:self].integerValue;
-}
-
 - (NSInteger)year
 {
 	NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];

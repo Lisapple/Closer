@@ -122,7 +122,7 @@
 				// Play the default song (from complete.caf)
 				NSString * path = [NSString stringWithFormat:@"%@/Songs/complete.caf", [NSBundle mainBundle].bundlePath];
 				_player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_OS_SIMULATOR
 				/* This can crash on Simulator */
 				[_player prepareToPlay];
 				[_player play];
@@ -136,7 +136,7 @@
 			NSString * path = [NSString stringWithFormat:@"%@/Songs/%@", [NSBundle mainBundle].bundlePath, fileName];
 			_player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path]
 															 error:nil];
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_OS_SIMULATOR
 			/* This can crash on Simulator */
 			[_player prepareToPlay];
 			[_player play];

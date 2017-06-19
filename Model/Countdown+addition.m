@@ -242,7 +242,7 @@ IGNORE_DEPRECATION_END
 	if (path) {
 		NSURL * const fileURL = [NSURL fileURLWithPath:path];
 		if (fileURL) {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
 			// Playing sounds on simulator is still "buggy"
 #else
 			NSError * error = nil;

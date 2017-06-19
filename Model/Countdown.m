@@ -189,7 +189,7 @@ static NSMutableArray * _countdowns = nil;
 			[[WCSession defaultSession] sendMessage:@{ @"update" : @YES }
 									   replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
 										   dispatch_sync(dispatch_get_main_queue(), ^{
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
 											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Reply", nil)
 																											   message:replyMessage.description
 																										preferredStyle:UIAlertControllerStyleAlert];
@@ -200,7 +200,7 @@ static NSMutableArray * _countdowns = nil;
 									   }
 									   errorHandler:^(NSError * _Nonnull error) {
 										   dispatch_sync(dispatch_get_main_queue(), ^{
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
 											   UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Reply error", nil)
 																											   message:error.localizedDescription
 																										preferredStyle:UIAlertControllerStyleAlert];
@@ -612,7 +612,7 @@ static NSMutableArray * _countdowns = nil;
 	return (_durationIndex < _durations.count) ? _durations[_durationIndex] : _durations.firstObject;
 }
 
-- (NSArray *)durations
+- (NSArray <NSNumber *> *)durations
 {
 	return _durations;
 }
@@ -622,7 +622,7 @@ static NSMutableArray * _countdowns = nil;
 	return (_durationIndex < _names.count) ? _names[_durationIndex] : _names.firstObject;
 }
 
-- (NSArray *)names
+- (NSArray <NSString *> *)names
 {
 	return _names;
 }
@@ -731,7 +731,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)descriptionOfDurationAtIndex:(NSInteger)index
 {
-	long seconds = _durations[index].longValue;
+	long seconds = _durations[index].integerValue;
 	long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
@@ -754,7 +754,7 @@ static NSMutableArray * _countdowns = nil;
 
 - (NSString *)shortDescriptionOfDurationAtIndex:(NSInteger)index
 {
-	long seconds = _durations[index].longValue;
+	long seconds = _durations[index].integerValue;
 	long days = seconds / (24 * 60 * 60); seconds -= days * (24 * 60 * 60);
 	long hours = seconds / (60 * 60); seconds -= hours * (60 * 60);
 	long minutes = seconds / 60; seconds -= minutes * 60;
